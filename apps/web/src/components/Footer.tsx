@@ -272,19 +272,19 @@ export default function Footer() {
           ].map((section) => (
             <div
               key={section.title}
-              className="group rounded-xl border border-brand-border bg-brand-elevated/30 p-4 sm:p-5 transition hover:border-brand-accent/40 hover:bg-brand-elevated/50"
+              className="group rounded-xl border border-brand-border bg-brand-elevated/30 p-3 sm:p-4 transition hover:border-brand-accent/40 hover:bg-brand-elevated/50"
             >
-              <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-                <div className="sm:w-36 shrink-0">
-                  <h3 className="text-xs font-bold text-brand-text uppercase tracking-wider">{section.title}</h3>
-                  <p className="text-[10px] text-brand-text-secondary/70 mt-0.5 hidden sm:block">{section.desc}</p>
+              <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
+                <div className="sm:w-28 shrink-0">
+                  <h3 className="text-[11px] font-semibold text-brand-text uppercase tracking-wider">{section.title}</h3>
+                  <p className="text-[9px] text-brand-text-secondary/70 mt-0.5 hidden sm:block">{section.desc}</p>
                 </div>
-                <div className="flex flex-wrap gap-2 flex-1">
+                <div className="flex flex-wrap gap-1.5 flex-1 content-start">
                   {section.links.map((link) => (
                     <Link
                       key={link.label}
                       href={link.href}
-                      className="inline-flex items-center px-2.5 py-1.5 rounded-full text-[11px] leading-tight border border-brand-border bg-brand-surface/60 text-brand-text-secondary hover:bg-brand-accent hover:text-brand-bg hover:border-brand-accent transition-all"
+                      className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] leading-tight border border-brand-border bg-brand-surface/60 text-brand-text-secondary hover:bg-brand-accent hover:text-brand-bg hover:border-brand-accent transition-all whitespace-nowrap"
                     >
                       {link.label}
                     </Link>
