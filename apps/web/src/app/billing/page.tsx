@@ -3,9 +3,11 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { CreditCard, Loader2, Check, Zap, Sparkles, Building2, Crown } from 'lucide-react';
 
 export default function BillingPage() {
+  const router = useRouter();
   const [credits, setCredits] = useState(0);
   const [loading, setLoading] = useState(false);
   const [currentPlan, setCurrentPlan] = useState('free');
@@ -28,16 +30,41 @@ export default function BillingPage() {
     { id: 'enterprise', name: 'Enterprise', price: null, icon: Crown, features: ['Custom', 'SLA dedicado', 'White-label'] },
   ];
 
-  async function handleUpgrade(plan: string) {
+  async function handleUpgrade(planId: string) {
+    if (planId === 'free') {
+      router.push('/dashboard');
+      return;
+    }
+    if (planId === 'enterprise') {
+      window.location.href = 'mailto:stackpost@expostacker.com.br?subject=Interesse%20no%20plano%20Enterprise';
+      return;
+    }
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login?redirect=billing');
+      return;
+    }
     setLoading(true);
-    // In production, this would redirect to Stripe Checkout
-    alert(`Redirecionando para Stripe Checkout - Plano ${plan}...\n\nEm producao, isso abre uma sessao Stripe real.`);
-    setLoading(false);
+    try {
+      const res = await fetch('/api/pagamentos/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ plano: planId }),
+      });
+      const data = await res.json();
+      if (res.ok && data.init_point) {
+        window.location.href = data.init_point;
+      } else {
+        alert(data.error || 'Erro ao iniciar pagamento. Tente novamente.');
+      }
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function handleAddCredits() {
     setLoading(true);
-    alert('Redirecionando para Stripe para adicionar creditos X...');
+    alert('Adicionar creditos X ainda nao implementado.');
     setLoading(false);
   }
 
@@ -57,10 +84,10 @@ export default function BillingPage() {
 
           <div className="p-6 rounded-2xl bg-brand-surface border border-brand-border">
             <h2 className="text-lg font-semibold mb-2 flex items-center gap-2"><CreditCard className="w-5 h-5 text-brand-accent" /> Creditos X</h2>
-            <div className="text-3xl font-bold font-mono">${credits.toFixed(2)}</div>
-            <p className="text-sm text-brand-text-secondary mt-2">Cobranca por uso: $0.015/post, $0.20/post com link</p>
+            <div className="text-3xl font-bold font-mono">R$ {credits.toFixed(2)}</div>
+            <p className="text-sm text-brand-text-secondary mt-2">Cobranca por uso: R$ 0.015/post, R$ 0.20/post com link</p>
             <button onClick={handleAddCredits} disabled={loading} className="mt-3 w-full px-4 py-2 rounded-xl bg-brand-elevated border border-brand-border text-sm hover:bg-brand-border transition">
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Adicionar creditos'}
+              {loading ? 'Carregando...' : 'Adicionar creditos'}
             </button>
           </div>
 
@@ -77,7 +104,7 @@ export default function BillingPage() {
             <div key={p.id} className={`p-6 rounded-2xl border ${currentPlan === p.id ? 'bg-brand-surface border-brand-accent' : 'bg-brand-surface border-brand-border'}`}>
               <p.icon className="w-8 h-8 text-brand-accent mb-3" />
               <h3 className="text-lg font-bold">{p.name}</h3>
-              <div className="text-2xl font-bold mb-4">{p.price === null ? 'Custom' : `R$ ${p.price}`}</div>
+              <div className="text-2xl font-bold mb-4">{p.price === null ? 'Custom' : p.price === 0 ? 'R$ 0' : `R$ ${p.price}`}</div>
               <ul className="space-y-2 mb-6">
                 {p.features.map((f) => (
                   <li key={f} className="flex items-center gap-2 text-sm text-brand-text-secondary">
@@ -87,14 +114,14 @@ export default function BillingPage() {
               </ul>
               <button
                 onClick={() => handleUpgrade(p.id)}
-                disabled={loading || currentPlan === p.id}
+                disabled={loading || (currentPlan === p.id && p.id !== 'enterprise')}
                 className={`w-full px-4 py-3 rounded-xl font-semibold text-sm transition disabled:opacity-50 ${
-                  currentPlan === p.id
+                  currentPlan === p.id && p.id !== 'enterprise'
                     ? 'bg-brand-elevated border border-brand-border text-brand-text-secondary'
                     : 'bg-brand-accent text-brand-bg hover:bg-brand-accent-hover'
                 }`}
               >
-                {currentPlan === p.id ? 'Plano atual' : 'Fazer upgrade'}
+                {currentPlan === p.id && p.id !== 'enterprise' ? 'Plano atual' : p.id === 'enterprise' ? 'Falar com vendas' : 'Fazer upgrade'}
               </button>
             </div>
           ))}

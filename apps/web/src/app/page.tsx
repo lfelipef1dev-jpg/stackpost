@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Layers, Calendar, BarChart3, Zap, Shield, Globe, ArrowRight, MessageSquare, Upload, Webhook, Key, Building2, Sparkles, Clock, RefreshCw, FileCheck, Hash } from 'lucide-react';
 import { PLATFORMS } from '@/lib/platforms';
+import { PlatformIcon } from '@/components/PlatformIcon';
 
 const features = [
   {
@@ -98,13 +99,13 @@ export default function Home() {
       </section>
 
       <section className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-15 gap-3">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3">
           {featuredPlatforms.map((p) => (
             <div
               key={p.id}
               className="p-3 rounded-xl bg-brand-surface border border-brand-border text-center hover:border-brand-text/30 transition"
             >
-              <div className="w-2.5 h-2.5 rounded-full mx-auto mb-1.5" style={{ backgroundColor: p.color }} />
+              <div className="mx-auto mb-1.5 flex justify-center"><PlatformIcon id={p.id} size={22} color={p.color} /></div>
               <div className="text-brand-text text-xs font-medium">{p.name}</div>
             </div>
           ))}
