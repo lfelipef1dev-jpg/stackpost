@@ -259,53 +259,37 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Big sections as horizontal rows: Plataformas, Especializadas, Comparacao */}
-        {rowSections.map((section) => (
-          <div key={section.title} className="py-4 border-t border-brand-border">
-            <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-6">
-              <h3 className="text-xs font-semibold text-brand-text uppercase tracking-wider sm:min-w-[110px] sm:w-[110px] shrink-0 pt-0.5">{section.title}</h3>
-              <div className="flex flex-wrap gap-x-4 gap-y-1.5 flex-1">
-                {section.links.map((link) => (
-                  <Link key={link.label} href={link.href} className="text-xs text-brand-text-secondary hover:text-brand-accent transition-colors">
-                    {link.label}
-                  </Link>
-                ))}
+        {/* API Directory: Plataformas, Especializadas, Comparacao, Supporting + Partners as badge rows */}
+        <div className="space-y-4 mt-8">
+          {[
+            { ...rowSections[0], desc: '15 redes sociais conectadas' },
+            { ...rowSections[1], desc: 'APIs especializadas por canal' },
+            { title: 'Comparacao', links: comparisons, desc: 'Compare com as alternativas' },
+            { title: 'Supporting APIs', links: [...supportSection.links, ...partners], desc: 'Recursos de infraestrutura' },
+          ].map((section) => (
+            <div
+              key={section.title}
+              className="group rounded-xl border border-brand-border bg-brand-elevated/30 p-4 sm:p-5 transition hover:border-brand-accent/40 hover:bg-brand-elevated/50"
+            >
+              <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+                <div className="sm:w-36 shrink-0">
+                  <h3 className="text-xs font-bold text-brand-text uppercase tracking-wider">{section.title}</h3>
+                  <p className="text-[10px] text-brand-text-secondary/70 mt-0.5 hidden sm:block">{section.desc}</p>
+                </div>
+                <div className="flex flex-wrap gap-2 flex-1">
+                  {section.links.map((link) => (
+                    <Link
+                      key={link.label}
+                      href={link.href}
+                      className="inline-flex items-center px-2.5 py-1.5 rounded-full text-[11px] leading-tight border border-brand-border bg-brand-surface/60 text-brand-text-secondary hover:bg-brand-accent hover:text-brand-bg hover:border-brand-accent transition-all"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-
-        {/* Comparacao */}
-        <div className="py-4 border-t border-brand-border">
-          <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-6">
-            <h3 className="text-xs font-semibold text-brand-text uppercase tracking-wider sm:min-w-[110px] sm:w-[110px] shrink-0 pt-0.5">Comparacao</h3>
-            <div className="flex flex-wrap gap-x-4 gap-y-1.5 flex-1">
-              {comparisons.map((c) => (
-                <Link key={c.label} href={c.href} className="text-xs text-brand-text-secondary hover:text-brand-accent transition-colors">
-                  {c.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Supporting APIs + Partners */}
-        <div className="py-4 border-t border-brand-border">
-          <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-6">
-            <h3 className="text-xs font-semibold text-brand-text uppercase tracking-wider sm:min-w-[110px] sm:w-[110px] shrink-0 pt-0.5">{supportSection.title}</h3>
-            <div className="flex flex-wrap gap-x-4 gap-y-1.5 flex-1">
-              {supportSection.links.map((link) => (
-                <Link key={link.label} href={link.href} className="text-xs text-brand-text-secondary hover:text-brand-accent transition-colors">
-                  {link.label}
-                </Link>
-              ))}
-              {partners.map((p) => (
-                <Link key={p.label} href={p.href} className="text-xs text-brand-text-secondary hover:text-brand-accent transition-colors">
-                  {p.label}
-                </Link>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
 
         {/* Social icons */}
