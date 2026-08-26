@@ -6,6 +6,10 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CreditCard, Loader2, Check, Zap, Sparkles, Building2, Crown } from 'lucide-react';
 
+function brl(n: number) {
+  return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
 export default function BillingPage() {
   const router = useRouter();
   const [credits, setCredits] = useState(0);
@@ -22,6 +26,13 @@ export default function BillingPage() {
         setCurrentPlan(data.plan || 'free');
       });
   }, []);
+
+  const planPrices: Record<string, number | null> = {
+    free: 0,
+    pro: 100,
+    business: 400,
+    enterprise: null,
+  };
 
   const plans = [
     { id: 'free', name: 'Free', price: 0, icon: Zap, features: ['20 posts/mes', '50 comentarios/mes', '3 contas'] },
@@ -68,6 +79,8 @@ export default function BillingPage() {
     setLoading(false);
   }
 
+  const nextPayment = planPrices[currentPlan];
+
   return (
     <div className="min-h-screen bg-brand-bg">
       <Header activeHref="/billing" />
@@ -84,8 +97,8 @@ export default function BillingPage() {
 
           <div className="p-6 rounded-2xl bg-brand-surface border border-brand-border">
             <h2 className="text-lg font-semibold mb-2 flex items-center gap-2"><CreditCard className="w-5 h-5 text-brand-accent" /> Creditos X</h2>
-            <div className="text-3xl font-bold font-mono">R$ {credits.toFixed(2)}</div>
-            <p className="text-sm text-brand-text-secondary mt-2">Cobranca por uso: R$ 0.015/post, R$ 0.20/post com link</p>
+            <div className="text-3xl font-bold">{brl(credits)}</div>
+            <p className="text-sm text-brand-text-secondary mt-2">Cobranca por uso: R$ 0,015/post, R$ 0,20/post com link</p>
             <button onClick={handleAddCredits} disabled={loading} className="mt-3 w-full px-4 py-2 rounded-xl bg-brand-elevated border border-brand-border text-sm hover:bg-brand-border transition">
               {loading ? 'Carregando...' : 'Adicionar creditos'}
             </button>
@@ -93,7 +106,7 @@ export default function BillingPage() {
 
           <div className="p-6 rounded-2xl bg-brand-surface border border-brand-border">
             <h2 className="text-lg font-semibold mb-2">Proximo pagamento</h2>
-            <div className="text-3xl font-bold">{currentPlan === 'free' ? 'R$ 0' : currentPlan === 'pro' ? 'R$ 100' : currentPlan === 'business' ? 'R$ 400' : 'Custom'}</div>
+            <div className="text-3xl font-bold">{nextPayment === null ? 'Custom' : brl(nextPayment)}</div>
             <p className="text-sm text-brand-text-secondary mt-2">Cobrado mensalmente</p>
           </div>
         </div>
@@ -104,7 +117,7 @@ export default function BillingPage() {
             <div key={p.id} className={`p-6 rounded-2xl border ${currentPlan === p.id ? 'bg-brand-surface border-brand-accent' : 'bg-brand-surface border-brand-border'}`}>
               <p.icon className="w-8 h-8 text-brand-accent mb-3" />
               <h3 className="text-lg font-bold">{p.name}</h3>
-              <div className="text-2xl font-bold mb-4">{p.price === null ? 'Custom' : p.price === 0 ? 'R$ 0' : `R$ ${p.price}`}</div>
+              <div className="text-2xl font-bold mb-4">{p.price === null ? 'Custom' : brl(p.price)}</div>
               <ul className="space-y-2 mb-6">
                 {p.features.map((f) => (
                   <li key={f} className="flex items-center gap-2 text-sm text-brand-text-secondary">
