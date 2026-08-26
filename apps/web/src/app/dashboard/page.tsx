@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PlanModal from '@/components/PlanModal';
+import Header from '@/components/Header';
 
 export default function DashboardPage() {
   const [posts, setPosts] = useState<any[]>([]);
@@ -39,26 +40,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen">
-      <header className="h-16 border-b border-brand-border bg-brand-surface/50 backdrop-blur sticky top-0 z-20">
-        <div className="max-w-7xl mx-auto h-full px-4 flex items-center justify-between">
-          <div className="font-display font-bold text-xl text-brand-accent">StackPost</div>
-          <nav className="hidden md:flex gap-6 text-sm text-brand-text-secondary">
-            <a href="/dashboard" className="text-brand-text">Dashboard</a>
-            <a href="/composer" className="hover:text-brand-text">Criar post</a>
-            <a href="/calendar" className="hover:text-brand-text">Calendario</a>
-            <a href="/accounts" className="hover:text-brand-text">Contas</a>
-            <a href="/analytics" className="hover:text-brand-text">Analytics</a>
-            <a href="/webhooks" className="hover:text-brand-text">Webhooks</a>
-            <a href="/settings" className="hover:text-brand-text">Config</a>
-          </nav>
-          <button
-            onClick={() => setShowPlanModal(true)}
-            className="px-3 py-1.5 text-xs rounded-full bg-brand-accent/10 text-brand-accent border border-brand-accent/20 hover:bg-brand-accent/20 transition"
-          >
-            Plano: {planLabels[currentPlan]}
-          </button>
-        </div>
-      </header>
+      <Header activeHref="/dashboard" />
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">Dashboard</h1>

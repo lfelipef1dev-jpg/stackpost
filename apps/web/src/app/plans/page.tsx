@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Check, X, Zap, Crown, Building2, Star, ChevronRight, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
@@ -176,8 +177,38 @@ const faqs = [
 ];
 
 export default function PlansPage() {
+  const router = useRouter();
   const [yearly, setYearly] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  async function startCheckout(plan: Plan) {
+    if (plan.id === 'free') {
+      router.push('/register');
+      return;
+    }
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login?redirect=plans');
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch('/api/pagamentos/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ plano: plan.id }),
+      });
+      const data = await res.json();
+      if (res.ok && data.init_point) {
+        window.location.href = data.init_point;
+      } else {
+        alert(data.error || 'Erro ao iniciar pagamento');
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
 
   function formatPrice(plan: Plan) {
     if (plan.monthlyPrice === null) return 'Custom';
@@ -267,14 +298,15 @@ export default function PlansPage() {
               </div>
 
               <button
-                onClick={() => setSelectedPlan(plan)}
+                onClick={() => startCheckout(plan)}
+                disabled={loading}
                 className={`w-full mb-6 px-4 py-3 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2 ${
                   plan.popular
                     ? 'bg-brand-accent text-brand-bg hover:bg-brand-accent-hover'
                     : 'bg-brand-elevated border border-brand-border text-brand-text hover:bg-brand-border'
                 }`}
               >
-                {plan.cta}
+                {plan.id === 'free' ? 'Comecar gratis' : 'Escolher plano'}
                 <ChevronRight className="w-4 h-4" />
               </button>
 
@@ -418,16 +450,17 @@ export default function PlansPage() {
               >
                 Fechar
               </button>
-              <Link
-                href={selectedPlan.ctaHref}
-                className={`flex-1 text-center px-4 py-3 rounded-xl font-semibold transition ${
+              <button
+                onClick={() => startCheckout(selectedPlan)}
+                disabled={loading}
+                className={`flex-1 px-4 py-3 rounded-xl font-semibold transition ${
                   selectedPlan.popular
                     ? 'bg-brand-accent text-brand-bg hover:bg-brand-accent-hover'
                     : 'bg-brand-elevated border border-brand-border text-brand-text hover:bg-brand-border'
                 }`}
               >
-                {selectedPlan.cta}
-              </Link>
+                {selectedPlan.id === 'free' ? 'Comecar gratis' : 'Pagar com Mercado Pago'}
+              </button>
             </div>
           </div>
         </div>

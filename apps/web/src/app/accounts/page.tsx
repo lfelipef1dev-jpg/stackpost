@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { PLATFORMS } from '@/lib/platforms';
+import { PlatformIcon } from '@/components/PlatformIcon';
+import Header from '@/components/Header';
 import { RefreshCw, Trash2, AlertCircle, CheckCircle2, Clock, Loader2, Zap } from 'lucide-react';
 
 const OAUTH_ROUTES: Record<string, string> = {
@@ -83,19 +85,7 @@ export default function AccountsPage() {
 
   return (
     <div className="min-h-screen bg-brand-bg">
-      <header className="h-16 border-b border-brand-border bg-brand-surface/50 backdrop-blur sticky top-0 z-20">
-        <div className="max-w-7xl mx-auto h-full px-4 flex items-center justify-between">
-          <div className="font-display font-bold text-xl text-brand-accent">StackPost</div>
-          <nav className="hidden md:flex gap-6 text-sm text-brand-text-secondary">
-            <a href="/dashboard" className="hover:text-brand-text">Dashboard</a>
-            <a href="/composer" className="hover:text-brand-text">Criar post</a>
-            <a href="/calendar" className="hover:text-brand-text">Calendario</a>
-            <a href="/accounts" className="text-brand-text">Contas</a>
-            <a href="/analytics" className="hover:text-brand-text">Analytics</a>
-            <a href="/settings" className="hover:text-brand-text">Config</a>
-          </nav>
-        </div>
-      </header>
+      <Header activeHref="/accounts" />
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">Contas conectadas</h1>
@@ -118,7 +108,7 @@ export default function AccountsPage() {
                         : 'bg-brand-elevated/50 border-brand-border/50'
                     }`}
                   >
-                    <div className="w-3 h-3 rounded-full mx-auto mb-2" style={{ backgroundColor: p.color }} />
+                    <div className="mx-auto mb-2"><PlatformIcon id={p.id} size={24} color={p.color} /></div>
                     <div className="text-sm font-medium">{p.name}</div>
                     {isConnected ? (
                       <div className="text-[10px] text-success mt-1">Conectado</div>
@@ -147,7 +137,7 @@ export default function AccountsPage() {
                 <div key={acc.id} className="p-4 rounded-xl bg-brand-surface border border-brand-border">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: PLATFORMS.find((p) => p.id === acc.platform)?.color || '#888' }} />
+                      <PlatformIcon id={acc.platform} size={20} color={PLATFORMS.find((p) => p.id === acc.platform)?.color || '#888'} />
                       <div>
                         <div className="font-semibold capitalize">{acc.platform}</div>
                         <div className="text-sm text-brand-text-secondary">{acc.username}</div>
