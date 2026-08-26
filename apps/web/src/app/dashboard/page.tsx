@@ -1,4 +1,5 @@
 'use client';
+import Footer from '@/components/Footer';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -153,6 +154,7 @@ export default function DashboardPage() {
       </main>
 
       {showPlanModal && <PlanModal currentPlan={currentPlan} onClose={() => setShowPlanModal(false)} />}
+      <Footer />
     </div>
   );
 }

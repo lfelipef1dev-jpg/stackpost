@@ -1,4 +1,5 @@
 'use client';
+import Footer from '@/components/Footer';
 
 import { useEffect, useState } from 'react';
 import { PLATFORMS } from '@/lib/platforms';
@@ -166,6 +167,7 @@ export default function AccountsPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

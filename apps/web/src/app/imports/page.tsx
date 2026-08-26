@@ -1,4 +1,6 @@
 'use client';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 import { useEffect, useState } from 'react';
 import { Download, Loader2, FileClock, Instagram, Facebook, Linkedin } from 'lucide-react';
@@ -52,20 +54,7 @@ export default function ImportsPage() {
 
   return (
     <div className="min-h-screen bg-brand-bg">
-      <header className="h-16 border-b border-brand-border bg-brand-surface/50 backdrop-blur sticky top-0 z-20">
-        <div className="max-w-7xl mx-auto h-full px-4 flex items-center justify-between">
-          <div className="font-display font-bold text-xl text-brand-accent">StackPost</div>
-          <nav className="hidden md:flex gap-6 text-sm text-brand-text-secondary">
-            <a href="/dashboard" className="hover:text-brand-text">Dashboard</a>
-            <a href="/composer" className="hover:text-brand-text">Criar post</a>
-            <a href="/calendar" className="hover:text-brand-text">Calendario</a>
-            <a href="/comments" className="hover:text-brand-text">Comentarios</a>
-            <a href="/imports" className="text-brand-text">Importar</a>
-            <a href="/analytics" className="hover:text-brand-text">Analytics</a>
-            <a href="/settings" className="hover:text-brand-text">Config</a>
-          </nav>
-        </div>
-      </header>
+      <Header activeHref="/imports" />
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">Importar historico</h1>
@@ -114,6 +103,7 @@ export default function ImportsPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
