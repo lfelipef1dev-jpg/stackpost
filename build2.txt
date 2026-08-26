@@ -1,0 +1,71 @@
+﻿
+> @stackpost/web@0.1.0 build
+> next build
+
+   Ôû▓ Next.js 15.5.24
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+node.exe :  ÔÜá Compiled with warnings in 61s
+No linha:1 caractere:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( ÔÜá Compiled with warnings in 61s:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+./src/app/docs/api-reference/page.tsx
+Attempted import error: '@scalar/api-reference' does not contain a default export (imported as 'ApiReference').
+
+Import trace for requested module:
+./src/app/docs/api-reference/page.tsx
+
+../../node_modules/web-worker/src/node/index.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+../../node_modules/web-worker/src/node/index.js
+../../node_modules/make-asynchronous/index.js
+../../node_modules/super-regex/index.js
+../../node_modules/is-identifier/index.js
+../../node_modules/stringify-object/index.js
+../../node_modules/@scalar/snippetz/dist/httpsnippet-lite/targets/javascript/jquery/client.js
+../../node_modules/@scalar/snippetz/dist/plugins/js/jquery/jquery.js
+../../node_modules/@scalar/snippetz/dist/plugins/js/jquery/index.js
+../../node_modules/@scalar/snippetz/dist/clients/index.js
+../../node_modules/@scalar/snippetz/dist/snippetz.js
+../../node_modules/@scalar/snippetz/dist/index.js
+../../node_modules/@scalar/blocks/dist/code-example/helpers/generate-client-options.js
+../../node_modules/@scalar/blocks/dist/code-example/index.js
+../../node_modules/@scalar/api-reference/dist/helpers/load-from-perssistance.js
+../../node_modules/@scalar/api-reference/dist/components/ApiReference.vue.script.js
+../../node_modules/@scalar/api-reference/dist/components/ApiReference.vue.js
+../../node_modules/@scalar/api-reference/dist/index.js
+./src/app/docs/api-reference/page.tsx
+
+ Ô£ô Compiled successfully in 77s
+   Linting and checking validity of types ...
+Failed to compile.
+
+./src/app/docs/api-reference/page.tsx:5:8
+Type error: Module '"C:/Users/lfeli/Desktop/StackPost/node_modules/@scalar/api-reference/dist/index"' has no default 
+export. Did you mean to use 'import { ApiReference } from 
+"C:/Users/lfeli/Desktop/StackPost/node_modules/@scalar/api-reference/dist/index"' instead?
+
+[0m [90m 3 |[39m [36mimport[39m [33mFooter[39m [36mfrom[39m [32m'@/components/Footer'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mJsonLd[39m[33m,[39m serviceSchema } [36mfrom[39m 
+[32m'@/components/JsonLd'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m [33mApiReference[39m [36mfrom[39m 
+[32m'@scalar/api-reference'[39m[33m;[39m
+ [90m   |[39m        [31m[1m^[22m[39m
+ [90m 6 |[39m
+ [90m 7 |[39m [36mexport[39m [36mconst[39m metadata[33m:[39m [33mMetadata[39m [33m=[39m {
+ [90m 8 |[39m   title[33m:[39m [32m'API Reference - Scalar Docs - StackPost'[39m[33m,[39m[0m
+Next.js build worker exited with code: 1 and signal: null
+npm error Lifecycle script `build` failed with error:
+npm error code 1
+npm error path C:\Users\lfeli\Desktop\StackPost\apps\web
+npm error workspace @stackpost/web@0.1.0
+npm error location C:\Users\lfeli\Desktop\StackPost\apps\web
+npm error command failed
+npm error command C:\Windows\system32\cmd.exe /d /s /c next build

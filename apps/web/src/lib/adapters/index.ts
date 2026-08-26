@@ -1,24 +1,19 @@
-import { PlatformAdapter, PublishResult, PublishParams } from './base';
+import { PlatformAdapter, PublishParams, PublishResult } from './base';
 import { publishToInstagram } from './instagram-api';
 import { publishToLinkedIn } from './linkedin-api';
 import { TwitterAdapter as TwitterRealAdapter } from './twitter';
-
-class GenericAdapter extends PlatformAdapter {
-  constructor(
-    public name: string,
-    public textLimit: number,
-    public message: string
-  ) {
-    super();
-  }
-
-  async publish(params: PublishParams): Promise<PublishResult> {
-    if (params.content.length > this.textLimit) {
-      return { success: false, error: { code: 'VALIDATION', message: `${this.name}: texto maximo ${this.textLimit} caracteres.` } };
-    }
-    return { success: true, externalId: `${this.name}-${Date.now()}`, externalUrl: `https://${this.name}.com/p/mock` };
-  }
-}
+import { FacebookAdapter as FacebookRealAdapter } from './facebook';
+import { TikTokAdapter as TikTokRealAdapter } from './tiktok';
+import { YouTubeAdapter as YouTubeRealAdapter } from './youtube';
+import { ThreadsAdapter as ThreadsRealAdapter } from './threads';
+import { PinterestAdapter as PinterestRealAdapter } from './pinterest';
+import { RedditAdapter as RedditRealAdapter } from './reddit';
+import { BlueskyAdapter as BlueskyRealAdapter } from './bluesky';
+import { MastodonAdapter as MastodonRealAdapter } from './mastodon';
+import { DiscordAdapter as DiscordRealAdapter } from './discord';
+import { SlackAdapter as SlackRealAdapter } from './slack';
+import { GoogleBusinessAdapter as GoogleBusinessRealAdapter } from './google-business';
+import { SnapchatAdapter as SnapchatRealAdapter } from './snapchat';
 
 export class InstagramAdapter extends PlatformAdapter {
   name = 'instagram';
@@ -48,16 +43,16 @@ export class LinkedInAdapter extends PlatformAdapter {
   }
 }
 
-export class FacebookAdapter extends GenericAdapter { constructor() { super('facebook', 63206, 'Facebook'); } }
-export class TikTokAdapter extends GenericAdapter { constructor() { super('tiktok', 2200, 'TikTok'); } }
-export class YouTubeAdapter extends GenericAdapter { constructor() { super('youtube', 5000, 'YouTube'); } }
-export class XAdapter extends TwitterRealAdapter {}
-export class ThreadsAdapter extends GenericAdapter { constructor() { super('threads', 500, 'Threads'); } }
-export class PinterestAdapter extends GenericAdapter { constructor() { super('pinterest', 500, 'Pinterest'); } }
-export class RedditAdapter extends GenericAdapter { constructor() { super('reddit', 300, 'Reddit'); } }
-export class BlueskyAdapter extends GenericAdapter { constructor() { super('bluesky', 300, 'Bluesky'); } }
-export class MastodonAdapter extends GenericAdapter { constructor() { super('mastodon', 500, 'Mastodon'); } }
-export class DiscordAdapter extends GenericAdapter { constructor() { super('discord', 2000, 'Discord'); } }
-export class SlackAdapter extends GenericAdapter { constructor() { super('slack', 30000, 'Slack'); } }
-export class GoogleBusinessAdapter extends GenericAdapter { constructor() { super('google_business', 1500, 'Google Business'); } }
-export class SnapchatAdapter extends GenericAdapter { constructor() { super('snapchat', 1000, 'Snapchat'); } }
+export { FacebookAdapter } from './facebook';
+export { TikTokAdapter } from './tiktok';
+export { YouTubeAdapter } from './youtube';
+export { TwitterAdapter as XAdapter } from './twitter';
+export { ThreadsAdapter } from './threads';
+export { PinterestAdapter } from './pinterest';
+export { RedditAdapter } from './reddit';
+export { BlueskyAdapter } from './bluesky';
+export { MastodonAdapter } from './mastodon';
+export { DiscordAdapter } from './discord';
+export { SlackAdapter } from './slack';
+export { GoogleBusinessAdapter } from './google-business';
+export { SnapchatAdapter } from './snapchat';

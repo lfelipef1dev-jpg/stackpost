@@ -1,4 +1,5 @@
-'use client';
+﻿'use client';
+
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -125,7 +126,7 @@ export default function SettingsPage() {
                     <div className="text-xs text-brand-text-secondary font-mono">{k.key_prefix}...</div>
                     <div className="text-[10px] text-brand-text-secondary mt-1">
                       Criada: {new Date(k.created_at).toLocaleDateString('pt-BR')}
-                      {k.last_used_at && ` • Ultimo uso: ${new Date(k.last_used_at).toLocaleDateString('pt-BR')}`}
+                      {k.last_used_at && ` â€¢ Ultimo uso: ${new Date(k.last_used_at).toLocaleDateString('pt-BR')}`}
                     </div>
                   </div>
                   <button

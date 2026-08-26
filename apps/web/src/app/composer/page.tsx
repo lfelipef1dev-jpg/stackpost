@@ -1,4 +1,5 @@
-'use client';
+﻿'use client';
+
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -368,7 +369,7 @@ export default function ComposerPage() {
               </div>
 
               <div className="mt-4 space-y-2 text-xs text-brand-text-secondary">
-                <div className="flex justify-between"><span>Proporção</span><span>{activePlatform.aspect}</span></div>
+                <div className="flex justify-between"><span>ProporÃ§Ã£o</span><span>{activePlatform.aspect}</span></div>
                 <div className="flex justify-between"><span>Formatos</span><span>{activePlatform.formats}</span></div>
                 <div className="flex justify-between"><span>Limite</span><span>{activePlatform.maxFile}</span></div>
                 <div className="flex justify-between"><span>Texto</span><span>{activePlatform.textLimit}</span></div>
@@ -387,7 +388,7 @@ export default function ComposerPage() {
             <p className="text-brand-text-secondary mb-6">
               {pendingAction === 'publish'
                 ? 'Isso vai publicar imediatamente nas plataformas selecionadas. Tem certeza?'
-                : 'O post será salvo e publicado no horário agendado.'}
+                : 'O post serÃ¡ salvo e publicado no horÃ¡rio agendado.'}
             </p>
             <div className="flex gap-3">
               <button

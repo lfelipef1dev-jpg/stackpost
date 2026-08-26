@@ -31,7 +31,8 @@ async function deliverWebhook(url: string, secret: string, payload: any): Promis
 }
 
 async function deliverWithRetries(url: string, secret: string, payload: any): Promise<{ success: boolean; attempts: number }> {
-  const delays = [0, 30000, 90000]; // initial + 2 retries, exponential from 30s
+  // 1 initial + 3 retries = 4 total attempts, exponential backoff from 30s
+  const delays = [0, 30000, 90000, 270000];
 
   for (let i = 0; i < delays.length; i++) {
     if (delays[i] > 0) await new Promise((r) => setTimeout(r, delays[i]));
@@ -40,7 +41,7 @@ async function deliverWithRetries(url: string, secret: string, payload: any): Pr
     if (result.success) return { success: true, attempts: i + 1 };
   }
 
-  return { success: false, attempts: 3 };
+  return { success: false, attempts: 4 };
 }
 
 export async function POST(req: NextRequest) {
@@ -90,7 +91,7 @@ export async function POST(req: NextRequest) {
         .update({
           status: delivery.success ? 'delivered' : 'failed',
           attempts: delivery.attempts,
-          delivered_at: new Date().toISOString(),
+          delivered_at: delivery.success ? new Date().toISOString() : null,
         })
         .eq('id', eventId);
 
@@ -99,7 +100,7 @@ export async function POST(req: NextRequest) {
       if (!delivery.success) {
         const { data: failRow, error: failErr } = await supabase
           .from('webhooks')
-          .select('consecutive_failures')
+          .select('consecutive_failures, last_success_at')
           .eq('id', webhook.id)
           .single();
 
@@ -113,10 +114,13 @@ export async function POST(req: NextRequest) {
 
         if (failUpdateErr) throw failUpdateErr;
 
-        if (failures >= 50) {
+        // Auto-disable apos 7 dias sem sucesso (conforme plano)
+        const lastSuccess = failRow?.last_success_at ? new Date(failRow.last_success_at) : null;
+        const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+        if (!lastSuccess || lastSuccess < sevenDaysAgo) {
           const { error: disableErr } = await supabase
             .from('webhooks')
-            .update({ status: 'disabled' })
+            .update({ status: 'disabled', disabled_reason: '7 dias sem sucesso' })
             .eq('id', webhook.id);
 
           if (disableErr) throw disableErr;
@@ -124,7 +128,7 @@ export async function POST(req: NextRequest) {
       } else {
         const { error: resetErr } = await supabase
           .from('webhooks')
-          .update({ consecutive_failures: 0 })
+          .update({ consecutive_failures: 0, last_success_at: new Date().toISOString() })
           .eq('id', webhook.id);
 
         if (resetErr) throw resetErr;

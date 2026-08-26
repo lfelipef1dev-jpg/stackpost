@@ -1,4 +1,5 @@
-'use client';
+﻿'use client';
+
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -86,8 +87,8 @@ export default function LinkInBioPage() {
                       <div className="text-sm font-medium truncate">{l.title}</div>
                       <div className="text-xs text-brand-text-secondary truncate">{l.url}</div>
                     </div>
-                    <button onClick={() => handleReorder(l.id, 'up')} disabled={i === 0} className="text-brand-text-secondary hover:text-brand-text disabled:opacity-30">↑</button>
-                    <button onClick={() => handleReorder(l.id, 'down')} disabled={i === links.length - 1} className="text-brand-text-secondary hover:text-brand-text disabled:opacity-30">↓</button>
+                    <button onClick={() => handleReorder(l.id, 'up')} disabled={i === 0} className="text-brand-text-secondary hover:text-brand-text disabled:opacity-30">â†‘</button>
+                    <button onClick={() => handleReorder(l.id, 'down')} disabled={i === links.length - 1} className="text-brand-text-secondary hover:text-brand-text disabled:opacity-30">â†“</button>
                     <a href={l.url} target="_blank" rel="noopener noreferrer" className="text-brand-text-secondary hover:text-brand-accent"><ExternalLink className="w-4 h-4" /></a>
                     <button onClick={() => handleDelete(l.id)} className="text-brand-text-secondary hover:text-error"><Trash2 className="w-4 h-4" /></button>
                   </div>

@@ -20,10 +20,14 @@
 
   body {
     @apply bg-brand-bg text-brand-text antialiased;
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: var(--font-sans), 'Inter', system-ui, sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif;
+  }
+
+  code, pre, .font-mono {
+    font-family: var(--font-mono), 'JetBrains Mono', ui-monospace, monospace;
   }
 }

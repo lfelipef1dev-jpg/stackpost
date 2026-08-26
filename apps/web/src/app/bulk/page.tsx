@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { Upload, FileSpreadsheet, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
@@ -84,7 +84,7 @@ export default function BulkPage() {
                     <CheckCircle2 className="w-4 h-4 text-success" />
                     <span className="text-sm line-clamp-1">{p.content?.slice(0, 50)}</span>
                   </div>
-                  <div className="text-xs text-brand-text-secondary mt-1">{p.platforms?.join(', ')} • {p.status}</div>
+                  <div className="text-xs text-brand-text-secondary mt-1">{p.platforms?.join(', ')} â€¢ {p.status}</div>
                 </div>
               ))}
             </div>

@@ -1,4 +1,5 @@
-'use client';
+﻿'use client';
+
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -188,7 +189,7 @@ export default function CalendarPage() {
                         </div>
                         <div className="text-xs text-brand-text-secondary">
                           {p.platforms?.join(', ')}
-                          {p.scheduled_at && ` • ${new Date(p.scheduled_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`}
+                          {p.scheduled_at && ` â€¢ ${new Date(p.scheduled_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`}
                         </div>
                       </div>
                     );

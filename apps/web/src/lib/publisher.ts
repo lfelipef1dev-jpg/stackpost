@@ -79,7 +79,7 @@ export async function publishPost(postId: string) {
   const accountsList = accounts || [];
   const derivatives = post.derivatives || {};
 
-  const results = await Promise.all(
+  const settled = await Promise.allSettled(
     post.platforms.map(async (platform: string) => {
       const adapter = adapters[platform];
       const account = accountsList.find((a) => a.platform === platform);
@@ -112,6 +112,13 @@ export async function publishPost(postId: string) {
 
       return { platform, ...result };
     })
+  );
+
+  // allSettled garante que falha em uma plataforma nao afeta as outras
+  const results = settled.map((s, i) =>
+    s.status === 'fulfilled'
+      ? s.value
+      : { platform: post.platforms[i], success: false, error: s.reason?.message || 'Erro interno' }
   );
 
   const hasError = results.some((r: any) => !r.success);

@@ -1,0 +1,23 @@
+feat: StackPost v1.0.0 - 114 endpoints, 15 platforms, MCP/CLI/SDK
+
+- 28 new API endpoints (posts/[id], analytics, comments, accounts, organization)
+- Rate limiting 3 layers (100/1s, 500/10s, 2000/60s)
+- X/Twitter OAuth flow + Mastodon OAuth flow
+- X prepaid credits system ($0.015/post, $0.20/link)
+- OpenAPI 3.1 spec (3MB, 114 endpoints)
+- Scalar API docs at /docs/api-reference
+- MCP server (@stackpost/mcp-server)
+- CLI (@stackpost/cli)
+- SDK TypeScript (@stackpost/sdk)
+- SDK Python (stackpost)
+- SDK Go (github.com/stackpost/sdk-go)
+- AI hashtags with Nexus IA integration
+- Real cron implementations (refresh-tokens, sync-analytics, webhook-retry)
+- Cursor pagination helper
+- Status endpoint (/api/status)
+- Schema migration 001 (aligns DB with code)
+- Wrangler cron triggers (11 crons)
+
+Generated with [Devin](https://devin.ai)
+
+Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>

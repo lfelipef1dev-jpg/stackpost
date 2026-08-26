@@ -1,0 +1,13 @@
+{
+  "name": "@stackpost/cli",
+  "version": "1.0.0",
+  "description": "StackPost CLI - Publique do terminal",
+  "bin": {
+    "stackpost": "src/index.js"
+  },
+  "scripts": {
+    "build": "echo 'No build needed'"
+  },
+  "keywords": ["stackpost", "cli", "social-media"],
+  "license": "MIT"
+}
