@@ -1,0 +1,181 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { PLATFORMS } from '@/lib/platforms';
+import { RefreshCw, Trash2, AlertCircle, CheckCircle2, Clock, Loader2, Zap } from 'lucide-react';
+
+const OAUTH_ROUTES: Record<string, string> = {
+  instagram: '/api/oauth/meta?state=instagram',
+  facebook: '/api/oauth/meta?state=facebook',
+  threads: '/api/oauth/meta?state=threads',
+  linkedin: '/api/oauth/linkedin',
+};
+
+export default function AccountsPage() {
+  const [accounts, setAccounts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [checking, setChecking] = useState<string | null>(null);
+
+  useEffect(() => {
+    loadAccounts();
+  }, []);
+
+  async function loadAccounts() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    const res = await fetch('/api/accounts', { headers: { Authorization: `Bearer ${token}` } });
+    const data = await res.json();
+    setAccounts(Array.isArray(data) ? data : []);
+  }
+
+  function handleConnect(platform: string) {
+    const route = OAUTH_ROUTES[platform];
+    if (route) {
+      window.location.href = route;
+    } else {
+      alert(`OAuth para ${platform} ainda nao implementado. Use o formulario manual abaixo.`);
+    }
+  }
+
+  async function handleCheck(accountId: string) {
+    setChecking(accountId);
+    const token = localStorage.getItem('token');
+    await fetch('/api/accounts/connection-check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ socialAccountId: accountId }),
+    });
+    await loadAccounts();
+    setChecking(null);
+  }
+
+  async function handleRefresh(accountId: string) {
+    setChecking(accountId);
+    const token = localStorage.getItem('token');
+    await fetch('/api/accounts/refresh-token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ socialAccountId: accountId }),
+    });
+    await loadAccounts();
+    setChecking(null);
+  }
+
+  async function handleDelete(accountId: string) {
+    const token = localStorage.getItem('token');
+    await fetch(`/api/accounts?id=${accountId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+    await loadAccounts();
+  }
+
+  const statusIcon: Record<string, typeof CheckCircle2> = {
+    active: CheckCircle2,
+    expired: AlertCircle,
+    reconnect_required: AlertCircle,
+    pending: Clock,
+  };
+
+  const statusColor: Record<string, string> = {
+    active: 'text-success',
+    expired: 'text-error',
+    reconnect_required: 'text-warning',
+    pending: 'text-brand-text-secondary',
+  };
+
+  return (
+    <div className="min-h-screen bg-brand-bg">
+      <header className="h-16 border-b border-brand-border bg-brand-surface/50 backdrop-blur sticky top-0 z-20">
+        <div className="max-w-7xl mx-auto h-full px-4 flex items-center justify-between">
+          <div className="font-display font-bold text-xl text-brand-accent">StackPost</div>
+          <nav className="hidden md:flex gap-6 text-sm text-brand-text-secondary">
+            <a href="/dashboard" className="hover:text-brand-text">Dashboard</a>
+            <a href="/composer" className="hover:text-brand-text">Criar post</a>
+            <a href="/calendar" className="hover:text-brand-text">Calendario</a>
+            <a href="/accounts" className="text-brand-text">Contas</a>
+            <a href="/analytics" className="hover:text-brand-text">Analytics</a>
+            <a href="/settings" className="hover:text-brand-text">Config</a>
+          </nav>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-8">Contas conectadas</h1>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="p-6 rounded-2xl bg-brand-surface border border-brand-border">
+            <h2 className="text-lg font-semibold mb-4">Conectar nova conta</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {PLATFORMS.map((p) => {
+                const isConnected = accounts.some((a) => a.platform === p.id);
+                const hasOAuth = !!OAUTH_ROUTES[p.id];
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => handleConnect(p.id)}
+                    disabled={isConnected}
+                    className={`p-4 rounded-xl border text-center transition disabled:opacity-50 ${
+                      hasOAuth
+                        ? 'bg-brand-elevated border-brand-border hover:border-brand-accent'
+                        : 'bg-brand-elevated/50 border-brand-border/50'
+                    }`}
+                  >
+                    <div className="w-3 h-3 rounded-full mx-auto mb-2" style={{ backgroundColor: p.color }} />
+                    <div className="text-sm font-medium">{p.name}</div>
+                    {isConnected ? (
+                      <div className="text-[10px] text-success mt-1">Conectado</div>
+                    ) : hasOAuth ? (
+                      <div className="text-[10px] text-brand-accent mt-1">OAuth</div>
+                    ) : (
+                      <div className="text-[10px] text-brand-text-secondary mt-1">Manual</div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <h2 className="text-lg font-semibold mb-4">Contas ativas ({accounts.length})</h2>
+            {accounts.length === 0 && (
+              <div className="p-6 rounded-2xl bg-brand-surface border border-brand-border text-center text-brand-text-secondary">
+                Nenhuma conta conectada. Conecte uma conta para comecar.
+              </div>
+            )}
+            {accounts.map((acc) => {
+              const Icon = statusIcon[acc.status] || Clock;
+              const color = statusColor[acc.status] || 'text-brand-text-secondary';
+              return (
+                <div key={acc.id} className="p-4 rounded-xl bg-brand-surface border border-brand-border">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: PLATFORMS.find((p) => p.id === acc.platform)?.color || '#888' }} />
+                      <div>
+                        <div className="font-semibold capitalize">{acc.platform}</div>
+                        <div className="text-sm text-brand-text-secondary">{acc.username}</div>
+                      </div>
+                    </div>
+                    <span className={`flex items-center gap-1 text-xs ${color}`}>
+                      <Icon className="w-3 h-3" /> {acc.status}
+                    </span>
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={() => handleCheck(acc.id)} disabled={checking === acc.id} className="flex-1 px-3 py-2 rounded-lg bg-brand-elevated border border-brand-border text-xs hover:bg-brand-border transition flex items-center justify-center gap-1">
+                      {checking === acc.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Zap className="w-3 h-3" />}
+                      Testar
+                    </button>
+                    <button onClick={() => handleRefresh(acc.id)} disabled={checking === acc.id} className="flex-1 px-3 py-2 rounded-lg bg-brand-elevated border border-brand-border text-xs hover:bg-brand-border transition flex items-center justify-center gap-1">
+                      <RefreshCw className="w-3 h-3" />
+                      Renovar
+                    </button>
+                    <button onClick={() => handleDelete(acc.id)} className="px-3 py-2 rounded-lg hover:bg-error/10 text-brand-text-secondary hover:text-error transition">
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}

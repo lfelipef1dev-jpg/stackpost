@@ -1,0 +1,35 @@
+# Lista de postagens de teste
+
+## Instagram (3 testes)
+
+### Teste 1 - Frotamais v1
+- Imagem: `C:\Users\lfeli\Desktop\Instagram_Bot\posts_social\instagram\frotamais\frotamais_01.jpg`
+- Legenda: legenda_frotamais_1.txt
+- Horario: agora
+
+### Teste 2 - Frotamais v2
+- Imagem: `C:\Users\lfeli\Desktop\Instagram_Bot\posts_expostacker_instagram\cases\frotamais-hero.jpg`
+- Legenda: legenda_frotamais_v2.txt
+- Horario: +5 min
+
+### Teste 3 - Nexus IA
+- Imagem: `C:\Users\lfeli\Desktop\Instagram_Bot\posts_expostacker_instagram\nexus\01_nexus_apresentacao.png`
+- Legenda: legenda_nexus_1.txt
+- Horario: +10 min
+
+## LinkedIn (3 testes)
+
+### Teste 1 - Frotamais
+- Imagem: `C:\Users\lfeli\Desktop\Instagram_Bot\posts_social\linkedin\frotamais\frotamais_01.jpg`
+- Legenda: legenda_frotamais_v2.txt
+- Horario: +15 min
+
+### Teste 2 - Nexus IA
+- Imagem: `C:\Users\lfeli\Desktop\Instagram_Bot\posts_expostacker_instagram\cases\nexus-ia-hero.jpg`
+- Legenda: legenda_nexus_1.txt
+- Horario: +20 min
+
+### Teste 3 - Case ExpoStacker
+- Imagem: `C:\Users\lfeli\Desktop\Instagram_Bot\posts_expostacker_instagram\banner\nexus-ia-banner.jpg`
+- Legenda: legenda_nexus_1.txt (adaptar)
+- Horario: +25 min

@@ -1,0 +1,38 @@
+﻿# Secrets e variaveis locais
+.env.local
+.env.*.local
+.dev.vars
+.deploy.env
+.devin/secrets/
+wrangler.toml
+
+# Build
+.next
+.open-next
+.wrangler
+node_modules
+
+# Browser sessions e cache
+sessao_meta/
+sessao_*/
+*.pem
+*.key
+
+# Videos e arquivos grandes
+videos/
+*.mp4
+*.webm
+*.avi
+*.mov
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Outros
+.DS_Store
+*.log
+*.tmp
+.cache/

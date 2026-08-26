@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --brand-bg: #0A0A0A;
+    --brand-surface: #1A1A1A;
+    --brand-elevated: #252525;
+    --brand-border: rgba(255, 255, 255, 0.12);
+    --brand-text: #E6E6E6;
+    --brand-text-secondary: rgba(230, 230, 230, 0.70);
+    --brand-accent: #8AB4F8;
+    --brand-accent-hover: #AECBFA;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-brand-bg text-brand-text antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+  }
+}

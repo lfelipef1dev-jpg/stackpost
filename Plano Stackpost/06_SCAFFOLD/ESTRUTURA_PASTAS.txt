@@ -1,0 +1,245 @@
+# Estrutura de Pastas - Monorepo Stackpost
+
+## Layout recomendado (pnpm workspaces + Turborepo)
+
+```
+stackpost/
+├── apps/
+│   ├── backend/                    # NestJS + Fastify (API principal)
+│   │   ├── src/
+│   │   │   ├── main.ts             # Bootstrap (Fastify, CORS, Swagger)
+│   │   │   ├── app.module.ts       # Root module
+│   │   │   ├── common/             # Guards, interceptors, filters, pipes
+│   │   │   │   ├── guards/
+│   │   │   │   │   ├── api-key.guard.ts
+│   │   │   │   │   └── jwt.guard.ts
+│   │   │   │   ├── interceptors/
+│   │   │   │   │   ├── rate-limit.interceptor.ts
+│   │   │   │   │   └── logging.interceptor.ts
+│   │   │   │   ├── filters/
+│   │   │   │   │   └── http-exception.filter.ts
+│   │   │   │   └── decorators/
+│   │   │   │       └── current-org.decorator.ts
+│   │   │   ├── config/             # ConfigService, env validation (Zod)
+│   │   │   │   ├── config.module.ts
+│   │   │   │   └── env.schema.ts
+│   │   │   ├── db/                 # Drizzle ORM
+│   │   │   │   ├── drizzle.module.ts
+│   │   │   │   ├── schema/         # Schema definitions
+│   │   │   │   │   ├── organizations.ts
+│   │   │   │   │   ├── teams.ts
+│   │   │   │   │   ├── api-keys.ts
+│   │   │   │   │   ├── social-accounts.ts
+│   │   │   │   │   ├── posts.ts
+│   │   │   │   │   ├── uploads.ts
+│   │   │   │   │   ├── comments.ts
+│   │   │   │   │   ├── webhooks.ts
+│   │   │   │   │   ├── webhook-events.ts
+│   │   │   │   │   ├── analytics-snapshots.ts
+│   │   │   │   │   └── usage-counters.ts
+│   │   │   │   ├── seed.ts
+│   │   │   │   └── migrations/     # Geradas por drizzle-kit
+│   │   │   ├── modules/            # Feature modules
+│   │   │   │   ├── organization/
+│   │   │   │   │   ├── organization.module.ts
+│   │   │   │   │   ├── organization.controller.ts
+│   │   │   │   │   ├── organization.service.ts
+│   │   │   │   │   └── dto/
+│   │   │   │   ├── team/
+│   │   │   │   ├── api-key/
+│   │   │   │   ├── social-account/
+│   │   │   │   │   ├── social-account.module.ts
+│   │   │   │   │   ├── social-account.controller.ts
+│   │   │   │   │   ├── social-account.service.ts
+│   │   │   │   │   └── adapters/   # PlatformAdapter implementations
+│   │   │   │   │       ├── platform-adapter.interface.ts
+│   │   │   │   │       ├── adapter.registry.ts
+│   │   │   │   │       ├── instagram.adapter.ts
+│   │   │   │   │       ├── facebook.adapter.ts
+│   │   │   │   │       ├── tiktok.adapter.ts
+│   │   │   │   │       ├── youtube.adapter.ts
+│   │   │   │   │       ├── linkedin.adapter.ts
+│   │   │   │   │       ├── twitter.adapter.ts
+│   │   │   │   │       ├── threads.adapter.ts
+│   │   │   │   │       ├── bluesky.adapter.ts
+│   │   │   │   │       ├── mastodon.adapter.ts
+│   │   │   │   │       ├── pinterest.adapter.ts
+│   │   │   │   │       ├── reddit.adapter.ts
+│   │   │   │   │       ├── discord.adapter.ts
+│   │   │   │   │       ├── slack.adapter.ts
+│   │   │   │   │       ├── google-business.adapter.ts
+│   │   │   │   │       └── snapchat.adapter.ts
+│   │   │   │   ├── upload/
+│   │   │   │   │   ├── upload.module.ts
+│   │   │   │   │   ├── upload.controller.ts
+│   │   │   │   │   ├── upload.service.ts
+│   │   │   │   │   ├── r2.service.ts         # Cloudflare R2 client
+│   │   │   │   │   └── validators/           # Per-platform media validators
+│   │   │   │   │       ├── instagram.validator.ts
+│   │   │   │   │       ├── tiktok.validator.ts
+│   │   │   │   │       └── ...
+│   │   │   │   ├── post/
+│   │   │   │   │   ├── post.module.ts
+│   │   │   │   │   ├── post.controller.ts
+│   │   │   │   │   ├── post.service.ts
+│   │   │   │   │   ├── post.schema.ts       # Zod schema (POST /post body)
+│   │   │   │   │   ├── publisher/           # Publisher worker
+│   │   │   │   │   │   ├── publisher.worker.ts
+│   │   │   │   │   │   └── publisher.scheduler.ts
+│   │   │   │   │   └── dto/
+│   │   │   │   ├── comment/
+│   │   │   │   ├── analytics/
+│   │   │   │   ├── webhook/
+│   │   │   │   │   ├── webhook.module.ts
+│   │   │   │   │   ├── webhook.controller.ts
+│   │   │   │   │   ├── webhook.service.ts
+│   │   │   │   │   └── webhook.delivery.worker.ts
+│   │   │   │   ├── import/                  # Post history, CSV, reviews
+│   │   │   │   │   ├── post-history-import/
+│   │   │   │   │   ├── csv-import/
+│   │   │   │   │   └── reviews-import/
+│   │   │   │   ├── misc/                    # Per-platform misc endpoints
+│   │   │   │   │   ├── facebook/
+│   │   │   │   │   ├── instagram/
+│   │   │   │   │   ├── tiktok/
+│   │   │   │   │   ├── youtube/
+│   │   │   │   │   ├── linkedin/
+│   │   │   │   │   ├── reddit/
+│   │   │   │   │   └── google-business/
+│   │   │   │   ├── usage/                   # Rate limits + daily + monthly
+│   │   │   │   │   ├── usage.service.ts
+│   │   │   │   │   └── rate-limit.service.ts
+│   │   │   │   └── billing/                 # Stripe
+│   │   │   ├── queue/             # BullMQ queue definitions
+│   │   │   │   ├── queues.ts
+│   │   │   │   └── workers/
+│   │   │   ├── cron/              # @nestjs/schedule jobs
+│   │   │   │   ├── analytics-refresh.cron.ts
+│   │   │   │   ├── connection-check.cron.ts
+│   │   │   │   ├── token-refresh.cron.ts
+│   │   │   │   ├── upload-cleanup.cron.ts
+│   │   │   │   ├── analytics-purge.cron.ts
+│   │   │   │   ├── webhook-events-purge.cron.ts
+│   │   │   │   ├── monthly-counter-reset.cron.ts
+│   │   │   │   ├── webhook-auto-disable.cron.ts
+│   │   │   │   └── multipart-auto-abort.cron.ts
+│   │   │   └── scripts/           # CLI scripts
+│   │   │       ├── generate-openapi.ts
+│   │   │       └── generate-api-key.ts
+│   │   ├── test/                  # Jest tests
+│   │   ├── drizzle.config.ts
+│   │   ├── nest-cli.json
+│   │   ├── tsconfig.json
+│   │   ├── Dockerfile
+│   │   └── package.json
+│   │
+│   └── dashboard/                 # Next.js 15 (App Router)
+│       ├── src/
+│       │   ├── app/
+│       │   │   ├── (auth)/        # Login, register
+│       │   │   │   ├── login/page.tsx
+│       │   │   │   └── register/page.tsx
+│       │   │   ├── (dashboard)/   # Protected routes
+│       │   │   │   ├── layout.tsx
+│       │   │   │   ├── page.tsx              # Overview
+│       │   │   │   ├── calendar/page.tsx     # Calendar view
+│       │   │   │   ├── composer/page.tsx     # Post editor
+│       │   │   │   ├── accounts/page.tsx     # Social accounts
+│       │   │   │   ├── analytics/page.tsx    # Analytics
+│       │   │   │   ├── comments/page.tsx     # Comments
+│       │   │   │   ├── imports/page.tsx      # Imports
+│       │   │   │   ├── webhooks/page.tsx     # Webhooks
+│       │   │   │   ├── settings/
+│       │   │   │   │   ├── organization/page.tsx
+│       │   │   │   │   ├── team/page.tsx
+│       │   │   │   │   ├── api-keys/page.tsx
+│       │   │   │   │   └── billing/page.tsx
+│       │   │   └── api/            # Route handlers (proxy to backend)
+│       │   ├── components/
+│       │   │   ├── ui/             # shadcn/ui components
+│       │   │   ├── composer/
+│       │   │   ├── calendar/
+│       │   │   ├── analytics/
+│       │   │   └── accounts/
+│       │   ├── lib/
+│       │   │   ├── api.ts          # Backend client
+│       │   │   ├── auth.ts         # JWT handling
+│       │   │   └── utils.ts
+│       │   └── hooks/
+│       ├── Dockerfile
+│       ├── next.config.ts
+│       ├── tailwind.config.ts
+│       ├── tsconfig.json
+│       └── package.json
+│
+├── packages/
+│   ├── shared/                     # Tipos Zod compartilhados
+│   │   ├── src/
+│   │   │   ├── schemas/            # Zod schemas (post, comment, etc)
+│   │   │   ├── types/              # Types derivados
+│   │   │   └── index.ts
+│   │   ├── tsconfig.json
+│   │   └── package.json
+│   │
+│   └── sdk/                        # SDK gerado de OpenAPI
+│       ├── src/
+│       │   ├── schema.ts           # Gerado por openapi-typescript
+│       │   ├── client.ts           # Client wrapper
+│       │   └── index.ts
+│       ├── tsconfig.json
+│       └── package.json
+│
+├── docker-compose.yml              # Postgres + Redis + backend + dashboard
+├── .env.example
+├── turbo.json                      # Turborepo config
+├── pnpm-workspace.yaml
+├── package.json                    # Root (workspaces)
+├── tsconfig.base.json
+├── .gitignore
+├── .eslintrc.js
+├── .prettierrc
+└── README.md
+```
+
+## Como inicializar
+
+```powershell
+# 1. Criar estrutura base
+mkdir stackpost
+cd stackpost
+pnpm init
+pnpm add -D turbo typescript @types/node
+
+# 2. Criar workspaces
+pnpm-workspace.yaml:
+  packages:
+    - "apps/*"
+    - "packages/*"
+
+# 3. Backend
+mkdir -p apps/backend
+cd apps/backend
+pnpm dlx @nestjs/cli new . --package-manager pnpm --strict
+
+# 4. Dashboard
+cd ../..
+mkdir -p apps/dashboard
+cd apps/dashboard
+pnpm dlx create-next-app@latest . --typescript --tailwind --app --use-pnpm
+
+# 5. Shared
+cd ../..
+mkdir -p packages/shared/src
+cd packages/shared
+pnpm init
+pnpm add zod
+
+# 6. Docker
+# Copiar docker-compose.yml e .env.example de 06_SCAFFOLD/
+cp "../Plano Stackpost/06_SCAFFOLD/docker-compose.yml" .
+cp "../Plano Stackpost/06_SCAFFOLD/.env.example" .env
+# Editar .env com suas credenciais
+
+# 7. Subir
+docker-compose up -d
+```

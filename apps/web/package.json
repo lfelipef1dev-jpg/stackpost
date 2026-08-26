@@ -1,0 +1,39 @@
+{
+  "name": "@stackpost/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3333",
+    "build": "next build",
+    "start": "next start",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.62.1",
+    "@supabase/supabase-js": "^2.49.1",
+    "@types/pg": "^8.23.1",
+    "dotenv": "^16.6.1",
+    "jose": "^5.9.6",
+    "lucide-react": "^0.474.0",
+    "next": "^15.5.22",
+    "pg": "^8.23.0",
+    "playwright": "^1.62.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "uuid": "^14.0.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.2",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.20",
+    "esbuild": "^0.28.2",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5",
+    "wrangler": "^4.125.0"
+  }
+}
