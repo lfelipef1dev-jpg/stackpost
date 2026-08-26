@@ -36,3 +36,9 @@ venv/
 *.log
 *.tmp
 .cache/
+
+# Playwright
+screenshots-tests/
+test-results/
+playwright-report/
+tests/.auth/
