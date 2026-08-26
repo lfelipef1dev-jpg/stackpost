@@ -43,6 +43,18 @@ const footerColumns = [
     ],
   },
   {
+    title: 'Empresa',
+    links: [
+      { label: 'Sobre', href: '/about' },
+      { label: 'Blog', href: '/blog' },
+      { label: 'Contato', href: '/contact' },
+      { label: 'ExpoStacker', href: 'https://expostacker.com.br' },
+    ],
+  },
+];
+
+const rowSections = [
+  {
     title: 'Plataformas',
     links: [
       { label: 'Instagram API', href: '/instagram-api' },
@@ -93,27 +105,17 @@ const footerColumns = [
       { label: 'Cursor', href: '/cursor-social-media' },
     ],
   },
-  {
-    title: 'Supporting APIs',
-    links: [
-      { label: 'Todas Plataformas', href: '/platforms' },
-      { label: 'API Error Reference', href: '/errors' },
-      { label: 'Multi-Tenant API', href: '/multi-tenant-social-media-api' },
-      { label: 'White Label API', href: '/white-label-social-media-api' },
-    ],
-  },
-  {
-    title: 'Empresa',
-    links: [
-      { label: 'Sobre', href: '/about' },
-      { label: 'Blog', href: '/blog' },
-      { label: 'Contato', href: '/contact' },
-      { label: 'Glossario', href: '/glossary' },
-      { label: 'Brand Kit', href: '/brand-kit' },
-      { label: 'ExpoStacker', href: 'https://expostacker.com.br' },
-    ],
-  },
 ];
+
+const supportSection = {
+  title: 'Supporting APIs',
+  links: [
+    { label: 'Todas Plataformas', href: '/platforms' },
+    { label: 'API Error Reference', href: '/errors' },
+    { label: 'Multi-Tenant API', href: '/multi-tenant-social-media-api' },
+    { label: 'White Label API', href: '/white-label-social-media-api' },
+  ],
+};
 
 const partners = [
   { label: 'SavedTime', href: '/partners/savedtime' },
@@ -220,9 +222,9 @@ export default function Footer() {
   return (
     <footer className="bg-brand-surface/20 border-t-2 border-brand-accent shadow-[0_-0_20px_rgba(138,180,248,0.15)]" role="contentinfo">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-10">
-        {/* Top: brand + 6 columns */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-6 mb-8">
-          <div className="col-span-2 md:col-span-3 lg:col-span-1">
+        {/* Top: brand + 4 columns */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 mb-8">
+          <div className="col-span-2 md:col-span-4 lg:col-span-1">
             <div className="flex items-center gap-2 mb-3">
               <div className="w-8 h-8 rounded-lg bg-brand-accent flex items-center justify-center">
                 <Layers className="w-4 h-4 text-brand-bg" />
@@ -257,27 +259,52 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Comparisons */}
+        {/* Big sections as horizontal rows: Plataformas, Especializadas, Comparacao */}
+        {rowSections.map((section) => (
+          <div key={section.title} className="py-4 border-t border-brand-border">
+            <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-6">
+              <h3 className="text-xs font-semibold text-brand-text uppercase tracking-wider sm:min-w-[110px] sm:w-[110px] shrink-0 pt-0.5">{section.title}</h3>
+              <div className="flex flex-wrap gap-x-4 gap-y-1.5 flex-1">
+                {section.links.map((link) => (
+                  <Link key={link.label} href={link.href} className="text-xs text-brand-text-secondary hover:text-brand-accent transition-colors">
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+
+        {/* Comparacao */}
         <div className="py-4 border-t border-brand-border">
-          <h3 className="text-xs font-semibold mb-2 text-brand-text uppercase tracking-wider">Comparacao</h3>
-          <div className="flex flex-wrap gap-x-4 gap-y-1">
-            {comparisons.map((c) => (
-              <Link key={c.label} href={c.href} className="text-xs text-brand-text-secondary hover:text-brand-accent transition-colors">
-                {c.label}
-              </Link>
-            ))}
+          <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-6">
+            <h3 className="text-xs font-semibold text-brand-text uppercase tracking-wider sm:min-w-[110px] sm:w-[110px] shrink-0 pt-0.5">Comparacao</h3>
+            <div className="flex flex-wrap gap-x-4 gap-y-1.5 flex-1">
+              {comparisons.map((c) => (
+                <Link key={c.label} href={c.href} className="text-xs text-brand-text-secondary hover:text-brand-accent transition-colors">
+                  {c.label}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Partners */}
+        {/* Supporting APIs + Partners */}
         <div className="py-4 border-t border-brand-border">
-          <h3 className="text-xs font-semibold mb-2 text-brand-text uppercase tracking-wider">Parceiros</h3>
-          <div className="flex flex-wrap gap-x-4 gap-y-1">
-            {partners.map((p) => (
-              <Link key={p.label} href={p.href} className="text-xs text-brand-text-secondary hover:text-brand-accent transition-colors">
-                {p.label}
-              </Link>
-            ))}
+          <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-6">
+            <h3 className="text-xs font-semibold text-brand-text uppercase tracking-wider sm:min-w-[110px] sm:w-[110px] shrink-0 pt-0.5">{supportSection.title}</h3>
+            <div className="flex flex-wrap gap-x-4 gap-y-1.5 flex-1">
+              {supportSection.links.map((link) => (
+                <Link key={link.label} href={link.href} className="text-xs text-brand-text-secondary hover:text-brand-accent transition-colors">
+                  {link.label}
+                </Link>
+              ))}
+              {partners.map((p) => (
+                <Link key={p.label} href={p.href} className="text-xs text-brand-text-secondary hover:text-brand-accent transition-colors">
+                  {p.label}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
 
