@@ -28,18 +28,12 @@ const footerColumns = [
     ],
   },
   {
-    title: 'Core APIs',
+    title: 'Suporte a APIs',
     links: [
-      { label: 'Social Media API', href: '/social-media-api' },
-      { label: 'Unified API', href: '/unified-api' },
-      { label: 'Posting API', href: '/posting-api' },
-      { label: 'Scheduling API', href: '/scheduling-api' },
-      { label: 'Media Upload API', href: '/media-upload-api' },
-      { label: 'Bulk Posting', href: '/bulk-posting' },
-      { label: 'Post History API', href: '/post-history-api' },
-      { label: 'Comments API', href: '/comments-api' },
-      { label: 'Analytics API', href: '/analytics-api' },
-      { label: 'First Comment', href: '/first-comment-api' },
+      { label: 'Todas Plataformas', href: '/platforms' },
+      { label: 'API Error Reference', href: '/errors' },
+      { label: 'Multi-Tenant API', href: '/multi-tenant-social-media-api' },
+      { label: 'White Label API', href: '/white-label-social-media-api' },
     ],
   },
   {
@@ -107,13 +101,19 @@ const rowSections = [
   },
 ];
 
-const supportSection = {
-  title: 'Supporting APIs',
+const coreApisSection = {
+  title: 'Core APIs',
   links: [
-    { label: 'Todas Plataformas', href: '/platforms' },
-    { label: 'API Error Reference', href: '/errors' },
-    { label: 'Multi-Tenant API', href: '/multi-tenant-social-media-api' },
-    { label: 'White Label API', href: '/white-label-social-media-api' },
+    { label: 'Social Media API', href: '/social-media-api' },
+    { label: 'Unified API', href: '/unified-api' },
+    { label: 'Posting API', href: '/posting-api' },
+    { label: 'Scheduling API', href: '/scheduling-api' },
+    { label: 'Media Upload API', href: '/media-upload-api' },
+    { label: 'Bulk Posting', href: '/bulk-posting' },
+    { label: 'Post History API', href: '/post-history-api' },
+    { label: 'Comments API', href: '/comments-api' },
+    { label: 'Analytics API', href: '/analytics-api' },
+    { label: 'First Comment', href: '/first-comment-api' },
   ],
 };
 
@@ -222,9 +222,9 @@ export default function Footer() {
   return (
     <footer className="bg-brand-surface/20 border-t-2 border-brand-accent shadow-[0_-0_20px_rgba(138,180,248,0.15)]" role="contentinfo">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-10">
-        {/* Top: brand + 4 columns */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 mb-8">
-          <div className="col-span-2 md:col-span-4 lg:col-span-1">
+        {/* Top: centered brand + aligned 4 columns */}
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 mb-10">
+          <div className="lg:w-56 shrink-0 flex flex-col items-center lg:items-start text-center lg:text-left">
             <div className="flex items-center gap-2 mb-3">
               <div className="w-8 h-8 rounded-lg bg-brand-accent flex items-center justify-center">
                 <Layers className="w-4 h-4 text-brand-bg" />
@@ -243,29 +243,32 @@ export default function Footer() {
             </div>
           </div>
 
-          {footerColumns.map((col) => (
-            <div key={col.title}>
-              <h3 className="text-xs font-semibold mb-3 text-brand-text uppercase tracking-wider">{col.title}</h3>
-              <ul className="space-y-1.5">
-                {col.links.map((link) => (
-                  <li key={link.label}>
-                    <Link href={link.href} className="text-xs text-brand-text-secondary hover:text-brand-accent transition-colors">
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-6">
+            {footerColumns.map((col) => (
+              <div key={col.title}>
+                <h3 className="text-xs font-semibold mb-3 text-brand-text uppercase tracking-wider">{col.title}</h3>
+                <ul className="space-y-1.5">
+                  {col.links.map((link) => (
+                    <li key={link.label}>
+                      <Link href={link.href} className="text-xs text-brand-text-secondary hover:text-brand-accent transition-colors">
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* API Directory: Plataformas, Especializadas, Comparacao, Supporting + Partners as badge rows */}
-        <div className="space-y-4 mt-8">
+        {/* API Directory: Core APIs, Plataformas, Especializadas, Comparacao, Supporting + Partners as badge rows */}
+        <div className="space-y-4">
           {[
+            { ...coreApisSection, desc: '10 endpoints principais' },
             { ...rowSections[0], desc: '15 redes sociais conectadas' },
             { ...rowSections[1], desc: 'APIs especializadas por canal' },
             { title: 'Comparacao', links: comparisons, desc: 'Compare com as alternativas' },
-            { title: 'Supporting APIs', links: [...supportSection.links, ...partners], desc: 'Recursos de infraestrutura' },
+            { title: 'Parceiros', links: partners, desc: 'Integracoes parceiras' },
           ].map((section) => (
             <div
               key={section.title}
