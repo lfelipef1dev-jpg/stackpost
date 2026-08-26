@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Layers, Calendar, BarChart3, Zap, Shield, Globe, ArrowRight, MessageSquare, Upload, Webhook, Key, Building2, Sparkles, Clock, RefreshCw, FileCheck, Hash, AlertCircle, CheckCircle2, TrendingUp, Rocket, Mail, Bot, PlayCircle } from 'lucide-react';
 import { PLATFORMS } from '@/lib/platforms';
-import { PlatformIcon } from '@/components/PlatformIcon';
+import { PlatformCard } from '@/components/PlatformCard';
 import { FadeIn, ScrollReveal, StaggerGroup, StaggerItem, Parallax } from '@/components/animations';
 import { JsonLd, softwareApplicationSchema } from '@/components/JsonLd';
 import Footer from '@/components/Footer';
@@ -229,17 +229,7 @@ export default function Home() {
         <StaggerGroup className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 xl:grid-cols-15 gap-3" stagger={0.03}>
           {featuredPlatforms.map((p) => (
             <StaggerItem key={p.id}>
-              <div
-                className="p-3 rounded-xl bg-brand-surface/50 backdrop-blur border border-brand-border text-center hover:border-brand-text/30 hover:bg-brand-surface transition-all hover:scale-105 cursor-default h-full flex flex-col items-center justify-between"
-                style={{ transitionDuration: '0.2s' }}
-              >
-                <div className="mx-auto mb-1.5 flex justify-center">
-                  <PlatformIcon id={p.id} size={22} color={p.color} />
-                </div>
-                <div className="text-brand-text text-[11px] font-medium leading-tight min-h-[1.75rem] flex items-center justify-center text-center w-full">
-                  {p.name}
-                </div>
-              </div>
+              <PlatformCard platform={p} />
             </StaggerItem>
           ))}
         </StaggerGroup>
