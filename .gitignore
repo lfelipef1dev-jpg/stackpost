@@ -42,3 +42,7 @@ screenshots-tests/
 test-results/
 playwright-report/
 tests/.auth/
+
+.supabase-token.txt
+supabase/.temp/
+

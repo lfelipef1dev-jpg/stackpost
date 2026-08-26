@@ -19,17 +19,19 @@
       "custom_domain": true
     }
   ],
-  "crons": [
-    "* * * * *",      // publish-scheduled (a cada 1 min)
-    "0 * * * *",      // refresh-tokens (a cada 1 hora)
-    "0 */6 * * *",    // sync-analytics (a cada 6 horas)
-    "*/5 * * * *",    // webhook-retry (a cada 5 min)
-    "0 3 * * *",      // cleanup-uploads (diario 3h)
-    "0 0 1 * *",      // monthly-usage-reset (dia 1 do mes)
-    "0 4 * * 1",      // best-time-ml (semanal segunda 4h)
-    "0 5 * * *",      // import-history (diario 5h)
-    "0 * * * *",      // auto-disable-webhooks (a cada 1 hora)
-    "*/30 * * * *",   // health-check (a cada 30 min)
-    "*/15 * * * *"    // auto-reconnect (a cada 15 min)
-  ]
+  "triggers": {
+    "crons": [
+      "* * * * *",
+      "0 * * * *",
+      "0 */6 * * *",
+      "*/5 * * * *",
+      "0 3 * * *",
+      "0 0 1 * *",
+      "0 4 * * 1",
+      "0 5 * * *",
+      "0 * * * *",
+      "*/30 * * * *",
+      "*/15 * * * *"
+    ]
+  }
 }
