@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { formatError } from '@/lib/errors';
 import { PLATFORMS } from '@/lib/platforms';
+import { PlatformIcon } from '@/components/PlatformIcon';
 import { Sparkles, Hash, Loader2, MessageSquare } from 'lucide-react';
 
 export default function ComposerPage() {
@@ -302,7 +303,7 @@ export default function ComposerPage() {
                       onChange={() => togglePlatform(p.id)}
                       className="w-4 h-4 accent-brand-accent"
                     />
-                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }} />
+                    <PlatformIcon id={p.id} size={18} color={p.color} />
                     <span className="text-sm truncate">{p.name}</span>
                   </label>
                 ))}
