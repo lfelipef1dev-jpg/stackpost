@@ -29,7 +29,7 @@ export default function CommentsPage() {
     if (!token) return;
     const res = await fetch('/api/posts', { headers: { Authorization: `Bearer ${token}` } });
     const data = await res.json();
-    setPosts(Array.isArray(data) ? data : []);
+    setPosts(Array.isArray(data) ? data : (data.items || []));
   }
 
   async function handleCreate() {

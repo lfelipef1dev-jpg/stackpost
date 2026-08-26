@@ -59,6 +59,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
     }
 
+    await supabase
+      .from('team_members')
+      .insert({ team_id: teamId, user_id: user.id, role: 'admin' });
+
     const token = await new SignJWT({ sub: user.id, email, name, role: user.role, teamId })
       .setProtectedHeader({ alg: 'HS256' })
       .setExpirationTime('7d')

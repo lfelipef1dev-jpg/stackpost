@@ -46,23 +46,12 @@ export async function POST(req: NextRequest) {
 
   const supabase = getSupabase();
   const idempotencyKey = req.headers.get('x-idempotency-key');
-  if (idempotencyKey) {
-    const { data: existing, error: idemError } = await supabase
-      .from('posts')
-      .select('*')
-      .eq('team_id', user!.teamId)
-      .eq('idempotency_key', idempotencyKey);
-    if (idemError) throw idemError;
-    if (existing && existing.length > 0) {
-      return NextResponse.json(existing[0], { status: 200 });
-    }
-  }
 
   const body = await req.json();
   const parsed = postSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues }, { status: 400 });
 
-  const { content, platforms, uploadIds, scheduledAt, firstComment, postType } = parsed.data as any;
+  const { content, platforms, uploadIds, scheduledAt, firstComment } = parsed.data as any;
   const status = scheduledAt ? 'scheduled' : 'draft';
 
   try {
@@ -75,8 +64,6 @@ export async function POST(req: NextRequest) {
         upload_ids: uploadIds || null,
         scheduled_at: scheduledAt || null,
         status,
-        idempotency_key: idempotencyKey || null,
-        post_type: postType || 'POST',
         first_comment: firstComment || null,
       })
       .select()

@@ -25,7 +25,7 @@ export default function CalendarPage() {
     if (!token) return;
     fetch('/api/posts', { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => res.json())
-      .then((data) => setPosts(Array.isArray(data) ? data : []));
+      .then((data) => setPosts(Array.isArray(data) ? data : (data.items || [])));
   }, []);
 
   const year = currentDate.getFullYear();

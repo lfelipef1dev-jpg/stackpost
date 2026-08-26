@@ -20,11 +20,11 @@ export default function DashboardPage() {
 
     fetch('/api/posts', { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => res.json())
-      .then(setPosts);
+      .then((data) => setPosts(Array.isArray(data) ? data : (data.items || [])));
 
     fetch('/api/accounts', { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => res.json())
-      .then(setAccounts);
+      .then((data) => setAccounts(Array.isArray(data) ? data : (data.items || data.accounts || [])));
   }, [router]);
 
   const metrics = [
