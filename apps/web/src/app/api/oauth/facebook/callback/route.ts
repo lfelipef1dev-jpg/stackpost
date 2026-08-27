@@ -3,7 +3,7 @@ import { getSupabase } from '@/lib/supabase';
 
 const META_APP_ID = process.env.META_APP_ID || process.env.IG_APP_ID || '';
 const META_APP_SECRET = process.env.META_APP_SECRET || process.env.IG_APP_SECRET || '';
-const META_REDIRECT_URI = process.env.META_REDIRECT_URI || 'https://stackpost.expostacker.com.br/api/oauth/facebook/callback';
+const FACEBOOK_REDIRECT_URI = process.env.FACEBOOK_REDIRECT_URI || 'https://stackpost.expostacker.com.br/api/oauth/facebook/callback';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
     const tokenUrl = new URL('https://graph.facebook.com/v19.0/oauth/access_token');
     tokenUrl.searchParams.set('client_id', META_APP_ID);
     tokenUrl.searchParams.set('client_secret', META_APP_SECRET);
-    tokenUrl.searchParams.set('redirect_uri', META_REDIRECT_URI);
+    tokenUrl.searchParams.set('redirect_uri', FACEBOOK_REDIRECT_URI);
     tokenUrl.searchParams.set('code', code);
 
     const tokenRes = await fetch(tokenUrl.toString());

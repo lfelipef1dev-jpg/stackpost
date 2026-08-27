@@ -39,6 +39,7 @@ jobs:
           META_APP_ID: ${{ secrets.META_APP_ID }}
           META_APP_SECRET: ${{ secrets.META_APP_SECRET }}
           META_REDIRECT_URI: ${{ secrets.META_REDIRECT_URI }}
+          FACEBOOK_REDIRECT_URI: ${{ secrets.FACEBOOK_REDIRECT_URI }}
           IG_APP_ID: ${{ secrets.IG_APP_ID }}
           IG_APP_SECRET: ${{ secrets.IG_APP_SECRET }}
           LINKEDIN_CLIENT_ID: ${{ secrets.LINKEDIN_CLIENT_ID }}
@@ -64,6 +65,7 @@ jobs:
           echo "$META_APP_ID" | npx wrangler secret put META_APP_ID --name stackpost
           echo "$META_APP_SECRET" | npx wrangler secret put META_APP_SECRET --name stackpost
           echo "$META_REDIRECT_URI" | npx wrangler secret put META_REDIRECT_URI --name stackpost
+          echo "$FACEBOOK_REDIRECT_URI" | npx wrangler secret put FACEBOOK_REDIRECT_URI --name stackpost
           echo "$IG_APP_ID" | npx wrangler secret put IG_APP_ID --name stackpost
           echo "$IG_APP_SECRET" | npx wrangler secret put IG_APP_SECRET --name stackpost
           echo "$NEXT_PUBLIC_SITE_URL" | npx wrangler secret put NEXT_PUBLIC_SITE_URL --name stackpost
@@ -81,6 +83,7 @@ jobs:
           META_APP_ID: ${{ secrets.META_APP_ID }}
           META_APP_SECRET: ${{ secrets.META_APP_SECRET }}
           META_REDIRECT_URI: ${{ secrets.META_REDIRECT_URI }}
+          FACEBOOK_REDIRECT_URI: ${{ secrets.FACEBOOK_REDIRECT_URI }}
           IG_APP_ID: ${{ secrets.IG_APP_ID }}
           IG_APP_SECRET: ${{ secrets.IG_APP_SECRET }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
