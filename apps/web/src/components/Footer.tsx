@@ -261,14 +261,14 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* API Directory: compact 2-row badge rows */}
+        {/* API Directory: compact badge rows, ordered by density */}
         <div className="space-y-4">
           {[
-            { ...coreApisSection, desc: '10 endpoints principais' },
-            { ...rowSections[0], desc: '15 redes sociais conectadas' },
-            { ...rowSections[1], desc: 'APIs especializadas por canal' },
-            { title: 'Comparacao', links: comparisons, desc: 'Compare com as alternativas' },
-            { title: 'Suporte e Parceiros', links: [...footerColumns[2].links, ...partners], desc: 'Infraestrutura e parcerias' },
+            { title: 'Suporte e Parceiros', links: [...footerColumns[2].links, ...partners], desc: 'Infraestrutura e parcerias', height: 'max-h-[34px]' },
+            { ...coreApisSection, desc: '10 endpoints principais', height: 'max-h-[34px]' },
+            { title: 'Comparacao', links: comparisons, desc: 'Compare com as alternativas', height: 'max-h-[34px]' },
+            { ...rowSections[0], desc: '15 redes sociais conectadas', height: 'max-h-[52px]' },
+            { ...rowSections[1], desc: 'APIs especializadas por canal', height: 'max-h-[72px]' },
           ].map((section) => (
             <div
               key={section.title}
@@ -279,7 +279,7 @@ export default function Footer() {
                   <h3 className="text-[11px] font-semibold text-brand-text uppercase tracking-wider">{section.title}</h3>
                   <p className="text-[9px] text-brand-text-secondary/70 mt-0.5 hidden sm:block">{section.desc}</p>
                 </div>
-                <div className="flex flex-wrap gap-1.5 flex-1 content-start max-h-[52px] overflow-hidden">
+                <div className={`flex flex-wrap gap-1.5 flex-1 content-start overflow-hidden ${section.height}`}>
                   {section.links.map((link) => (
                     <Link
                       key={link.label}
