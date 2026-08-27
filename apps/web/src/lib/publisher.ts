@@ -42,17 +42,22 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333';
 const UPLOAD_DIR = 'C:/Users/lfeli/Desktop/StackPost/videos';
 
 function buildImageUrl(uploadId: string, platform: string, derivatives: Record<string, string> = {}): string {
+  // Derivativas ja vem com URL completa do Supabase Storage
   if (platform === 'instagram') {
-    return derivatives.instagram_4x5
-      ? `${BASE_URL}${derivatives.instagram_4x5}`
-      : `${BASE_URL}/uploads/${uploadId}`;
+    if (derivatives.instagram_4x5) {
+      const d = derivatives.instagram_4x5;
+      return d.startsWith('http') ? d : `${BASE_URL}${d}`;
+    }
+    return uploadId.startsWith('http') ? uploadId : `${BASE_URL}/uploads/${uploadId}`;
   }
   if (platform === 'linkedin') {
-    return derivatives.linkedin_1x1
-      ? `${BASE_URL}${derivatives.linkedin_1x1}`
-      : `${BASE_URL}/uploads/${uploadId}`;
+    if (derivatives.linkedin_1x1) {
+      const d = derivatives.linkedin_1x1;
+      return d.startsWith('http') ? d : `${BASE_URL}${d}`;
+    }
+    return uploadId.startsWith('http') ? uploadId : `${BASE_URL}/uploads/${uploadId}`;
   }
-  return `${BASE_URL}/uploads/${uploadId}`;
+  return uploadId.startsWith('http') ? uploadId : `${BASE_URL}/uploads/${uploadId}`;
 }
 
 export async function publishPost(postId: string) {

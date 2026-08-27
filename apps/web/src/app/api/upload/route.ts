@@ -1,74 +1,55 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
-import { writeFile, mkdir, copyFile, readdir, rm } from 'fs/promises';
-import { existsSync } from 'fs';
-import path from 'path';
 import { v4 as uuid } from 'uuid';
-import { spawn } from 'child_process';
 
-const UPLOAD_DIR = 'C:/Users/lfeli/Desktop/StackPost/videos';
-const PUBLIC_UPLOADS = 'C:/Users/lfeli/Desktop/StackPost/apps/web/public/uploads';
-const CONVERTER = 'C:/Users/lfeli/Desktop/StackPost/converter_upload.py';
-
-function runPython(args: string[]): Promise<{ code: number; stdout: string; stderr: string }> {
-  return new Promise((resolve) => {
-    const child = spawn('python', [CONVERTER, ...args]);
-    let stdout = '';
-    let stderr = '';
-    child.stdout.on('data', (data) => { stdout += data; });
-    child.stderr.on('data', (data) => { stderr += data; });
-    child.on('close', (code) => resolve({ code: code ?? 0, stdout, stderr }));
-  });
-}
+const BUCKET = 'uploads';
+const MAX_SIZE = 100 * 1024 * 1024; // 100 MB
 
 async function processAndSave(file: File, teamId: string): Promise<{ id: string; url: string; derivatives: Record<string, string> }> {
-  await mkdir(UPLOAD_DIR, { recursive: true });
-  await mkdir(PUBLIC_UPLOADS, { recursive: true });
-
   const bytes = await file.arrayBuffer();
   const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
   const id = uuid();
-  const originalName = `${id}.${ext}`;
-  const originalPath = path.join(UPLOAD_DIR, originalName);
+  const savedName = `${id}.${ext}`;
 
-  await writeFile(originalPath, Buffer.from(bytes));
-
-  const derivatives: Record<string, string> = {};
-  const publicOriginal = path.join(PUBLIC_UPLOADS, originalName);
-  await copyFile(originalPath, publicOriginal);
-
-  if (['jpg', 'jpeg', 'png', 'webp'].includes(ext)) {
-    const tempDir = path.join(UPLOAD_DIR, `convert_${id}`);
-    await mkdir(tempDir, { recursive: true });
-
-    const { code } = await runPython([originalPath, tempDir]);
-    if (code === 0) {
-      const files = await readdir(tempDir);
-      for (const name of files) {
-        if (name.endsWith('.jpg')) {
-          const key = name.replace('.jpg', '');
-          const dest = path.join(PUBLIC_UPLOADS, `${id}_${key}.jpg`);
-          await copyFile(path.join(tempDir, name), dest);
-          derivatives[key] = `/uploads/${id}_${key}.jpg`;
-        }
-      }
-    }
-
-    try { await rm(tempDir, { recursive: true, force: true }); } catch {}
+  if (file.size > MAX_SIZE) {
+    throw new Error('Arquivo excede 100 MB');
   }
 
-  const url = `/uploads/${originalName}`;
+  const supabase = getSupabase();
 
+  // Upload original pro Supabase Storage
+  const { error: upErr } = await supabase
+    .storage
+    .from(BUCKET)
+    .upload(savedName, bytes, { contentType: file.type, upsert: false });
+  if (upErr) throw upErr;
+
+  const { data: pub } = supabase.storage.from(BUCKET).getPublicUrl(savedName);
+  const publicUrl = pub.publicUrl;
+
+  const derivatives: Record<string, string> = {};
+
+  // Para imagens, gerar derivadas via edge function ou pular (publicar original)
+  // No Cloudflare Worker nao temos PIL/ffmpeg, entao publicamos a original.
+  // As derivadas serao geradas por um servico separado (supabase function ou worker dedicado).
+  if (['jpg', 'jpeg', 'png', 'webp'].includes(ext)) {
+    // Por enquanto, usar a propria original como derivada (proporcao sera ajustada pelo Instagram)
+    derivatives.instagram_1x1 = publicUrl;
+    derivatives.instagram_4x5 = publicUrl;
+    derivatives.linkedin_1x1 = publicUrl;
+    derivatives['linkedin_1.9x1'] = publicUrl;
+  }
+
+  // Registrar no banco
   try {
-    const supabase = getSupabase();
     const { error } = await supabase
       .from('uploads')
-      .insert({ team_id: teamId, file_name: file.name, mime_type: file.type, size: file.size, url });
+      .insert({ team_id: teamId, file_name: file.name, mime_type: file.type, size: file.size, url: publicUrl });
     if (error) throw error;
   } catch {}
 
-  return { id: originalName, url, derivatives };
+  return { id: savedName, url: publicUrl, derivatives };
 }
 
 export async function POST(req: NextRequest) {
