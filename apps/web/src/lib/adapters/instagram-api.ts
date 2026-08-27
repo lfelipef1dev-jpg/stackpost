@@ -4,63 +4,72 @@ import { NextRequest, NextResponse } from 'next/server';
 const META_APP_ID = process.env.META_APP_ID;
 const META_APP_SECRET = process.env.META_APP_SECRET;
 const META_REDIRECT_URI = process.env.META_REDIRECT_URI || 'https://stackpost.expostacker.com.br/api/oauth/meta/callback';
+// Para Business Login for Instagram, usar o Instagram App ID (diferente do Meta App ID)
+const IG_APP_ID = process.env.IG_APP_ID || META_APP_ID;
+const IG_APP_SECRET = process.env.IG_APP_SECRET || META_APP_SECRET;
 
 export function getInstagramAuthUrl(stateToken?: string): string {
-  // Instagram API with Facebook Login for Business
-  // https://developers.facebook.com/docs/instagram-platform/instagram-api-with-facebook-login/get-started/
+  // Business Login for Instagram - permissoes instagram_business_* ja ativadas
+  // https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/business-login/
   const scopes = [
-    'instagram_basic',
-    'instagram_content_publish',
-    'pages_read_engagement',
-    'pages_show_list',
-    'business_management',
+    'instagram_business_basic',
+    'instagram_business_content_publish',
+    'instagram_business_manage_comments',
+    'instagram_business_manage_messages',
+    'instagram_business_manage_insights',
   ];
-  const url = new URL('https://www.facebook.com/v19.0/dialog/oauth');
-  url.searchParams.set('client_id', META_APP_ID || '');
+  const url = new URL('https://api.instagram.com/oauth/authorize');
+  url.searchParams.set('client_id', IG_APP_ID || '');
   url.searchParams.set('redirect_uri', META_REDIRECT_URI);
   url.searchParams.set('scope', scopes.join(','));
   url.searchParams.set('state', stateToken || 'instagram');
   url.searchParams.set('response_type', 'code');
-  url.searchParams.set('display', 'page');
-  url.searchParams.set('extras', JSON.stringify({ setup: { channel: 'IG_API_ONBOARDING' } }));
   return url.toString();
 }
 
 export async function handleInstagramCallback(code: string) {
-  // Facebook Login for Business - trocar code por token
-  const tokenUrl = 'https://graph.facebook.com/v19.0/oauth/access_token';
-  const res = await fetch(`${tokenUrl}?client_id=${META_APP_ID}&client_secret=${META_APP_SECRET}&redirect_uri=${META_REDIRECT_URI}&code=${code}`);
+  // Business Login for Instagram - trocar code por token no endpoint do Instagram
+  const tokenUrl = 'https://api.instagram.com/oauth/access_token';
+  const params = new URLSearchParams({
+    client_id: IG_APP_ID || '',
+    client_secret: IG_APP_SECRET || '',
+    grant_type: 'authorization_code',
+    redirect_uri: META_REDIRECT_URI,
+    code,
+  });
+  const res = await fetch(tokenUrl, {
+    method: 'POST',
+    body: params,
+  });
   const data = await res.json();
 
-  if (data.error) throw new Error(data.error.message);
+  if (data.error_type) throw new Error(data.error_message || data.error_type);
 
-  // Obter paginas do usuario
-  const pagesRes = await fetch(`https://graph.facebook.com/v19.0/me/accounts?access_token=${data.access_token}`);
-  const pages = await pagesRes.json();
+  // Trocar short-lived por long-lived (60 dias)
+  const longLivedRes = await fetch(
+    `https://graph.instagram.com/access_token?grant_type=ig_exchange_token&client_secret=${IG_APP_SECRET}&access_token=${data.access_token}`
+  );
+  const longLived = await longLivedRes.json();
 
-  if (!pages.data?.length) throw new Error('Nenhuma pagina do Facebook encontrada. Conecte uma pagina business.');
+  const accessToken = longLived.access_token || data.access_token;
+  const expiresIn = longLived.expires_in || 3600;
+  const userId = data.user_id;
 
-  const pageToken = pages.data[0].access_token;
-  const pageId = pages.data[0].id;
+  // Obter perfil do usuario
+  const profileRes = await fetch(
+    `https://graph.instagram.com/me?fields=id,username&access_token=${accessToken}`
+  );
+  const profile = await profileRes.json();
 
-  // Obter Instagram Business Account da pagina
-  const igRes = await fetch(`https://graph.facebook.com/v19.0/${pageId}?fields=instagram_business_account&access_token=${pageToken}`);
-  const igData = await igRes.json();
-
-  const instagramId = igData.instagram_business_account?.id;
-  if (!instagramId) throw new Error('Conta do Instagram nao encontrada na pagina. Vincule uma conta business do Instagram a sua pagina do Facebook.');
-
-  // Obter username do Instagram
-  const igProfileRes = await fetch(`https://graph.facebook.com/v19.0/${instagramId}?fields=username&access_token=${pageToken}`);
-  const igProfile = await igProfileRes.json();
+  if (profile.error) throw new Error(profile.error.message);
 
   return {
-    accessToken: data.access_token,
-    pageToken,
-    pageId,
-    instagramId,
-    username: igProfile.username || pages.data[0].name,
-    expiresAt: new Date(Date.now() + (data.expires_in || 5184000) * 1000).toISOString(),
+    accessToken,
+    pageToken: null,
+    pageId: null,
+    instagramId: profile.id || userId,
+    username: profile.username,
+    expiresAt: new Date(Date.now() + expiresIn * 1000).toISOString(),
   };
 }
 
