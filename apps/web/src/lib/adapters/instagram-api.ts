@@ -106,7 +106,7 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
   // Para video, verificar se o container terminou de processar
   if (mediaType === 'VIDEO') {
     let retries = 0;
-    while (retries < 10) {
+    while (retries < 30) {
       const statusRes = await fetch(`https://graph.instagram.com/v23.0/${container.id}?fields=status_code&access_token=${token}`);
       const statusData = await statusRes.json();
       if (statusData.status_code === 'FINISHED') break;
