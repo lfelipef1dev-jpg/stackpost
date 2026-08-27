@@ -308,75 +308,101 @@ export default function PlansPage() {
       </section>
 
       {/* Plan cards */}
-      <section className="max-w-7xl mx-auto px-4 pb-16">
-        <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" stagger={0.1}>
-          {plans.map((plan) => (
-            <StaggerItem key={plan.id} y={32}>
-              <div
-                className={`relative p-6 rounded-2xl border transition flex flex-col h-full ${
-                  plan.popular
-                    ? 'bg-brand-surface/50 backdrop-blur border-brand-accent shadow-[0_0_40px_rgba(138,180,248,0.2)]'
-                    : 'bg-brand-surface/50 backdrop-blur border-brand-border hover:border-brand-text/30'
-                }`}
-              >
-                {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-brand-accent text-brand-bg text-xs font-semibold whitespace-nowrap">
-                    Mais popular
-                  </div>
-                )}
+      <section className="max-w-7xl mx-auto px-4 pb-20">
+        <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 items-start" stagger={0.08}>
+          {plans.map((plan) => {
+            const isFree = plan.id === 'free';
+            const isPro = plan.id === 'pro';
+            const isBusiness = plan.id === 'business';
+            const isEnterprise = plan.id === 'enterprise';
+            const accent = isFree ? '#94A3B8' : isPro ? '#22D3EE' : isBusiness ? '#8AB4F8' : '#C084FC';
 
-                {plan.trial && !plan.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-brand-elevated border border-brand-border text-brand-text-secondary text-xs font-medium whitespace-nowrap">
-                    14 dias gratis
-                  </div>
-                )}
-
-                <div className="flex items-center gap-3 mb-4 mt-2">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${plan.popular ? 'bg-brand-accent/20' : 'bg-brand-elevated'}`}>
-                    <plan.icon className={`w-5 h-5 ${plan.popular ? 'text-brand-accent' : 'text-brand-text-secondary'}`} />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold">{plan.name}</h3>
-                    <p className="text-xs text-brand-text-secondary">{plan.tagline}</p>
-                  </div>
-                </div>
-
-                <div className="mb-6">
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-bold">{formatPrice(plan)}</span>
-                    <span className="text-brand-text-secondary text-sm">{formatPeriod(plan)}</span>
-                  </div>
-                  <p className="text-xs text-brand-text-secondary mt-1">por organizacao</p>
-                </div>
-
-                <button
-                  onClick={() => startCheckout(plan)}
-                  disabled={loading}
-                  className={`w-full mb-6 px-4 py-3 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2 ${
-                    plan.popular
-                      ? 'bg-brand-accent text-brand-bg hover:bg-brand-accent-hover shadow-[0_0_30px_rgba(138,180,248,0.2)]'
-                      : 'bg-brand-elevated border border-brand-border text-brand-text hover:bg-brand-border'
-                  }`}
+            return (
+              <StaggerItem key={plan.id} y={24}>
+                <div
+                  className="relative rounded-3xl border bg-brand-surface/40 backdrop-blur-sm p-6 flex flex-col h-full transition-all duration-300 hover:-translate-y-1"
+                  style={{
+                    borderColor: isBusiness ? `${accent}60` : 'var(--brand-border)',
+                    boxShadow: isBusiness ? `0 0 40px -12px ${accent}40` : 'none',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = `${accent}80`; e.currentTarget.style.boxShadow = `0 0 40px -8px ${accent}35`; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = isBusiness ? `${accent}60` : 'var(--brand-border)'; e.currentTarget.style.boxShadow = isBusiness ? `0 0 40px -12px ${accent}40` : 'none'; }}
                 >
-                  {plan.id === 'free' ? 'Comecar gratis' : 'Escolher plano'}
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-
-                <div className="space-y-3 flex-1">
-                  {plan.features.map((f) => (
-                    <div key={f.label} className="flex items-center justify-between text-sm">
-                      <span className="text-brand-text-secondary">{f.label}</span>
-                      {typeof f.value === 'boolean' ? (
-                        f.value ? <Check className="w-4 h-4 text-success" /> : <X className="w-4 h-4 text-error" />
-                      ) : (
-                        <span className={`font-medium ${f.highlight ? 'text-brand-accent' : 'text-brand-text'}`}>{f.value}</span>
-                      )}
+                  {plan.popular && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-brand-accent text-brand-bg text-[10px] font-bold tracking-wide uppercase shadow-lg">
+                      Mais popular
                     </div>
-                  ))}
+                  )}
+                  {plan.trial && !plan.popular && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-brand-elevated border border-brand-border text-brand-text text-[10px] font-semibold tracking-wide shadow-lg">
+                      14 dias gratis
+                    </div>
+                  )}
+
+                  <div className="flex items-start justify-between mb-5 min-h-[40px]">
+                    <div>
+                      <h3 className="text-2xl font-bold tracking-tight">{plan.name}</h3>
+                      <p className="text-xs text-brand-text-secondary mt-0.5">{plan.tagline}</p>
+                    </div>
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ml-3"
+                      style={{ backgroundColor: `${accent}15` }}
+                    >
+                      <plan.icon className="w-5 h-5" style={{ color: accent }} />
+                    </div>
+                  </div>
+
+                  <div className="mb-5">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-4xl font-bold tracking-tight">{formatPrice(plan)}</span>
+                      <span className="text-brand-text-secondary text-sm font-medium">{formatPeriod(plan)}</span>
+                    </div>
+                    <p className="text-xs text-brand-text-secondary mt-1">por organizacao</p>
+                  </div>
+
+                  <button
+                    onClick={() => startCheckout(plan)}
+                    disabled={loading}
+                    className="w-full mb-6 px-5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2"
+                    style={{
+                      backgroundColor: isBusiness ? accent : 'var(--brand-elevated)',
+                      color: isBusiness ? '#0A0A0A' : 'var(--brand-text)',
+                      border: `1px solid ${isBusiness ? accent : 'var(--brand-border)'}`,
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = isBusiness ? '#A3C4F9' : `${accent}20`;
+                      e.currentTarget.style.borderColor = accent;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = isBusiness ? accent : 'var(--brand-elevated)';
+                      e.currentTarget.style.borderColor = isBusiness ? accent : 'var(--brand-border)';
+                    }}
+                  >
+                    {plan.id === 'free' ? 'Comecar gratis' : plan.id === 'enterprise' ? 'Falar com vendas' : 'Escolher plano'}
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+
+                  <div className="space-y-2.5 flex-1">
+                    {plan.features.map((f) => (
+                      <div key={f.label} className="flex items-center justify-between py-1.5 border-b border-brand-border/30 last:border-0 text-sm">
+                        <div className="flex items-center gap-2 text-brand-text-secondary">
+                          {typeof f.value === 'boolean' ? (
+                            f.value ? <Check className="w-3.5 h-3.5 text-success" /> : <X className="w-3.5 h-3.5 text-error" />
+                          ) : (
+                            <span className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: `${accent}25` }} />
+                          )}
+                          <span>{f.label}</span>
+                        </div>
+                        {typeof f.value !== 'boolean' && (
+                          <span className="font-semibold text-right" style={{ color: f.highlight ? accent : 'var(--brand-text)' }}>{f.value}</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </StaggerItem>
-          ))}
+              </StaggerItem>
+            );
+          })}
         </StaggerGroup>
       </section>
 
