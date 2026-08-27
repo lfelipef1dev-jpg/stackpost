@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
   const parsed = postSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues }, { status: 400 });
 
-  const { content, platforms, uploadIds, scheduledAt, firstComment } = parsed.data as any;
+  const { content, platforms, uploadIds, scheduledAt, firstComment, derivatives } = parsed.data as any;
   const status = scheduledAt ? 'scheduled' : 'draft';
 
   try {
@@ -65,6 +65,7 @@ export async function POST(req: NextRequest) {
         scheduled_at: scheduledAt || null,
         status,
         first_comment: firstComment || null,
+        derivatives: derivatives || {},
       })
       .select()
       .single();

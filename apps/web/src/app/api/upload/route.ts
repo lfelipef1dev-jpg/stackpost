@@ -9,8 +9,8 @@ const MAX_SIZE = 100 * 1024 * 1024; // 100 MB
 async function processAndSave(file: File, teamId: string): Promise<{ id: string; url: string; derivatives: Record<string, string> }> {
   const bytes = await file.arrayBuffer();
   const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
-  const id = uuid();
-  const savedName = `${id}.${ext}`;
+  const uploadId = uuid();
+  const savedName = `${uploadId}.${ext}`;
 
   if (file.size > MAX_SIZE) {
     throw new Error('Arquivo excede 100 MB');
@@ -30,11 +30,8 @@ async function processAndSave(file: File, teamId: string): Promise<{ id: string;
 
   const derivatives: Record<string, string> = {};
 
-  // Para imagens, gerar derivadas via edge function ou pular (publicar original)
-  // No Cloudflare Worker nao temos PIL/ffmpeg, entao publicamos a original.
-  // As derivadas serao geradas por um servico separado (supabase function ou worker dedicado).
+  // Para imagens, usar a propria original como derivada (proporcao sera ajustada pelo Instagram)
   if (['jpg', 'jpeg', 'png', 'webp'].includes(ext)) {
-    // Por enquanto, usar a propria original como derivada (proporcao sera ajustada pelo Instagram)
     derivatives.instagram_1x1 = publicUrl;
     derivatives.instagram_4x5 = publicUrl;
     derivatives.linkedin_1x1 = publicUrl;
@@ -42,14 +39,14 @@ async function processAndSave(file: File, teamId: string): Promise<{ id: string;
   }
 
   // Registrar no banco
-  try {
-    const { error } = await supabase
-      .from('uploads')
-      .insert({ team_id: teamId, file_name: file.name, mime_type: file.type, size: file.size, url: publicUrl });
-    if (error) throw error;
-  } catch {}
+  const { error: dbErr } = await supabase
+    .from('uploads')
+    .insert({ id: uploadId, team_id: teamId, file_name: file.name, mime_type: file.type, size: file.size, url: publicUrl });
+  if (dbErr) {
+    console.error('Upload db insert error:', dbErr);
+  }
 
-  return { id: savedName, url: publicUrl, derivatives };
+  return { id: uploadId, url: publicUrl, derivatives };
 }
 
 export async function POST(req: NextRequest) {

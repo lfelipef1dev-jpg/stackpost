@@ -21,6 +21,7 @@ export const postSchema = z.object({
   platforms: z.array(z.enum(allPlatforms)),
   uploadIds: z.array(z.string()).optional(),
   scheduledAt: z.string().datetime().optional().nullable(),
+  derivatives: z.record(z.string()).optional(),
 });
 
 export const accountSchema = z.object({
