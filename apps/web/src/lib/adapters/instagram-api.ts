@@ -6,16 +6,13 @@ const META_APP_SECRET = process.env.META_APP_SECRET;
 const META_REDIRECT_URI = process.env.META_REDIRECT_URI || 'https://stackpost.expostacker.com.br/api/oauth/meta/callback';
 
 export function getInstagramAuthUrl(stateToken?: string): string {
-  // Scopes validos para Facebook Login for Business
-  // instagram_manage_insights, instagram_manage_messages, instagram_basic,
-  // pages_manage_posts, pages_read_engagement, pages_show_list, business_management
+  // Scopes minimos para Instagram API com Facebook Login for Business
+  // https://developers.facebook.com/docs/instagram-platform/instagram-api-with-facebook-login/business-login-for-instagram/
   const scopes = [
     'instagram_basic',
     'instagram_content_publish',
     'pages_show_list',
     'pages_read_engagement',
-    'pages_manage_posts',
-    'business_management',
   ];
   const url = new URL('https://www.facebook.com/v19.0/dialog/oauth');
   url.searchParams.set('client_id', META_APP_ID || '');
@@ -23,6 +20,8 @@ export function getInstagramAuthUrl(stateToken?: string): string {
   url.searchParams.set('scope', scopes.join(','));
   url.searchParams.set('state', stateToken || 'instagram');
   url.searchParams.set('response_type', 'code');
+  url.searchParams.set('display', 'page');
+  url.searchParams.set('extras', JSON.stringify({ setup: { channel: 'IG_API_ONBOARDING' } }));
   return url.toString();
 }
 
