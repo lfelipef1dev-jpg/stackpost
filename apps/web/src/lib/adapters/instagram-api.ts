@@ -85,7 +85,7 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
   };
 
   if (mediaType === 'VIDEO') {
-    params.media_type = 'VIDEO';
+    params.media_type = 'REELS';
     params.video_url = mediaUrl;
   } else {
     params.image_url = mediaUrl;
