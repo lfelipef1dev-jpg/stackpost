@@ -41,7 +41,7 @@ export async function handleLinkedInCallback(code: string) {
   };
 }
 
-export async function publishToLinkedIn(account: any, content: string, imageUrl: string) {
+export async function publishToLinkedIn(account: any, content: string, imageUrl: string, videoUrl?: string) {
   // Usar external_id (user.sub do userinfo) salvo no momento do OAuth
   const author = `urn:li:person:${account.external_id}`;
 
@@ -49,7 +49,87 @@ export async function publishToLinkedIn(account: any, content: string, imageUrl:
     return { success: false, error: 'LinkedIn account sem external_id. Reconecte a conta.' };
   }
 
-  // Se tem imagem, faz upload via assets
+  // VIDEO: upload via assets com recipe feedshare-video
+  if (videoUrl) {
+    const registerRes = await fetch('https://api.linkedin.com/v2/assets?action=registerUpload', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${account.access_token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        registerUploadRequest: {
+          recipes: ['urn:li:digitalmediaRecipe:feedshare-video'],
+          owner: author,
+          serviceRelationships: [{ relationshipType: 'OWNER', identifier: 'urn:li:userGeneratedContent' }],
+        },
+      }),
+    });
+    const register = await registerRes.json();
+
+    if (register.error) return { success: false, error: register.error };
+
+    const uploadUrl = register.value.uploadMechanism['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest'].uploadUrl;
+    const asset = register.value.asset;
+
+    // Baixar video e subir
+    const videoRes = await fetch(videoUrl);
+    const videoBlob = await videoRes.blob();
+
+    const uploadRes = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': videoRes.headers.get('content-type') || 'video/mp4' },
+      body: videoBlob,
+    });
+
+    if (!uploadRes.ok) return { success: false, error: 'Falha no upload do video' };
+
+    // Polling: esperar processamento do video (max 60s)
+    let videoReady = false;
+    for (let i = 0; i < 30; i++) {
+      await new Promise((r) => setTimeout(r, 2000));
+      const statusRes = await fetch(`https://api.linkedin.com/v2/assets/${asset.split(':').pop()}`, {
+        headers: { Authorization: `Bearer ${account.access_token}` },
+      });
+      const status = await statusRes.json();
+      const recipes = status?.recipes || [];
+      const videoRecipe = recipes.find((r: any) => r.recipe === 'urn:li:digitalmediaRecipe:feedshare-video');
+      if (videoRecipe?.status === 'READY') {
+        videoReady = true;
+        break;
+      }
+    }
+
+    if (!videoReady) return { success: false, error: 'Timeout: video nao processou a tempo' };
+
+    const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${account.access_token}`,
+        'Content-Type': 'application/json',
+        'X-Restli-Protocol-Version': '2.0.0',
+      },
+      body: JSON.stringify({
+        author,
+        lifecycleState: 'PUBLISHED',
+        specificContent: {
+          'com.linkedin.ugc.ShareContent': {
+            shareCommentary: { text: content },
+            shareMediaCategory: 'VIDEO',
+            media: [{ status: 'READY', description: { text: content }, media: asset }],
+          },
+        },
+        visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' },
+      }),
+    });
+    const post = await postRes.json();
+
+    if (post.error) return { success: false, error: post.error };
+
+    return { success: true, externalId: post.id };
+  }
+
+  // IMAGE: upload via assets com recipe feedshare-image
   if (imageUrl) {
     const registerRes = await fetch('https://api.linkedin.com/v2/assets?action=registerUpload', {
       method: 'POST',
