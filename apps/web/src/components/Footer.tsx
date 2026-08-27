@@ -225,8 +225,7 @@ export default function Footer() {
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 mb-10">
           <div className="lg:w-56 shrink-0 flex flex-col items-center lg:items-start text-center lg:text-left">
             <div className="flex items-center gap-2 mb-3">
-              <img src="/icon.png" alt="StackPost" className="w-8 h-8 rounded-lg" />
-              <span className="font-display font-bold text-lg text-brand-text">StackPost</span>
+              <img src="/logo.png" alt="StackPost" className="h-8 w-auto" />
             </div>
             <p className="text-sm text-brand-text-secondary mb-3">
               A API unificada de redes sociais para SaaS, agencias e AI agents.

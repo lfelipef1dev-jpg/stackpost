@@ -97,8 +97,7 @@ export default function Home() {
       <header className="h-16 border-b border-brand-border bg-brand-surface/50 backdrop-blur-xl sticky top-0 z-20">
         <div className="max-w-7xl mx-auto h-full px-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src="/icon.png" alt="StackPost" className="w-8 h-8 rounded-lg" />
-            <span className="font-display font-bold text-xl text-brand-text">StackPost</span>
+            <img src="/logo.png" alt="StackPost" className="h-8 w-auto" />
           </div>
           <nav className="hidden md:flex gap-6 text-sm text-brand-text-secondary items-center">
             <Link href="/features" className="hover:text-brand-text transition">Features</Link>
