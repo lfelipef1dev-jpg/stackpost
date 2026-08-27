@@ -43,22 +43,58 @@ export default function ComposerPage() {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    const formData = new FormData();
-    formData.append('file', file);
+    setMessage('Enviando arquivo...');
 
-    const res = await fetch('/api/upload', {
-      method: 'POST',
-      body: formData,
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    try {
+      // 1. Pedir URL assinada pro Worker (request leve, sem o arquivo)
+      const presignRes = await fetch('/api/upload/presign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ fileName: file.name, contentType: file.type, size: file.size }),
+      });
 
-    const data = await res.json();
-    if (res.ok) {
-      setMediaPath(data.id);
-      setMediaPreview(URL.createObjectURL(file));
-      setDerivatives(data.derivatives || {});
-    } else {
-      setMessage(data.error || 'Erro no upload');
+      const presignData = await presignRes.json();
+      if (!presignRes.ok) {
+        setMessage(presignData.error || 'Erro no upload');
+        return;
+      }
+
+      // 2. PUT direto no Supabase Storage (bypassa o Worker)
+      const uploadRes = await fetch(presignData.signedUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': file.type || 'application/octet-stream' },
+        body: file,
+      });
+
+      if (!uploadRes.ok) {
+        setMessage('Erro ao enviar arquivo para o storage');
+        return;
+      }
+
+      // 3. Registrar upload no banco
+      const regRes = await fetch('/api/upload/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          id: presignData.id,
+          fileName: file.name,
+          contentType: file.type,
+          size: file.size,
+          url: presignData.publicUrl,
+        }),
+      });
+
+      if (regRes.ok) {
+        setMediaPath(presignData.id);
+        setMediaPreview(URL.createObjectURL(file));
+        setDerivatives(presignData.derivatives || {});
+        setMessage('');
+      } else {
+        const regData = await regRes.json();
+        setMessage(regData.error || 'Erro ao registrar upload');
+      }
+    } catch (err: any) {
+      setMessage(err.message || 'Erro no upload');
     }
   }
 
