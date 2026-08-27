@@ -218,8 +218,8 @@ export default function BillingPage() {
                 key={plan.id}
                 className="relative rounded-3xl border bg-brand-surface/40 backdrop-blur-sm p-6 flex flex-col h-full transition-all duration-300 hover:-translate-y-1"
                 style={{
-                  borderColor: isBusiness ? `${accent}60` : 'var(--brand-border)',
-                  boxShadow: isBusiness ? `0 0 40px -12px ${accent}40` : 'none',
+                  borderColor: isCurrent ? accent : (isBusiness ? `${accent}60` : 'var(--brand-border)'),
+                  boxShadow: isCurrent ? `0 0 40px -8px ${accent}50` : (isBusiness ? `0 0 40px -12px ${accent}40` : 'none'),
                 }}
                 onMouseEnter={(e) => { e.currentTarget.style.borderColor = `${accent}80`; e.currentTarget.style.boxShadow = `0 0 40px -8px ${accent}35`; }}
                 onMouseLeave={(e) => { e.currentTarget.style.borderColor = isBusiness ? `${accent}60` : 'var(--brand-border)'; e.currentTarget.style.boxShadow = isBusiness ? `0 0 40px -12px ${accent}40` : 'none'; }}
@@ -227,6 +227,11 @@ export default function BillingPage() {
                 {plan.popular && !isCurrent && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-brand-accent text-brand-bg text-[10px] font-bold tracking-wide uppercase shadow-lg">
                     Mais popular
+                  </div>
+                )}
+                {isCurrent && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase shadow-lg flex items-center gap-1" style={{ backgroundColor: accent, color: '#0A0A0A' }}>
+                    <Crown className="w-3 h-3" /> Plano atual
                   </div>
                 )}
 
