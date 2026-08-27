@@ -2,8 +2,8 @@ name: Cron Publish Scheduled
 
 on:
   schedule:
-    # A cada 1 minuto
-    - cron: '* * * * *'
+    # A cada 5 minutos (minimo do GitHub Actions)
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -12,15 +12,12 @@ jobs:
     steps:
       - name: Trigger publish-scheduled
         run: |
-          curl -s -X GET \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+          RESP=$(curl -s -w "\n%{http_code}" -X GET \
             -H "Content-Type: application/json" \
-            "https://stackpost.expostacker.com.br/api/cron/publish-scheduled" \
-            -o - -w "\n%{http_code}"
+            "https://stackpost.expostacker.com.br/api/cron/publish-scheduled")
+          echo "$RESP"
       - name: Trigger refresh-tokens
         run: |
           curl -s -X GET \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            -H "Content-Type: application/json" \
             "https://stackpost.expostacker.com.br/api/cron/refresh-tokens" \
-            -o /dev/null -w "%{http_code}"
+            -o /dev/null -w "refresh-tokens: %{http_code}\n"
