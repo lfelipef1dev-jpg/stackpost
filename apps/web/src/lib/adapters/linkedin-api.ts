@@ -5,7 +5,7 @@ const LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;
 const LINKEDIN_REDIRECT_URI = process.env.LINKEDIN_REDIRECT_URI || 'http://localhost:3333/api/oauth/linkedin/callback';
 
 export function getLinkedInAuthUrl(): string {
-  const scopes = encodeURIComponent('openid profile w_member_social r_basicprofile');
+  const scopes = encodeURIComponent('r_basicprofile w_member_social');
   return `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${LINKEDIN_CLIENT_ID}&redirect_uri=${encodeURIComponent(LINKEDIN_REDIRECT_URI)}&scope=${scopes}`;
 }
 
@@ -25,24 +25,26 @@ export async function handleLinkedInCallback(code: string) {
 
   if (data.error) throw new Error(data.error_description || data.error);
 
-  const userRes = await fetch('https://api.linkedin.com/v2/userinfo', {
+  // Usar /v2/me (r_basicprofile) em vez de /v2/userinfo (openid)
+  const userRes = await fetch('https://api.linkedin.com/v2/me', {
     headers: { Authorization: `Bearer ${data.access_token}` },
   });
   const user = await userRes.json();
 
   return {
     accessToken: data.access_token,
-    username: user.name || user.sub,
+    username: user.localizedFirstName + ' ' + user.localizedLastName || user.id,
+    externalId: user.id,
     expiresAt: new Date(Date.now() + data.expires_in * 1000).toISOString(),
   };
 }
 
 export async function publishToLinkedIn(account: any, content: string, imageUrl: string) {
-  const userRes = await fetch('https://api.linkedin.com/v2/userinfo', {
+  const userRes = await fetch('https://api.linkedin.com/v2/me', {
     headers: { Authorization: `Bearer ${account.access_token}` },
   });
   const user = await userRes.json();
-  const author = `urn:li:person:${user.sub}`;
+  const author = `urn:li:person:${user.id}`;
 
   const registerRes = await fetch('https://api.linkedin.com/v2/assets?action=registerUpload', {
     method: 'POST',
