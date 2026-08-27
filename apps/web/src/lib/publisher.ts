@@ -84,6 +84,20 @@ export async function publishPost(postId: string) {
   const accountsList = accounts || [];
   const derivatives = post.derivatives || {};
 
+  // Buscar URLs dos uploads no banco
+  let uploadUrls: Record<string, string> = {};
+  if (post.upload_ids?.length) {
+    const { data: uploads } = await supabase
+      .from('uploads')
+      .select('id, url')
+      .in('id', post.upload_ids);
+    if (uploads) {
+      for (const u of uploads) {
+        uploadUrls[u.id] = u.url;
+      }
+    }
+  }
+
   const settled = await Promise.allSettled(
     post.platforms.map(async (platform: string) => {
       const adapter = adapters[platform];
@@ -92,9 +106,21 @@ export async function publishPost(postId: string) {
       if (!adapter) return { platform, success: false, error: 'Plataforma nao suportada' };
       if (!account) return { platform, success: false, error: 'Conta nao conectada' };
 
-      const imageUrl = post.upload_ids?.length
-        ? buildImageUrl(post.upload_ids[0], platform, derivatives)
-        : undefined;
+      let imageUrl: string | undefined;
+      if (post.upload_ids?.length) {
+        const uploadId = post.upload_ids[0];
+        // Se tem derivada especifica da plataforma, usar
+        if (platform === 'instagram' && derivatives.instagram_4x5) {
+          imageUrl = derivatives.instagram_4x5.startsWith('http') ? derivatives.instagram_4x5 : `${BASE_URL}${derivatives.instagram_4x5}`;
+        } else if (platform === 'linkedin' && derivatives.linkedin_1x1) {
+          imageUrl = derivatives.linkedin_1x1.startsWith('http') ? derivatives.linkedin_1x1 : `${BASE_URL}${derivatives.linkedin_1x1}`;
+        } else if (uploadUrls[uploadId]) {
+          // Buscar URL do banco
+          imageUrl = uploadUrls[uploadId];
+        } else {
+          imageUrl = uploadId.startsWith('http') ? uploadId : `${BASE_URL}/uploads/${uploadId}`;
+        }
+      }
 
       const result = await adapter.publish({
         content: post.content,
