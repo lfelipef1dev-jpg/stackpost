@@ -9,9 +9,9 @@ import Header from '@/components/Header';
 import { RefreshCw, Trash2, AlertCircle, CheckCircle2, Clock, Loader2, Zap } from 'lucide-react';
 
 const OAUTH_ROUTES: Record<string, string> = {
-  instagram: '/api/oauth/meta?state=instagram',
-  facebook: '/api/oauth/meta?state=facebook',
-  threads: '/api/oauth/meta?state=threads',
+  instagram: '/api/oauth/meta',
+  facebook: '/api/oauth/meta',
+  threads: '/api/oauth/meta',
   linkedin: '/api/oauth/linkedin',
 };
 
@@ -35,7 +35,9 @@ export default function AccountsPage() {
   function handleConnect(platform: string) {
     const route = OAUTH_ROUTES[platform];
     if (route) {
-      window.location.href = route;
+      const token = localStorage.getItem('token');
+      const separator = route.includes('?') ? '&' : '?';
+      window.location.href = `${route}${separator}token=${token}`;
     } else {
       alert(`OAuth para ${platform} ainda nao implementado. Use o formulario manual abaixo.`);
     }

@@ -3,15 +3,15 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const META_APP_ID = process.env.META_APP_ID;
 const META_APP_SECRET = process.env.META_APP_SECRET;
-const META_REDIRECT_URI = process.env.META_REDIRECT_URI || 'http://localhost:3333/api/oauth/meta/callback';
+const META_REDIRECT_URI = process.env.META_REDIRECT_URI || 'https://stackpost.expostacker.com.br/api/oauth/meta/callback';
 
-export function getInstagramAuthUrl(): string {
+export function getInstagramAuthUrl(stateToken?: string): string {
   const scopes = ['instagram_basic', 'instagram_content_publish', 'pages_read_engagement'];
   const url = new URL('https://www.facebook.com/v19.0/dialog/oauth');
   url.searchParams.set('client_id', META_APP_ID || '');
   url.searchParams.set('redirect_uri', META_REDIRECT_URI);
   url.searchParams.set('scope', scopes.join(','));
-  url.searchParams.set('state', 'instagram');
+  url.searchParams.set('state', stateToken || 'instagram');
   return url.toString();
 }
 
