@@ -38,10 +38,7 @@ export class LinkedInAdapter extends PlatformAdapter {
     if (params.content.length > 3000) {
       return { success: false, error: { code: 'VALIDATION', message: 'LinkedIn: texto maximo 3000 caracteres.' } };
     }
-    if (!params.imageUrl) {
-      return { success: false, error: { code: 'VALIDATION', message: 'LinkedIn: imagem obrigatoria.' } };
-    }
-    return publishToLinkedIn(params.account, params.content, params.imageUrl);
+    return publishToLinkedIn(params.account, params.content, params.imageUrl || '');
   }
 }
 
