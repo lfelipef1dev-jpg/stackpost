@@ -84,10 +84,10 @@ export async function publishToLinkedIn(account: any, content: string, imageUrl:
 
     if (!uploadRes.ok) return { success: false, error: 'Falha no upload do video' };
 
-    // Polling: esperar processamento do video (max 60s)
+    // Polling: esperar processamento do video (max 5 min)
     let videoReady = false;
-    for (let i = 0; i < 30; i++) {
-      await new Promise((r) => setTimeout(r, 2000));
+    for (let i = 0; i < 60; i++) {
+      await new Promise((r) => setTimeout(r, 5000));
       const statusRes = await fetch(`https://api.linkedin.com/v2/assets/${asset.split(':').pop()}`, {
         headers: { Authorization: `Bearer ${account.access_token}` },
       });
@@ -98,9 +98,12 @@ export async function publishToLinkedIn(account: any, content: string, imageUrl:
         videoReady = true;
         break;
       }
+      if (videoRecipe?.status === 'ERROR') {
+        return { success: false, error: 'LinkedIn rejeitou o video' };
+      }
     }
 
-    if (!videoReady) return { success: false, error: 'Timeout: video nao processou a tempo' };
+    if (!videoReady) return { success: false, error: 'Timeout: video nao processou apos 5 min' };
 
     const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
       method: 'POST',
