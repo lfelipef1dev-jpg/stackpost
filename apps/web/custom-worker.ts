@@ -6,7 +6,8 @@ import { default as handler } from "./.open-next/worker.js";
 export default {
   fetch: handler.fetch,
 
-  async scheduled(event, env, ctx) {
+  // @ts-ignore - tipos do Cloudflare nao disponiveis no build do Next
+  async scheduled(event: any, env: any, ctx: any) {
     console.log('[cron] scheduled handler fired', event.cron);
     ctx.waitUntil(
       (async () => {
@@ -21,14 +22,14 @@ export default {
             const resp = await fetch(url);
             const text = await resp.text();
             console.log('[cron] ' + route + ' -> ' + resp.status + ': ' + text.substring(0, 200));
-          } catch (e) {
+          } catch (e: any) {
             console.error('[cron] Erro em ' + route + ':', e.message);
           }
         }
       })()
     );
   },
-} satisfies ExportedHandler;
+};
 
 // Re-export Durable Objects (necessario para cache do OpenNext)
 // @ts-ignore `.open-next/worker.js` is generated at build time
