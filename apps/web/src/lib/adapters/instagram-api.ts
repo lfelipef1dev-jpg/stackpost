@@ -74,12 +74,17 @@ export async function handleInstagramCallback(code: string) {
 }
 
 export async function publishToInstagram(account: any, content: string, imageUrl: string) {
-  const containerRes = await fetch(`https://graph.facebook.com/v19.0/${account.instagram_id}/media`, {
+  // Business Login for Instagram usa graph.instagram.com (nao graph.facebook.com)
+  const igUserId = account.external_id || account.instagram_id;
+  const token = account.access_token;
+
+  // Criar container de midia
+  const containerRes = await fetch(`https://graph.instagram.com/v23.0/${igUserId}/media`, {
     method: 'POST',
     body: new URLSearchParams({
       image_url: imageUrl,
       caption: content,
-      access_token: account.access_token,
+      access_token: token,
     }),
   });
   const container = await containerRes.json();
@@ -88,11 +93,12 @@ export async function publishToInstagram(account: any, content: string, imageUrl
 
   await new Promise((r) => setTimeout(r, 3000));
 
-  const publishRes = await fetch(`https://graph.facebook.com/v19.0/${account.instagram_id}/media_publish`, {
+  // Publicar o container
+  const publishRes = await fetch(`https://graph.instagram.com/v23.0/${igUserId}/media_publish`, {
     method: 'POST',
     body: new URLSearchParams({
       creation_id: container.id,
-      access_token: account.access_token,
+      access_token: token,
     }),
   });
   const publish = await publishRes.json();
