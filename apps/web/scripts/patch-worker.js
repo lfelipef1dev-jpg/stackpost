@@ -17,9 +17,10 @@ if (workerCode.includes('async scheduled(')) {
 
 const scheduledHandler = `
   async scheduled(event, env, ctx) {
+    console.log('[cron] scheduled handler fired', event.cron);
     ctx.waitUntil(
       (async () => {
-        const baseUrl = env.NEXT_PUBLIC_SITE_URL || 'https://stackpost.expostacker.com.br';
+        const baseUrl = 'https://stackpost.expostacker.com.br';
         const cronSecret = env.CRON_SECRET || '';
         const routes = [
           '/api/cron/publish-scheduled',
@@ -27,12 +28,16 @@ const scheduledHandler = `
         ];
         for (const route of routes) {
           try {
-            await fetch(new Request(baseUrl + route, {
+            const url = baseUrl + route;
+            console.log('[cron] Fetching', url);
+            const resp = await fetch(url, {
               method: 'GET',
               headers: cronSecret ? { authorization: 'Bearer ' + cronSecret } : {},
-            }));
+            });
+            const text = await resp.text();
+            console.log('[cron] ' + route + ' -> ' + resp.status + ': ' + text.substring(0, 200));
           } catch (e) {
-            console.error('[cron] Erro em ' + route + ':', e);
+            console.error('[cron] Erro em ' + route + ':', e.message, e.stack);
           }
         }
       })()

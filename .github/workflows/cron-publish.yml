@@ -1,0 +1,26 @@
+name: Cron Publish Scheduled
+
+on:
+  schedule:
+    # A cada 1 minuto
+    - cron: '* * * * *'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger publish-scheduled
+        run: |
+          curl -s -X GET \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            "https://stackpost.expostacker.com.br/api/cron/publish-scheduled" \
+            -o - -w "\n%{http_code}"
+      - name: Trigger refresh-tokens
+        run: |
+          curl -s -X GET \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            "https://stackpost.expostacker.com.br/api/cron/refresh-tokens" \
+            -o /dev/null -w "%{http_code}"
