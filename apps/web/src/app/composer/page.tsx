@@ -121,13 +121,20 @@ export default function ComposerPage() {
       return;
     }
 
+    // Converter datetime-local (YYYY-MM-DDTHH:MM) para ISO 8601 completo
+    let isoScheduledAt: string | null = null;
+    if (action === 'schedule' && scheduledAt) {
+      const d = new Date(scheduledAt);
+      isoScheduledAt = d.toISOString();
+    }
+
     const res = await fetch('/api/posts', {
       method: 'POST',
       body: JSON.stringify({
         content,
         platforms: selectedPlatforms,
         uploadIds: mediaPath ? [mediaPath] : undefined,
-        scheduledAt: action === 'schedule' ? scheduledAt : null,
+        scheduledAt: isoScheduledAt,
         postType,
         firstComment,
       }),
