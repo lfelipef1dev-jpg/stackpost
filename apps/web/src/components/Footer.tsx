@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { Layers } from 'lucide-react';
 
 const footerColumns = [
   {
@@ -226,9 +225,7 @@ export default function Footer() {
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 mb-10">
           <div className="lg:w-56 shrink-0 flex flex-col items-center lg:items-start text-center lg:text-left">
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 rounded-lg bg-brand-accent flex items-center justify-center">
-                <Layers className="w-4 h-4 text-brand-bg" />
-              </div>
+              <img src="/icon.png" alt="StackPost" className="w-8 h-8 rounded-lg" />
               <span className="font-display font-bold text-lg text-brand-text">StackPost</span>
             </div>
             <p className="text-sm text-brand-text-secondary mb-3">
