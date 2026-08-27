@@ -5,7 +5,7 @@ const LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;
 const LINKEDIN_REDIRECT_URI = process.env.LINKEDIN_REDIRECT_URI || 'http://localhost:3333/api/oauth/linkedin/callback';
 
 export function getLinkedInAuthUrl(): string {
-  const scopes = encodeURIComponent('w_member_social');
+  const scopes = encodeURIComponent('openid profile w_member_social');
   return `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${LINKEDIN_CLIENT_ID}&redirect_uri=${encodeURIComponent(LINKEDIN_REDIRECT_URI)}&scope=${scopes}`;
 }
 
@@ -25,71 +25,92 @@ export async function handleLinkedInCallback(code: string) {
 
   if (data.error) throw new Error(data.error_description || data.error);
 
-  // Tentar /v2/me primeiro, depois /v2/userinfo
-  let userId = '';
-  let userName = 'LinkedIn User';
-  
-  try {
-    const userRes = await fetch('https://api.linkedin.com/v2/me', {
-      headers: { Authorization: `Bearer ${data.access_token}` },
-    });
-    if (userRes.ok) {
-      const user = await userRes.json();
-      userId = user.id;
-      userName = (user.localizedFirstName || '') + ' ' + (user.localizedLastName || '');
-      if (!userName.trim()) userName = user.id || 'LinkedIn User';
-    }
-  } catch (e) {
-    // /v2/me pode falhar sem r_basicprofile
-  }
+  // Usar /v2/userinfo (openid + profile) pra pegar sub (person ID) e nome
+  const userRes = await fetch('https://api.linkedin.com/v2/userinfo', {
+    headers: { Authorization: `Bearer ${data.access_token}` },
+  });
+  const user = await userRes.json();
+
+  if (user.error) throw new Error(user.error_description || user.error || 'Erro ao buscar perfil');
 
   return {
     accessToken: data.access_token,
-    username: userName.trim() || userId || 'LinkedIn User',
-    externalId: userId,
+    username: user.name || user.given_name || user.sub || 'LinkedIn User',
+    externalId: user.sub,
     expiresAt: new Date(Date.now() + (data.expires_in || 5184000) * 1000).toISOString(),
   };
 }
 
 export async function publishToLinkedIn(account: any, content: string, imageUrl: string) {
-  const userRes = await fetch('https://api.linkedin.com/v2/me', {
-    headers: { Authorization: `Bearer ${account.access_token}` },
-  });
-  const user = await userRes.json();
-  const author = `urn:li:person:${user.id}`;
+  // Usar external_id (user.sub do userinfo) salvo no momento do OAuth
+  const author = `urn:li:person:${account.external_id}`;
 
-  const registerRes = await fetch('https://api.linkedin.com/v2/assets?action=registerUpload', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${account.access_token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      registerUploadRequest: {
-        recipes: ['urn:li:digitalmediaRecipe:feedshare-image'],
-        owner: author,
-        serviceRelationships: [{ relationshipType: 'OWNER', identifier: 'urn:li:userGeneratedContent' }],
+  if (!account.external_id) {
+    return { success: false, error: 'LinkedIn account sem external_id. Reconecte a conta.' };
+  }
+
+  // Se tem imagem, faz upload via assets
+  if (imageUrl) {
+    const registerRes = await fetch('https://api.linkedin.com/v2/assets?action=registerUpload', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${account.access_token}`,
+        'Content-Type': 'application/json',
       },
-    }),
-  });
-  const register = await registerRes.json();
+      body: JSON.stringify({
+        registerUploadRequest: {
+          recipes: ['urn:li:digitalmediaRecipe:feedshare-image'],
+          owner: author,
+          serviceRelationships: [{ relationshipType: 'OWNER', identifier: 'urn:li:userGeneratedContent' }],
+        },
+      }),
+    });
+    const register = await registerRes.json();
 
-  if (register.error) return { success: false, error: register.error };
+    if (register.error) return { success: false, error: register.error };
 
-  const uploadUrl = register.value.uploadMechanism['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest'].uploadUrl;
-  const asset = register.value.asset;
+    const uploadUrl = register.value.uploadMechanism['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest'].uploadUrl;
+    const asset = register.value.asset;
 
-  const imageRes = await fetch(imageUrl);
-  const imageBlob = await imageRes.blob();
+    const imageRes = await fetch(imageUrl);
+    const imageBlob = await imageRes.blob();
 
-  const uploadRes = await fetch(uploadUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': imageRes.headers.get('content-type') || 'image/jpeg' },
-    body: imageBlob,
-  });
+    const uploadRes = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': imageRes.headers.get('content-type') || 'image/jpeg' },
+      body: imageBlob,
+    });
 
-  if (!uploadRes.ok) return { success: false, error: 'Falha no upload da imagem' };
+    if (!uploadRes.ok) return { success: false, error: 'Falha no upload da imagem' };
 
+    const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${account.access_token}`,
+        'Content-Type': 'application/json',
+        'X-Restli-Protocol-Version': '2.0.0',
+      },
+      body: JSON.stringify({
+        author,
+        lifecycleState: 'PUBLISHED',
+        specificContent: {
+          'com.linkedin.ugc.ShareContent': {
+            shareCommentary: { text: content },
+            shareMediaCategory: 'IMAGE',
+            media: [{ status: 'READY', description: { text: content }, media: asset }],
+          },
+        },
+        visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' },
+      }),
+    });
+    const post = await postRes.json();
+
+    if (post.error) return { success: false, error: post.error };
+
+    return { success: true, externalId: post.id };
+  }
+
+  // Post só de texto
   const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
     method: 'POST',
     headers: {
@@ -103,8 +124,7 @@ export async function publishToLinkedIn(account: any, content: string, imageUrl:
       specificContent: {
         'com.linkedin.ugc.ShareContent': {
           shareCommentary: { text: content },
-          shareMediaCategory: 'IMAGE',
-          media: [{ status: 'READY', description: { text: content }, media: asset }],
+          shareMediaCategory: 'NONE',
         },
       },
       visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' },

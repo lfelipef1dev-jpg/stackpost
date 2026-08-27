@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
     if (existing) {
       const { error: updateError } = await supabase
         .from('social_accounts')
-        .update({ access_token: data.accessToken, external_id: data.username, expires_at: data.expiresAt })
+        .update({ access_token: data.accessToken, external_id: data.externalId, expires_at: data.expiresAt })
         .eq('id', existing.id);
       if (updateError) throw updateError;
     } else {
@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
           platform: 'linkedin',
           username: data.username,
           access_token: data.accessToken,
-          external_id: data.username,
+          external_id: data.externalId,
           expires_at: data.expiresAt,
         });
       if (insertError) throw insertError;
