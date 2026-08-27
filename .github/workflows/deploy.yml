@@ -45,10 +45,6 @@ jobs:
           LINKEDIN_CLIENT_SECRET: ${{ secrets.LINKEDIN_CLIENT_SECRET }}
           LINKEDIN_REDIRECT_URI: ${{ secrets.LINKEDIN_REDIRECT_URI }}
 
-      - name: Patch worker.js with scheduled handler
-        run: node scripts/patch-worker.js
-        working-directory: apps/web
-
       - name: Deploy to Cloudflare Workers
         run: npx opennextjs-cloudflare deploy
         working-directory: apps/web
