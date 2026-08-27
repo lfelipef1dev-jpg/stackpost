@@ -15,16 +15,66 @@ export class FacebookAdapter extends PlatformAdapter {
     if (content.length > 63206) return { success: false, error: { code: 'VALIDATION', message: 'Facebook: texto maximo 63206 caracteres.' } };
 
     try {
-      const body: any = { message: content };
+      // VIDEO: upload via video endpoint
+      if (params.videoUrl) {
+        // Baixar video
+        const videoRes = await fetch(params.videoUrl);
+        const videoBlob = await videoRes.blob();
 
-      if (params.imageUrl) {
-        body.link = params.imageUrl;
+        const formData = new FormData();
+        formData.append('access_token', accessToken);
+        formData.append('description', content);
+        formData.append('source', videoBlob, 'video.mp4');
+
+        const res = await fetch(`https://graph.facebook.com/v19.0/${pageId}/videos`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await res.json();
+        if (!res.ok) return { success: false, error: normalizeError(new Error(data.error?.message || 'Facebook video API error'), this.platform) };
+
+        const videoId = data.id;
+        return {
+          success: true,
+          externalId: videoId,
+          externalUrl: `https://facebook.com/${pageId}/videos/${videoId}`,
+        };
       }
 
+      // IMAGE: upload via photos endpoint (foto real, nao link)
+      if (params.imageUrl) {
+        // Baixar imagem
+        const imgRes = await fetch(params.imageUrl);
+        const imgBlob = await imgRes.blob();
+
+        const formData = new FormData();
+        formData.append('access_token', accessToken);
+        formData.append('message', content);
+        formData.append('source', imgBlob, 'image.jpg');
+
+        const res = await fetch(`https://graph.facebook.com/v19.0/${pageId}/photos`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await res.json();
+        if (!res.ok) return { success: false, error: normalizeError(new Error(data.error?.message || 'Facebook photo API error'), this.platform) };
+
+        const photoId = data.id;
+        const postId = data.post_id || `${pageId}_${photoId}`;
+        return {
+          success: true,
+          externalId: postId,
+          externalUrl: `https://facebook.com/${postId.replace('_', '/photos/')}`,
+        };
+      }
+
+      // TEXT ONLY: feed post
       const res = await fetch(`https://graph.facebook.com/v19.0/${pageId}/feed`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...body, access_token: accessToken }),
+        body: JSON.stringify({ message: content, access_token: accessToken }),
       });
 
       const data = await res.json();
