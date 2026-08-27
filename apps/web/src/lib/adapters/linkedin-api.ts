@@ -5,7 +5,7 @@ const LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;
 const LINKEDIN_REDIRECT_URI = process.env.LINKEDIN_REDIRECT_URI || 'http://localhost:3333/api/oauth/linkedin/callback';
 
 export function getLinkedInAuthUrl(): string {
-  const scopes = encodeURIComponent('r_basicprofile w_member_social');
+  const scopes = encodeURIComponent('w_member_social');
   return `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${LINKEDIN_CLIENT_ID}&redirect_uri=${encodeURIComponent(LINKEDIN_REDIRECT_URI)}&scope=${scopes}`;
 }
 
@@ -25,17 +25,29 @@ export async function handleLinkedInCallback(code: string) {
 
   if (data.error) throw new Error(data.error_description || data.error);
 
-  // Usar /v2/me (r_basicprofile) em vez de /v2/userinfo (openid)
-  const userRes = await fetch('https://api.linkedin.com/v2/me', {
-    headers: { Authorization: `Bearer ${data.access_token}` },
-  });
-  const user = await userRes.json();
+  // Tentar /v2/me primeiro, depois /v2/userinfo
+  let userId = '';
+  let userName = 'LinkedIn User';
+  
+  try {
+    const userRes = await fetch('https://api.linkedin.com/v2/me', {
+      headers: { Authorization: `Bearer ${data.access_token}` },
+    });
+    if (userRes.ok) {
+      const user = await userRes.json();
+      userId = user.id;
+      userName = (user.localizedFirstName || '') + ' ' + (user.localizedLastName || '');
+      if (!userName.trim()) userName = user.id || 'LinkedIn User';
+    }
+  } catch (e) {
+    // /v2/me pode falhar sem r_basicprofile
+  }
 
   return {
     accessToken: data.access_token,
-    username: user.localizedFirstName + ' ' + user.localizedLastName || user.id,
-    externalId: user.id,
-    expiresAt: new Date(Date.now() + data.expires_in * 1000).toISOString(),
+    username: userName.trim() || userId || 'LinkedIn User',
+    externalId: userId,
+    expiresAt: new Date(Date.now() + (data.expires_in || 5184000) * 1000).toISOString(),
   };
 }
 

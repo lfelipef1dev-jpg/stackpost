@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
       .select('id')
       .eq('platform', 'linkedin')
       .eq('username', data.username)
-      .single();
+      .maybeSingle();
 
     if (existing) {
       const { error: updateError } = await supabase
