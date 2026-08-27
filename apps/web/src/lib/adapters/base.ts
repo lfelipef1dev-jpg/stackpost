@@ -13,6 +13,8 @@ export interface PublishParams {
     [key: string]: any;
   };
   imageUrl?: string;
+  videoUrl?: string;
+  mediaType?: 'IMAGE' | 'VIDEO' | 'CAROUSEL';
 }
 
 export abstract class PlatformAdapter {

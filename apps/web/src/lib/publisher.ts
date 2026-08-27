@@ -84,16 +84,16 @@ export async function publishPost(postId: string) {
   const accountsList = accounts || [];
   const derivatives = post.derivatives || {};
 
-  // Buscar URLs dos uploads no banco
-  let uploadUrls: Record<string, string> = {};
+  // Buscar URLs e tipos dos uploads no banco
+  let uploadData: Record<string, { url: string; mime_type: string }> = {};
   if (post.upload_ids?.length) {
     const { data: uploads } = await supabase
       .from('uploads')
-      .select('id, url')
+      .select('id, url, mime_type')
       .in('id', post.upload_ids);
     if (uploads) {
       for (const u of uploads) {
-        uploadUrls[u.id] = u.url;
+        uploadData[u.id] = { url: u.url, mime_type: u.mime_type || '' };
       }
     }
   }
@@ -107,16 +107,23 @@ export async function publishPost(postId: string) {
       if (!account) return { platform, success: false, error: 'Conta nao conectada' };
 
       let imageUrl: string | undefined;
+      let videoUrl: string | undefined;
       if (post.upload_ids?.length) {
         const uploadId = post.upload_ids[0];
+        const data = uploadData[uploadId];
+        const isVideo = data?.mime_type?.startsWith('video/') || uploadId.endsWith('.mp4');
+
         // Se tem derivada especifica da plataforma, usar
-        if (platform === 'instagram' && derivatives.instagram_4x5) {
+        if (platform === 'instagram' && derivatives.instagram_4x5 && !isVideo) {
           imageUrl = derivatives.instagram_4x5.startsWith('http') ? derivatives.instagram_4x5 : `${BASE_URL}${derivatives.instagram_4x5}`;
-        } else if (platform === 'linkedin' && derivatives.linkedin_1x1) {
+        } else if (platform === 'linkedin' && derivatives.linkedin_1x1 && !isVideo) {
           imageUrl = derivatives.linkedin_1x1.startsWith('http') ? derivatives.linkedin_1x1 : `${BASE_URL}${derivatives.linkedin_1x1}`;
-        } else if (uploadUrls[uploadId]) {
-          // Buscar URL do banco
-          imageUrl = uploadUrls[uploadId];
+        } else if (data?.url) {
+          if (isVideo) {
+            videoUrl = data.url;
+          } else {
+            imageUrl = data.url;
+          }
         } else {
           imageUrl = uploadId.startsWith('http') ? uploadId : `${BASE_URL}/uploads/${uploadId}`;
         }
@@ -127,6 +134,7 @@ export async function publishPost(postId: string) {
         uploadIds: post.upload_ids,
         account,
         imageUrl,
+        videoUrl,
       });
 
       const { error: ppError } = await supabase

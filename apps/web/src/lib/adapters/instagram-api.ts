@@ -73,25 +73,48 @@ export async function handleInstagramCallback(code: string) {
   };
 }
 
-export async function publishToInstagram(account: any, content: string, imageUrl: string) {
+export async function publishToInstagram(account: any, content: string, mediaUrl: string, mediaType: 'IMAGE' | 'VIDEO' = 'IMAGE') {
   // Business Login for Instagram usa graph.instagram.com (nao graph.facebook.com)
   const igUserId = account.external_id || account.instagram_id;
   const token = account.access_token;
 
-  // Criar container de midia
+  // Criar container de midia - parametros diferentes pra video e imagem
+  const params: Record<string, string> = {
+    caption: content,
+    access_token: token,
+  };
+
+  if (mediaType === 'VIDEO') {
+    params.media_type = 'VIDEO';
+    params.video_url = mediaUrl;
+  } else {
+    params.image_url = mediaUrl;
+  }
+
   const containerRes = await fetch(`https://graph.instagram.com/v23.0/${igUserId}/media`, {
     method: 'POST',
-    body: new URLSearchParams({
-      image_url: imageUrl,
-      caption: content,
-      access_token: token,
-    }),
+    body: new URLSearchParams(params),
   });
   const container = await containerRes.json();
 
   if (container.error) return { success: false, error: container.error.error_user_msg || container.error.message };
 
-  await new Promise((r) => setTimeout(r, 3000));
+  // Video precisa de mais tempo pra processar
+  const waitMs = mediaType === 'VIDEO' ? 10000 : 3000;
+  await new Promise((r) => setTimeout(r, waitMs));
+
+  // Para video, verificar se o container terminou de processar
+  if (mediaType === 'VIDEO') {
+    let retries = 0;
+    while (retries < 10) {
+      const statusRes = await fetch(`https://graph.instagram.com/v23.0/${container.id}?fields=status_code&access_token=${token}`);
+      const statusData = await statusRes.json();
+      if (statusData.status_code === 'FINISHED') break;
+      if (statusData.status_code === 'ERROR') return { success: false, error: 'Erro ao processar video no Instagram' };
+      await new Promise((r) => setTimeout(r, 5000));
+      retries++;
+    }
+  }
 
   // Publicar o container
   const publishRes = await fetch(`https://graph.instagram.com/v23.0/${igUserId}/media_publish`, {
