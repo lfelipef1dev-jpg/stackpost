@@ -84,27 +84,8 @@ export async function publishToLinkedIn(account: any, content: string, imageUrl:
 
     if (!uploadRes.ok) return { success: false, error: 'Falha no upload do video' };
 
-    // Polling: esperar processamento do video (max 5 min)
-    let videoReady = false;
-    for (let i = 0; i < 60; i++) {
-      await new Promise((r) => setTimeout(r, 5000));
-      const statusRes = await fetch(`https://api.linkedin.com/v2/assets/${asset.split(':').pop()}`, {
-        headers: { Authorization: `Bearer ${account.access_token}` },
-      });
-      const status = await statusRes.json();
-      const recipes = status?.recipes || [];
-      const videoRecipe = recipes.find((r: any) => r.recipe === 'urn:li:digitalmediaRecipe:feedshare-video');
-      if (videoRecipe?.status === 'READY') {
-        videoReady = true;
-        break;
-      }
-      if (videoRecipe?.status === 'ERROR') {
-        return { success: false, error: 'LinkedIn rejeitou o video' };
-      }
-    }
-
-    if (!videoReady) return { success: false, error: 'Timeout: video nao processou apos 5 min' };
-
+    // Publicar com status READY - LinkedIn processa async apos publicacao
+    // (Polling dentro do Worker estoura o CPU time limit do Cloudflare)
     const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
       method: 'POST',
       headers: {
