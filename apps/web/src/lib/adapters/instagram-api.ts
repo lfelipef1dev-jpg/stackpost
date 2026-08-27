@@ -6,12 +6,23 @@ const META_APP_SECRET = process.env.META_APP_SECRET;
 const META_REDIRECT_URI = process.env.META_REDIRECT_URI || 'https://stackpost.expostacker.com.br/api/oauth/meta/callback';
 
 export function getInstagramAuthUrl(stateToken?: string): string {
-  const scopes = ['instagram_basic', 'instagram_content_publish', 'pages_read_engagement'];
+  // Scopes validos para Facebook Login for Business
+  // instagram_manage_insights, instagram_manage_messages, instagram_basic,
+  // pages_manage_posts, pages_read_engagement, pages_show_list, business_management
+  const scopes = [
+    'instagram_basic',
+    'instagram_content_publish',
+    'pages_show_list',
+    'pages_read_engagement',
+    'pages_manage_posts',
+    'business_management',
+  ];
   const url = new URL('https://www.facebook.com/v19.0/dialog/oauth');
   url.searchParams.set('client_id', META_APP_ID || '');
   url.searchParams.set('redirect_uri', META_REDIRECT_URI);
   url.searchParams.set('scope', scopes.join(','));
   url.searchParams.set('state', stateToken || 'instagram');
+  url.searchParams.set('response_type', 'code');
   return url.toString();
 }
 
