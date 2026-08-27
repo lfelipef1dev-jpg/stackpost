@@ -26,7 +26,7 @@ export default function Header({ activeHref }: { activeHref?: string }) {
     <header className="h-16 border-b border-brand-border bg-brand-surface/50 backdrop-blur sticky top-0 z-20">
       <div className="max-w-7xl mx-auto h-full px-4 flex items-center justify-between">
         <a href="/dashboard" className="flex items-center gap-2">
-          <img src="/logo.png" alt="StackPost" className="h-14 w-auto" />
+          <img src="/brand/logo.png" alt="StackPost" className="h-14 w-auto" />
         </a>
         <nav className="hidden md:flex gap-6 text-sm text-brand-text-secondary items-center">
           {nav.map((item) => (

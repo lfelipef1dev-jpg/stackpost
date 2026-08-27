@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     description: SITE_DESC,
     images: [
       {
-        url: '/og.png',
+        url: '/brand/og.png',
         width: 1200,
         height: 630,
         alt: 'StackPost - API unificada de redes sociais',
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: `${SITE_NAME} - API unificada de redes sociais`,
     description: SITE_DESC,
-    images: ['/og.png'],
+    images: ['/brand/og.png'],
   },
   robots: {
     index: true,
@@ -71,9 +71,9 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: '/icon.png',
-    apple: '/icon.png',
-    shortcut: '/icon.png',
+    icon: '/brand/icon.png',
+    apple: '/brand/icon.png',
+    shortcut: '/brand/icon.png',
   },
   manifest: '/site.webmanifest',
 };
@@ -90,7 +90,7 @@ const organizationJsonLd = {
   '@id': `${SITE_URL}/#organization`,
   name: SITE_NAME,
   url: SITE_URL,
-  logo: `${SITE_URL}/logo.png`,
+  logo: `${SITE_URL}/brand/logo.png`,
   description: SITE_DESC,
   founder: {
     '@type': 'Organization',
