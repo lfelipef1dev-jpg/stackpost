@@ -38,7 +38,16 @@ export default function DashboardPage() {
   ];
 
   const planLabels: Record<string, string> = { free: 'Free', pro: 'Pro', business: 'Business', enterprise: 'Enterprise' };
-  const currentPlan = 'free';
+  const [currentPlan, setCurrentPlan] = useState('free');
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    fetch('/api/me', { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => res.json())
+      .then((data) => setCurrentPlan(data?.organization?.plan || 'free'))
+      .catch(() => setCurrentPlan('free'));
+  }, []);
 
   return (
     <div className="min-h-screen">
