@@ -49,7 +49,7 @@ const billingPlans: BillingPlan[] = [
     id: 'pro',
     name: 'Pro',
     tagline: 'Para usuarios avancados',
-    monthlyPrice: 100,
+    monthlyPrice: 515,
     icon: Sparkles,
     features: [
       { label: 'Posts', value: '10.000 / mes' },
@@ -70,7 +70,7 @@ const billingPlans: BillingPlan[] = [
     id: 'business',
     name: 'Business',
     tagline: 'Para empresas em crescimento',
-    monthlyPrice: 400,
+    monthlyPrice: 2060,
     icon: Building2,
     popular: true,
     features: [
