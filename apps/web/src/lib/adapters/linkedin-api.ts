@@ -74,7 +74,7 @@ export async function handleLinkedInCallback(code: string) {
   return accounts;
 }
 
-export async function publishToLinkedIn(account: any, content: string, imageUrl: string, videoUrl?: string) {
+export async function publishToLinkedIn(account: any, content: string, imageUrl: string, videoUrl?: string, mediaUrls?: string[], pdfUrl?: string) {
   // author pode ser urn:li:person:{sub} ou urn:li:organization:{id}
   const author = account.external_id && account.external_id.startsWith('urn:li:')
     ? account.external_id
@@ -206,6 +206,121 @@ export async function publishToLinkedIn(account: any, content: string, imageUrl:
 
     if (post.error) return { success: false, error: post.error };
 
+    return { success: true, externalId: post.id };
+  }
+
+  // MULTI-MIDIA (ate 10 imagens)
+  if (mediaUrls && mediaUrls.length > 1) {
+    const mediaItems: any[] = [];
+    for (const url of mediaUrls.slice(0, 10)) {
+      const registerRes = await fetch('https://api.linkedin.com/v2/assets?action=registerUpload', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${account.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          registerUploadRequest: {
+            recipes: ['urn:li:digitalmediaRecipe:feedshare-image'],
+            owner: author,
+            serviceRelationships: [{ relationshipType: 'OWNER', identifier: 'urn:li:userGeneratedContent' }],
+          },
+        }),
+      });
+      const register = await registerRes.json();
+      if (register.error) return { success: false, error: register.error };
+
+      const uploadUrl = register.value.uploadMechanism['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest'].uploadUrl;
+      const asset = register.value.asset;
+
+      const imgRes = await fetch(url);
+      const imgBlob = await imgRes.blob();
+      await fetch(uploadUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': imgRes.headers.get('content-type') || 'image/jpeg' },
+        body: imgBlob,
+      });
+
+      mediaItems.push({ status: 'READY', description: { text: content.slice(0, 200) }, media: asset });
+    }
+
+    const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${account.access_token}`,
+        'Content-Type': 'application/json',
+        'X-Restli-Protocol-Version': '2.0.0',
+      },
+      body: JSON.stringify({
+        author,
+        lifecycleState: 'PUBLISHED',
+        specificContent: {
+          'com.linkedin.ugc.ShareContent': {
+            shareCommentary: { text: content },
+            shareMediaCategory: 'IMAGE',
+            media: mediaItems,
+          },
+        },
+        visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' },
+      }),
+    });
+    const post = await postRes.json();
+    if (post.error) return { success: false, error: post.error };
+    return { success: true, externalId: post.id };
+  }
+
+  // PDF / DOCUMENTO
+  if (pdfUrl) {
+    const registerRes = await fetch('https://api.linkedin.com/v2/assets?action=registerUpload', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${account.access_token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        registerUploadRequest: {
+          recipes: ['urn:li:digitalmediaRecipe:feedshare-document'],
+          owner: author,
+          serviceRelationships: [{ relationshipType: 'OWNER', identifier: 'urn:li:userGeneratedContent' }],
+        },
+      }),
+    });
+    const register = await registerRes.json();
+    if (register.error) return { success: false, error: register.error };
+
+    const uploadUrl = register.value.uploadMechanism['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest'].uploadUrl;
+    const asset = register.value.asset;
+
+    const pdfRes = await fetch(pdfUrl);
+    const pdfBlob = await pdfRes.blob();
+    await fetch(uploadUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': pdfRes.headers.get('content-type') || 'application/pdf' },
+      body: pdfBlob,
+    });
+
+    const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${account.access_token}`,
+        'Content-Type': 'application/json',
+        'X-Restli-Protocol-Version': '2.0.0',
+      },
+      body: JSON.stringify({
+        author,
+        lifecycleState: 'PUBLISHED',
+        specificContent: {
+          'com.linkedin.ugc.ShareContent': {
+            shareCommentary: { text: content },
+            shareMediaCategory: 'DOCUMENT',
+            media: [{ status: 'READY', description: { text: content.slice(0, 200) }, media: asset }],
+          },
+        },
+        visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' },
+      }),
+    });
+    const post = await postRes.json();
+    if (post.error) return { success: false, error: post.error };
     return { success: true, externalId: post.id };
   }
 

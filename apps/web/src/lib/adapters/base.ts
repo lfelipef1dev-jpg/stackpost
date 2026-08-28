@@ -15,6 +15,8 @@ export interface PublishParams {
   };
   imageUrl?: string;
   videoUrl?: string;
+  mediaUrls?: string[];
+  pdfUrl?: string;
   mediaType?: 'IMAGE' | 'VIDEO' | 'CAROUSEL' | 'STORY';
 }
 

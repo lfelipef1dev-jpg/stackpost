@@ -73,12 +73,71 @@ export async function handleInstagramCallback(code: string) {
   };
 }
 
-export async function publishToInstagram(account: any, content: string, mediaUrl: string, mediaType: 'IMAGE' | 'VIDEO' | 'STORY' = 'IMAGE', firstComment?: string) {
+export async function publishToInstagram(account: any, content: string, mediaUrl: string, mediaType: 'IMAGE' | 'VIDEO' | 'STORY' | 'CAROUSEL' = 'IMAGE', firstComment?: string, carouselUrls?: string[]) {
   // Business Login for Instagram usa graph.instagram.com (nao graph.facebook.com)
   const igUserId = account.external_id || account.instagram_id;
   const token = account.access_token;
 
   if (!igUserId) return { success: false, error: 'Instagram: external_id nao encontrado na conta.' };
+
+  // CAROUSEL: criar container para cada midia, depois container pai
+  if (mediaType === 'CAROUSEL' && carouselUrls && carouselUrls.length > 0) {
+    const childrenIds: string[] = [];
+    for (const url of carouselUrls.slice(0, 10)) {
+      const isVideo = url.match(/\.(mp4|mov|webm)$/i);
+      const childParams: Record<string, string> = {
+        access_token: token,
+        is_carousel_item: 'true',
+      };
+      if (isVideo) {
+        childParams.media_type = 'VIDEO';
+        childParams.video_url = url;
+      } else {
+        childParams.image_url = url;
+      }
+
+      const childRes = await fetch(`https://graph.instagram.com/v23.0/${igUserId}/media`, {
+        method: 'POST',
+        body: new URLSearchParams(childParams),
+      });
+      const child = await childRes.json();
+      if (child.error) return { success: false, error: child.error.error_user_msg || child.error.message };
+      childrenIds.push(child.id);
+    }
+
+    // Aguardar processamento de videos
+    await new Promise((r) => setTimeout(r, 10000));
+
+    const carouselParams = new URLSearchParams({
+      access_token: token,
+      media_type: 'CAROUSEL',
+      caption: content,
+      children: JSON.stringify(childrenIds),
+    });
+
+    const carouselRes = await fetch(`https://graph.instagram.com/v23.0/${igUserId}/media`, {
+      method: 'POST',
+      body: carouselParams,
+    });
+    const carousel = await carouselRes.json();
+    if (carousel.error) return { success: false, error: carousel.error.error_user_msg || carousel.error.message };
+
+    const publishRes = await fetch(`https://graph.instagram.com/v23.0/${igUserId}/media_publish`, {
+      method: 'POST',
+      body: new URLSearchParams({ creation_id: carousel.id, access_token: token }),
+    });
+    const publish = await publishRes.json();
+    if (publish.error) return { success: false, error: publish.error.error_user_msg || publish.error.message };
+
+    if (firstComment?.trim() && publish.id) {
+      await fetch(`https://graph.instagram.com/v23.0/${publish.id}/comments`, {
+        method: 'POST',
+        body: new URLSearchParams({ message: firstComment.trim(), access_token: token }),
+      }).catch((err) => console.warn('Instagram first comment error:', err));
+    }
+
+    return { success: true, externalId: publish.id };
+  }
 
   // Criar container de midia - parametros diferentes pra video, imagem e story
   const params: Record<string, string> = {

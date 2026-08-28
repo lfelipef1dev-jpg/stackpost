@@ -78,7 +78,9 @@ export async function publishPost(postId: string) {
   const { data: accounts, error: accountsError } = await supabase
     .from('social_accounts')
     .select('*')
-    .in('platform', post.platforms);
+    .eq('team_id', post.team_id)
+    .in('platform', post.platforms)
+    .eq('status', 'active');
   if (accountsError) throw accountsError;
 
   const accountsList = accounts || [];
@@ -108,24 +110,47 @@ export async function publishPost(postId: string) {
 
       let imageUrl: string | undefined;
       let videoUrl: string | undefined;
+      let mediaUrls: string[] | undefined;
+      let pdfUrl: string | undefined;
       if (post.upload_ids?.length) {
-        const uploadId = post.upload_ids[0];
-        const data = uploadData[uploadId];
-        const isVideo = data?.mime_type?.startsWith('video/') || uploadId.endsWith('.mp4');
+        // Coletar todas as URLs de upload
+        const allUrls: string[] = [];
+        for (const uid of post.upload_ids) {
+          const data = uploadData[uid];
+          if (data?.url) {
+            allUrls.push(data.url);
+          } else if (uid.startsWith('http')) {
+            allUrls.push(uid);
+          } else {
+            allUrls.push(`${BASE_URL}/uploads/${uid}`);
+          }
+        }
+
+        const firstUploadId = post.upload_ids[0];
+        const firstData = uploadData[firstUploadId];
+        const isVideo = firstData?.mime_type?.startsWith('video/') || firstUploadId.endsWith('.mp4');
+        const isPdf = firstData?.mime_type === 'application/pdf' || firstUploadId.endsWith('.pdf');
 
         // Se tem derivada especifica da plataforma, usar
         if (platform === 'instagram' && derivatives.instagram_4x5 && !isVideo) {
           imageUrl = derivatives.instagram_4x5.startsWith('http') ? derivatives.instagram_4x5 : `${BASE_URL}${derivatives.instagram_4x5}`;
-        } else if (platform === 'linkedin' && derivatives.linkedin_1x1 && !isVideo) {
+        } else if (platform === 'linkedin' && derivatives.linkedin_1x1 && !isVideo && !isPdf) {
           imageUrl = derivatives.linkedin_1x1.startsWith('http') ? derivatives.linkedin_1x1 : `${BASE_URL}${derivatives.linkedin_1x1}`;
-        } else if (data?.url) {
+        } else if (firstData?.url) {
           if (isVideo) {
-            videoUrl = data.url;
+            videoUrl = firstData.url;
+          } else if (isPdf) {
+            pdfUrl = firstData.url;
           } else {
-            imageUrl = data.url;
+            imageUrl = firstData.url;
           }
         } else {
-          imageUrl = uploadId.startsWith('http') ? uploadId : `${BASE_URL}/uploads/${uploadId}`;
+          imageUrl = firstUploadId.startsWith('http') ? firstUploadId : `${BASE_URL}/uploads/${firstUploadId}`;
+        }
+
+        // Multi-midia: se tem mais de 1 upload e nao e video nem PDF
+        if (allUrls.length > 1 && !isVideo && !isPdf) {
+          mediaUrls = allUrls;
         }
       }
 
@@ -136,6 +161,9 @@ export async function publishPost(postId: string) {
         account,
         imageUrl,
         videoUrl,
+        mediaUrls,
+        pdfUrl,
+        mediaType: mediaUrls && mediaUrls.length > 1 ? 'CAROUSEL' : undefined,
       });
 
       const { error: ppError } = await supabase
