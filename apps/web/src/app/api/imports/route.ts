@@ -39,8 +39,11 @@ export async function POST(req: NextRequest) {
       const mediaData = await mediaRes.json();
       imported = mediaData.data || [];
     } else if (account.platform === 'linkedin') {
+      const author = account.external_id && account.external_id.startsWith('urn:li:')
+        ? account.external_id
+        : `urn:li:person:${account.external_id}`;
       const postsRes = await fetch(
-        `https://api.linkedin.com/v2/shares?q=owners&owners=${encodeURIComponent(`urn:li:person:${account.external_id}`)}&count=${maxLimit}`,
+        `https://api.linkedin.com/v2/shares?q=owners&owners=${encodeURIComponent(author)}&count=${maxLimit}`,
         { headers: { Authorization: `Bearer ${account.access_token}` } }
       );
       const postsData = await postsRes.json();
