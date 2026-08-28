@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
     // Buscar uploads antigos nao associados a posts
     const { data: uploads, error } = await supabase
       .from('uploads')
-      .select('id, url')
+      .select('id, url, storage_path, team_id')
       .lt('created_at', sevenDaysAgo)
       .is('post_id', null)
       .limit(100);
@@ -26,13 +26,40 @@ export async function GET(req: NextRequest) {
     if (error) throw error;
 
     let cleaned = 0;
+    let storageDeleted = 0;
+    let storageFailed = 0;
+
     for (const upload of uploads || []) {
-      // TODO: deletar do R2/Storage
+      // Deletar do Supabase Storage se tiver bucket/path
+      const bucketName = process.env.UPLOADS_BUCKET || 'uploads';
+      const path = upload.storage_path || upload.url?.split(`/storage/v1/object/${bucketName}/`)[1];
+
+      if (path) {
+        const { error: storageErr } = await supabase.storage
+          .from(bucketName)
+          .remove([path]);
+        if (storageErr) {
+          console.warn(`Storage delete failed for ${upload.id}:`, storageErr.message);
+          storageFailed++;
+        } else {
+          storageDeleted++;
+        }
+      }
+
+      // Deletar do banco
       const { error: delErr } = await supabase.from('uploads').delete().eq('id', upload.id);
       if (!delErr) cleaned++;
     }
 
-    return NextResponse.json({ ok: true, cron: 'cleanup-uploads', cleaned, total: (uploads || []).length, timestamp: now });
+    return NextResponse.json({
+      ok: true,
+      cron: 'cleanup-uploads',
+      cleaned,
+      storageDeleted,
+      storageFailed,
+      total: (uploads || []).length,
+      timestamp: now,
+    });
   } catch (err: any) {
     console.error('Cron cleanup-uploads error:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });

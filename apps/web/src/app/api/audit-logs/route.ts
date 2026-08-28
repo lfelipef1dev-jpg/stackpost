@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
       .from('audit_logs')
       .insert({
         team_id: user.teamId,
-        user_id: user.userId || user.id,
+        user_id: user.id,
         action,
         resource: resource || null,
         resource_id: resourceId || null,

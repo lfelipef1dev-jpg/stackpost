@@ -1,11 +1,61 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
+import { getUserFromToken } from '@/lib/auth';
 
-// Connect social account
+// POST /api/accounts/connect — conectar conta manualmente (OAuth e feito nas rotas /api/oauth/*)
 export async function POST(req: NextRequest) {
-  const body = await req.json().catch(() => ({}));
-  const supabase = getSupabase();
-  // TODO: Connect social account
-  return NextResponse.json({ ok: true, endpoint: 'accounts/connect', method: 'POST' });
-}
+  const user = await getUserFromToken(req);
+  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
+  const { platform, accessToken, refreshToken, externalId, username, platformAccountId, metadata } = await req.json().catch(() => ({}));
+  if (!platform || !accessToken) {
+    return NextResponse.json({ error: 'platform e accessToken obrigatorios' }, { status: 400 });
+  }
+
+  const supabase = getSupabase();
+
+  try {
+    const { data: existing } = await supabase
+      .from('social_accounts')
+      .select('id')
+      .eq('team_id', user.teamId)
+      .eq('platform', platform)
+      .eq('external_id', externalId || '')
+      .maybeSingle();
+
+    const accountData = {
+      access_token: accessToken,
+      refresh_token: refreshToken || null,
+      external_id: externalId || null,
+      platform_account_id: platformAccountId || null,
+      platform_metadata: metadata || {},
+      status: 'active',
+    };
+
+    if (existing) {
+      const { data, error } = await supabase
+        .from('social_accounts')
+        .update(accountData)
+        .eq('id', existing.id)
+        .select()
+        .single();
+      if (error) throw error;
+      return NextResponse.json(data);
+    }
+
+    const { data, error } = await supabase
+      .from('social_accounts')
+      .insert({
+        team_id: user.teamId,
+        platform,
+        username: username || 'unknown',
+        ...accountData,
+      })
+      .select()
+      .single();
+    if (error) throw error;
+    return NextResponse.json(data, { status: 201 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}

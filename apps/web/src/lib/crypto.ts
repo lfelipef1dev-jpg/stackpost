@@ -35,5 +35,5 @@ export function decryptToken(ciphertext: string): string {
 }
 
 export function isEncrypted(value: string): boolean {
-  return value && value.includes(':') && value.split(':').length === 3;
+  return Boolean(value) && value.includes(':') && value.split(':').length === 3;
 }

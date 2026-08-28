@@ -1,10 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
+import { getUserFromToken } from '@/lib/auth';
 
-// Upload usage stats
+// GET /api/usage/uploads — contagem de uploads do mes atual
 export async function GET(req: NextRequest) {
-  const supabase = getSupabase();
-  // TODO: Upload usage stats
-  return NextResponse.json({ ok: true, endpoint: 'usage/uploads', method: 'GET' });
-}
+  const user = await getUserFromToken(req);
+  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
+  const supabase = getSupabase();
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
+  try {
+    const { count, error } = await supabase
+      .from('uploads')
+      .select('id', { count: 'exact', head: true })
+      .eq('team_id', user.teamId)
+      .gte('created_at', startOfMonth);
+
+    if (error) throw error;
+    return NextResponse.json({ uploads: count || 0, period: 'current_month', since: startOfMonth });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
