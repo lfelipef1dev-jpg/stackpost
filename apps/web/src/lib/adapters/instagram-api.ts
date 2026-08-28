@@ -73,22 +73,29 @@ export async function handleInstagramCallback(code: string) {
   };
 }
 
-export async function publishToInstagram(account: any, content: string, mediaUrl: string, mediaType: 'IMAGE' | 'VIDEO' = 'IMAGE') {
+export async function publishToInstagram(account: any, content: string, mediaUrl: string, mediaType: 'IMAGE' | 'VIDEO' | 'STORY' = 'IMAGE', firstComment?: string) {
   // Business Login for Instagram usa graph.instagram.com (nao graph.facebook.com)
   const igUserId = account.external_id || account.instagram_id;
   const token = account.access_token;
 
-  // Criar container de midia - parametros diferentes pra video e imagem
+  if (!igUserId) return { success: false, error: 'Instagram: external_id nao encontrado na conta.' };
+
+  // Criar container de midia - parametros diferentes pra video, imagem e story
   const params: Record<string, string> = {
-    caption: content,
     access_token: token,
   };
 
-  if (mediaType === 'VIDEO') {
+  if (mediaType === 'STORY') {
+    // Stories exigem media_type STORIES e nao aceitam caption
+    params.media_type = 'STORIES';
+    params.image_url = mediaUrl;
+  } else if (mediaType === 'VIDEO') {
     params.media_type = 'REELS';
     params.video_url = mediaUrl;
+    params.caption = content;
   } else {
     params.image_url = mediaUrl;
+    params.caption = content;
   }
 
   const containerRes = await fetch(`https://graph.instagram.com/v23.0/${igUserId}/media`, {
@@ -99,8 +106,8 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
 
   if (container.error) return { success: false, error: container.error.error_user_msg || container.error.message };
 
-  // Video precisa de mais tempo pra processar
-  const waitMs = mediaType === 'VIDEO' ? 10000 : 3000;
+  // Video e story precisam de mais tempo pra processar
+  const waitMs = (mediaType === 'VIDEO' || mediaType === 'STORY') ? 10000 : 3000;
   await new Promise((r) => setTimeout(r, waitMs));
 
   // Para video, verificar se o container terminou de processar
@@ -127,6 +134,17 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
   const publish = await publishRes.json();
 
   if (publish.error) return { success: false, error: publish.error.error_user_msg || publish.error.message };
+
+  // First comment (regra do bundle: max 2.200, ja validado no adapter)
+  if (firstComment?.trim() && publish.id) {
+    await fetch(`https://graph.instagram.com/v23.0/${publish.id}/comments`, {
+      method: 'POST',
+      body: new URLSearchParams({
+        message: firstComment.trim(),
+        access_token: token,
+      }),
+    }).catch((err) => console.warn('Instagram first comment error:', err));
+  }
 
   return { success: true, externalId: publish.id };
 }

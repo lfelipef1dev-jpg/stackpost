@@ -8,13 +8,14 @@ export interface PublishResult {
 export interface PublishParams {
   content: string;
   uploadIds?: string[];
+  firstComment?: string;
   account: {
     access_token: string;
     [key: string]: any;
   };
   imageUrl?: string;
   videoUrl?: string;
-  mediaType?: 'IMAGE' | 'VIDEO' | 'CAROUSEL';
+  mediaType?: 'IMAGE' | 'VIDEO' | 'CAROUSEL' | 'STORY';
 }
 
 export abstract class PlatformAdapter {

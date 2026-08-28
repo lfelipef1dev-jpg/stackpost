@@ -132,6 +132,7 @@ export async function publishPost(postId: string) {
       const result = await adapter.publish({
         content: post.content,
         uploadIds: post.upload_ids,
+        firstComment: post.first_comment,
         account,
         imageUrl,
         videoUrl,

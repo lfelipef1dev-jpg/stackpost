@@ -22,12 +22,15 @@ export class InstagramAdapter extends PlatformAdapter {
     if (params.content.length > 2200) {
       return { success: false, error: { code: 'VALIDATION', message: 'Instagram: texto maximo 2200 caracteres.' } };
     }
+    if (params.firstComment && params.firstComment.length > 2200) {
+      return { success: false, error: { code: 'VALIDATION', message: 'Instagram: firstComment maximo 2200 caracteres.' } };
+    }
     const mediaUrl = params.videoUrl || params.imageUrl;
     if (!mediaUrl) {
       return { success: false, error: { code: 'VALIDATION', message: 'Instagram: midia obrigatoria.' } };
     }
-    const mediaType = params.videoUrl ? 'VIDEO' : 'IMAGE';
-    return publishToInstagram(params.account, params.content, mediaUrl, mediaType);
+    const mediaType = params.mediaType || (params.videoUrl ? 'VIDEO' : 'IMAGE');
+    return publishToInstagram(params.account, params.content, mediaUrl, mediaType as any, params.firstComment);
   }
 }
 
