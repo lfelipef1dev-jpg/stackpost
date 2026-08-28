@@ -18,17 +18,13 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  // Escopos completos para gerenciar Pages: posts, reels, stories, comentarios, insights, mensagens
+  // Escopos basicos que funcionam sem App Review (development mode).
+  // Escopos avancados (pages_manage_engagement, pages_read_engagement, pages_read_user_content,
+  // pages_manage_metadata, pages_messaging) exigem App Review no Meta for Developers.
+  // Adicionar depois da aprovacao.
   const scopes = [
     'pages_show_list',
     'pages_manage_posts',
-    'pages_manage_engagement',
-    'pages_read_engagement',
-    'pages_read_user_content',
-    'pages_manage_metadata',
-    'pages_messaging',
-    'read_insights',
-    'business_management',
   ];
 
   const url = new URL('https://www.facebook.com/v21.0/dialog/oauth');
