@@ -27,19 +27,25 @@ export async function GET(req: NextRequest) {
 
     let published = 0;
     let failed = 0;
+    const errors: any[] = [];
 
     for (const post of posts || []) {
       try {
         const result = await publishPost(post.id);
-        if (result.status === 'posted') published++;
-        else failed++;
-      } catch (err) {
+        if (result.status === 'posted') {
+          published++;
+        } else {
+          failed++;
+          errors.push({ id: post.id, result });
+        }
+      } catch (err: any) {
         console.error(`Failed to publish ${post.id}:`, err);
         failed++;
+        errors.push({ id: post.id, error: err.message, stack: err.stack });
       }
     }
 
-    return NextResponse.json({ ok: true, cron: 'publish-scheduled', published, failed, total: (posts || []).length, timestamp: now });
+    return NextResponse.json({ ok: true, cron: 'publish-scheduled', published, failed, total: (posts || []).length, errors, timestamp: now });
   } catch (err: any) {
     console.error('Cron publish-scheduled error:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
