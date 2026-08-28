@@ -19,7 +19,7 @@ export class FacebookAdapter extends PlatformAdapter {
     if (params.uploadIds && params.uploadIds.length > 4) return { success: false, error: { code: 'VALIDATION', message: 'Facebook: maximo 4 imagens por post.' } };
 
     try {
-      const postResult = await this.publishMedia(pageId, accessToken, content, mediaType, params.imageUrl || '', params.videoUrl || '');
+      const postResult = await this.publishMedia(pageId, accessToken, content, mediaType, params.imageUrl || '', params.videoUrl || '', params.mediaUrls);
 
       if (postResult.success && firstComment && postResult.externalId) {
         await fetch(`https://graph.facebook.com/v19.0/${postResult.externalId}/comments`, {
@@ -41,7 +41,8 @@ export class FacebookAdapter extends PlatformAdapter {
     content: string,
     mediaType: string,
     imageUrl: string,
-    videoUrl: string
+    videoUrl: string,
+    mediaUrls?: string[]
   ): Promise<PublishResult> {
     // STORY: upload de imagem para /stories
     if (mediaType === 'STORY' && imageUrl) {
@@ -112,9 +113,9 @@ export class FacebookAdapter extends PlatformAdapter {
     // IMAGE normal: upload via /photos
     if (imageUrl) {
       // CAROUSEL: multiplas imagens (ate 4)
-      if (params.mediaUrls && params.mediaUrls.length > 1) {
+      if (mediaUrls && mediaUrls.length > 1) {
         const mediaIds: string[] = [];
-        for (const url of params.mediaUrls.slice(0, 4)) {
+        for (const url of mediaUrls.slice(0, 4)) {
           const imgRes = await fetch(url);
           const imgBlob = await imgRes.blob();
           const formData = new FormData();

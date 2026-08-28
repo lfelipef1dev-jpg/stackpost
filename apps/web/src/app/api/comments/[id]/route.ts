@@ -3,7 +3,8 @@ import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 
 // GET /api/comments/[id] — buscar comment
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
@@ -11,7 +12,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   const { data, error } = await supabase
     .from('comments')
     .select('*, posts!inner(team_id)')
-    .eq('id', params.id)
+    .eq('id', id)
     .single();
   if (error || !data) return NextResponse.json({ error: 'Comment nao encontrado' }, { status: 404 });
   if (data.posts?.team_id !== user.teamId) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
@@ -19,7 +20,8 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 }
 
 // DELETE /api/comments/[id] — deletar comment
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
@@ -27,7 +29,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   const { data: comment, error: cError } = await supabase
     .from('comments')
     .select('*, posts!inner(team_id, platforms)')
-    .eq('id', params.id)
+    .eq('id', id)
     .single();
   if (cError || !comment) return NextResponse.json({ error: 'Comment nao encontrado' }, { status: 404 });
   if (comment.posts?.team_id !== user.teamId) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
@@ -62,7 +64,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     }
   }
 
-  const { error: delError } = await supabase.from('comments').delete().eq('id', params.id);
+  const { error: delError } = await supabase.from('comments').delete().eq('id', id);
   if (delError) throw delError;
 
   return NextResponse.json({ success: true });

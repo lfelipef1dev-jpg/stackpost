@@ -3,7 +3,8 @@ import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 
 // GET /api/posts/[id] — buscar post
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
@@ -11,7 +12,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   const { data: post, error } = await supabase
     .from('posts')
     .select('*, post_platforms(*)')
-    .eq('id', params.id)
+    .eq('id', id)
     .eq('team_id', user.teamId)
     .maybeSingle();
   if (error || !post) return NextResponse.json({ error: 'Post nao encontrado' }, { status: 404 });
@@ -19,7 +20,8 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 }
 
 // PATCH /api/posts/[id] — editar post
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
@@ -38,7 +40,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const { data, error } = await supabase
     .from('posts')
     .update(updates)
-    .eq('id', params.id)
+    .eq('id', id)
     .eq('team_id', user.teamId)
     .select()
     .maybeSingle();
@@ -47,7 +49,8 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 }
 
 // DELETE /api/posts/[id] — deletar post (e tentar deletar nas plataformas)
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
@@ -57,7 +60,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   const { data: ppRows } = await supabase
     .from('post_platforms')
     .select('platform, external_id')
-    .eq('post_id', params.id)
+    .eq('post_id', id)
     .eq('status', 'posted')
     .not('external_id', 'is', null);
 
@@ -100,8 +103,8 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   }
 
   // Deletar do banco
-  await supabase.from('post_platforms').delete().eq('post_id', params.id);
-  const { error } = await supabase.from('posts').delete().eq('id', params.id).eq('team_id', user.teamId);
+  await supabase.from('post_platforms').delete().eq('post_id', id);
+  const { error } = await supabase.from('posts').delete().eq('id', id).eq('team_id', user.teamId);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   return NextResponse.json({ success: true });

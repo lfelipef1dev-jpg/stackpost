@@ -3,12 +3,12 @@ import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 import { publishPost } from '@/lib/publisher';
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
+  const { id: postId } = await params;
   const supabase = getSupabase();
-  const postId = params.id;
 
   try {
     const { data: post, error: postError } = await supabase

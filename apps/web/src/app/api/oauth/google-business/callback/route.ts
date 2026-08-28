@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Se tem locations, criar uma conta por location; senao, uma conta generica
-    const accountsToInsert = locations.length > 0
+    const accountsToInsert: any[] = locations.length > 0
       ? locations.map((loc) => ({
           team_id: user.teamId,
           platform: 'google_business',
@@ -81,6 +81,8 @@ export async function GET(req: NextRequest) {
           username: 'Google Business',
           access_token: tokenData.access_token,
           refresh_token: tokenData.refresh_token,
+          external_id: null,
+          platform_account_id: null,
           platform_metadata: { type: 'account' },
           expires_at: tokenData.expires_in ? new Date(Date.now() + tokenData.expires_in * 1000).toISOString() : null,
           status: 'active',
