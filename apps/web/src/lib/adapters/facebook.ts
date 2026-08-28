@@ -86,17 +86,15 @@ export class FacebookAdapter extends PlatformAdapter {
 
     // VIDEO normal: upload via /videos
     if (videoUrl) {
-      const videoRes = await fetch(videoUrl);
-      const videoBlob = await videoRes.blob();
-
-      const formData = new FormData();
-      formData.append('access_token', accessToken);
-      formData.append('description', content);
-      formData.append('source', videoBlob, 'video.mp4');
-
+      // Usar file_url em vez de fetch+source para evitar loop no Cloudflare Worker
       const res = await fetch(`https://graph.facebook.com/v26.0/${pageId}/videos`, {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_token: accessToken,
+          description: content,
+          file_url: videoUrl,
+        }),
       });
 
       const data = await res.json();
@@ -116,15 +114,14 @@ export class FacebookAdapter extends PlatformAdapter {
       if (mediaUrls && mediaUrls.length > 1) {
         const mediaIds: string[] = [];
         for (const url of mediaUrls.slice(0, 4)) {
-          const imgRes = await fetch(url);
-          const imgBlob = await imgRes.blob();
-          const formData = new FormData();
-          formData.append('access_token', accessToken);
-          formData.append('published', 'false');
-          formData.append('source', imgBlob, 'image.jpg');
           const res = await fetch(`https://graph.facebook.com/v26.0/${pageId}/photos`, {
             method: 'POST',
-            body: formData,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              access_token: accessToken,
+              published: false,
+              url: url,
+            }),
           });
           const data = await res.json();
           if (!res.ok) return { success: false, error: normalizeError(new Error(data.error?.message || 'Facebook carousel photo error'), this.platform) };
@@ -151,17 +148,15 @@ export class FacebookAdapter extends PlatformAdapter {
         };
       }
 
-      const imgRes = await fetch(imageUrl);
-      const imgBlob = await imgRes.blob();
-
-      const formData = new FormData();
-      formData.append('access_token', accessToken);
-      formData.append('message', content);
-      formData.append('source', imgBlob, 'image.jpg');
-
+      // Usar url em vez de fetch+source para evitar loop no Cloudflare Worker
       const res = await fetch(`https://graph.facebook.com/v26.0/${pageId}/photos`, {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_token: accessToken,
+          message: content,
+          url: imageUrl,
+        }),
       });
 
       const data = await res.json();
