@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
   }
 
   const scopes = [
+    'pages_manage_posts',
     'pages_show_list',
   ];
 
