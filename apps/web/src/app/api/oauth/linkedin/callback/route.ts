@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const data = await handleLinkedInCallback(code);
+    const accounts = await handleLinkedInCallback(code);
 
     const supabase = getSupabase();
     const { data: team } = await supabase
@@ -22,34 +22,42 @@ export async function GET(req: NextRequest) {
       .single();
     const teamId = team?.id;
 
-    const { data: existing } = await supabase
-      .from('social_accounts')
-      .select('id')
-      .eq('platform', 'linkedin')
-      .eq('username', data.username)
-      .maybeSingle();
+    for (const account of accounts) {
+      const { data: existing } = await supabase
+        .from('social_accounts')
+        .select('id')
+        .eq('platform', 'linkedin')
+        .eq('external_id', account.externalId)
+        .maybeSingle();
 
-    if (existing) {
-      const { error: updateError } = await supabase
-        .from('social_accounts')
-        .update({ access_token: data.accessToken, external_id: data.externalId, expires_at: data.expiresAt })
-        .eq('id', existing.id);
-      if (updateError) throw updateError;
-    } else {
-      const { error: insertError } = await supabase
-        .from('social_accounts')
-        .insert({
-          team_id: teamId,
-          platform: 'linkedin',
-          username: data.username,
-          access_token: data.accessToken,
-          external_id: data.externalId,
-          expires_at: data.expiresAt,
-        });
-      if (insertError) throw insertError;
+      if (existing) {
+        const { error: updateError } = await supabase
+          .from('social_accounts')
+          .update({
+            access_token: account.accessToken,
+            username: account.username,
+            expires_at: account.expiresAt,
+            status: 'active',
+          })
+          .eq('id', existing.id);
+        if (updateError) throw updateError;
+      } else {
+        const { error: insertError } = await supabase
+          .from('social_accounts')
+          .insert({
+            team_id: teamId,
+            platform: 'linkedin',
+            username: account.username,
+            access_token: account.accessToken,
+            external_id: account.externalId,
+            expires_at: account.expiresAt,
+            status: 'active',
+          });
+        if (insertError) throw insertError;
+      }
     }
 
-    return NextResponse.redirect(new URL('/dashboard?connected=linkedin', req.url));
+    return NextResponse.redirect(new URL('/dashboard?connected=linkedin&accounts=' + accounts.length, req.url));
   } catch (error: any) {
     console.error('LinkedIn OAuth error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });

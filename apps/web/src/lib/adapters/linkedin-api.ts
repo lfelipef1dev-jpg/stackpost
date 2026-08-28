@@ -5,7 +5,8 @@ const LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;
 const LINKEDIN_REDIRECT_URI = process.env.LINKEDIN_REDIRECT_URI || 'http://localhost:3333/api/oauth/linkedin/callback';
 
 export function getLinkedInAuthUrl(): string {
-  const scopes = encodeURIComponent('openid profile w_member_social');
+  // r_basicprofile retido para compatibilidade; r_organization_social permite Company Pages
+  const scopes = encodeURIComponent('openid profile w_member_social r_organization_social w_organization_social');
   return `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${LINKEDIN_CLIENT_ID}&redirect_uri=${encodeURIComponent(LINKEDIN_REDIRECT_URI)}&scope=${scopes}`;
 }
 
@@ -25,20 +26,52 @@ export async function handleLinkedInCallback(code: string) {
 
   if (data.error) throw new Error(data.error_description || data.error);
 
+  const accessToken = data.access_token;
+
   // Usar /v2/userinfo (openid + profile) pra pegar sub (person ID) e nome
   const userRes = await fetch('https://api.linkedin.com/v2/userinfo', {
-    headers: { Authorization: `Bearer ${data.access_token}` },
+    headers: { Authorization: `Bearer ${accessToken}` },
   });
   const user = await userRes.json();
 
   if (user.error) throw new Error(user.error_description || user.error || 'Erro ao buscar perfil');
 
-  return {
-    accessToken: data.access_token,
+  const accounts: any[] = [];
+
+  // Conta pessoal
+  accounts.push({
+    accessToken,
     username: user.name || user.given_name || user.sub || 'LinkedIn User',
     externalId: user.sub,
     expiresAt: new Date(Date.now() + (data.expires_in || 5184000) * 1000).toISOString(),
-  };
+    type: 'person',
+  });
+
+  // Buscar Company Pages administradas
+  try {
+    const orgsRes = await fetch(
+      'https://api.linkedin.com/v2/organizationalEntityAcls?q=roleAssignee&role=ADMINISTRATOR&projection=(elements*(organizationalEntity~(id,localizedName,vanityName)))',
+      { headers: { Authorization: `Bearer ${accessToken}`, 'X-Restli-Protocol-Version': '2.0.0' } }
+    );
+    const orgsData = await orgsRes.json();
+    if (orgsData.elements) {
+      for (const el of orgsData.elements) {
+        const org = el.organizationalEntity;
+        const orgId = org.match(/\d+$/)[0];
+        accounts.push({
+          accessToken,
+          username: `${org.localizedName || 'Company'} (Page)`,
+          externalId: `urn:li:organization:${orgId}`,
+          expiresAt: new Date(Date.now() + (data.expires_in || 5184000) * 1000).toISOString(),
+          type: 'company',
+        });
+      }
+    }
+  } catch (err) {
+    console.warn('LinkedIn Company Pages fetch error:', err);
+  }
+
+  return accounts;
 }
 
 export async function publishToLinkedIn(account: any, content: string, imageUrl: string, videoUrl?: string) {
