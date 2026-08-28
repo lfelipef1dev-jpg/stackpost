@@ -94,7 +94,7 @@ export async function PUT(req: NextRequest) {
   if (error) return error;
 
   const body = await req.json();
-  const { id, scheduledAt, status } = body;
+  const { id, content, platforms, uploadIds, scheduledAt, status, firstComment, derivatives } = body;
 
   if (!id) return NextResponse.json({ error: 'ID obrigatorio' }, { status: 400 });
 
@@ -107,12 +107,19 @@ export async function PUT(req: NextRequest) {
 
   try {
     const supabase = getSupabase();
+    const updates: any = {
+      scheduled_at: scheduledAt,
+      status: newStatus,
+    };
+    if (content !== undefined) updates.content = content;
+    if (platforms !== undefined) updates.platforms = platforms;
+    if (uploadIds !== undefined) updates.upload_ids = uploadIds;
+    if (firstComment !== undefined) updates.first_comment = firstComment;
+    if (derivatives !== undefined) updates.derivatives = derivatives;
+
     const { data, error: updateError } = await supabase
       .from('posts')
-      .update({
-        scheduled_at: scheduledAt,
-        status: newStatus,
-      })
+      .update(updates)
       .eq('id', id)
       .eq('team_id', user!.teamId)
       .select()
