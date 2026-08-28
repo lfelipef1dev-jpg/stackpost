@@ -24,14 +24,14 @@ export async function GET(req: NextRequest) {
 
     const { data: snapshots } = await supabase
       .from('analytics_snapshots')
-      .select('platform, raw_payload, created_at')
+      .select('platform, raw, created_at')
       .eq('post_id', postId)
       .order('created_at', { ascending: false });
 
     const byPlatform: Record<string, any> = {};
     for (const s of snapshots || []) {
       if (!byPlatform[s.platform]) {
-        byPlatform[s.platform] = { raw: s.raw_payload, captured_at: s.created_at };
+        byPlatform[s.platform] = { raw: s.raw, captured_at: s.created_at };
       }
     }
 

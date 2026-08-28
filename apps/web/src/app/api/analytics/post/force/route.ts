@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
           comments: metrics.comments,
           shares: metrics.shares,
           saves: metrics.saves,
-          raw_payload: metrics.raw,
+          raw: metrics.raw,
         });
 
         refreshed.push({ platform: pp.platform, ...metrics });

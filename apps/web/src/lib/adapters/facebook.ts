@@ -111,6 +111,45 @@ export class FacebookAdapter extends PlatformAdapter {
 
     // IMAGE normal: upload via /photos
     if (imageUrl) {
+      // CAROUSEL: multiplas imagens (ate 4)
+      if (params.mediaUrls && params.mediaUrls.length > 1) {
+        const mediaIds: string[] = [];
+        for (const url of params.mediaUrls.slice(0, 4)) {
+          const imgRes = await fetch(url);
+          const imgBlob = await imgRes.blob();
+          const formData = new FormData();
+          formData.append('access_token', accessToken);
+          formData.append('published', 'false');
+          formData.append('source', imgBlob, 'image.jpg');
+          const res = await fetch(`https://graph.facebook.com/v19.0/${pageId}/photos`, {
+            method: 'POST',
+            body: formData,
+          });
+          const data = await res.json();
+          if (!res.ok) return { success: false, error: normalizeError(new Error(data.error?.message || 'Facebook carousel photo error'), this.platform) };
+          mediaIds.push(data.id);
+        }
+
+        // Postar no feed com attached_media
+        const attachedMedia = mediaIds.map((id) => ({ media_fbid: id }));
+        const feedRes = await fetch(`https://graph.facebook.com/v19.0/${pageId}/feed`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: content,
+            attached_media: attachedMedia,
+            access_token: accessToken,
+          }),
+        });
+        const feedData = await feedRes.json();
+        if (!feedRes.ok) return { success: false, error: normalizeError(new Error(feedData.error?.message || 'Facebook carousel feed error'), this.platform) };
+        return {
+          success: true,
+          externalId: feedData.id,
+          externalUrl: `https://facebook.com/${feedData.id.replace('_', '/posts/')}`,
+        };
+      }
+
       const imgRes = await fetch(imageUrl);
       const imgBlob = await imgRes.blob();
 

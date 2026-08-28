@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
     let totals = { impressions: 0, views: 0, likes: 0, comments: 0, shares: 0, saves: 0 };
     for (const s of snapshots || []) {
       if (!byPlatform[s.platform]) {
-        byPlatform[s.platform] = { impressions: 0, views: 0, likes: 0, comments: 0, shares: 0, saves: 0, raw: s.raw_payload };
+        byPlatform[s.platform] = { impressions: 0, views: 0, likes: 0, comments: 0, shares: 0, saves: 0, raw: s.raw };
       }
       byPlatform[s.platform].impressions += s.impressions || 0;
       byPlatform[s.platform].views += s.views || 0;
