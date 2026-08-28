@@ -19,9 +19,7 @@ export async function GET(req: NextRequest) {
   }
 
   const scopes = [
-    'pages_manage_posts',
     'pages_show_list',
-    'business_management',
   ];
 
   const url = new URL('https://www.facebook.com/v19.0/dialog/oauth');
