@@ -20,10 +20,7 @@ export async function GET(req: NextRequest) {
 
   const scopes = [
     'pages_manage_posts',
-    'pages_read_engagement',
     'pages_show_list',
-    'pages_messaging',
-    'publish_to_groups',
     'business_management',
   ];
 
