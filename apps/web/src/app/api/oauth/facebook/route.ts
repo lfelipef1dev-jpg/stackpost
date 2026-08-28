@@ -27,7 +27,8 @@ export async function GET(req: NextRequest) {
     'pages_manage_posts',
   ];
 
-  const url = new URL('https://www.facebook.com/v21.0/dialog/oauth');
+  // Usar mesma versao da API configurada no App (v26.0) para evitar conflitos de escopo
+  const url = new URL('https://www.facebook.com/v26.0/dialog/oauth');
   url.searchParams.set('client_id', META_APP_ID);
   url.searchParams.set('redirect_uri', FACEBOOK_REDIRECT_URI);
   url.searchParams.set('scope', scopes.join(','));

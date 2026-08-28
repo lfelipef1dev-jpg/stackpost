@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     } else if (account.platform === 'facebook') {
       const pageId = account.platform_account_id || account.external_id;
       const res = await fetch(
-        `https://graph.facebook.com/v21.0/${pageId}?fields=name,picture,followers_count&access_token=${account.access_token}`
+        `https://graph.facebook.com/v26.0/${pageId}?fields=name,picture,followers_count&access_token=${account.access_token}`
       );
       const data = await res.json();
       if (data.name) updates.username = data.name;

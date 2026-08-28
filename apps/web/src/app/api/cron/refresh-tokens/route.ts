@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
 
         if (platform === 'facebook' || platform === 'instagram' || platform === 'meta') {
           // Meta Graph API — fb_exchange_token
-          const res = await fetch('https://graph.facebook.com/v21.0/oauth/access_token', {
+          const res = await fetch('https://graph.facebook.com/v26.0/oauth/access_token', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({

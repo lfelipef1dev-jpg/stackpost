@@ -20,24 +20,19 @@ const scheduledHandler = `
     console.log('[cron] scheduled handler fired', event.cron);
     ctx.waitUntil(
       (async () => {
-        const baseUrl = 'https://stackpost.expostacker.com.br';
-        const cronSecret = env.CRON_SECRET || '';
         const routes = [
           '/api/cron/publish-scheduled',
           '/api/cron/refresh-tokens',
         ];
         for (const route of routes) {
           try {
-            const url = baseUrl + route;
+            const url = 'https://stackpost.expostacker.com.br' + route;
             console.log('[cron] Fetching', url);
-            const resp = await fetch(url, {
-              method: 'GET',
-              headers: cronSecret ? { authorization: 'Bearer ' + cronSecret } : {},
-            });
+            const resp = await fetch(url);
             const text = await resp.text();
             console.log('[cron] ' + route + ' -> ' + resp.status + ': ' + text.substring(0, 200));
           } catch (e) {
-            console.error('[cron] Erro em ' + route + ':', e.message, e.stack);
+            console.error('[cron] Erro em ' + route + ':', e.message);
           }
         }
       })()

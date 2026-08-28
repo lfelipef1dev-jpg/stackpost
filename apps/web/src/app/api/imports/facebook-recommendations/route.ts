@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
     // Facebook recommendations/reviews via graph API
     const res = await fetch(
-      `https://graph.facebook.com/v21.0/${pageId}/ratings?fields=reviewer,rating,recommendation_type,review_text,created_time,open_graph_story&limit=${maxLimit}&access_token=${account.access_token}`
+      `https://graph.facebook.com/v26.0/${pageId}/ratings?fields=reviewer,rating,recommendation_type,review_text,created_time,open_graph_story&limit=${maxLimit}&access_token=${account.access_token}`
     );
     const data = await res.json();
 

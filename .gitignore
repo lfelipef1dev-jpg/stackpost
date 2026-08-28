@@ -15,8 +15,24 @@ node_modules
 # Browser sessions e cache
 sessao_meta/
 sessao_*/
+scripts/meta_session/
+scripts/supabase_session/
+scripts/linkedin_session/
+scripts/*_session/
+migrations/supabase_session/
+migrations/*_session/
 *.pem
 *.key
+
+# Scripts auxiliares locais (nao fazem parte do produto)
+scripts/*.py
+scripts/*.json
+scripts/*.png
+scripts/*.txt
+scripts/*.md
+tests_nexus/
+videos_demo/
+commit-msg*.txt
 
 # Videos e arquivos grandes
 videos/

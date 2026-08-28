@@ -46,8 +46,8 @@ export async function POST(req: NextRequest) {
 
         if (pp.platform === 'instagram' || pp.platform === 'facebook') {
           const apiBase = pp.platform === 'instagram'
-            ? `https://graph.facebook.com/v21.0/${account.external_id}`
-            : `https://graph.facebook.com/v21.0/${pp.external_id}`;
+            ? `https://graph.facebook.com/v26.0/${account.external_id}`
+            : `https://graph.facebook.com/v26.0/${pp.external_id}`;
           const fields = pp.platform === 'instagram'
             ? 'insights.metric(impressions,reach,likes,comments,saves)'
             : 'insights.metric(post_impressions,post_reactions_like_total,post_comments,post_shares)';

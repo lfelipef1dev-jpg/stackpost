@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
   try {
     // Instagram Music Search (requere instagram_business_manage_messages)
     const res = await fetch(
-      `https://graph.facebook.com/v21.0/${account.external_id}/music?fields=id,title,artist&access_token=${account.access_token}`
+      `https://graph.facebook.com/v26.0/${account.external_id}/music?fields=id,title,artist&access_token=${account.access_token}`
     );
     const data = await res.json();
     if (!res.ok) return NextResponse.json({ error: data.error?.message || 'Audio search nao disponivel' }, { status: 400 });

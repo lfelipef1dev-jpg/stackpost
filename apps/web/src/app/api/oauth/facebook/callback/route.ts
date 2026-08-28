@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
 
   try {
     // 1. Trocar code por user access token de curta duracao
-    const tokenUrl = new URL('https://graph.facebook.com/v21.0/oauth/access_token');
+    const tokenUrl = new URL('https://graph.facebook.com/v26.0/oauth/access_token');
     tokenUrl.searchParams.set('client_id', META_APP_ID);
     tokenUrl.searchParams.set('client_secret', META_APP_SECRET);
     tokenUrl.searchParams.set('redirect_uri', FACEBOOK_REDIRECT_URI);
@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
 
     // 2. Trocar por long-lived (60 dias)
     const longLivedRes = await fetch(
-      `https://graph.facebook.com/v21.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${META_APP_ID}&client_secret=${META_APP_SECRET}&fb_exchange_token=${shortLivedToken}`
+      `https://graph.facebook.com/v26.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${META_APP_ID}&client_secret=${META_APP_SECRET}&fb_exchange_token=${shortLivedToken}`
     );
     const longLivedData = await longLivedRes.json();
     if (longLivedData.error) throw new Error(longLivedData.error.message);
@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
 
     // 3. Listar TODAS as Pages do usuario (com page_access_token, avatar, followers)
     const pagesRes = await fetch(
-      `https://graph.facebook.com/v21.0/me/accounts?fields=id,name,access_token,picture,followers_count,tasks&limit=100&access_token=${userAccessToken}`
+      `https://graph.facebook.com/v26.0/me/accounts?fields=id,name,access_token,picture,followers_count,tasks&limit=100&access_token=${userAccessToken}`
     );
     const pagesData = await pagesRes.json();
 

@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     if (account.platform === 'facebook') {
       // Buscar Pages do usuario
       const res = await fetch(
-        `https://graph.facebook.com/v21.0/me/accounts?fields=id,name,access_token,picture,followers_count&access_token=${account.access_token}`
+        `https://graph.facebook.com/v26.0/me/accounts?fields=id,name,access_token,picture,followers_count&access_token=${account.access_token}`
       );
       const data = await res.json();
       channels = (data.data || []).map((p: any) => ({

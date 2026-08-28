@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
 
     if (platform === 'instagram' || platform === 'facebook') {
       const res = await fetch(
-        `https://graph.facebook.com/v21.0/${pp.external_id}/comments?fields=id,message,from,created_time&limit=${maxLimit}&access_token=${account.access_token}`
+        `https://graph.facebook.com/v26.0/${pp.external_id}/comments?fields=id,message,from,created_time&limit=${maxLimit}&access_token=${account.access_token}`
       );
       const data = await res.json();
       for (const c of data.data || []) {

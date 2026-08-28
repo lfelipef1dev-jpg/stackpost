@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 
 // Cron: Importar historico de posts das plataformas conectadas
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
       try {
         if (account.platform === 'instagram') {
           const res = await fetch(
-            `https://graph.facebook.com/v21.0/${account.external_id}/media?fields=id,caption,media_type,media_url,permalink,timestamp&since=${Math.floor(Date.now() / 1000) - 86400}&access_token=${account.access_token}`
+            `https://graph.facebook.com/v26.0/${account.external_id}/media?fields=id,caption,media_type,media_url,permalink,timestamp&since=${Math.floor(Date.now() / 1000) - 86400}&access_token=${account.access_token}`
           );
           const data = await res.json();
           for (const item of data.data || []) {
@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
         } else if (account.platform === 'facebook') {
           const pageId = account.platform_account_id || account.external_id;
           const res = await fetch(
-            `https://graph.facebook.com/v21.0/${pageId}/posts?fields=id,message,full_picture,permalink_url,created_time&since=${Math.floor(Date.now() / 1000) - 86400}&access_token=${account.access_token}`
+            `https://graph.facebook.com/v26.0/${pageId}/posts?fields=id,message,full_picture,permalink_url,created_time&since=${Math.floor(Date.now() / 1000) - 86400}&access_token=${account.access_token}`
           );
           const data = await res.json();
           for (const item of data.data || []) {

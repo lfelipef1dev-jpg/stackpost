@@ -78,7 +78,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
     try {
       if (pp.platform === 'instagram' || pp.platform === 'facebook') {
-        await fetch(`https://graph.facebook.com/v21.0/${pp.external_id}?access_token=${account.access_token}`, {
+        await fetch(`https://graph.facebook.com/v26.0/${pp.external_id}?access_token=${account.access_token}`, {
           method: 'DELETE',
         });
       } else if (pp.platform === 'linkedin') {

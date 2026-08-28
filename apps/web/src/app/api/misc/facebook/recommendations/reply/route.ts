@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     if (!account) return NextResponse.json({ error: 'Conta Facebook nao encontrada' }, { status: 404 });
 
     // Responder via comment na open_graph_story
-    const res = await fetch(`https://graph.facebook.com/v21.0/${recommendationId}/comments`, {
+    const res = await fetch(`https://graph.facebook.com/v26.0/${recommendationId}/comments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message, access_token: account.access_token }),

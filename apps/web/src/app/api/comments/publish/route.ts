@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     let externalCommentId: string | null = null;
 
     if (platform === 'instagram' || platform === 'facebook') {
-      const res = await fetch(`https://graph.facebook.com/v21.0/${pp.external_id}/comments`, {
+      const res = await fetch(`https://graph.facebook.com/v26.0/${pp.external_id}/comments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: text, access_token: account.access_token }),

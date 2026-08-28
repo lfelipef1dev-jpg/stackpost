@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 
 // Cron: Sincronizar analytics de posts publicados (a cada 6 horas)
@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
         // Buscar analytics da plataforma
         let analyticsUrl = '';
         if (pp.platform === 'instagram' || pp.platform === 'facebook') {
-          analyticsUrl = `https://graph.facebook.com/v21.0/${pp.external_id}/insights?metric=impressions,reach,likes,comments,shares&access_token=${account.access_token}`;
+          analyticsUrl = `https://graph.facebook.com/v26.0/${pp.external_id}/insights?metric=impressions,reach,likes,comments,shares&access_token=${account.access_token}`;
         } else if (pp.platform === 'linkedin') {
           analyticsUrl = `https://api.linkedin.com/rest/socialActions/${pp.external_id}`;
         } else if (pp.platform === 'youtube') {

@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const res = await fetch(
-      `https://graph.facebook.com/v21.0/ig_hashtag_search?user_id=${account.external_id}&q=${encodeURIComponent(query)}&access_token=${account.access_token}`
+      `https://graph.facebook.com/v26.0/ig_hashtag_search?user_id=${account.external_id}&q=${encodeURIComponent(query)}&access_token=${account.access_token}`
     );
     const data = await res.json();
     if (!res.ok) return NextResponse.json({ error: data.error?.message || 'Erro ao buscar' }, { status: 400 });

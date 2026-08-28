@@ -22,7 +22,7 @@ export class FacebookAdapter extends PlatformAdapter {
       const postResult = await this.publishMedia(pageId, accessToken, content, mediaType, params.imageUrl || '', params.videoUrl || '', params.mediaUrls);
 
       if (postResult.success && firstComment && postResult.externalId) {
-        await fetch(`https://graph.facebook.com/v19.0/${postResult.externalId}/comments`, {
+        await fetch(`https://graph.facebook.com/v26.0/${postResult.externalId}/comments`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message: firstComment, access_token: accessToken }),
@@ -53,7 +53,7 @@ export class FacebookAdapter extends PlatformAdapter {
       if (content) formData.append('caption', content);
       formData.append('source', imgBlob, 'image.jpg');
 
-      const res = await fetch(`https://graph.facebook.com/v19.0/${pageId}/stories`, {
+      const res = await fetch(`https://graph.facebook.com/v26.0/${pageId}/stories`, {
         method: 'POST',
         body: formData,
       });
@@ -73,7 +73,7 @@ export class FacebookAdapter extends PlatformAdapter {
       formData.append('caption', content);
       formData.append('video', videoBlob, 'video.mp4');
 
-      const res = await fetch(`https://graph.facebook.com/v19.0/${pageId}/reels`, {
+      const res = await fetch(`https://graph.facebook.com/v26.0/${pageId}/reels`, {
         method: 'POST',
         body: formData,
       });
@@ -94,7 +94,7 @@ export class FacebookAdapter extends PlatformAdapter {
       formData.append('description', content);
       formData.append('source', videoBlob, 'video.mp4');
 
-      const res = await fetch(`https://graph.facebook.com/v19.0/${pageId}/videos`, {
+      const res = await fetch(`https://graph.facebook.com/v26.0/${pageId}/videos`, {
         method: 'POST',
         body: formData,
       });
@@ -122,7 +122,7 @@ export class FacebookAdapter extends PlatformAdapter {
           formData.append('access_token', accessToken);
           formData.append('published', 'false');
           formData.append('source', imgBlob, 'image.jpg');
-          const res = await fetch(`https://graph.facebook.com/v19.0/${pageId}/photos`, {
+          const res = await fetch(`https://graph.facebook.com/v26.0/${pageId}/photos`, {
             method: 'POST',
             body: formData,
           });
@@ -133,7 +133,7 @@ export class FacebookAdapter extends PlatformAdapter {
 
         // Postar no feed com attached_media
         const attachedMedia = mediaIds.map((id) => ({ media_fbid: id }));
-        const feedRes = await fetch(`https://graph.facebook.com/v19.0/${pageId}/feed`, {
+        const feedRes = await fetch(`https://graph.facebook.com/v26.0/${pageId}/feed`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -159,7 +159,7 @@ export class FacebookAdapter extends PlatformAdapter {
       formData.append('message', content);
       formData.append('source', imgBlob, 'image.jpg');
 
-      const res = await fetch(`https://graph.facebook.com/v19.0/${pageId}/photos`, {
+      const res = await fetch(`https://graph.facebook.com/v26.0/${pageId}/photos`, {
         method: 'POST',
         body: formData,
       });
@@ -177,7 +177,7 @@ export class FacebookAdapter extends PlatformAdapter {
     }
 
     // TEXT ONLY: /feed
-    const res = await fetch(`https://graph.facebook.com/v19.0/${pageId}/feed`, {
+    const res = await fetch(`https://graph.facebook.com/v26.0/${pageId}/feed`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: content, access_token: accessToken }),

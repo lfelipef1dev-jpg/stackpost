@@ -29,8 +29,8 @@ export async function POST(req: NextRequest) {
     if (platform === 'instagram' || platform === 'facebook') {
       const fields = 'id,caption,media_type,media_url,permalink,timestamp';
       const url = platform === 'instagram'
-        ? `https://graph.facebook.com/v21.0/${account.external_id}/media?fields=${fields}&limit=${maxLimit}&access_token=${account.access_token}`
-        : `https://graph.facebook.com/v21.0/${account.external_id}/posts?fields=id,message,full_picture,permalink_url,created_time&limit=${maxLimit}&access_token=${account.access_token}`;
+        ? `https://graph.facebook.com/v26.0/${account.external_id}/media?fields=${fields}&limit=${maxLimit}&access_token=${account.access_token}`
+        : `https://graph.facebook.com/v26.0/${account.external_id}/posts?fields=id,message,full_picture,permalink_url,created_time&limit=${maxLimit}&access_token=${account.access_token}`;
       const res = await fetch(url);
       const data = await res.json();
       for (const item of data.data || []) {
