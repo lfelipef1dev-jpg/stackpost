@@ -18,12 +18,20 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  // Escopos completos para gerenciar Pages: posts, reels, stories, comentarios, insights, mensagens
   const scopes = [
-    'pages_manage_posts',
     'pages_show_list',
+    'pages_manage_posts',
+    'pages_manage_engagement',
+    'pages_read_engagement',
+    'pages_read_user_content',
+    'pages_manage_metadata',
+    'pages_messaging',
+    'read_insights',
+    'business_management',
   ];
 
-  const url = new URL('https://www.facebook.com/v19.0/dialog/oauth');
+  const url = new URL('https://www.facebook.com/v21.0/dialog/oauth');
   url.searchParams.set('client_id', META_APP_ID);
   url.searchParams.set('redirect_uri', FACEBOOK_REDIRECT_URI);
   url.searchParams.set('scope', scopes.join(','));

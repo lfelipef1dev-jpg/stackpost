@@ -10,9 +10,21 @@ import { RefreshCw, Trash2, AlertCircle, CheckCircle2, Clock, Loader2, Zap } fro
 
 const OAUTH_ROUTES: Record<string, string> = {
   instagram: '/api/oauth/meta',
-  facebook: '/api/oauth/meta',
-  threads: '/api/oauth/meta',
+  facebook: '/api/oauth/facebook',
+  threads: '/api/oauth/threads',
   linkedin: '/api/oauth/linkedin',
+  x: '/api/oauth/x',
+  twitter: '/api/oauth/x',
+  tiktok: '/api/oauth/tiktok',
+  youtube: '/api/oauth/youtube',
+  pinterest: '/api/oauth/pinterest',
+  reddit: '/api/oauth/reddit',
+  bluesky: '/api/oauth/bluesky',
+  mastodon: '/api/oauth/mastodon',
+  discord: '/api/oauth/discord',
+  slack: '/api/oauth/slack',
+  google_business: '/api/oauth/google-business',
+  snapchat: '/api/oauth/snapchat',
 };
 
 export default function AccountsPage() {
@@ -29,7 +41,9 @@ export default function AccountsPage() {
     if (!token) return;
     const res = await fetch('/api/accounts', { headers: { Authorization: `Bearer ${token}` } });
     const data = await res.json();
-    setAccounts(Array.isArray(data) ? data : []);
+    // Filtrar contas meta_user (token interno para renovacao, nao conta visivel)
+    const visible = (Array.isArray(data) ? data : []).filter((a: any) => a.platform !== 'meta_user');
+    setAccounts(visible);
   }
 
   function handleConnect(platform: string) {
@@ -99,13 +113,16 @@ export default function AccountsPage() {
             <h2 className="text-lg font-semibold mb-4">Conectar nova conta</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {PLATFORMS.map((p) => {
-                const isConnected = accounts.some((a) => a.platform === p.id);
+                const connectedCount = accounts.filter((a) => a.platform === p.id).length;
+                const isConnected = connectedCount > 0;
                 const hasOAuth = !!OAUTH_ROUTES[p.id];
+                // Permitir reconectar Facebook (multiplas Pages) e outras plataformas multi-conta
+                const allowReconnect = p.id === 'facebook' || p.id === 'google_business' || p.id === 'reddit';
                 return (
                   <button
                     key={p.id}
                     onClick={() => handleConnect(p.id)}
-                    disabled={isConnected}
+                    disabled={isConnected && !allowReconnect}
                     className={`p-4 rounded-xl border text-center transition disabled:opacity-50 ${
                       hasOAuth
                         ? 'bg-brand-elevated border-brand-border hover:border-brand-accent'
@@ -115,7 +132,9 @@ export default function AccountsPage() {
                     <div className="mx-auto mb-2"><PlatformIcon id={p.id} size={24} color={p.color} /></div>
                     <div className="text-sm font-medium">{p.name}</div>
                     {isConnected ? (
-                      <div className="text-[10px] text-success mt-1">Conectado</div>
+                      <div className="text-[10px] text-success mt-1">
+                        {connectedCount} conta{connectedCount > 1 ? 's' : ''}{allowReconnect ? ' · +1' : ''}
+                      </div>
                     ) : hasOAuth ? (
                       <div className="text-[10px] text-brand-accent mt-1">OAuth</div>
                     ) : (
@@ -137,14 +156,24 @@ export default function AccountsPage() {
             {accounts.map((acc) => {
               const Icon = statusIcon[acc.status] || Clock;
               const color = statusColor[acc.status] || 'text-brand-text-secondary';
+              const meta = acc.platform_metadata || {};
+              const avatar = typeof meta === 'object' && meta.avatar ? meta.avatar : null;
+              const followers = typeof meta === 'object' && meta.followers ? meta.followers : null;
               return (
                 <div key={acc.id} className="p-4 rounded-xl bg-brand-surface border border-brand-border">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
-                      <PlatformIcon id={acc.platform} size={20} color={PLATFORMS.find((p) => p.id === acc.platform)?.color || '#888'} />
+                      {avatar ? (
+                        <img src={avatar} alt={acc.username} className="w-10 h-10 rounded-full object-cover" />
+                      ) : (
+                        <PlatformIcon id={acc.platform} size={20} color={PLATFORMS.find((p) => p.id === acc.platform)?.color || '#888'} />
+                      )}
                       <div>
-                        <div className="font-semibold capitalize">{acc.platform}</div>
+                        <div className="font-semibold capitalize">{acc.platform.replace('_', ' ')}</div>
                         <div className="text-sm text-brand-text-secondary">{acc.username}</div>
+                        {followers !== null && (
+                          <div className="text-[10px] text-brand-text-secondary">{followers} seguidores</div>
+                        )}
                       </div>
                     </div>
                     <span className={`flex items-center gap-1 text-xs ${color}`}>
