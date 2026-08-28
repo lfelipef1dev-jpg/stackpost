@@ -34,6 +34,7 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
           MERCADOPAGO_ACCESS_TOKEN: ${{ secrets.MERCADOPAGO_ACCESS_TOKEN }}
           MERCADOPAGO_WEBHOOK_SECRET: ${{ secrets.MERCADOPAGO_WEBHOOK_SECRET }}
           META_APP_ID: ${{ secrets.META_APP_ID }}
@@ -73,6 +74,7 @@ jobs:
           echo "$NEXT_PUBLIC_SUPABASE_URL" | npx wrangler secret put NEXT_PUBLIC_SUPABASE_URL --name stackpost
           echo "$NEXT_PUBLIC_SUPABASE_ANON_KEY" | npx wrangler secret put NEXT_PUBLIC_SUPABASE_ANON_KEY --name stackpost
           echo "$JWT_SECRET" | npx wrangler secret put JWT_SECRET --name stackpost
+          echo "$CRON_SECRET" | npx wrangler secret put CRON_SECRET --name stackpost
           echo "$LINKEDIN_CLIENT_ID" | npx wrangler secret put LINKEDIN_CLIENT_ID --name stackpost
           echo "$LINKEDIN_CLIENT_SECRET" | npx wrangler secret put LINKEDIN_CLIENT_SECRET --name stackpost
           echo "$LINKEDIN_REDIRECT_URI" | npx wrangler secret put LINKEDIN_REDIRECT_URI --name stackpost

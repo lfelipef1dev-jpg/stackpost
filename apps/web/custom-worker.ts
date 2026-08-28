@@ -9,6 +9,7 @@ export default {
   // @ts-ignore - tipos do Cloudflare nao disponiveis no build do Next
   async scheduled(event: any, env: any, ctx: any) {
     console.log('[cron] scheduled handler fired', event.cron);
+    const cronSecret = env.CRON_SECRET || 'B9A54177BCB6F7215D4D4356E6F9D060';
     ctx.waitUntil(
       (async () => {
         const routes = [
@@ -19,7 +20,11 @@ export default {
           try {
             const url = 'https://stackpost.expostacker.com.br' + route;
             console.log('[cron] Fetching', url);
-            const resp = await fetch(url);
+            const resp = await fetch(url, {
+              headers: {
+                'Authorization': `Bearer ${cronSecret}`,
+              },
+            });
             const text = await resp.text();
             console.log('[cron] ' + route + ' -> ' + resp.status + ': ' + text.substring(0, 200));
           } catch (e: any) {
