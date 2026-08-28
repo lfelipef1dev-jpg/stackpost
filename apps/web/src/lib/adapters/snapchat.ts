@@ -13,7 +13,12 @@ export class SnapchatAdapter extends PlatformAdapter {
     if (!accessToken) return { success: false, error: normalizeError(new Error('No access token'), this.platform) };
     if (!adAccountId) return { success: false, error: normalizeError(new Error('Ad Account ID obrigatorio'), this.platform) };
     if (content.length > 1000) return { success: false, error: { code: 'VALIDATION', message: 'Snapchat: texto maximo 1000 caracteres.' } };
-    if (!params.imageUrl) return { success: false, error: { code: 'VALIDATION', message: 'Snapchat: media obrigatoria.' } };
+
+    const isVideo = params.videoUrl;
+    const isImage = params.imageUrl;
+    if (!isVideo && !isImage) {
+      return { success: false, error: { code: 'VALIDATION', message: 'Snapchat: video ou imagem obrigatoria.' } };
+    }
 
     try {
       // Snapchat Marketing API - upload media
@@ -24,15 +29,20 @@ export class SnapchatAdapter extends PlatformAdapter {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          type: 'IMAGE',
-          url: params.imageUrl,
+          type: isVideo ? 'VIDEO' : 'IMAGE',
+          url: isVideo || isImage,
+          name: content.slice(0, 100),
         }),
       });
 
       const mediaData = await mediaRes.json();
       if (!mediaRes.ok) return { success: false, error: normalizeError(new Error(mediaData.request_status?.error?.message || 'Snapchat API error'), this.platform) };
 
-      const mediaId = mediaData.media?.[0]?.id;
+      // Snapchat responde com media como objeto (nao array)
+      const mediaId = mediaData.media?.id || mediaData.media?.[0]?.id;
+      if (!mediaId) {
+        return { success: false, error: normalizeError(new Error('Snapchat: upload sem mediaId'), this.platform) };
+      }
       return {
         success: true,
         externalId: mediaId,

@@ -15,13 +15,21 @@ export class RedditAdapter extends PlatformAdapter {
     if (content.length > 300) return { success: false, error: { code: 'VALIDATION', message: 'Reddit: titulo maximo 300 caracteres.' } };
 
     try {
-      const body: any = {
-        kind: params.imageUrl ? 'link' : 'self',
-        sr_name: subreddit,
+      // Reddit API: kind=link usa title+url, kind=self usa title+text
+      const isLink = params.imageUrl || params.videoUrl;
+      const body: Record<string, string> = {
+        sr: subreddit,
         title: content.slice(0, 300),
-        text: content,
+        api_type: 'json',
       };
-      if (params.imageUrl) body.url = params.imageUrl;
+
+      if (isLink) {
+        body.kind = 'link';
+        body.url = params.videoUrl || params.imageUrl || '';
+      } else {
+        body.kind = 'self';
+        body.text = content;
+      }
 
       const res = await fetch('https://oauth.reddit.com/api/submit', {
         method: 'POST',

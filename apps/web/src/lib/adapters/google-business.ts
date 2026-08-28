@@ -15,24 +15,36 @@ export class GoogleBusinessAdapter extends PlatformAdapter {
     if (content.length > 1500) return { success: false, error: { code: 'VALIDATION', message: 'Google Business: texto maximo 1500 caracteres.' } };
 
     try {
-      // Google Business Profile API - localPosts
+      // Garantir que locationId tem o prefixo locations/ completo
+      const fullLocationId = locationId.startsWith('locations/')
+        ? locationId
+        : `locations/${locationId}`;
+
+      // Google Business Performance API (mybusinessbusinessinformation) exige localPosts endpoint
       const body: any = {
         languageCode: 'pt-BR',
         summary: content,
         topicType: 'STANDARD',
       };
+
       if (params.imageUrl) {
+        // googleUrl deve ser uma URL publicamente acessivel; idealmente do proprio dominio verificado
         body.media = [{ mediaFormat: 'PHOTO', googleUrl: params.imageUrl }];
+      } else if (params.videoUrl) {
+        body.media = [{ mediaFormat: 'VIDEO', googleUrl: params.videoUrl }];
       }
 
-      const res = await fetch(`https://mybusinessbusinessinformation.googleapis.com/v1/${locationId}/localPosts`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      });
+      const res = await fetch(
+        `https://mybusinessbusinessinformation.googleapis.com/v1/${fullLocationId}/localPosts`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body),
+        }
+      );
 
       const data = await res.json();
       if (!res.ok) return { success: false, error: normalizeError(new Error(data.error?.message || 'Google Business API error'), this.platform) };

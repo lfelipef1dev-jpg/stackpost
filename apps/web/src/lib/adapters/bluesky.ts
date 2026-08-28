@@ -16,6 +16,43 @@ export class BlueskyAdapter extends PlatformAdapter {
     if (content.length > 300) return { success: false, error: { code: 'VALIDATION', message: 'Bluesky: texto maximo 300 caracteres.' } };
 
     try {
+      const record: any = {
+        $type: 'app.bsky.feed.post',
+        text: content,
+        createdAt: new Date().toISOString(),
+        langs: ['pt'],
+      };
+
+      // Upload de midia via xrpc.atproto.repo.uploadBlob
+      const embedMedia: any[] = [];
+      const mediaUrl = params.imageUrl || params.videoUrl;
+      if (mediaUrl) {
+        const dlRes = await fetch(mediaUrl);
+        if (dlRes.ok) {
+          const blob = await dlRes.blob();
+          const mimeType = dlRes.headers.get('content-type') || 'image/jpeg';
+          const uploadRes = await fetch('https://bsky.social/xrpc/com.atproto.repo.uploadBlob', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': mimeType,
+            },
+            body: blob,
+          });
+          const uploadData = await uploadRes.json();
+          if (uploadData.blob) {
+            embedMedia.push({ alt: content.slice(0, 100), image: uploadData.blob });
+          }
+        }
+      }
+
+      if (embedMedia.length > 0) {
+        record.embed = {
+          $type: 'app.bsky.embed.images',
+          images: embedMedia,
+        };
+      }
+
       // AT Protocol - create record
       const res = await fetch('https://bsky.social/xrpc/com.atproto.repo.createRecord', {
         method: 'POST',
@@ -26,12 +63,7 @@ export class BlueskyAdapter extends PlatformAdapter {
         body: JSON.stringify({
           repo: did,
           collection: 'app.bsky.feed.post',
-          record: {
-            $type: 'app.bsky.feed.post',
-            text: content,
-            createdAt: new Date().toISOString(),
-            langs: ['pt-BR'],
-          },
+          record,
         }),
       });
 

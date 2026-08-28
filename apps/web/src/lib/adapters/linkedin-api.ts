@@ -228,18 +228,23 @@ export async function publishToLinkedIn(account: any, content: string, imageUrl:
         }),
       });
       const register = await registerRes.json();
-      if (register.error) return { success: false, error: register.error };
+      if (register.error || !register.value) {
+        return { success: false, error: register.error?.message || register.error || 'Erro ao registrar upload LinkedIn' };
+      }
 
       const uploadUrl = register.value.uploadMechanism['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest'].uploadUrl;
       const asset = register.value.asset;
 
       const imgRes = await fetch(url);
       const imgBlob = await imgRes.blob();
-      await fetch(uploadUrl, {
+      const uploadRes = await fetch(uploadUrl, {
         method: 'POST',
         headers: { 'Content-Type': imgRes.headers.get('content-type') || 'image/jpeg' },
         body: imgBlob,
       });
+      if (!uploadRes.ok) {
+        return { success: false, error: `Falha no upload de midia LinkedIn (HTTP ${uploadRes.status})` };
+      }
 
       mediaItems.push({ status: 'READY', description: { text: content.slice(0, 200) }, media: asset });
     }
@@ -286,18 +291,23 @@ export async function publishToLinkedIn(account: any, content: string, imageUrl:
       }),
     });
     const register = await registerRes.json();
-    if (register.error) return { success: false, error: register.error };
+    if (register.error || !register.value) {
+      return { success: false, error: register.error?.message || register.error || 'Erro ao registrar upload PDF LinkedIn' };
+    }
 
     const uploadUrl = register.value.uploadMechanism['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest'].uploadUrl;
     const asset = register.value.asset;
 
     const pdfRes = await fetch(pdfUrl);
     const pdfBlob = await pdfRes.blob();
-    await fetch(uploadUrl, {
+    const uploadRes = await fetch(uploadUrl, {
       method: 'POST',
       headers: { 'Content-Type': pdfRes.headers.get('content-type') || 'application/pdf' },
       body: pdfBlob,
     });
+    if (!uploadRes.ok) {
+      return { success: false, error: `Falha no upload de PDF LinkedIn (HTTP ${uploadRes.status})` };
+    }
 
     const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
       method: 'POST',

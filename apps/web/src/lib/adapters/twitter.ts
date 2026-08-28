@@ -28,17 +28,40 @@ export class TwitterAdapter extends PlatformAdapter {
       if (mediaUrls && mediaUrls.length > 0) {
         const mediaIds: string[] = [];
         for (const url of mediaUrls.slice(0, 4)) {
+          // X v1.1 media/upload exige binario real. Fazer download da URL primeiro.
+          const isHttpUrl = url.startsWith('http');
+          let mediaBuffer: Buffer;
+          let mimeType = 'image/jpeg';
+          if (isHttpUrl) {
+            const dlRes = await fetch(url);
+            if (!dlRes.ok) {
+              console.warn(`Twitter: falha ao baixar midia ${url}`);
+              continue;
+            }
+            mimeType = dlRes.headers.get('content-type') || (url.match(/\.(mp4|mov)$/i) ? 'video/mp4' : 'image/jpeg');
+            const arrayBuf = await dlRes.arrayBuffer();
+            mediaBuffer = Buffer.from(arrayBuf);
+          } else {
+            // Se nao for URL, nao temos binario - pular
+            console.warn(`Twitter: uploadId sem URL http nao suportado (${url})`);
+            continue;
+          }
+
+          const fd = new FormData();
+          const blob = new Blob([new Uint8Array(mediaBuffer)], { type: mimeType });
+          fd.append('media', blob);
+
           const mediaRes = await fetch('https://upload.twitter.com/1.1/media/upload.json', {
             method: 'POST',
             headers: { Authorization: `Bearer ${accessToken}` },
-            body: (() => {
-              const fd = new FormData();
-              fd.append('media', url);
-              return fd;
-            })(),
+            body: fd,
           });
           const mediaData = await mediaRes.json();
-          if (mediaData.media_id_string) mediaIds.push(mediaData.media_id_string);
+          if (mediaData.media_id_string) {
+            mediaIds.push(mediaData.media_id_string);
+          } else {
+            console.warn(`Twitter: upload falhou`, mediaData);
+          }
         }
         if (mediaIds.length > 0) body.media = { media_ids: mediaIds };
       }

@@ -9,29 +9,47 @@ export class PinterestAdapter extends PlatformAdapter {
     const accessToken = params.account?.access_token;
     const boardId = params.account?.platform_account_id || params.account?.board_id;
     const content = params.content;
+    const link = params.account?.platform_metadata?.link || '';
 
     if (!accessToken) return { success: false, error: normalizeError(new Error('No access token'), this.platform) };
     if (!boardId) return { success: false, error: normalizeError(new Error('Board ID obrigatorio'), this.platform) };
     if (content.length > 500) return { success: false, error: { code: 'VALIDATION', message: 'Pinterest: descricao maxima 500 caracteres.' } };
-    if (!params.imageUrl) return { success: false, error: { code: 'VALIDATION', message: 'Pinterest: imagem obrigatoria.' } };
+
+    const isVideo = params.videoUrl;
+    const isImage = params.imageUrl;
+    if (!isVideo && !isImage) {
+      return { success: false, error: { code: 'VALIDATION', message: 'Pinterest: video ou imagem obrigatoria.' } };
+    }
 
     try {
+      const body: any = {
+        board_id: boardId,
+        title: content.slice(0, 100),
+        description: content,
+      };
+
+      // link deve ser o site de destino (nao a URL da midia)
+      if (link) body.link = link;
+
+      if (isVideo) {
+        body.media_source = {
+          source_type: 'video_url',
+          url: isVideo,
+        };
+      } else {
+        body.media_source = {
+          source_type: 'image_url',
+          url: isImage,
+        };
+      }
+
       const res = await fetch(`https://api.pinterest.com/v5/pins`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          board_id: boardId,
-          title: content.slice(0, 100),
-          description: content,
-          link: params.imageUrl,
-          media_source: {
-            source_type: 'image_url',
-            url: params.imageUrl,
-          },
-        }),
+        body: JSON.stringify(body),
       });
 
       const data = await res.json();

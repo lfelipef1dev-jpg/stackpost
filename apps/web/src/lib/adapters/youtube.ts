@@ -11,38 +11,71 @@ export class YouTubeAdapter extends PlatformAdapter {
 
     if (!accessToken) return { success: false, error: normalizeError(new Error('No access token'), this.platform) };
     if (content.length > 5000) return { success: false, error: { code: 'VALIDATION', message: 'YouTube: texto maximo 5000 caracteres.' } };
-    if (!params.imageUrl) return { success: false, error: { code: 'VALIDATION', message: 'YouTube: video obrigatorio.' } };
+
+    // YouTube exige video. Se videoUrl vazio, nao da pra publicar.
+    const videoUrl = params.videoUrl;
+    if (!videoUrl) {
+      return { success: false, error: { code: 'VALIDATION', message: 'YouTube: video obrigatorio (videoUrl).' } };
+    }
 
     try {
-      // YouTube Data API v3 - community post (via channel)
-      const channelId = params.account?.platform_account_id || params.account?.channel_id;
-      if (!channelId) return { success: false, error: normalizeError(new Error('Channel ID obrigatorio'), this.platform) };
+      // Passo 1: Iniciar resumable upload - POST apenas metadata, obter Location header
+      const initRes = await fetch(
+        'https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+            'X-Upload-Content-Type': 'video/*',
+          },
+          body: JSON.stringify({
+            snippet: { title: content.slice(0, 100) || 'StackPost Video', description: content },
+            status: { privacyStatus: 'public', selfDeclaredMadeForKids: false },
+          }),
+        }
+      );
 
-      const res = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${channelId}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      if (!initRes.ok) {
+        const errData = await initRes.json().catch(() => ({}));
+        return { success: false, error: normalizeError(new Error(errData.error?.message || `YouTube init HTTP ${initRes.status}`), this.platform) };
+      }
 
-      const data = await res.json();
-      if (!res.ok) return { success: false, error: normalizeError(new Error(data.error?.message || 'YouTube API error'), this.platform) };
+      // Location header contem a URL de upload resumable
+      const uploadUrl = initRes.headers.get('Location') || initRes.headers.get('location');
+      if (!uploadUrl) {
+        return { success: false, error: normalizeError(new Error('YouTube: nao recebeu Location header do resumable upload'), this.platform) };
+      }
 
-      // YouTube Community posts require the channel's Bearer token
-      // For video uploads, use the videos endpoint
-      const videoRes = await fetch('https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status', {
-        method: 'POST',
+      // Passo 2: Fazer download do video
+      const videoRes = await fetch(videoUrl);
+      if (!videoRes.ok) {
+        return { success: false, error: normalizeError(new Error(`YouTube: falha ao baixar video (${videoRes.status})`), this.platform) };
+      }
+      const videoBlob = await videoRes.blob();
+      const videoContentType = videoRes.headers.get('content-type') || 'video/mp4';
+
+      // Passo 3: PUT do binario na URL resumable
+      const uploadRes = await fetch(uploadUrl, {
+        method: 'PUT',
         headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          'Content-Type': videoContentType,
+          'Content-Length': videoBlob.size.toString(),
         },
-        body: JSON.stringify({
-          snippet: { title: content.slice(0, 100), description: content },
-          status: { privacyStatus: 'public' },
-        }),
+        body: videoBlob,
       });
 
-      const videoData = await videoRes.json();
-      if (!videoRes.ok) return { success: false, error: normalizeError(new Error(videoData.error?.message || 'YouTube upload error'), this.platform) };
+      if (!uploadRes.ok) {
+        const errText = await uploadRes.text();
+        return { success: false, error: normalizeError(new Error(`YouTube upload HTTP ${uploadRes.status}: ${errText}`), this.platform) };
+      }
 
+      const videoData = await uploadRes.json().catch(() => ({}));
       const videoId = videoData.id;
+      if (!videoId) {
+        return { success: false, error: normalizeError(new Error('YouTube: upload concluido mas sem videoId na resposta'), this.platform) };
+      }
+
       return {
         success: true,
         externalId: videoId,

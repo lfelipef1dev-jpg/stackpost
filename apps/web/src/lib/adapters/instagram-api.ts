@@ -105,8 +105,20 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
       childrenIds.push(child.id);
     }
 
-    // Aguardar processamento de videos
-    await new Promise((r) => setTimeout(r, 10000));
+    // Aguardar processamento de cada child (polling real em vez de delay fixo)
+    for (const childId of childrenIds) {
+      let retries = 0;
+      while (retries < 30) {
+        const statusRes = await fetch(`https://graph.instagram.com/v23.0/${childId}?fields=status_code&access_token=${token}`);
+        const statusData = await statusRes.json();
+        if (statusData.status_code === 'FINISHED') break;
+        if (statusData.status_code === 'ERROR') {
+          return { success: false, error: `Erro ao processar midia do carrossel (child ${childId})` };
+        }
+        await new Promise((r) => setTimeout(r, 3000));
+        retries++;
+      }
+    }
 
     const carouselParams = new URLSearchParams({
       access_token: token,
@@ -145,9 +157,13 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
   };
 
   if (mediaType === 'STORY') {
-    // Stories exigem media_type STORIES e nao aceitam caption
-    params.media_type = 'STORIES';
-    params.image_url = mediaUrl;
+    // Instagram Content Publishing API (graph.instagram.com) NAO suporta stories.
+    // Stories exigem o endpoint /stories dedicado que nao esta disponivel via Business Login.
+    // Retornar erro claro em vez de tentar e falhar silenciosamente.
+    return {
+      success: false,
+      error: 'Stories do Instagram nao sao suportados via Content Publishing API. Use o endpoint de Stories dedicado.',
+    };
   } else if (mediaType === 'VIDEO') {
     params.media_type = 'REELS';
     params.video_url = mediaUrl;
@@ -165,14 +181,10 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
 
   if (container.error) return { success: false, error: container.error.error_user_msg || container.error.message };
 
-  // Video e story precisam de mais tempo pra processar
-  const waitMs = (mediaType === 'VIDEO' || mediaType === 'STORY') ? 10000 : 3000;
-  await new Promise((r) => setTimeout(r, waitMs));
-
-  // Para video, verificar se o container terminou de processar
+  // Video precisa de polling real de status (delay fixo e frágil)
   if (mediaType === 'VIDEO') {
     let retries = 0;
-    while (retries < 30) {
+    while (retries < 60) {
       const statusRes = await fetch(`https://graph.instagram.com/v23.0/${container.id}?fields=status_code&access_token=${token}`);
       const statusData = await statusRes.json();
       if (statusData.status_code === 'FINISHED') break;
@@ -180,6 +192,9 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
       await new Promise((r) => setTimeout(r, 5000));
       retries++;
     }
+  } else {
+    // Imagem: pequeno delay inicial
+    await new Promise((r) => setTimeout(r, 3000));
   }
 
   // Publicar o container

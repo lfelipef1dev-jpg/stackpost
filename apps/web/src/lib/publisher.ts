@@ -163,7 +163,8 @@ export async function publishPost(postId: string) {
         videoUrl,
         mediaUrls,
         pdfUrl,
-        mediaType: mediaUrls && mediaUrls.length > 1 ? 'CAROUSEL' : undefined,
+        // Preservar mediaType original se definido; apenas fallback para CAROUSEL se nao definido
+        mediaType: post.media_type || (mediaUrls && mediaUrls.length > 1 ? 'CAROUSEL' : undefined),
       });
 
       const { error: ppError } = await supabase
