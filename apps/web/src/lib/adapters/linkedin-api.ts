@@ -75,8 +75,10 @@ export async function handleLinkedInCallback(code: string) {
 }
 
 export async function publishToLinkedIn(account: any, content: string, imageUrl: string, videoUrl?: string) {
-  // Usar external_id (user.sub do userinfo) salvo no momento do OAuth
-  const author = `urn:li:person:${account.external_id}`;
+  // author pode ser urn:li:person:{sub} ou urn:li:organization:{id}
+  const author = account.external_id && account.external_id.startsWith('urn:li:')
+    ? account.external_id
+    : `urn:li:person:${account.external_id}`;
 
   if (!account.external_id) {
     return { success: false, error: 'LinkedIn account sem external_id. Reconecte a conta.' };

@@ -41,6 +41,9 @@ export class LinkedInAdapter extends PlatformAdapter {
     if (params.content.length > 3000) {
       return { success: false, error: { code: 'VALIDATION', message: 'LinkedIn: texto maximo 3000 caracteres.' } };
     }
+    if (params.firstComment) {
+      console.warn('LinkedIn: firstComment nao suportado pela API oficial. Ignorando.');
+    }
     return publishToLinkedIn(params.account, params.content, params.imageUrl || '', params.videoUrl || '');
   }
 }

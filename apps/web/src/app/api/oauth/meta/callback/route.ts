@@ -42,15 +42,19 @@ export async function GET(req: NextRequest) {
       .eq('platform', 'instagram')
       .maybeSingle();
 
+    const accountData = {
+      access_token: data.accessToken,
+      external_id: data.instagramId,
+      platform_account_id: data.instagramId,
+      platform_metadata: { type: 'business' },
+      expires_at: data.expiresAt,
+      status: 'active',
+    };
+
     if (existing) {
       const { error: updateError } = await supabase
         .from('social_accounts')
-        .update({
-          access_token: data.accessToken,
-          external_id: data.instagramId,
-          expires_at: data.expiresAt,
-          status: 'active',
-        })
+        .update(accountData)
         .eq('id', existing.id);
       if (updateError) throw updateError;
     } else {
@@ -60,10 +64,7 @@ export async function GET(req: NextRequest) {
           team_id: resolvedTeamId,
           platform: 'instagram',
           username: data.username,
-          access_token: data.accessToken,
-          external_id: data.instagramId,
-          expires_at: data.expiresAt,
-          status: 'active',
+          ...accountData,
         });
       if (insertError) throw insertError;
     }
