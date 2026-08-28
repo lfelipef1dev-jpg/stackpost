@@ -28,6 +28,9 @@ export async function GET(req: NextRequest) {
       organization: team.organizations,
       team: { ...team, organizations: undefined },
       members: members || [],
+      // Campos diretos para UI
+      name: team.organizations?.name || team.name || '',
+      plan: team.organizations?.plan || team.plan || 'free',
     });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

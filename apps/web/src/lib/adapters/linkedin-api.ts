@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const LINKEDIN_CLIENT_ID = process.env.LINKEDIN_CLIENT_ID;
 const LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;
-const LINKEDIN_REDIRECT_URI = process.env.LINKEDIN_REDIRECT_URI || 'http://localhost:3333/api/oauth/linkedin/callback';
+const LINKEDIN_REDIRECT_URI = process.env.LINKEDIN_REDIRECT_URI || 'https://stackpost.expostacker.com.br/api/oauth/linkedin/callback';
 
-export function getLinkedInAuthUrl(): string {
+export function getLinkedInAuthUrl(stateToken?: string): string {
   // r_basicprofile retido para compatibilidade; r_organization_social permite Company Pages
   const scopes = encodeURIComponent('openid profile w_member_social r_organization_social w_organization_social');
-  return `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${LINKEDIN_CLIENT_ID}&redirect_uri=${encodeURIComponent(LINKEDIN_REDIRECT_URI)}&scope=${scopes}`;
+  const state = stateToken || 'linkedin';
+  return `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${LINKEDIN_CLIENT_ID}&redirect_uri=${encodeURIComponent(LINKEDIN_REDIRECT_URI)}&scope=${scopes}&state=${encodeURIComponent(state)}`;
 }
 
 export async function handleLinkedInCallback(code: string) {

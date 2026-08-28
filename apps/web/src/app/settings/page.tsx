@@ -4,28 +4,75 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 import { useEffect, useState } from 'react';
-import { Key, Plus, Trash2, Copy, Check, Loader2, Eye } from 'lucide-react';
+import { Key, Plus, Trash2, Copy, Check, Loader2, UserPlus, Users, Shield, Crown, Eye, Pencil } from 'lucide-react';
+
+const ROLE_LABELS: Record<string, string> = {
+  owner: 'Owner',
+  admin: 'Admin',
+  editor: 'Editor',
+  viewer: 'Viewer',
+};
+
+const ROLE_ICONS: Record<string, typeof Crown> = {
+  owner: Crown,
+  admin: Shield,
+  editor: Pencil,
+  viewer: Eye,
+};
 
 export default function SettingsPage() {
-  const [org, setOrg] = useState('ExpoStacker');
+  const [org, setOrg] = useState('');
   const [plan, setPlan] = useState('free');
   const [apiKeys, setApiKeys] = useState<any[]>([]);
+  const [members, setMembers] = useState<any[]>([]);
   const [newKeyName, setNewKeyName] = useState('');
   const [newKey, setNewKey] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
   const [showPlanModal, setShowPlanModal] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteRole, setInviteRole] = useState('editor');
+  const [inviteLoading, setInviteLoading] = useState(false);
+  const [savingOrg, setSavingOrg] = useState(false);
 
   useEffect(() => {
-    loadApiKeys();
+    loadAll();
   }, []);
 
-  async function loadApiKeys() {
+  async function loadAll() {
     const token = localStorage.getItem('token');
     if (!token) return;
+    await Promise.all([loadApiKeys(token), loadOrg(token), loadMembers(token)]);
+  }
+
+  async function loadApiKeys(token: string) {
     const res = await fetch('/api/api-keys', { headers: { Authorization: `Bearer ${token}` } });
     const data = await res.json();
     setApiKeys(Array.isArray(data) ? data : []);
+  }
+
+  async function loadOrg(token: string) {
+    const res = await fetch('/api/organization', { headers: { Authorization: `Bearer ${token}` } });
+    const data = await res.json();
+    if (data?.name) setOrg(data.name);
+    if (data?.plan) setPlan(data.plan);
+  }
+
+  async function loadMembers(token: string) {
+    const res = await fetch('/api/team/members', { headers: { Authorization: `Bearer ${token}` } });
+    const data = await res.json();
+    setMembers(Array.isArray(data) ? data : []);
+  }
+
+  async function saveOrg() {
+    setSavingOrg(true);
+    const token = localStorage.getItem('token');
+    await fetch('/api/organization', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ name: org }),
+    });
+    setSavingOrg(false);
   }
 
   async function handleCreateKey() {
@@ -40,7 +87,7 @@ export default function SettingsPage() {
     if (res.ok) {
       setNewKey(data.key);
       setNewKeyName('');
-      await loadApiKeys();
+      await loadApiKeys(token!);
     }
     setLoading(false);
   }
@@ -48,7 +95,27 @@ export default function SettingsPage() {
   async function handleDeleteKey(id: string) {
     const token = localStorage.getItem('token');
     await fetch(`/api/api-keys?id=${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
-    await loadApiKeys();
+    await loadApiKeys(token!);
+  }
+
+  async function handleInvite() {
+    if (!inviteEmail.trim()) return;
+    setInviteLoading(true);
+    const token = localStorage.getItem('token');
+    await fetch('/api/team/invite', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ email: inviteEmail.trim(), role: inviteRole }),
+    });
+    setInviteEmail('');
+    await loadMembers(token!);
+    setInviteLoading(false);
+  }
+
+  async function handleRemoveMember(id: string) {
+    const token = localStorage.getItem('token');
+    await fetch(`/api/team/members?id=${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+    await loadMembers(token!);
   }
 
   function copy(text: string) {
@@ -67,22 +134,32 @@ export default function SettingsPage() {
         <h1 className="text-3xl font-bold mb-8">Configuracoes</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Organizacao */}
           <div className="p-6 rounded-2xl bg-brand-surface border border-brand-border">
             <h2 className="text-lg font-semibold mb-4">Organizacao</h2>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm text-brand-text-secondary mb-1">Nome</label>
-                <input
-                  value={org}
-                  onChange={(e) => setOrg(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-brand-elevated border border-brand-border text-brand-text"
-                />
+                <div className="flex gap-2">
+                  <input
+                    value={org}
+                    onChange={(e) => setOrg(e.target.value)}
+                    className="flex-1 px-4 py-3 rounded-xl bg-brand-elevated border border-brand-border text-brand-text"
+                  />
+                  <button
+                    onClick={saveOrg}
+                    disabled={savingOrg}
+                    className="px-4 py-3 rounded-xl bg-brand-accent text-brand-bg font-semibold hover:bg-brand-accent-hover transition disabled:opacity-50"
+                  >
+                    {savingOrg ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Salvar'}
+                  </button>
+                </div>
               </div>
               <div>
                 <label className="block text-sm text-brand-text-secondary mb-1">Plano atual</label>
                 <div className="flex items-center gap-3">
                   <div className="flex-1 px-4 py-3 rounded-xl bg-brand-elevated border border-brand-border text-brand-text">
-                    {planLabels[plan]}
+                    {planLabels[plan] || plan}
                   </div>
                   <button
                     onClick={() => setShowPlanModal(true)}
@@ -95,6 +172,7 @@ export default function SettingsPage() {
             </div>
           </div>
 
+          {/* API Keys */}
           <div className="p-6 rounded-2xl bg-brand-surface border border-brand-border">
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <Key className="w-5 h-5 text-brand-accent" /> API Keys
@@ -126,7 +204,7 @@ export default function SettingsPage() {
                     <div className="text-xs text-brand-text-secondary font-mono">{k.key_prefix}...</div>
                     <div className="text-[10px] text-brand-text-secondary mt-1">
                       Criada: {new Date(k.created_at).toLocaleDateString('pt-BR')}
-                      {k.last_used_at && ` â€¢ Ultimo uso: ${new Date(k.last_used_at).toLocaleDateString('pt-BR')}`}
+                      {k.last_used_at && ` - Ultimo uso: ${new Date(k.last_used_at).toLocaleDateString('pt-BR')}`}
                     </div>
                   </div>
                   <button
@@ -157,6 +235,77 @@ export default function SettingsPage() {
             </div>
           </div>
 
+          {/* Team Members (RBAC) */}
+          <div className="p-6 rounded-2xl bg-brand-surface border border-brand-border lg:col-span-2">
+            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <Users className="w-5 h-5 text-brand-accent" /> Membros do time (RBAC)
+            </h2>
+
+            <div className="space-y-3 mb-6">
+              {members.length === 0 && (
+                <div className="text-brand-text-secondary text-sm">Nenhum membro alem de voce. Convide membros para colaborar.</div>
+              )}
+              {members.map((m) => {
+                const RoleIcon = ROLE_ICONS[m.role] || Eye;
+                return (
+                  <div key={m.id} className="flex items-center justify-between p-3 rounded-xl bg-brand-elevated border border-brand-border">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full bg-brand-accent/20 flex items-center justify-center text-brand-accent text-sm font-bold">
+                        {(m.email || m.name || '?').charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <div className="text-sm font-medium">{m.name || m.email}</div>
+                        <div className="text-xs text-brand-text-secondary">{m.email}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="flex items-center gap-1 text-xs px-2 py-1 rounded-lg bg-brand-surface border border-brand-border">
+                        <RoleIcon className="w-3 h-3" /> {ROLE_LABELS[m.role] || m.role}
+                      </span>
+                      {m.role !== 'owner' && (
+                        <button
+                          onClick={() => handleRemoveMember(m.id)}
+                          className="p-2 rounded-lg hover:bg-error/10 text-brand-text-secondary hover:text-error transition"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Invite */}
+            <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t border-brand-border">
+              <input
+                type="email"
+                value={inviteEmail}
+                onChange={(e) => setInviteEmail(e.target.value)}
+                placeholder="email@dominio.com"
+                className="flex-1 px-4 py-2 rounded-xl bg-brand-elevated border border-brand-border text-brand-text text-sm"
+              />
+              <select
+                value={inviteRole}
+                onChange={(e) => setInviteRole(e.target.value)}
+                className="px-4 py-2 rounded-xl bg-brand-elevated border border-brand-border text-brand-text text-sm"
+              >
+                <option value="admin">Admin</option>
+                <option value="editor">Editor</option>
+                <option value="viewer">Viewer</option>
+              </select>
+              <button
+                onClick={handleInvite}
+                disabled={inviteLoading || !inviteEmail.trim()}
+                className="px-4 py-2 rounded-xl bg-brand-accent text-brand-bg font-semibold hover:bg-brand-accent-hover transition disabled:opacity-50 flex items-center gap-2"
+              >
+                {inviteLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <UserPlus className="w-4 h-4" />}
+                Convidar
+              </button>
+            </div>
+          </div>
+
+          {/* Plataformas */}
           <div className="p-6 rounded-2xl bg-brand-surface border border-brand-border lg:col-span-2">
             <h2 className="text-lg font-semibold mb-4">Redes sociais suportadas</h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3 text-sm text-brand-text-secondary">

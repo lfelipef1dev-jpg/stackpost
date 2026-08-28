@@ -5,27 +5,38 @@ import { getSupabase } from '@/lib/supabase';
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const code = searchParams.get('code');
+  const state = searchParams.get('state') || 'linkedin';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://stackpost.expostacker.com.br';
 
   if (!code) {
     return NextResponse.json({ error: 'Codigo nao informado' }, { status: 400 });
   }
 
+  const teamId = state.includes(':') ? state.split(':')[0] : null;
+
   try {
     const accounts = await handleLinkedInCallback(code);
 
     const supabase = getSupabase();
-    const { data: team } = await supabase
-      .from('teams')
-      .select('id')
-      .order('created_at', { ascending: true })
-      .limit(1)
-      .single();
-    const teamId = team?.id;
+
+    // Resolver teamId do state ou fallback para primeiro team
+    let resolvedTeamId = teamId;
+    if (!resolvedTeamId) {
+      const { data: team } = await supabase
+        .from('teams')
+        .select('id')
+        .order('created_at', { ascending: true })
+        .limit(1)
+        .single();
+      resolvedTeamId = team?.id;
+    }
+    if (!resolvedTeamId) throw new Error('Nenhum team encontrado');
 
     for (const account of accounts) {
       const { data: existing } = await supabase
         .from('social_accounts')
         .select('id')
+        .eq('team_id', resolvedTeamId)
         .eq('platform', 'linkedin')
         .eq('external_id', account.externalId)
         .maybeSingle();
@@ -50,7 +61,7 @@ export async function GET(req: NextRequest) {
         const { error: insertError } = await supabase
           .from('social_accounts')
           .insert({
-            team_id: teamId,
+            team_id: resolvedTeamId,
             platform: 'linkedin',
             ...accountData,
           });
@@ -58,9 +69,9 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    return NextResponse.redirect(new URL('/dashboard?connected=linkedin&accounts=' + accounts.length, req.url));
+    return NextResponse.redirect(`${siteUrl}/accounts?connected=linkedin&accounts=${accounts.length}`);
   } catch (error: any) {
     console.error('LinkedIn OAuth error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.redirect(`${siteUrl}/accounts?error=${encodeURIComponent(error.message)}`);
   }
 }
