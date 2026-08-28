@@ -30,15 +30,20 @@ export async function GET(req: NextRequest) {
         .eq('external_id', account.externalId)
         .maybeSingle();
 
+      const accountData = {
+        access_token: account.accessToken,
+        username: account.username,
+        external_id: account.externalId,
+        platform_account_id: account.externalId,
+        platform_metadata: { type: account.type || 'person' },
+        expires_at: account.expiresAt,
+        status: 'active',
+      };
+
       if (existing) {
         const { error: updateError } = await supabase
           .from('social_accounts')
-          .update({
-            access_token: account.accessToken,
-            username: account.username,
-            expires_at: account.expiresAt,
-            status: 'active',
-          })
+          .update(accountData)
           .eq('id', existing.id);
         if (updateError) throw updateError;
       } else {
@@ -47,11 +52,7 @@ export async function GET(req: NextRequest) {
           .insert({
             team_id: teamId,
             platform: 'linkedin',
-            username: account.username,
-            access_token: account.accessToken,
-            external_id: account.externalId,
-            expires_at: account.expiresAt,
-            status: 'active',
+            ...accountData,
           });
         if (insertError) throw insertError;
       }
