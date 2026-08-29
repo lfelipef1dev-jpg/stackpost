@@ -36,6 +36,17 @@ const footerColumns = [
     ],
   },
   {
+    title: 'Suporte e Parceiros',
+    links: [
+      { label: 'Todas Plataformas', href: '/platforms' },
+      { label: 'API Error Reference', href: '/errors' },
+      { label: 'Multi-Tenant API', href: '/multi-tenant-social-media-api' },
+      { label: 'White Label API', href: '/white-label-social-media-api' },
+      { label: 'SavedTime', href: '/partners/savedtime' },
+      { label: 'That Marketing Buddy', href: '/partners/that-marketing-buddy' },
+    ],
+  },
+  {
     title: 'Empresa',
     links: [
       { label: 'Sobre', href: '/about' },
@@ -239,7 +250,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="flex-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {footerColumns.map((col) => (
               <div key={col.title}>
                 <h3 className="text-xs font-semibold mb-3 text-brand-text uppercase tracking-wider">{col.title}</h3>
@@ -257,30 +268,35 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* API Directory: column layout */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-10">
+        {/* API Directory: compact badge rows */}
+        <div className="space-y-4">
           {[
-            { title: 'Suporte e Parceiros', links: [...footerColumns[2].links, ...partners], desc: 'Infraestrutura e parcerias' },
-            { ...coreApisSection, desc: '10 endpoints principais' },
-            { title: 'Comparacao', links: comparisons, desc: 'Compare com as alternativas' },
-            { ...rowSections[0], desc: '15 redes sociais conectadas' },
-            { ...rowSections[1], desc: 'APIs especializadas por canal' },
+            { ...coreApisSection, desc: '10 endpoints principais', height: 'max-h-[34px]' },
+            { title: 'Comparacao', links: comparisons, desc: 'Compare com as alternativas', height: 'max-h-[34px]' },
+            { ...rowSections[0], desc: '15 redes sociais conectadas', height: 'max-h-[52px]' },
+            { ...rowSections[1], desc: 'APIs especializadas por canal', height: 'max-h-[72px]' },
           ].map((section) => (
-            <div key={section.title} className="rounded-xl border border-brand-border bg-brand-elevated/30 p-4">
-              <h3 className="text-[11px] font-semibold text-brand-text uppercase tracking-wider mb-1">{section.title}</h3>
-              <p className="text-[9px] text-brand-text-secondary/70 mb-3">{section.desc}</p>
-              <ul className="space-y-1.5">
-                {section.links.map((link) => (
-                  <li key={link.label}>
+            <div
+              key={section.title}
+              className="group rounded-xl border border-brand-border bg-brand-elevated/30 p-3 sm:p-4 transition hover:border-brand-accent/40 hover:bg-brand-elevated/50"
+            >
+              <div className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-4">
+                <div className="sm:w-32 shrink-0">
+                  <h3 className="text-[11px] font-semibold text-brand-text uppercase tracking-wider">{section.title}</h3>
+                  <p className="text-[9px] text-brand-text-secondary/70 mt-0.5 hidden sm:block">{section.desc}</p>
+                </div>
+                <div className={`flex flex-wrap gap-1.5 flex-1 content-start overflow-hidden ${section.height}`}>
+                  {section.links.map((link) => (
                     <Link
+                      key={link.label}
                       href={link.href}
-                      className="text-xs text-brand-text-secondary hover:text-brand-accent transition-colors"
+                      className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] leading-none border border-brand-border/60 bg-brand-surface/40 text-brand-text-secondary/90 hover:bg-brand-accent hover:text-brand-bg hover:border-brand-accent transition-all whitespace-nowrap"
                     >
                       {link.label}
                     </Link>
-                  </li>
-                ))}
-              </ul>
+                  ))}
+                </div>
+              </div>
             </div>
           ))}
         </div>
