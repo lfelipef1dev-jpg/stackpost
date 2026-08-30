@@ -720,7 +720,7 @@ export default function ComposerPage() {
               <p className="text-brand-text-secondary mb-6 text-sm">
                 {pendingAction === 'publish'
                   ? 'Isso vai publicar imediatamente nas plataformas selecionadas. Tem certeza?'
-                  : 'O post sera salvo e publicado no horario agendado.'}
+                  : 'O post será salvo e publicado no horário agendado.'}
               </p>
               <div className="flex gap-3">
                 <button

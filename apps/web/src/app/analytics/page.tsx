@@ -217,7 +217,7 @@ function Donut({
 /* CSV Export                                                          */
 /* ------------------------------------------------------------------ */
 function exportCSV(data: AnalyticsData | null) {
-  const rows = ['Metrica,Valor'];
+  const rows = ['Métrica,Valor'];
   const s = data?.summary || { total: 0, posted: 0, errors: 0, scheduled: 0, drafts: 0, processing: 0, successRate: 0 };
   rows.push(`Total de posts,${s.total || 0}`);
   rows.push(`Publicados,${s.posted || 0}`);
@@ -237,14 +237,14 @@ function exportCSV(data: AnalyticsData | null) {
     }),
     { impressions: 0, views: 0, likes: 0, comments: 0, shares: 0, saves: 0 }
   );
-  rows.push(`Impressoes,${totals.impressions}`);
+  rows.push(`Impressões,${totals.impressions}`);
   rows.push(`Views,${totals.views}`);
   rows.push(`Curtidas,${totals.likes}`);
-  rows.push(`Comentarios,${totals.comments}`);
+  rows.push(`Comentários,${totals.comments}`);
   rows.push(`Compartilhamentos,${totals.shares}`);
   rows.push(`Salvos,${totals.saves}`);
   rows.push('');
-  rows.push('Plataforma,Posts,Impressoes,Views,Curtidas,Comentarios,Compart.,Salvos');
+  rows.push('Plataforma,Posts,Impressões,Views,Curtidas,Comentários,Compart.,Salvos');
   for (const m of data?.metrics || []) {
     rows.push(
       `${platformName(m.platform)},${data?.byPlatform?.[m.platform] || 0},${m.impressions || 0},${m.views || 0},${m.likes || 0},${m.comments || 0},${m.shares || 0},${m.saves || 0}`
@@ -270,6 +270,7 @@ export default function AnalyticsPage() {
     fetch(`/api/analytics?period=${period}`)
       .then((res) => res.json())
       .then((d) => setData(d))
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, [period]);
 
@@ -329,7 +330,7 @@ export default function AnalyticsPage() {
   /* ---- KPI cards ---- */
   const kpiCards = [
     {
-      label: 'Publicacoes',
+      label: 'Publicações',
       value: s.total,
       icon: BarChart3,
       color: '#8AB4F8',
@@ -353,7 +354,7 @@ export default function AnalyticsPage() {
       deltaUp: s.scheduled > 0,
     },
     {
-      label: 'Impressoes',
+      label: 'Impressões',
       value: totals.impressions,
       icon: Eye,
       color: '#60A5FA',
@@ -385,10 +386,10 @@ export default function AnalyticsPage() {
       value: `${s.successRate}%`,
       detail:
         s.successRate >= 80
-          ? 'Acima da media. Suas publicacoes estao saindo sem problemas.'
+          ? 'Acima da média. Suas publicações estão saindo sem problemas.'
           : s.successRate >= 50
-            ? 'Na media. Algumas publicacoes falham — revise suas contas.'
-            : 'Abaixo da media. Verifique tokens e permissoes das contas.',
+            ? 'Na média. Algumas publicações falham — revise suas contas.'
+            : 'Abaixo da média. Verifique tokens e permissões das contas.',
       color: s.successRate >= 80 ? '#34D399' : s.successRate >= 50 ? '#FBBF24' : '#F87171',
       icon: s.successRate >= 50 ? TrendingUp : TrendingDown,
     },
@@ -397,10 +398,10 @@ export default function AnalyticsPage() {
       value: `${engagementRate.toFixed(1)}%`,
       detail:
         engagementRate >= 3
-          ? 'Acima do benchmark de 3%. Seu conteudo esta engajando bem.'
+          ? 'Acima do benchmark de 3%. Seu conteúdo está engajando bem.'
           : engagementRate >= 1
-            ? 'Proximo do benchmark. Teste titulos e horarios diferentes.'
-            : 'Abaixo do benchmark de 3%. Foco em conteudo que gera conversa.',
+            ? 'Próximo do benchmark. Teste títulos e horários diferentes.'
+            : 'Abaixo do benchmark de 3%. Foco em conteúdo que gera conversa.',
       color: engagementRate >= 3 ? '#34D399' : engagementRate >= 1 ? '#FBBF24' : '#F87171',
       icon: engagementRate >= 3 ? TrendingUp : TrendingDown,
     },
@@ -408,18 +409,18 @@ export default function AnalyticsPage() {
       label: 'Plataforma com mais posts',
       value: topPlatform ? platformName(topPlatform[0]) : '—',
       detail: topPlatform
-        ? `${topPlatform[1]} publicacoes nesta plataforma.`
-        : 'Nenhuma publicacao ainda. Conecte uma conta para comecar.',
+        ? `${topPlatform[1]} publicações nesta plataforma.`
+        : 'Nenhuma publicação ainda. Conecte uma conta para começar.',
       color: topPlatform ? platformColor(topPlatform[0]) : '#8AB4F8',
       icon: Trophy,
     },
     {
-      label: 'Publicacoes agendadas',
+      label: 'Publicações agendadas',
       value: s.scheduled,
       detail:
         s.scheduled > 0
           ? `${s.scheduled} posts na fila, prontos para sair automaticamente.`
-          : 'Nada agendado. Crie um cronograma para manter consistencia.',
+          : 'Nada agendado. Crie um cronograma para manter consistência.',
       color: s.scheduled > 0 ? '#FBBF24' : '#8AB4F8',
       icon: CalendarDays,
     },
@@ -438,18 +439,18 @@ export default function AnalyticsPage() {
   /* ---- Donut segments ---- */
   const donutSegments = [
     { label: 'Curtidas', value: totals.likes, color: '#34D399' },
-    { label: 'Comentarios', value: totals.comments, color: '#60A5FA' },
+    { label: 'Comentários', value: totals.comments, color: '#60A5FA' },
     { label: 'Compart.', value: totals.shares, color: '#FBBF24' },
     { label: 'Salvos', value: totals.saves, color: '#8AB4F8' },
   ];
 
   /* ---- Pro features ---- */
   const proFeatures = [
-    { icon: CalendarDays, text: 'Historico de ate 90 dias com comparativos' },
-    { icon: FileText, text: 'Relatorios em PDF prontos para apresentar' },
-    { icon: Flame, text: 'Heatmap dos melhores horarios para postar' },
+    { icon: CalendarDays, text: 'Histórico de até 90 dias com comparativos' },
+    { icon: FileText, text: 'Relatórios em PDF prontos para apresentar' },
+    { icon: Flame, text: 'Heatmap dos melhores horários para postar' },
     { icon: Users, text: 'Benchmark vs concorrentes do seu nicho' },
-    { icon: Download, text: 'Exportacao white-label com sua marca' },
+    { icon: Download, text: 'Exportação white-label com sua marca' },
   ];
 
   const fmt = (n: number) => Number(n || 0).toLocaleString('pt-BR');
@@ -471,7 +472,7 @@ export default function AnalyticsPage() {
               <div>
                 <h1 className="text-3xl font-bold text-brand-text">Painel de resultados</h1>
                 <p className="text-sm text-brand-text-secondary mt-1 max-w-xl">
-                  Tudo o que sua marca gerou nas redes, em um so lugar. Veja o retorno do seu
+                  Tudo o que sua marca gerou nas redes, em um só lugar. Veja o retorno do seu
                   tempo e descubra o que funciona.
                 </p>
               </div>
@@ -515,7 +516,7 @@ export default function AnalyticsPage() {
               </div>
               <div className="flex-1 min-w-[200px]">
                 <p className="text-sm font-medium text-brand-text">
-                  Sem dados ainda. Publique seu primeiro conteudo e em 24 horas comecaremos a
+                  Sem dados ainda. Publique seu primeiro conteúdo e em 24 horas começaremos a
                   montar seu painel.
                 </p>
               </div>
@@ -523,7 +524,7 @@ export default function AnalyticsPage() {
                 href="/composer"
                 className="flex items-center gap-2 px-4 py-2 rounded-full bg-brand-accent text-white text-sm font-medium hover:bg-brand-accent/90 transition"
               >
-                Criar primeira publicacao
+                Criar primeira publicação
                 <ArrowRight className="w-4 h-4" />
               </a>
             </div>
@@ -593,18 +594,18 @@ export default function AnalyticsPage() {
         </div>
 
         {/* ============================================================ */}
-        {/* 5. Grafico de area + 6. Melhor dia / Meta do mes             */}
+        {/* 5. Gráfico de área + 6. Melhor dia / Meta do mês             */}
         {/* ============================================================ */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          {/* Grafico de area */}
+          {/* Gráfico de área */}
           <SpotlightCard className="lg:col-span-2 p-6">
             <div className="flex items-center justify-between mb-5">
               <div>
                 <h2 className="text-lg font-semibold text-brand-text">
-                  Publicacoes no periodo
+                  Publicações no período
                 </h2>
                 <p className="text-xs text-brand-text-secondary mt-0.5">
-                  Volume diario de publicacoes
+                  Volume diário de publicações
                 </p>
               </div>
               <div className="flex items-center gap-2 text-xs text-brand-text-secondary">
@@ -618,7 +619,7 @@ export default function AnalyticsPage() {
                 <div className="text-center">
                   <BarChart3 className="w-10 h-10 text-brand-text-secondary/30 mx-auto mb-2" />
                   <p className="text-sm text-brand-text-secondary">
-                    Sem dados de periodo ainda
+                    Sem dados de período ainda
                   </p>
                 </div>
               </div>
@@ -653,12 +654,12 @@ export default function AnalyticsPage() {
               </div>
             )}
             <div className="flex justify-between text-xs text-brand-text-secondary mt-3">
-              <span>{period === '7d' ? '7 dias' : period === '90d' ? '90 dias' : '30 dias'} atras</span>
+              <span>{period === '7d' ? '7 dias' : period === '90d' ? '90 dias' : '30 dias'} atrás</span>
               <span>Hoje</span>
             </div>
           </SpotlightCard>
 
-          {/* Melhor dia + Meta do mes */}
+          {/* Melhor dia + Meta do mês */}
           <div className="flex flex-col gap-6">
             <SpotlightCard className="p-6 flex-1" glow="#FBBF24">
               <div className="flex items-center gap-3 mb-4">
@@ -673,7 +674,7 @@ export default function AnalyticsPage() {
                     {bestDay.count}
                   </div>
                   <p className="text-xs text-brand-text-secondary mt-1">
-                    publicacoes em{' '}
+                    publicações em{' '}
                     {new Date(bestDay.date + 'T00:00:00').toLocaleDateString('pt-BR', {
                       day: '2-digit',
                       month: 'long',
@@ -692,7 +693,7 @@ export default function AnalyticsPage() {
                 <div className="w-9 h-9 rounded-xl bg-success/15 border border-success/30 flex items-center justify-center">
                   <Target className="w-4 h-4 text-success" />
                 </div>
-                <h3 className="text-sm font-semibold text-brand-text">Meta do mes</h3>
+                <h3 className="text-sm font-semibold text-brand-text">Meta do mês</h3>
               </div>
               <div className="flex items-baseline gap-2 mb-3">
                 <span className="text-3xl font-bold font-mono text-brand-text">{s.posted}</span>
@@ -721,7 +722,7 @@ export default function AnalyticsPage() {
           <SpotlightCard className="p-6">
             <h2 className="text-lg font-semibold text-brand-text mb-1">Posts por plataforma</h2>
             <p className="text-xs text-brand-text-secondary mb-5">
-              Distribuicao das publicacoes por rede social
+              Distribuição das publicações por rede social
             </p>
 
             {Object.keys(byPlatform).length === 0 ? (
@@ -765,7 +766,7 @@ export default function AnalyticsPage() {
           <SpotlightCard className="p-6" glow="#F472B6">
             <h2 className="text-lg font-semibold text-brand-text mb-1">Engajamento</h2>
             <p className="text-xs text-brand-text-secondary mb-5">
-              Composicao das interacoes recebidas
+              Composição das interações recebidas
             </p>
 
             {totalEngagement === 0 ? (
@@ -800,10 +801,10 @@ export default function AnalyticsPage() {
         </div>
 
         {/* ============================================================ */}
-        {/* 9. Tabela de metricas por plataforma                         */}
+        {/* 9. Tabela de métricas por plataforma                         */}
         {/* ============================================================ */}
         <SpotlightCard className="p-6 mb-8">
-          <h2 className="text-lg font-semibold text-brand-text mb-1">Metricas por plataforma</h2>
+          <h2 className="text-lg font-semibold text-brand-text mb-1">Métricas por plataforma</h2>
           <p className="text-xs text-brand-text-secondary mb-5">
             Desempenho detalhado de cada rede social
           </p>
@@ -813,7 +814,7 @@ export default function AnalyticsPage() {
               <div className="text-center">
                 <BarChart3 className="w-10 h-10 text-brand-text-secondary/30 mx-auto mb-2" />
                 <p className="text-sm text-brand-text-secondary">
-                  Sem metricas ainda. As metricas aparecem apos a publicacao.
+                  Sem métricas ainda. As métricas aparecem após a publicação.
                 </p>
               </div>
             </div>
@@ -829,7 +830,7 @@ export default function AnalyticsPage() {
                       Posts
                     </th>
                     <th className="text-right py-3 px-3 text-brand-text-secondary font-medium text-xs">
-                      Impressoes
+                      Impressões
                     </th>
                     <th className="text-right py-3 px-3 text-brand-text-secondary font-medium text-xs">
                       Views
@@ -838,7 +839,7 @@ export default function AnalyticsPage() {
                       Curtidas
                     </th>
                     <th className="text-right py-3 px-3 text-brand-text-secondary font-medium text-xs">
-                      Comentarios
+                      Comentários
                     </th>
                     <th className="text-right py-3 px-3 text-brand-text-secondary font-medium text-xs">
                       Compart.
@@ -912,10 +913,10 @@ export default function AnalyticsPage() {
         </SpotlightCard>
 
         {/* ============================================================ */}
-        {/* 10. Status das publicacoes                                   */}
+        {/* 10. Status das publicações                                   */}
         {/* ============================================================ */}
         <div className="mb-8">
-          <h2 className="text-lg font-semibold text-brand-text mb-4">Status das publicacoes</h2>
+          <h2 className="text-lg font-semibold text-brand-text mb-4">Status das publicações</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
             {statusCards.map((c, i) => (
               <SpotlightCard key={i} className="p-4">
@@ -941,16 +942,16 @@ export default function AnalyticsPage() {
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-brand-text">
-                    Desbloqueie analises avancadas
+                    Desbloqueie análises avançadas
                   </h2>
                   <p className="text-xs text-brand-text-secondary">
-                    StackPost Pro — para quem leva dados a serio
+                    StackPost Pro — para quem leva dados a sério
                   </p>
                 </div>
               </div>
               <p className="text-sm text-brand-text-secondary mb-5 max-w-lg">
-                Veja alem do basico. Compare periodos, entenda seus melhores horarios e gere
-                relatorios prontos para sua equipe ou clientes.
+                Veja além do básico. Compare períodos, entenda seus melhores horários e gere
+                relatórios prontos para sua equipe ou clientes.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {proFeatures.map((f, i) => (
@@ -966,7 +967,7 @@ export default function AnalyticsPage() {
             <div className="flex flex-col gap-3 lg:w-56 flex-shrink-0">
               <div className="text-center lg:text-right">
                 <span className="text-3xl font-bold text-brand-text">R$ 49</span>
-                <span className="text-sm text-brand-text-secondary">/mes</span>
+                <span className="text-sm text-brand-text-secondary">/mês</span>
               </div>
               <a
                 href="/billing"

@@ -1,372 +1,206 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { Layers, Calendar, BarChart3, Zap, Shield, Globe, ArrowRight, MessageSquare, Upload, Webhook, Key, Building2, Sparkles, Clock, RefreshCw, FileCheck, Hash, AlertCircle, CheckCircle2, TrendingUp, Rocket, Mail, Bot, PlayCircle } from 'lucide-react';
+import { ArrowRight, Zap, Calendar, BarChart3, Upload, Webhook, Bot, Shield, Globe, Sparkles, Clock, MessageSquare, Layers, CheckCircle2, Building2, TrendingUp, Rocket } from 'lucide-react';
 import { PLATFORMS } from '@/lib/platforms';
-import { PlatformCard } from '@/components/PlatformCard';
-import { FadeIn, ScrollReveal, StaggerGroup, StaggerItem, Parallax } from '@/components/animations';
+import { PlatformIcon } from '@/components/PlatformIcon';
+import { FadeIn, ScrollReveal, StaggerGroup, StaggerItem } from '@/components/animations';
 import { JsonLd, softwareApplicationSchema } from '@/components/JsonLd';
 import Footer from '@/components/Footer';
+import HeroBanner from '@/components/HeroBanner';
+import PlatformCards from '@/components/PlatformCards';
+import LandingHeader from '@/components/LandingHeader';
 
 export const metadata: Metadata = {
-  title: 'StackPost - API unificada de redes sociais para SaaS e AI agents',
-  description: 'StackPost e a API unificada de redes sociais: uma integracao, 15 plataformas, 114 endpoints, MCP server, AI caption, A/B testing e analytics historico. Plano gratuito para sempre.',
+  title: 'StackPost - API unificada de redes sociais para SaaS, agências e AI agents',
+  description: 'StackPost é a API unificada de redes sociais: poste, agende, analise e modere em 15 plataformas por uma única integração. 114 endpoints, MCP server, AI caption, A/B testing, analytics histórico e contas ilimitadas. Plano gratuito para sempre.',
   alternates: { canonical: '/' },
 };
 
 const homeJsonLd = softwareApplicationSchema(
   'StackPost',
-  'API unificada de redes sociais para SaaS, agencias e AI agents. 15 plataformas, 114 endpoints, MCP server.',
+  'API unificada de redes sociais para SaaS, agências e AI agents. 15 plataformas, 114 endpoints, MCP server, publishing, scheduling, analytics, comments, webhooks e contas ilimitadas.',
   '/'
 );
 
-const features = [
-  {
-    category: 'Publicacao',
-    items: [
-      { icon: Layers, title: 'API de Postagem', description: 'Crie posts, rascunhos e fluxos de publicacao em multiplas contas e plataformas.' },
-      { icon: Calendar, title: 'Agendamento', description: 'Programe conteudo com campos especificos por plataforma sob controle.' },
-      { icon: Zap, title: 'Postagem em massa', description: 'Crie muitos posts de uma vez via CSV ou workflows via API.' },
-      { icon: MessageSquare, title: 'Primeiro comentario', description: 'Poste comentarios automaticos quando o conteudo for ao ar.' },
-    ],
-  },
-  {
-    category: 'Midia e uploads',
-    items: [
-      { icon: Upload, title: 'Upload de midia', description: 'Envie imagens e videos para fluxos de publicacao com validacao por plataforma.' },
-      { icon: Globe, title: 'Upload por URL', description: 'O StackPost busca a midia de uma URL publica e prepara para postagem.' },
-      { icon: Shield, title: 'Midia cross-platform', description: 'Reutilize midia entre plataformas respeitando regras de cada rede.' },
-    ],
-  },
-  {
-    category: 'Contas e conexao',
-    items: [
-      { icon: Key, title: 'OAuth oficial', description: 'Conecte contas atraves de fluxos oficiais de cada plataforma.' },
-      { icon: Building2, title: 'Contas por time', description: 'Mantenha contas conectadas no workspace certo: cliente, marca ou projeto.' },
-      { icon: RefreshCw, title: 'Sem limite artificial', description: 'Escale contas conforme seu modelo real de clientes. Sem cobranca por conta.' },
-    ],
-  },
-  {
-    category: 'Analytics e historico',
-    items: [
-      { icon: BarChart3, title: 'Analytics unificado', description: 'Leia impressoes, views, curtidas, comentarios e dados demograficos por plataforma.' },
-      { icon: Clock, title: 'Importacao de historico', description: 'Importe posts passados para uma timeline unificada no seu dashboard.' },
-      { icon: FileCheck, title: 'Relatorios por cliente', description: 'Construa views de analytics em torno de times, clientes, marcas ou organizacoes.' },
-    ],
-  },
-  {
-    category: 'Comentarios e engajamento',
-    items: [
-      { icon: MessageSquare, title: 'API de comentarios', description: 'Leia, responda e gerencie comentarios onde a plataforma suportar.' },
-      { icon: Hash, title: 'Workflows por plataforma', description: 'Instagram, Facebook, YouTube e outras com diferencas tratadas em uma camada.' },
-      { icon: AlertCircle, title: 'Erros faceis de debugar', description: 'Exponha motivos reais de falha da plataforma em vez de generico "failed".' },
-    ],
-  },
-  {
-    category: 'Multi-tenant e automacao',
-    items: [
-      { icon: Building2, title: 'Multi-tenant nativo', description: 'Modele clientes, times, marcas e localidades como workspaces separados.' },
-      { icon: Webhook, title: 'Webhooks em tempo real', description: 'Receba eventos quando posts publicam, falham, contas conectam ou workflows mudam.' },
-      { icon: Sparkles, title: 'API para AI agents', description: 'Deixe ferramentas de IA criar rascunhos, agendar e publicar apos aprovacao.' },
-    ],
-  },
+const stats = [
+  { value: '15', label: 'plataformas conectadas' },
+  { value: '114', label: 'endpoints prontos' },
+  { value: '0', label: 'custo por conta' },
+  { value: '99.9%', label: 'uptime' },
+];
+
+const bentoFeatures = [
+  { icon: Zap, title: 'Publicação unificada', desc: 'Um payload. 15 redes. Agendamento, retry e status tracking.', href: '/features' },
+  { icon: Upload, title: 'Upload de mídia escalável', desc: 'Multipart, presigned, TUS e URL import. Suporta até 1 GB.', href: '/features' },
+  { icon: Calendar, title: 'Agendamento inteligente', desc: 'Best-time ML, primeiro comentário e A/B testing.', href: '/features' },
+  { icon: BarChart3, title: 'Analytics histórico', desc: 'Cron diário de snapshots. Gráficos de evolução sem limite.', href: '/features' },
+  { icon: Bot, title: 'AI caption & hashtags', desc: 'Nexus IA gera variações de caption e hashtags por nicho.', href: '/features' },
+  { icon: Webhook, title: 'Webhooks com replay', desc: 'HMAC, retry, replay e eventos em tempo real.', href: '/features' },
+  { icon: Shield, title: 'Multi-user RBAC', desc: 'Owner, admin, editor, viewer. Workspaces separados.', href: '/features' },
+  { icon: MessageSquare, title: 'Comentários', desc: 'Leia, responda e importe comentários das principais redes.', href: '/features' },
 ];
 
 const testimonials = [
-  { name: 'Vlad M.', role: 'CTO, SaaS Platform', country: 'EUA', text: 'Testamos praticamente todas as APIs de redes sociais e esta foi de longe a melhor. Super direta na integracao e tem tudo que voce precisa em recursos.' },
-  { name: 'Phil R.', role: 'Engenheiro Senior', country: 'EUA', text: 'Avaliei tres produtos: Ayrshare, OneAll e StackPost. Depois de avaliar todos, o StackPost saiu na frente — e nao foi uma decisao de custo.' },
-  { name: 'Kathleen S.', role: 'Founder', country: 'EUA', text: 'Faz o que APIs muito mais caras fazem, e faz melhor e mais facil, com muito menos dor de cabeca e um preco muito menor. O preco e feito para startups.' },
-  { name: 'Tucker J.', role: 'Agencia de Marketing', country: 'EUA', text: 'Perfis ilimitados sem taxas por conta e um diferencial enorme se voce gerencia varios clientes ou construiu sobre a API.' },
-  { name: 'Kuben P.', role: 'Desenvolvedor', country: 'Filipinas', text: 'Confiavel, facil de integrar e muito mais acessivel que outras APIs que testamos. Documentacao clara, recursos novos regularmente.' },
-  { name: 'Bruna L.', role: 'Social Media Manager', country: 'Brasil', text: 'Finalmente uma ferramenta que entende o mercado brasileiro. Preco em reais, suporte em portugues, e funciona com todas as plataformas que preciso.' },
-];
-
-const comingSoon = [
-  { icon: MessageSquare, title: 'Meta Automation API', description: 'Instagram e Facebook: comentarios, DMs, respostas privadas, automacao e logs.' },
-  { icon: Mail, title: 'Social Media DM API', description: 'DMs unificadas e webhooks de mensagens, comecando por Instagram e Facebook Messenger.' },
-  { icon: Bot, title: 'Comment to DM API', description: 'Respostas privadas ativadas por palavras-chave em comentarios do Instagram e Facebook.' },
-  { icon: TrendingUp, title: 'Social Media Ads API', description: 'Workflows de anuncios pagos futuros em Meta, Google, TikTok, LinkedIn, Pinterest e X.' },
+  { name: 'Vlad M.', role: 'CTO, SaaS Platform', country: 'EUA', text: 'Testamos praticamente todas as APIs de redes sociais e esta foi de longe a melhor. Super direta na integração e tem tudo que você precisa em recursos.' },
+  { name: 'Tucker J.', role: 'Agência de Marketing', country: 'EUA', text: 'Perfis ilimitados sem taxas por conta é um diferencial enorme se você gerencia vários clientes ou construiu sobre a API.' },
+  { name: 'Bruna L.', role: 'Social Media Manager', country: 'Brasil', text: 'Finalmente uma ferramenta que entende o mercado brasileiro. Preço em reais, suporte em português, e funciona com todas as plataformas que preciso.' },
 ];
 
 export default function Home() {
-  const featuredPlatforms = PLATFORMS.slice(0, 15);
-
   return (
-    <main className="min-h-screen bg-brand-bg">
+    <main className="min-h-screen bg-brand-bg pt-16">
       <JsonLd data={homeJsonLd} />
-      {/* Header */}
-      <header className="h-16 border-b border-brand-border bg-brand-surface/50 backdrop-blur-xl sticky top-0 z-20">
-        <div className="max-w-7xl mx-auto h-full px-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <img src="/brand/logo.png" alt="StackPost" className="h-14 w-auto" />
-          </div>
-          <nav className="hidden md:flex gap-6 text-sm text-brand-text-secondary items-center">
-            <Link href="/features" className="hover:text-brand-text transition">Features</Link>
-            <Link href="/docs" className="hover:text-brand-text transition">Documentacao</Link>
-            <Link href="/blog" className="hover:text-brand-text transition">Blog</Link>
-            <Link href="/plans" className="hover:text-brand-text transition">Planos</Link>
-            <Link href="/login" className="hover:text-brand-text transition">Entrar</Link>
-            <Link
-              href="/register"
-              className="px-4 py-1.5 rounded-lg bg-brand-accent text-brand-bg font-medium hover:bg-brand-accent-hover transition"
-            >
-              Comecar gratis
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <LandingHeader />
 
-      {/* Hero with stagger animations + dashboard mockup */}
-      <section className="relative overflow-hidden">
-        {/* Glow background */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-brand-accent/10 rounded-full blur-[120px]" />
+      {/* Hero */}
+      <section className="relative flex flex-col items-center justify-center pt-4 pb-4 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none hidden md:block" aria-hidden="true">
+          <div className="absolute top-[-10%] right-[-10%] w-[40rem] h-[40rem] rounded-full bg-gradient-to-br from-brand-accent/10 to-brand-accent-hover/5 blur-[100px]"></div>
+          <div className="absolute bottom-[-10%] left-[-5%] w-[32rem] h-[32rem] rounded-full bg-gradient-to-tr from-brand-accent/8 to-transparent blur-[90px]"></div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 pt-24 pb-16 text-center">
+        <div className="relative w-full max-w-6xl mx-auto px-4 md:px-6 text-center">
           <div className="max-w-3xl mx-auto">
-            <FadeIn delay={0}>
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-brand-accent/30 bg-brand-accent/10 text-brand-accent text-sm font-mono tracking-wider">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                APIs oficiais · Multi-tenant · Provado em escala
+            <FadeIn>
+              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-0 text-[10px] md:text-xs font-bold uppercase tracking-widest text-brand-accent border border-brand-accent/25 rounded-full bg-brand-accent/10 backdrop-blur-sm">
+                <span className="relative flex w-2 h-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-accent opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-accent"></span>
+                </span>
+                114 endpoints · 15 plataformas · API ao vivo
               </span>
             </FadeIn>
 
             <FadeIn delay={0.06}>
-              <h1 className="text-5xl md:text-6xl font-bold mt-6 mb-6 leading-[1.1] tracking-tight">
-                Uma API. <span className="text-brand-accent">Todas as redes.</span>
+              <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-black leading-[1.05] tracking-[-0.04em] text-brand-text mt-8 mb-8 text-center md:whitespace-nowrap -translate-x-[2.5cm]">
+                Uma API para <span className="text-brand-accent">todas as redes.</span>
               </h1>
             </FadeIn>
+          </div>
 
+          <HeroBanner />
+
+          <div className="max-w-3xl mx-auto">
             <FadeIn delay={0.12}>
-              <p className="text-brand-text-secondary text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
-                Escreva uma vez, publique em qualquer lugar. Uma integracao para 15+ plataformas em vez de 15 fluxos OAuth e 15 conjuntos de breaking changes.
+              <p className="text-base md:text-lg text-brand-text-secondary max-w-2xl mx-auto mb-6 leading-relaxed mt-6">
+                Conecte, publique e analise em 15 plataformas com um único endpoint. Pronto para SaaS, agências e AI agents.
               </p>
             </FadeIn>
 
             <FadeIn delay={0.18}>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link
                   href="/register"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-brand-accent text-brand-bg font-semibold hover:bg-brand-accent-hover transition shadow-[0_0_40px_rgba(138,180,248,0.3)]"
-                >
-                  Comecar gratis <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link
-                  href="/docs"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border border-brand-border bg-brand-surface/50 backdrop-blur text-brand-text hover:bg-brand-elevated transition"
-                >
-                  <PlayCircle className="w-4 h-4" /> Ver demo
-                </Link>
-                <Link
-                  href="/plans"
-                  className="inline-flex items-center justify-center px-8 py-4 rounded-xl border border-brand-border bg-brand-surface/50 backdrop-blur text-brand-text hover:bg-brand-elevated transition"
-                >
-                  Ver planos
-                </Link>
-              </div>
-            </FadeIn>
-
-            <FadeIn delay={0.24}>
-              <p className="text-brand-text-secondary text-sm mt-6">
-                Plano gratuito para sempre · Nao precisa de cartao
-              </p>
-            </FadeIn>
-          </div>
-        </div>
-
-        {/* Dashboard mockup */}
-        <FadeIn delay={0.3} y={40}>
-          <div className="relative max-w-5xl mx-auto px-4 pb-16">
-            <div className="rounded-2xl border border-brand-border bg-brand-surface/50 backdrop-blur-xl overflow-hidden shadow-2xl shadow-brand-accent/10">
-              {/* Window bar */}
-              <div className="h-9 border-b border-brand-border flex items-center px-4 gap-2">
-                <div className="w-3 h-3 rounded-full bg-error/60" />
-                <div className="w-3 h-3 rounded-full bg-warning/60" />
-                <div className="w-3 h-3 rounded-full bg-success/60" />
-                <div className="ml-3 text-xs text-brand-text-secondary font-mono">stackpost.expostacker.com.br/dashboard</div>
-              </div>
-              {/* Mockup content */}
-              <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 rounded-xl bg-brand-elevated border border-brand-border">
-                  <div className="text-brand-text-secondary text-xs">Posts Publicados</div>
-                  <div className="text-2xl font-mono font-bold mt-1 text-brand-text">1.247</div>
-                  <div className="text-success text-xs mt-1">+12% este mes</div>
+                  className="inline-flex items-center justify-center px-8 py-4 bg-brand-accent text-brand-bg font-bold rounded-xl hover:opacity-90 transition-opacity duration-200 shadow-[0_0_32px_rgba(138,180,248,0.35)] min-w-[220px]"
+                  >
+                    Começar grátis <ArrowRight className="w-4 h-4 ml-2" />
+                  </Link>
+                  <Link
+                    href="/docs"
+                    className="inline-flex items-center justify-center px-5 py-4 text-brand-text-secondary hover:text-brand-accent transition-colors duration-200 min-h-[48px] font-medium"
+                  >
+                    Ver documentação &rarr;
+                  </Link>
                 </div>
-                <div className="p-4 rounded-xl bg-brand-elevated border border-brand-border">
-                  <div className="text-brand-text-secondary text-xs">Contas Conectadas</div>
-                  <div className="text-2xl font-mono font-bold mt-1 text-brand-text">28</div>
-                  <div className="text-success text-xs mt-1">+3 novas</div>
-                </div>
-                <div className="p-4 rounded-xl bg-brand-elevated border border-brand-border">
-                  <div className="text-brand-text-secondary text-xs">Taxa de Sucesso</div>
-                  <div className="text-2xl font-mono font-bold mt-1 text-brand-text">99.2%</div>
-                  <div className="text-success text-xs mt-1">Estavel</div>
-                </div>
-                {/* Mini chart */}
-                <div className="md:col-span-3 p-4 rounded-xl bg-brand-elevated border border-brand-border">
-                  <div className="text-brand-text-secondary text-xs mb-3">Publicacoes nos ultimos 30 dias</div>
-                  <div className="h-24 flex items-end gap-1">
-                    {[40, 55, 30, 70, 45, 60, 80, 50, 65, 90, 55, 75, 60, 85, 70, 95, 50, 65, 80, 60, 75, 90, 55, 70, 85, 60, 75, 80, 65, 95].map((h, i) => (
-                      <div
-                        key={i}
-                        className="flex-1 rounded-t bg-brand-accent/60 hover:bg-brand-accent transition-all"
-                        style={{ height: `${h}%`, minHeight: '4px' }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
+                <p className="text-brand-text-secondary/60 text-sm mt-4">Plano gratuito para sempre. Não precisa de cartão.</p>
+              </FadeIn>
             </div>
           </div>
-        </FadeIn>
-      </section>
 
-      {/* Platform grid with stagger */}
-      <section className="max-w-7xl mx-auto px-4 py-12">
-        <StaggerGroup className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 xl:grid-cols-15 gap-3" stagger={0.03}>
-          {featuredPlatforms.map((p) => (
-            <StaggerItem key={p.id}>
-              <PlatformCard platform={p} />
-            </StaggerItem>
-          ))}
-        </StaggerGroup>
-      </section>
+        </section>
 
-      {/* Features sections with scroll reveal */}
-      <section id="features" className="max-w-7xl mx-auto px-4 py-16">
-        <ScrollReveal className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-3">Tudo que seu produto precisa</h2>
-          <p className="text-brand-text-secondary max-w-2xl mx-auto">
-            Um mapa product-led dos workflows que o StackPost pode rodar, agrupado por como builders avaliam infraestrutura de API de redes sociais.
-          </p>
-        </ScrollReveal>
 
-        {features.map((group) => (
-          <div key={group.category} className="mb-14">
-            <ScrollReveal>
-              <h3 className="text-xl font-semibold mb-6 text-brand-accent">{group.category}</h3>
-            </ScrollReveal>
-            <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" stagger={0.08}>
-              {group.items.map((f) => (
-                <StaggerItem key={f.title}>
-                  <div className="group p-6 rounded-2xl bg-brand-surface/50 backdrop-blur border border-brand-border hover:border-brand-accent/40 transition-all duration-300 hover:shadow-[0_0_30px_rgba(138,180,248,0.1)]">
-                    <div className="w-12 h-12 rounded-xl bg-brand-accent/10 flex items-center justify-center mb-4 group-hover:bg-brand-accent/20 transition">
-                      <f.icon className="w-6 h-6 text-brand-accent" />
-                    </div>
-                    <h4 className="text-lg font-semibold mb-2">{f.title}</h4>
-                    <p className="text-sm text-brand-text-secondary leading-relaxed">{f.description}</p>
-                  </div>
-                </StaggerItem>
+        {/* TrustBar */}
+        <section className="py-6 md:py-8 border-y border-brand-border">
+          <div className="max-w-6xl mx-auto px-4 md:px-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {stats.map((s) => (
+                <div key={s.label} className="text-center md:text-left border-l border-brand-border first:border-0 pl-4 first:pl-0">
+                  <div className="text-3xl md:text-4xl font-black text-brand-accent font-mono leading-none">{s.value}</div>
+                  <div className="text-sm text-brand-text-secondary mt-1">{s.label}</div>
+                </div>
               ))}
-            </StaggerGroup>
+            </div>
           </div>
-        ))}
-      </section>
+        </section>
 
-      {/* Diferenciais StackPost */}
-      <section className="max-w-7xl mx-auto px-4 py-16 border-t border-brand-border">
-        <ScrollReveal className="text-center mb-12">
-          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-accent/10 text-brand-accent text-xs font-mono uppercase tracking-wider">
-            <Sparkles className="w-3 h-3" />
-            Diferenciais
-          </span>
-          <h2 className="text-3xl md:text-4xl font-bold mt-4 mb-4">Por que o StackPost e superior</h2>
-          <p className="text-brand-text-secondary max-w-2xl mx-auto">
-            Features que nenhuma outra plataforma de redes sociais oferece.
-          </p>
-        </ScrollReveal>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            { icon: Bot, title: 'MCP Server', desc: 'AI agents (Claude, Cursor) publicam posts via Model Context Protocol.' },
-            { icon: Sparkles, title: 'AI Caption', desc: 'Nexus IA gera 3-5 variacoes de caption por plataforma.' },
-            { icon: RefreshCw, title: 'A/B Testing', desc: 'Crie variacoes de caption/hashtag e compare performance.' },
-            { icon: TrendingUp, title: 'Best-time ML', desc: 'ML calcula engagement por hora/dia e sugere top 3 horarios.' },
-            { icon: Shield, title: 'Auto-reconnect', desc: 'Detecta desconexao e tenta refresh automatico.' },
-            { icon: FileCheck, title: 'Approval Workflow', desc: 'DRAFT -> REVIEW -> APPROVED -> SCHEDULED com roles.' },
-            { icon: Building2, title: 'Multi-user RBAC', desc: 'Owner, admin, editor, viewer. Sem taxa por seat.' },
-            { icon: Globe, title: 'Cross-post Adaptativo', desc: 'Escreve uma vez, sistema adapta para cada plataforma.' },
-            { icon: Hash, title: 'Hashtag Suggestions', desc: 'Trending APIs + nicho. Volume de busca e competencia.' },
-            { icon: Webhook, title: 'Webhook Replay', desc: 'Reenvie eventos perdidos apos re-enable.' },
-            { icon: Key, title: 'Idempotency', desc: 'Header Idempotency-Key preveni duplicacao em retries.' },
-            { icon: Clock, title: 'Analytics Indefinido', desc: 'Cron job diario salva snapshot. Grafico de evolucao.' },
-          ].map((d, i) => (
-            <ScrollReveal key={d.title} delay={i * 0.03}>
-              <div className="p-5 rounded-xl bg-brand-surface/50 backdrop-blur border border-brand-border hover:border-brand-accent/30 transition group h-full">
-                <d.icon className="w-6 h-6 text-brand-accent mb-3 group-hover:scale-110 transition" />
-                <h3 className="font-semibold mb-1.5 text-brand-text">{d.title}</h3>
-                <p className="text-sm text-brand-text-secondary">{d.desc}</p>
-              </div>
-            </ScrollReveal>
-          ))}
+        {/* Bento Features */}
+      <section className="py-20 md:py-28 border-y border-brand-border">
+        <div className="max-w-6xl mx-auto px-4 md:px-6">
+          <ScrollReveal className="mb-12">
+            <span className="inline-block text-xs font-mono font-bold text-brand-accent uppercase tracking-[0.2em] mb-3">Recursos</span>
+            <h2 className="font-display text-3xl md:text-5xl font-black leading-[1.05] tracking-[-0.03em] text-brand-text mb-4">
+              Tudo que seu produto precisa
+            </h2>
+          </ScrollReveal>
+
+          <StaggerGroup className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5" stagger={0.04}>
+            {bentoFeatures.map((f) => (
+              <StaggerItem key={f.title}>
+                <Link href={f.href} className="group block p-6 rounded-2xl border border-brand-border bg-gradient-to-br from-brand-surface/80 to-brand-bg/60 hover:border-brand-accent/60 transition-all duration-200 h-full">
+                  <div className="w-10 h-10 rounded-xl bg-brand-accent/10 flex items-center justify-center mb-4 group-hover:bg-brand-accent/20 transition">
+                    <f.icon className="w-5 h-5 text-brand-accent" />
+                  </div>
+                  <h3 className="font-semibold text-brand-text mb-2 group-hover:text-brand-accent transition-colors">{f.title}</h3>
+                  <p className="text-sm text-brand-text-secondary leading-relaxed">{f.desc}</p>
+                </Link>
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
         </div>
       </section>
 
-      {/* Coming Soon section */}
-      <section className="max-w-7xl mx-auto px-4 py-16 border-t border-brand-border">
-        <ScrollReveal className="text-center mb-12">
-          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-warning/10 text-warning text-xs font-mono uppercase tracking-wider">
-            <Rocket className="w-3 h-3" />
-            Em breve
-          </span>
-          <h2 className="text-3xl md:text-4xl font-bold mt-4 mb-3">O que esta por vir</h2>
-          <p className="text-brand-text-secondary max-w-2xl mx-auto">
-            Paginas de acesso antecipado para a proxima camada: automacao Meta, mensagens privadas, respostas automaticas e anuncios pagos.
-          </p>
-        </ScrollReveal>
+      {/* 15 plataformas com cards + modal */}
+      <PlatformCards />
 
-        <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 gap-6" stagger={0.1}>
-          {comingSoon.map((item) => (
-            <StaggerItem key={item.title}>
-              <div className="p-6 rounded-2xl bg-brand-surface/50 backdrop-blur border border-brand-border hover:border-brand-text/20 transition flex gap-4">
-                <div className="shrink-0 w-12 h-12 rounded-xl bg-brand-elevated flex items-center justify-center">
-                  <item.icon className="w-6 h-6 text-brand-text-secondary" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold mb-1">{item.title}</h3>
-                  <p className="text-sm text-brand-text-secondary">{item.description}</p>
-                </div>
-              </div>
-            </StaggerItem>
-          ))}
-        </StaggerGroup>
-      </section>
+      {/* Diferenciais */}
+      <section className="py-20 md:py-28 border-y border-brand-border">
+        <div className="max-w-6xl mx-auto px-4 md:px-6">
+          <ScrollReveal className="text-center mb-12">
+            <h2 className="font-display text-3xl md:text-4xl font-black tracking-tight text-brand-text mb-4">
+              Por que escolher o StackPost
+            </h2>
+            <p className="text-brand-text-secondary max-w-2xl mx-auto">
+              Diferenciais que nenhuma outra API de redes sociais oferece no mesmo preço.
+            </p>
+          </ScrollReveal>
 
-      {/* "Built different" section */}
-      <section className="max-w-7xl mx-auto px-4 py-16 border-t border-brand-border">
-        <ScrollReveal className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-3">Feito diferente</h2>
-        </ScrollReveal>
-        <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" stagger={0.08}>
-          {[
-            { title: 'Sem preco por seat', desc: 'Voce paga o mesmo todo mes.' },
-            { title: 'Sem limite artificial', desc: 'Conecte quantas contas precisar.' },
-            { title: 'Multi-tenant por design', desc: 'Workspaces de clientes separados.' },
-            { title: 'Erros verbosos', desc: 'Debug posts falhados sem chutar.' },
-          ].map((item) => (
-            <StaggerItem key={item.title}>
-              <div className="p-6 rounded-2xl bg-brand-surface/50 backdrop-blur border border-brand-border text-center hover:border-brand-accent/30 transition">
-                <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
-                <p className="text-sm text-brand-text-secondary">{item.desc}</p>
-              </div>
-            </StaggerItem>
-          ))}
-        </StaggerGroup>
+          <StaggerGroup className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4" stagger={0.03}>
+            {[
+              { icon: Layers, title: 'API unificada', desc: 'Um endpoint para 15 plataformas. Sem OAuth, retry e status individuais.' },
+              { icon: Globe, title: 'Contas ilimitadas', desc: 'Conecte todos os perfis que quiser. Pague pelo uso, não por conta.' },
+              { icon: TrendingUp, title: 'Analytics real', desc: 'Post e account analytics com refresh sob demanda e histórico infinito.' },
+              { icon: Bot, title: 'Pronto para IA', desc: 'MCP server, AI caption e A/B testing para agentes e produtos de conteúdo.' },
+              { icon: Shield, title: 'Produção', desc: 'Idempotency, webhooks com replay e RBAC nativo para multi-tenant.' },
+              { icon: Clock, title: 'Sem filas quebradas', desc: 'Scheduling, retry, best-time e aprovação em um só fluxo.' },
+              { icon: Sparkles, title: 'PIX em reais', desc: 'Checkout com Mercado Pago. Sem taxa internacional escondida.' },
+              { icon: CheckCircle2, title: 'Sem vendor lock-in', desc: 'Pegue seus dados a qualquer momento. API-first e transparente.' },
+            ].map((d) => (
+              <StaggerItem key={d.title}>
+                <div className="p-5 rounded-xl bg-brand-surface/50 border border-brand-border hover:border-brand-accent/40 transition h-full">
+                  <d.icon className="w-6 h-6 text-brand-accent mb-3" />
+                  <h3 className="font-semibold text-brand-text mb-1.5">{d.title}</h3>
+                  <p className="text-sm text-brand-text-secondary">{d.desc}</p>
+                </div>
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
+        </div>
       </section>
 
       {/* Testimonials */}
-      <section className="max-w-7xl mx-auto px-4 py-16 border-t border-brand-border">
+      <section className="py-20 md:py-28 max-w-6xl mx-auto px-4 md:px-6">
         <ScrollReveal className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-3">Quem ja confia</h2>
-          <p className="text-brand-text-secondary max-w-2xl mx-auto">
-            Times que substituiram suas proprias integracoes por uma unica API.
-          </p>
+          <h2 className="font-display text-3xl md:text-4xl font-black tracking-tight text-brand-text mb-4">
+            Quem já confia
+          </h2>
         </ScrollReveal>
 
-        <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" stagger={0.08}>
+        <StaggerGroup className="grid grid-cols-1 md:grid-cols-3 gap-6" stagger={0.08}>
           {testimonials.map((t) => (
             <StaggerItem key={t.name}>
-              <div className="p-6 rounded-2xl bg-brand-surface/50 backdrop-blur border border-brand-border hover:border-brand-text/20 transition flex flex-col h-full">
-                <p className="text-sm text-brand-text leading-relaxed mb-4 flex-1">"{t.text}"</p>
+              <div className="p-6 rounded-2xl bg-brand-surface/50 border border-brand-border h-full flex flex-col">
+                <p className="text-sm text-brand-text leading-relaxed mb-6 flex-1">"{t.text}"</p>
                 <div className="flex items-center gap-3 pt-4 border-t border-brand-border">
                   <div className="w-10 h-10 rounded-full bg-brand-accent/20 flex items-center justify-center text-brand-accent font-semibold text-sm">
                     {t.name.charAt(0)}
@@ -382,26 +216,28 @@ export default function Home() {
         </StaggerGroup>
       </section>
 
-      {/* Final CTA */}
-      <section className="max-w-7xl mx-auto px-4 py-20 text-center border-t border-brand-border relative overflow-hidden">
+      {/* CTA Final */}
+      <section className="py-24 md:py-32 border-t border-brand-border relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-brand-accent/10 rounded-full blur-[100px]" />
         </div>
-        <ScrollReveal className="relative">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Pronto para escalar seu conteudo?</h2>
-          <p className="text-brand-text-secondary mb-8 max-w-xl mx-auto">
-            Teste de graca. Nao precisa de cartao. Mude de plano quando quiser.
+        <ScrollReveal className="relative max-w-4xl mx-auto px-4 text-center">
+          <h2 className="font-display text-4xl md:text-6xl font-black tracking-tight text-brand-text mb-6">
+            Pronto para escalar seu conteúdo?
+          </h2>
+          <p className="text-brand-text-secondary text-lg md:text-xl mb-8 max-w-xl mx-auto">
+            Teste de graça. Não precisa de cartão. Mude de plano quando quiser.
           </p>
           <Link
             href="/register"
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-brand-accent text-brand-bg font-semibold hover:bg-brand-accent-hover transition shadow-[0_0_40px_rgba(138,180,248,0.3)]"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-brand-accent text-brand-bg font-bold hover:opacity-90 transition-opacity duration-200 shadow-[0_0_40px_rgba(138,180,248,0.35)]"
           >
-            Comecar agora <ArrowRight className="w-4 h-4" />
+            Começar agora <ArrowRight className="w-4 h-4" />
           </Link>
+          <p className="text-brand-text-secondary/60 text-sm mt-4">Plano Free para sempre. Pro com 14 dias de teste.</p>
         </ScrollReveal>
       </section>
 
-      {/* Rich footer */}
       <Footer />
     </main>
   );

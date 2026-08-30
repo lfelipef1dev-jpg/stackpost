@@ -109,15 +109,15 @@ const ORDEM_PLANOS: Record<string, number> = {
 };
 
 const allFeatures = [
-  'Posts / mes',
-  'Comentarios / mes',
+  'Posts / mês',
+  'Comentários / mês',
   'Contas sociais',
-  'Usuarios',
+  'Usuários',
   'Workspaces',
   'API, SDK e CLI',
-  'Calendario',
+  'Calendário',
   'Link na bio',
-  'Upload de midia',
+  'Upload de mídia',
   'AI caption',
   'MCP server',
   'Suporte',
@@ -127,26 +127,26 @@ const billingPlans: BillingPlan[] = [
   {
     id: 'free',
     name: 'Free',
-    tagline: 'Para comecar sem pagar',
+    tagline: 'Para começar sem pagar',
     monthlyPrice: 0,
     annualPrice: 0,
     icon: Zap,
     accent: '#94A3B8',
     features: [
-      { label: 'Posts / mes', value: '50' },
-      { label: 'Comentarios / mes', value: '100' },
+      { label: 'Posts / mês', value: '50' },
+      { label: 'Comentários / mês', value: '100' },
       { label: 'Contas sociais', value: '3' },
-      { label: 'Usuarios', value: '1' },
+      { label: 'Usuários', value: '1' },
       { label: 'Workspaces', value: '1' },
       { label: 'API, SDK e CLI', value: true },
-      { label: 'Calendario', value: true },
+      { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
-      { label: 'Upload de midia', value: '100 MB' },
+      { label: 'Upload de mídia', value: '100 MB' },
       { label: 'AI caption', value: false },
       { label: 'MCP server', value: false },
       { label: 'Suporte', value: 'Comunidade' },
     ],
-    included: ['Acesso a API', 'Biblioteca de midia', 'Analytics basico', 'Calendario', 'Postagem manual', 'Link na bio'],
+    included: ['Acesso a API', 'Biblioteca de mídia', 'Analytics básico', 'Calendário', 'Postagem manual', 'Link na bio'],
   },
   {
     id: 'starter',
@@ -157,93 +157,93 @@ const billingPlans: BillingPlan[] = [
     icon: Sparkles,
     accent: '#22D3EE',
     features: [
-      { label: 'Posts / mes', value: '2.000' },
-      { label: 'Comentarios / mes', value: '1.000' },
+      { label: 'Posts / mês', value: '2.000' },
+      { label: 'Comentários / mês', value: '1.000' },
       { label: 'Contas sociais', value: '5' },
-      { label: 'Usuarios', value: '2' },
+      { label: 'Usuários', value: '2' },
       { label: 'Workspaces', value: '1' },
       { label: 'API, SDK e CLI', value: true },
-      { label: 'Calendario', value: true },
+      { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
-      { label: 'Upload de midia', value: '500 MB' },
+      { label: 'Upload de mídia', value: '500 MB' },
       { label: 'AI caption', value: false },
       { label: 'MCP server', value: false },
       { label: 'Suporte', value: 'Email' },
     ],
-    included: ['Acesso a API', 'Biblioteca de midia', 'Analytics', 'Calendario', 'Postagem em massa', 'Link na bio'],
+    included: ['Acesso a API', 'Biblioteca de mídia', 'Analytics', 'Calendário', 'Postagem em massa', 'Link na bio'],
   },
   {
     id: 'growth',
     name: 'Crescimento',
-    tagline: 'Para agencias e SaaS iniciantes',
+    tagline: 'Para agências e SaaS iniciantes',
     monthlyPrice: 89,
     annualPrice: 75,
     icon: Building2,
     popular: true,
     accent: '#A78BFA',
     features: [
-      { label: 'Posts / mes', value: '8.000' },
-      { label: 'Comentarios / mes', value: '4.000' },
+      { label: 'Posts / mês', value: '8.000' },
+      { label: 'Comentários / mês', value: '4.000' },
       { label: 'Contas sociais', value: '20' },
-      { label: 'Usuarios', value: '5' },
+      { label: 'Usuários', value: '5' },
       { label: 'Workspaces', value: '3' },
       { label: 'API, SDK e CLI', value: true },
-      { label: 'Calendario', value: true },
+      { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
-      { label: 'Upload de midia', value: '2 GB' },
+      { label: 'Upload de mídia', value: '2 GB' },
       { label: 'AI caption', value: true },
       { label: 'MCP server', value: false },
-      { label: 'Suporte', value: 'Prioritario' },
+      { label: 'Suporte', value: 'Prioritário' },
     ],
-    included: ['Acesso a API', 'Biblioteca de midia', 'Analytics', 'Calendario', 'Postagem em massa', 'Link na bio'],
+    included: ['Acesso a API', 'Biblioteca de mídia', 'Analytics', 'Calendário', 'Postagem em massa', 'Link na bio'],
   },
   {
     id: 'scale',
     name: 'Escala',
-    tagline: 'Para SaaS e agencias em escala',
+    tagline: 'Para SaaS e agências em escala',
     monthlyPrice: 197,
     annualPrice: 167,
     icon: Crown,
     accent: '#60A5FA',
     features: [
-      { label: 'Posts / mes', value: '40.000' },
-      { label: 'Comentarios / mes', value: '20.000' },
+      { label: 'Posts / mês', value: '40.000' },
+      { label: 'Comentários / mês', value: '20.000' },
       { label: 'Contas sociais', value: 'Ilimitadas' },
-      { label: 'Usuarios', value: '20' },
+      { label: 'Usuários', value: '20' },
       { label: 'Workspaces', value: '10' },
       { label: 'API, SDK e CLI', value: true },
-      { label: 'Calendario', value: true },
+      { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
-      { label: 'Upload de midia', value: '10 GB' },
+      { label: 'Upload de mídia', value: '10 GB' },
       { label: 'AI caption', value: true },
       { label: 'MCP server', value: true },
-      { label: 'Suporte', value: 'Prioritario' },
+      { label: 'Suporte', value: 'Prioritário' },
     ],
-    included: ['Acesso a API', 'Biblioteca de midia', 'Analytics avancado', 'Calendario', 'Postagem em massa', 'Link na bio'],
+    included: ['Acesso a API', 'Biblioteca de mídia', 'Analytics avançado', 'Calendário', 'Postagem em massa', 'Link na bio'],
   },
   {
     id: 'business',
     name: 'Empresarial',
-    tagline: 'Para grandes operacoes',
+    tagline: 'Para grandes operações',
     monthlyPrice: 497,
     annualPrice: 422,
     icon: Crown,
     accent: '#C084FC',
     features: [
-      { label: 'Posts / mes', value: '150.000' },
-      { label: 'Comentarios / mes', value: '75.000' },
+      { label: 'Posts / mês', value: '150.000' },
+      { label: 'Comentários / mês', value: '75.000' },
       { label: 'Contas sociais', value: 'Ilimitadas' },
-      { label: 'Usuarios', value: 'Ilimitados' },
+      { label: 'Usuários', value: 'Ilimitados' },
       { label: 'Workspaces', value: 'Ilimitados' },
       { label: 'API, SDK e CLI', value: true },
-      { label: 'Calendario', value: true },
+      { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
-      { label: 'Upload de midia', value: '50 GB' },
+      { label: 'Upload de mídia', value: '50 GB' },
       { label: 'AI caption', value: true },
       { label: 'MCP server', value: true },
       { label: 'Suporte', value: 'Dedicado' },
     ],
-    included: ['Acesso a API', 'Biblioteca de midia', 'Analytics avancado', 'Calendario', 'Postagem em massa', 'Link na bio'],
+    included: ['Acesso a API', 'Biblioteca de mídia', 'Analytics avançado', 'Calendário', 'Postagem em massa', 'Link na bio'],
   },
 ];
 
@@ -267,12 +267,12 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 }
 
 const faqs = [
-  { q: 'Posso cancelar a qualquer momento?', a: 'Sim. Nao ha contrato de fidelidade. Voce pode cancelar ou mudar de plano quando quiser, sem multa.' },
-  { q: 'Como funciona o teste gratis?', a: 'Planos pagos tem 15 dias de teste gratis. Nao e necessario cartao para comecar. Depois, pague via PIX ou cartao pelo Mercado Pago.' },
-  { q: 'O que sao creditos X?', a: 'A API do X/Twitter cobra por post publicado. Voce adiciona creditos e so paga pelo que usar: R$ 0,015 por post de texto e R$ 0,20 por post com link.' },
-  { q: 'Posso trocar de plano depois?', a: 'Sim. Ao fazer upgrade, voce mantem todas as contas conectadas, conteudo e dados. O downgrade nao exclui nada, apenas limita os novos usos.' },
-  { q: 'Qual a garantia?', a: 'Garantimos 7 dias de reembolso em todos os planos pagos. Se nao gostar, devolvemos 100% do valor.' },
-  { q: 'O plano Empresarial e personalizado?', a: 'Sim. O plano Empresarial e para grandes operacoes com volume alto. Entre em contato com vendas para condicoes especiais.' },
+  { q: 'Posso cancelar a qualquer momento?', a: 'Sim. Não há contrato de fidelidade. Você pode cancelar ou mudar de plano quando quiser, sem multa.' },
+  { q: 'Como funciona o teste grátis?', a: 'Planos pagos têm 15 dias de teste grátis. Não é necessário cartão para começar. Depois, pague via PIX ou cartão pelo Mercado Pago.' },
+  { q: 'O que são créditos X?', a: 'A API do X/Twitter cobra por post publicado. Você adiciona créditos e só paga pelo que usar: R$ 0,015 por post de texto e R$ 0,20 por post com link.' },
+  { q: 'Posso trocar de plano depois?', a: 'Sim. Ao fazer upgrade, você mantém todas as contas conectadas, conteúdo e dados. O downgrade não exclui nada, apenas limita os novos usos.' },
+  { q: 'Qual a garantia?', a: 'Garantimos 7 dias de reembolso em todos os planos pagos. Se não gostar, devolvemos 100% do valor.' },
+  { q: 'O plano Empresarial é personalizado?', a: 'Sim. O plano Empresarial é para grandes operações com volume alto. Entre em contato com vendas para condições especiais.' },
 ];
 
 export default function BillingPage() {
@@ -341,7 +341,7 @@ export default function BillingPage() {
       if (res.ok && data.init_point) {
         window.location.href = data.init_point;
       } else {
-        alert(data.error || 'Erro ao iniciar pagamento de creditos.');
+        alert(data.error || 'Erro ao iniciar pagamento de créditos.');
       }
     } finally {
       setLoading(false);
@@ -355,20 +355,20 @@ export default function BillingPage() {
       <Header activeHref="/billing" />
 
       <main className="max-w-7xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-2">Cobranca</h1>
-        <p className="text-brand-text-secondary mb-8">Escolha o plano ideal para escalar suas publicacoes.</p>
+        <h1 className="text-3xl font-bold mb-2">Cobrança</h1>
+        <p className="text-brand-text-secondary mb-8">Escolha o plano ideal para escalar suas publicações.</p>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
           {/* Card Plano Atual */}
           <TiltCard className="h-full">
             <SpotlightCard className="h-full p-7 flex flex-col shadow-2xl shadow-brand-accent/5" glow={currentPlan === 'free' ? '#22C55E' : '#6366F1'}>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold flex items-center gap-2"><Shield className="w-4 h-4 text-success" /> Voce esta aqui</h2>
+                <h2 className="text-lg font-semibold flex items-center gap-2"><Shield className="w-4 h-4 text-success" /> Você está aqui</h2>
                 <span className="px-2.5 py-1 rounded-full bg-success/10 text-success text-[10px] font-semibold uppercase tracking-wide border border-success/20">Plano ativo</span>
               </div>
               <div className="text-4xl font-bold capitalize mb-1">{billingPlans.find((p) => p.id === currentPlan)?.name ?? currentPlan}</div>
               <p className="text-sm text-brand-text-secondary mb-4">
-                R$ {billingPlans.find((p) => p.id === currentPlan)?.monthlyPrice ?? 'Custom'} /mes · {billingPlans.find((p) => p.id === currentPlan)?.tagline}
+                R$ {billingPlans.find((p) => p.id === currentPlan)?.monthlyPrice ?? 'Custom'} /mês · {billingPlans.find((p) => p.id === currentPlan)?.tagline}
               </p>
 
               <div className="rounded-2xl bg-brand-elevated/50 border border-brand-border/50 p-4 mb-4">
@@ -378,7 +378,7 @@ export default function BillingPage() {
                     <div className="font-semibold text-sm">{usage.posts.used.toLocaleString('pt-BR')} / {usage.posts.limit.toLocaleString('pt-BR')}</div>
                   </div>
                   <div>
-                    <div className="text-[10px] uppercase tracking-wide text-brand-text-secondary mb-1">Comentarios</div>
+                    <div className="text-[10px] uppercase tracking-wide text-brand-text-secondary mb-1">Comentários</div>
                     <div className="font-semibold text-sm">{usage.comments.used.toLocaleString('pt-BR')} / {usage.comments.limit.toLocaleString('pt-BR')}</div>
                   </div>
                   <div>
@@ -403,7 +403,7 @@ export default function BillingPage() {
                 </div>
                 <div className="flex items-center gap-2 text-xs text-brand-text-secondary">
                   <Check className="w-4 h-4 text-success" />
-                  <span>Upgrade facil sem perder dados</span>
+                  <span>Upgrade fácil sem perder dados</span>
                 </div>
               </div>
 
@@ -413,17 +413,17 @@ export default function BillingPage() {
             </SpotlightCard>
           </TiltCard>
 
-          {/* Card Creditos X */}
+          {/* Card Créditos X */}
           <TiltCard className="h-full">
             <SpotlightCard className="h-full p-7 flex flex-col shadow-2xl shadow-brand-accent/5" glow="#F59E0B">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold flex items-center gap-2"><CreditCard className="w-5 h-5 text-warning" /> Creditos X</h2>
+                <h2 className="text-lg font-semibold flex items-center gap-2"><CreditCard className="w-5 h-5 text-warning" /> Créditos X</h2>
                 <span className="px-2.5 py-1 rounded-full bg-warning/10 text-warning text-[10px] font-semibold uppercase tracking-wide border border-warning/20">Saldo R$ {credits}</span>
               </div>
               <div className="text-4xl font-bold text-brand-accent mb-1">
                 R$ <AnimatedNumber value={credits} />
               </div>
-              <p className="text-sm text-brand-text-secondary mb-4">Saldo para publicacoes no X/Twitter</p>
+              <p className="text-sm text-brand-text-secondary mb-4">Saldo para publicações no X/Twitter</p>
 
               <div className="rounded-2xl bg-brand-elevated/50 border border-brand-border/50 p-4 mb-4">
                 <div className="grid grid-cols-2 gap-4">
@@ -451,20 +451,20 @@ export default function BillingPage() {
               <div className="space-y-2.5 mb-5">
                 <div className="flex items-center gap-2 text-xs text-success">
                   <Check className="w-4 h-4" />
-                  <span>Cobranca apenas pelo X usar</span>
+                  <span>Cobrança apenas ao usar o X</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-brand-text-secondary">
                   <Check className="w-4 h-4 text-success" />
-                  <span>Saldo nao expira</span>
+                  <span>Saldo não expira</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-brand-text-secondary">
                   <Check className="w-4 h-4 text-success" />
-                  <span>Recarga rapida via PIX</span>
+                  <span>Recarga rápida via PIX</span>
                 </div>
               </div>
 
               <button onClick={() => setShowCreditModal(true)} disabled={loading} className="w-full mt-auto px-4 py-3 rounded-xl bg-gradient-to-r from-warning to-amber-500 text-brand-bg font-semibold text-sm hover:opacity-90 transition shadow-lg shadow-warning/20 flex items-center justify-center gap-2">
-                <TrendingUp className="w-4 h-4" /> Adicionar creditos
+                <TrendingUp className="w-4 h-4" /> Adicionar créditos
               </button>
             </SpotlightCard>
           </TiltCard>
@@ -480,7 +480,7 @@ export default function BillingPage() {
                 {currentPlan === 'free' ? 'R$ 0' : <><AnimatedNumber value={nextPayment ?? 0} prefix="R$ " /></>}
               </div>
               <p className="text-sm text-brand-text-secondary mb-4">
-                {currentPlan === 'free' ? 'Plano gratuito sem cobranca' : 'Plano ativo, pagamento manual via PIX ou cartao'}
+                {currentPlan === 'free' ? 'Plano gratuito sem cobrança' : 'Plano ativo, pagamento manual via PIX ou cartão'}
               </p>
 
               <div className="rounded-2xl bg-brand-elevated/50 border border-brand-border/50 p-4 mb-4">
@@ -500,7 +500,7 @@ export default function BillingPage() {
                     <div className="font-semibold text-sm">Mensal</div>
                   </div>
                   <div>
-                    <div className="text-[10px] uppercase tracking-wide text-brand-text-secondary mb-1">Renovacao</div>
+                    <div className="text-[10px] uppercase tracking-wide text-brand-text-secondary mb-1">Renovação</div>
                     <div className="font-semibold text-sm">Manual</div>
                   </div>
                 </div>
@@ -538,7 +538,7 @@ export default function BillingPage() {
         <section id="planos" className="mb-16">
           <div className="text-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold mb-3">Escolha seu plano</h2>
-            <p className="text-brand-text-secondary max-w-2xl mx-auto mb-6">Comece gratis. Escale quando precisar. Pague apenas pelo que usar.</p>
+            <p className="text-brand-text-secondary max-w-2xl mx-auto mb-6">Comece grátis. Escale quando precisar. Pague apenas pelo que usar.</p>
 
             <div className="inline-flex items-center gap-2 p-1.5 rounded-2xl bg-brand-elevated border border-brand-border/50">
               <button
@@ -554,7 +554,7 @@ export default function BillingPage() {
                 Anual <span className="text-[10px] bg-success/20 text-success px-1.5 py-0.5 rounded-full">-15%</span>
               </button>
             </div>
-            {isAnnual && <p className="text-xs text-brand-text-secondary mt-3">No anual voce paga 12x o valor acima e economiza 2 meses.</p>}
+            {isAnnual && <p className="text-xs text-brand-text-secondary mt-3">No anual você paga 12x o valor acima e economiza 2 meses.</p>}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 items-stretch">
@@ -588,10 +588,10 @@ export default function BillingPage() {
                     <div className="mb-5">
                       <div className="text-3xl font-bold flex items-baseline gap-2">
                         {formatPlanPrice(price)}
-                        <span className="text-sm font-normal text-brand-text-secondary">/mes</span>
+                        <span className="text-sm font-normal text-brand-text-secondary">/mês</span>
                       </div>
                       {isAnnual && oldPrice && (
-                        <div className="text-xs text-brand-text-secondary line-through">R$ {oldPrice}/mes</div>
+                        <div className="text-xs text-brand-text-secondary line-through">R$ {oldPrice}/mês</div>
                       )}
                     </div>
 
@@ -632,7 +632,7 @@ export default function BillingPage() {
                         }
                       }}
                     >
-                      {isCurrent ? 'Plano atual' : isFree ? 'Comecar gratis' : plan.id === 'business' ? 'Falar com vendas' : 'Escolher plano'}
+                      {isCurrent ? 'Plano atual' : isFree ? 'Começar grátis' : plan.id === 'business' ? 'Falar com vendas' : 'Escolher plano'}
                       {!isFree && !isCurrent && plan.id !== 'business' && <ChevronRight className="w-4 h-4" />}
                     </button>
                   </SpotlightCard>
@@ -705,28 +705,28 @@ export default function BillingPage() {
           <FadeIn>
             <div className="text-center mb-14">
               <h2 className="text-2xl md:text-3xl font-bold mb-5">Tudo pronto para publicar em escala</h2>
-              <p className="text-brand-text-secondary max-w-2xl mx-auto leading-relaxed">Conecte suas contas, importe seu conteudo e comece a publicar em minutos. Sem contrato, sem taxa por conta e com garantia de 7 dias.</p>
+              <p className="text-brand-text-secondary max-w-2xl mx-auto leading-relaxed">Conecte suas contas, importe seu conteúdo e comece a publicar em minutos. Sem contrato, sem taxa por conta e com garantia de 7 dias.</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="rounded-2xl bg-brand-surface/60 border border-brand-border/50 p-6 text-center">
                 <div className="w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center mx-auto mb-4"><Shield className="w-6 h-6 text-success" /></div>
                 <h3 className="font-semibold mb-1">7 dias de garantia</h3>
-                <p className="text-sm text-brand-text-secondary">Nao gostou? Devolvemos 100% do seu dinheiro, sem burocracia.</p>
+                <p className="text-sm text-brand-text-secondary">Não gostou? Devolvemos 100% do seu dinheiro, sem burocracia.</p>
               </div>
               <div className="rounded-2xl bg-brand-surface/60 border border-brand-border/50 p-6 text-center">
                 <div className="w-12 h-12 rounded-xl bg-brand-accent/10 flex items-center justify-center mx-auto mb-4"><Zap className="w-6 h-6 text-brand-accent" /></div>
                 <h3 className="font-semibold mb-1">Setup em 10 minutos</h3>
-                <p className="text-sm text-brand-text-secondary">Conecte suas contas, importe conteudo e comece a publicar hoje.</p>
+                <p className="text-sm text-brand-text-secondary">Conecte suas contas, importe conteúdo e comece a publicar hoje.</p>
               </div>
               <div className="rounded-2xl bg-brand-surface/60 border border-brand-border/50 p-6 text-center">
                 <div className="w-12 h-12 rounded-xl bg-warning/10 flex items-center justify-center mx-auto mb-4"><Users className="w-6 h-6 text-warning" /></div>
                 <h3 className="font-semibold mb-1">Sem taxa por conta</h3>
-                <p className="text-sm text-brand-text-secondary">Voce paga pelo volume de publicacoes, nao por perfil conectado.</p>
+                <p className="text-sm text-brand-text-secondary">Você paga pelo volume de publicações, não por perfil conectado.</p>
               </div>
             </div>
 
             <div className="mt-10 text-center">
-              <p className="text-sm text-brand-text-secondary mb-4">Ainda com duvidas?</p>
+              <p className="text-sm text-brand-text-secondary mb-4">Ainda com dúvidas?</p>
               <Link href="/contact" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand-elevated border border-brand-border text-brand-text font-semibold hover:border-brand-accent transition">
                 Falar com vendas <ArrowRight className="w-4 h-4" />
               </Link>
@@ -738,7 +738,7 @@ export default function BillingPage() {
         <section className="max-w-3xl mx-auto mb-16">
           <div className="text-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold mb-3">Perguntas frequentes</h2>
-            <p className="text-brand-text-secondary">Tire suas duvidas antes de começar.</p>
+            <p className="text-brand-text-secondary">Tire suas dúvidas antes de começar.</p>
           </div>
           <div className="space-y-3">
             {faqs.map((faq) => (
@@ -750,12 +750,12 @@ export default function BillingPage() {
 
       <Footer />
 
-      {/* Modal de creditos */}
+      {/* Modal de créditos */}
       {showCreditModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="w-full max-w-md p-6 rounded-3xl bg-brand-surface border border-brand-border shadow-2xl">
-            <h3 className="text-xl font-bold mb-2">Adicionar creditos X</h3>
-            <p className="text-sm text-brand-text-secondary mb-6">Escolha o valor para adicionar aos creditos da API do X/Twitter.</p>
+            <h3 className="text-xl font-bold mb-2">Adicionar créditos X</h3>
+            <p className="text-sm text-brand-text-secondary mb-6">Escolha o valor para adicionar aos créditos da API do X/Twitter.</p>
 
             <div className="grid grid-cols-2 gap-3 mb-6">
               {[30, 50, 100, 200, 500].map((opt) => (

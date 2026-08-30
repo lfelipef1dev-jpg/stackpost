@@ -661,8 +661,8 @@ export default function AccountsPage() {
                   <div className="text-xs text-center text-brand-text-secondary">Não</div>
                 </div>
                 <div className="grid grid-cols-3 gap-2 items-center">
-                  <div className="text-xs">Preco</div>
-                  <div className="text-xs font-semibold text-success text-center">Acessivel</div>
+                  <div className="text-xs">Preço</div>
+                  <div className="text-xs font-semibold text-success text-center">Acessível</div>
                   <div className="text-xs text-center text-brand-text-secondary">Alto</div>
                 </div>
               </div>
