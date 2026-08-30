@@ -102,8 +102,8 @@ const OAUTH_ROUTES: Record<string, string> = {
 
 const ROTATING_BANNERS = [
   'Um dashboard, todas as plataformas',
-  'OAuth seguro, renovacao automatica',
-  'Gerencie 15 redes em um so lugar',
+  'OAuth seguro, renovação automática',
+  'Gerencie 15 redes em um só lugar',
 ];
 
 function expiryCountdown(dateStr?: string | null): { text: string; color: string } {
@@ -126,11 +126,11 @@ function timeAgo(dateStr?: string | null): string {
   const diff = now - target;
   if (diff < 0) return 'Agora';
   const min = Math.floor(diff / (1000 * 60));
-  if (min < 60) return `Sync ha ${min} min`;
+  if (min < 60) return `Sync há ${min} min`;
   const h = Math.floor(min / 60);
-  if (h < 24) return `Sync ha ${h} h`;
+  if (h < 24) return `Sync há ${h} h`;
   const d = Math.floor(h / 24);
-  return `Sync ha ${d} d`;
+  return `Sync há ${d} d`;
 }
 
 type SortKey = 'last_used' | 'token_expiry' | 'connection_date' | 'platform_az';
@@ -284,9 +284,9 @@ export default function AccountsPage() {
   };
 
   const sortLabels: Record<SortKey, string> = {
-    last_used: 'Ultima utilizada',
-    token_expiry: 'Expiracao token',
-    connection_date: 'Data conexao',
+    last_used: 'Última utilizada',
+    token_expiry: 'Expiração token',
+    connection_date: 'Data conexão',
     platform_az: 'Plataforma A-Z',
   };
 
@@ -302,7 +302,7 @@ export default function AccountsPage() {
             <h1 className="text-3xl font-bold">Contas conectadas</h1>
           </div>
           <p className="text-brand-text-secondary text-sm max-w-2xl">
-            Conecte suas redes sociais em um so lugar. OAuth seguro, renovacao automatica de token.
+            Conecte suas redes sociais em um só lugar. OAuth seguro, renovação automática de token.
           </p>
           <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-surface/60 border border-brand-border/50 backdrop-blur-xl">
             <Sparkles className="w-4 h-4 text-brand-accent" />
@@ -348,7 +348,7 @@ export default function AccountsPage() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold">{stats.expired}</div>
-                  <div className="text-xs text-brand-text-secondary">Expiradas / Atencao</div>
+                  <div className="text-xs text-brand-text-secondary">Expiradas / Atenção</div>
                 </div>
               </div>
             </SpotlightCard>
@@ -423,8 +423,8 @@ export default function AccountsPage() {
             </h2>
             <div className="hidden md:flex items-center gap-3 text-xs text-brand-text-secondary">
               <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-success" />{stats.active} ativas</span>
-              <span className="flex items-center gap-1"><AlertCircle className="w-3 h-3 text-warning" />{stats.expired} atencao</span>
-              <span className="flex items-center gap-1"><Users className="w-3 h-3 text-brand-accent" />15 plataformas</span>
+              <span className="flex items-center gap-1"><AlertCircle className="w-3 h-3 text-warning" />{stats.expired} atenção</span>
+              <span className="flex items-center gap-1"><Users className="w-3 h-3 text-brand-accent" />{stats.platforms} plataformas</span>
             </div>
             <div className="flex-1 min-w-[180px] relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-text-secondary" />
@@ -445,7 +445,7 @@ export default function AccountsPage() {
                     filter === f ? 'bg-brand-accent text-brand-bg' : 'text-brand-text-secondary hover:text-brand-text'
                   }`}
                 >
-                  {f === 'all' ? 'Todas' : f === 'active' ? 'Ativas' : 'Atencao'}
+                  {f === 'all' ? 'Todas' : f === 'active' ? 'Ativas' : 'Atenção'}
                 </button>
               ))}
             </div>
@@ -483,7 +483,7 @@ export default function AccountsPage() {
               <p className="text-brand-text-secondary text-sm">
                 Nenhuma conta encontrada.
                 <br />
-                Conecte uma conta para comecar.
+                Conecte uma conta para começar.
               </p>
             </SpotlightCard>
           </TiltCard>
@@ -602,24 +602,24 @@ export default function AccountsPage() {
             <SpotlightCard className="p-6" glow="#6366F1">
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="w-5 h-5 text-brand-accent" />
-                <h3 className="text-lg font-semibold">Dicas de gestao de contas</h3>
+                <h3 className="text-lg font-semibold">Dicas de gestão de contas</h3>
               </div>
               <ul className="space-y-3 text-sm text-brand-text-secondary">
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
-                  Renove tokens antes de expirar para evitar interrupcoes de publicacao.
+                  Renove tokens antes de expirar para evitar interrupções de publicação.
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
-                  Use o teste de conexao apos mudancas de senha ou permissoes.
+                  Use o teste de conexão após mudanças de senha ou permissões.
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
-                  Monitore o indicador de rate-limit para nao estourar cotas das APIs.
+                  Monitore o indicador de rate-limit para não estourar cotas das APIs.
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
-                  Conecte multiplas contas da mesma plataforma para escalar publicacao.
+                  Conecte múltiplas contas da mesma plataforma para escalar publicação.
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
@@ -651,14 +651,14 @@ export default function AccountsPage() {
                   <div className="text-xs text-center text-brand-text-secondary">Parcial</div>
                 </div>
                 <div className="grid grid-cols-3 gap-2 items-center">
-                  <div className="text-xs">Renovacao auto</div>
+                  <div className="text-xs">Renovação auto</div>
                   <div className="text-xs font-semibold text-success text-center">Sim</div>
-                  <div className="text-xs text-center text-brand-text-secondary">Nao</div>
+                  <div className="text-xs text-center text-brand-text-secondary">Não</div>
                 </div>
                 <div className="grid grid-cols-3 gap-2 items-center">
-                  <div className="text-xs">Dashboard unico</div>
+                  <div className="text-xs">Dashboard único</div>
                   <div className="text-xs font-semibold text-success text-center">Sim</div>
-                  <div className="text-xs text-center text-brand-text-secondary">Nao</div>
+                  <div className="text-xs text-center text-brand-text-secondary">Não</div>
                 </div>
                 <div className="grid grid-cols-3 gap-2 items-center">
                   <div className="text-xs">Preco</div>
@@ -733,7 +733,7 @@ export default function AccountsPage() {
             </div>
             <p className="text-sm text-brand-text-secondary mb-5">
               {bulkConfirm === 'delete'
-                ? `Tem certeza que deseja excluir ${selectedIds.length} conta${selectedIds.length > 1 ? 's' : ''}? Esta acao nao pode ser desfeita.`
+                ? `Tem certeza que deseja excluir ${selectedIds.length} conta${selectedIds.length > 1 ? 's' : ''}? Esta ação não pode ser desfeita.`
                 : `Tem certeza que deseja renovar o token de ${selectedIds.length} conta${selectedIds.length > 1 ? 's' : ''}?`}
             </p>
             <div className="flex gap-2">
@@ -830,7 +830,7 @@ export default function AccountsPage() {
                         <span>{acc.created_at ? new Date(acc.created_at).toLocaleDateString('pt-BR') : 'N/A'}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-brand-text-secondary">Ultimo sync</span>
+                        <span className="text-brand-text-secondary">Último sync</span>
                         <span>{timeAgo(acc.last_sync_at)}</span>
                       </div>
                       <div className="flex justify-between">
@@ -846,12 +846,12 @@ export default function AccountsPage() {
                     </div>
                   </div>
 
-                  {/* Permissoes OAuth */}
+                  {/* Permissões OAuth */}
                   {scopes.length > 0 && (
                     <div className="space-y-3 mb-6">
                       <div className="text-xs font-semibold text-brand-text-secondary uppercase tracking-wide flex items-center gap-1.5">
                         <Shield className="w-3.5 h-3.5" />
-                        Permissoes OAuth (scopes)
+                        Permissões OAuth (scopes)
                       </div>
                       <div className="flex flex-wrap gap-2">
                         {scopes.map((s: string) => (
@@ -867,7 +867,7 @@ export default function AccountsPage() {
                   <div className="space-y-3 mb-6">
                     <div className="text-xs font-semibold text-brand-text-secondary uppercase tracking-wide flex items-center gap-1.5">
                       <Lock className="w-3.5 h-3.5" />
-                      Seguranca
+                      Segurança
                     </div>
                     <div className="space-y-2 text-sm">
                       <div className="flex items-center gap-2">
@@ -876,7 +876,7 @@ export default function AccountsPage() {
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="w-4 h-4 text-success" />
-                        <span className="text-brand-text-secondary">OAuth 2.0 com refresh automatico</span>
+                        <span className="text-brand-text-secondary">OAuth 2.0 com refresh automático</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="w-4 h-4 text-success" />
@@ -885,7 +885,7 @@ export default function AccountsPage() {
                     </div>
                   </div>
 
-                  {/* Acoes */}
+                  {/* Ações */}
                   <div className="space-y-2">
                     <button
                       onClick={() => { handleCheck(acc.id); setDrawerAccount(null); }}
@@ -893,7 +893,7 @@ export default function AccountsPage() {
                       className="w-full px-4 py-2.5 rounded-xl bg-brand-elevated border border-brand-border text-sm font-medium hover:border-brand-accent transition flex items-center justify-center gap-2 disabled:opacity-50"
                     >
                       {checking === acc.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
-                      Testar conexao
+                      Testar conexão
                     </button>
                     <button
                       onClick={() => { handleRefresh(acc.id); setDrawerAccount(null); }}

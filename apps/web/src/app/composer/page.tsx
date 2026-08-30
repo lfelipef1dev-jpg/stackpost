@@ -278,7 +278,7 @@ export default function ComposerPage() {
             <h1 className="text-3xl font-bold">Criar post</h1>
           </div>
           <p className="text-brand-text-secondary text-sm max-w-2xl">
-            Escreva uma vez, publique em todas as redes. Selecione plataformas, adicione midia e agende ou publique agora.
+            Escreva uma vez, publique em todas as redes. Selecione plataformas, adicione mídia e agende ou publique agora.
           </p>
         </div>
 
@@ -305,14 +305,14 @@ export default function ComposerPage() {
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
-          {/* Coluna esquerda - formulario */}
+          {/* Coluna esquerda - formulário */}
           <div className="space-y-6">
-            {/* Conteudo unificado */}
+            {/* Conteúdo unificado */}
             <TiltCard>
               <SpotlightCard className="p-6" glow="#6366F1">
                 <div className="flex items-center gap-2 mb-4">
                   <Type className="w-4 h-4 text-brand-accent" />
-                  <label className="text-sm font-semibold">Conteudo unificado</label>
+                  <label className="text-sm font-semibold">Conteúdo unificado</label>
                 </div>
                 <textarea
                   value={content}
@@ -393,19 +393,19 @@ export default function ComposerPage() {
               </TiltCard>
             )}
 
-            {/* Primeiro comentario */}
+            {/* Primeiro comentário */}
             <TiltCard>
               <SpotlightCard className="p-6" glow="#22D3EE">
                 <div className="flex items-center gap-2 mb-3">
                   <MessageSquare className="w-4 h-4 text-info" />
-                  <label className="text-sm font-semibold">Primeiro comentario (opcional)</label>
+                  <label className="text-sm font-semibold">Primeiro comentário (opcional)</label>
                 </div>
                 <textarea
                   value={firstComment}
                   onChange={(e) => setFirstComment(e.target.value)}
                   rows={2}
                   className="w-full px-4 py-3 rounded-2xl bg-brand-elevated border border-brand-border text-brand-text focus:outline-none focus:border-brand-accent resize-none transition"
-                  placeholder="Comentario automatico apos publicar..."
+                  placeholder="Comentário automático após publicar..."
                 />
                 <p className="text-xs text-brand-text-secondary mt-2">
                   Suportado em: Instagram, Facebook, LinkedIn, YouTube, TikTok, Threads, Reddit, Mastodon, Discord, Slack, Bluesky
@@ -441,12 +441,12 @@ export default function ComposerPage() {
               </SpotlightCard>
             </TiltCard>
 
-            {/* Midia */}
+            {/* Mídia */}
             <TiltCard>
               <SpotlightCard className="p-6" glow="#22C55E">
                 <div className="flex items-center gap-2 mb-4">
                   <ImageIcon className="w-4 h-4 text-success" />
-                  <label className="text-sm font-semibold">Midia</label>
+                  <label className="text-sm font-semibold">Mídia</label>
                 </div>
                 <input ref={fileInputRef} type="file" accept="image/*,video/*" onChange={handleFileChange} className="hidden" />
                 <div
@@ -459,7 +459,7 @@ export default function ComposerPage() {
                     <div className="text-brand-text-secondary">
                       <ImageIcon className="w-10 h-10 mx-auto mb-3 text-brand-text-secondary/50 group-hover:text-brand-accent transition" />
                       <div className="text-sm">
-                        Arraste uma imagem ou video, ou <span className="text-brand-accent font-medium">clique para selecionar</span>
+                        Arraste uma imagem ou vídeo, ou <span className="text-brand-accent font-medium">clique para selecionar</span>
                       </div>
                     </div>
                   )}
@@ -531,12 +531,12 @@ export default function ComposerPage() {
                   className="w-full px-4 py-3 rounded-2xl bg-brand-elevated border border-brand-border text-brand-text focus:outline-none focus:border-brand-accent transition"
                 />
                 <p className="text-xs text-brand-text-secondary mt-2">
-                  Deixe em branco para publicar imediatamente apos clicar em &quot;Publicar agora&quot;.
+                  Deixe em branco para publicar imediatamente após clicar em &quot;Publicar agora&quot;.
                 </p>
               </SpotlightCard>
             </TiltCard>
 
-            {/* Botoes de acao */}
+            {/* Botões de ação */}
             <div className="flex gap-3">
               <button
                 onClick={() => confirmAction('schedule')}
@@ -613,7 +613,7 @@ export default function ComposerPage() {
                 {/* Especificacoes da plataforma */}
                 <div className="mt-4 space-y-2 text-xs">
                   <div className="flex justify-between text-brand-text-secondary">
-                    <span>Proporcao</span>
+                    <span>Proporção</span>
                     <span className="font-medium text-brand-text">{activePlatform.aspect}</span>
                   </div>
                   <div className="flex justify-between text-brand-text-secondary">
@@ -641,7 +641,7 @@ export default function ComposerPage() {
                 </div>
                 <div className="space-y-2.5 text-xs">
                   <div className="flex justify-between">
-                    <span className="text-brand-text-secondary">Proporcao ideal</span>
+                    <span className="text-brand-text-secondary">Proporção ideal</span>
                     <span className="font-medium">{activePlatform.aspect}</span>
                   </div>
                   <div className="flex justify-between">
@@ -653,14 +653,14 @@ export default function ComposerPage() {
                     <span className="font-medium">{activePlatform.textLimit}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-brand-text-secondary">Tamanho max.</span>
+                    <span className="text-brand-text-secondary">Tamanho máx.</span>
                     <span className="font-medium">{activePlatform.maxFile}</span>
                   </div>
                 </div>
                 <div className="mt-4 p-3 rounded-xl bg-brand-elevated/50 border border-brand-border/30">
                   <div className="text-brand-text-secondary text-xs mb-1">Dica de engajamento</div>
                   <div className="font-medium text-sm">
-                    Responda comentarios nas primeiras 2 horas para impulsionar o alcance.
+                    Responda comentários nas primeiras 2 horas para impulsionar o alcance.
                   </div>
                 </div>
               </SpotlightCard>
@@ -680,8 +680,8 @@ export default function ComposerPage() {
                     <span className="font-medium">{charCount}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-brand-text-secondary">Midia</span>
-                    <span className="font-medium">{mediaPath ? 'Sim' : 'Nao'}</span>
+                    <span className="text-brand-text-secondary">Mídia</span>
+                    <span className="font-medium">{mediaPath ? 'Sim' : 'Não'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-brand-text-secondary">Tipo</span>
@@ -692,8 +692,8 @@ export default function ComposerPage() {
                     <span className="font-medium">{scheduledAt ? 'Sim' : 'Agora'}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-brand-text-secondary">1o comentario</span>
-                    <span className="font-medium">{firstComment ? 'Sim' : 'Nao'}</span>
+                    <span className="text-brand-text-secondary">1º comentário</span>
+                    <span className="font-medium">{firstComment ? 'Sim' : 'Não'}</span>
                   </div>
                 </div>
               </SpotlightCard>
@@ -702,7 +702,7 @@ export default function ComposerPage() {
         </div>
       </main>
 
-      {/* Modal de confirmacao */}
+      {/* Modal de confirmação */}
       {showConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
           <TiltCard className="w-full max-w-md">

@@ -266,11 +266,12 @@ export default function AnalyticsPage() {
   const [period, setPeriod] = useState<'7d' | '30d' | '90d'>('30d');
 
   useEffect(() => {
-    fetch('/api/analytics')
+    setLoading(true);
+    fetch(`/api/analytics?period=${period}`)
       .then((res) => res.json())
       .then((d) => setData(d))
       .finally(() => setLoading(false));
-  }, []);
+  }, [period]);
 
   const s = data?.summary || {
     total: 0,
@@ -559,7 +560,7 @@ export default function AnalyticsPage() {
         {/* ============================================================ */}
         {/* 4. KPI cards com sparkline                                   */}
         {/* ============================================================ */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
           {kpiCards.map((kpi, i) => (
             <TiltCard key={i}>
               <SpotlightCard className="p-5 h-full" glow={kpi.color}>

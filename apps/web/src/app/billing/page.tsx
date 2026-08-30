@@ -361,7 +361,7 @@ export default function BillingPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
           {/* Card Plano Atual */}
           <TiltCard className="h-full">
-            <SpotlightCard className="h-full p-7 shadow-2xl shadow-brand-accent/5" glow={currentPlan === 'free' ? '#22C55E' : '#6366F1'}>
+            <SpotlightCard className="h-full p-7 flex flex-col shadow-2xl shadow-brand-accent/5" glow={currentPlan === 'free' ? '#22C55E' : '#6366F1'}>
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold flex items-center gap-2"><Shield className="w-4 h-4 text-success" /> Voce esta aqui</h2>
                 <span className="px-2.5 py-1 rounded-full bg-success/10 text-success text-[10px] font-semibold uppercase tracking-wide border border-success/20">Plano ativo</span>
@@ -407,7 +407,7 @@ export default function BillingPage() {
                 </div>
               </div>
 
-              <Link href="#planos" className="w-full block text-center px-4 py-3 rounded-xl bg-brand-elevated border border-brand-border text-sm font-semibold hover:border-brand-accent transition">
+              <Link href="#planos" className="w-full mt-auto block text-center px-4 py-3 rounded-xl bg-brand-elevated border border-brand-border text-sm font-semibold hover:border-brand-accent transition">
                 Fazer upgrade
               </Link>
             </SpotlightCard>
@@ -415,7 +415,7 @@ export default function BillingPage() {
 
           {/* Card Creditos X */}
           <TiltCard className="h-full">
-            <SpotlightCard className="h-full p-7 shadow-2xl shadow-brand-accent/5" glow="#F59E0B">
+            <SpotlightCard className="h-full p-7 flex flex-col shadow-2xl shadow-brand-accent/5" glow="#F59E0B">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold flex items-center gap-2"><CreditCard className="w-5 h-5 text-warning" /> Creditos X</h2>
                 <span className="px-2.5 py-1 rounded-full bg-warning/10 text-warning text-[10px] font-semibold uppercase tracking-wide border border-warning/20">Saldo R$ {credits}</span>
@@ -463,7 +463,7 @@ export default function BillingPage() {
                 </div>
               </div>
 
-              <button onClick={() => setShowCreditModal(true)} disabled={loading} className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-warning to-amber-500 text-brand-bg font-semibold text-sm hover:opacity-90 transition shadow-lg shadow-warning/20 flex items-center justify-center gap-2">
+              <button onClick={() => setShowCreditModal(true)} disabled={loading} className="w-full mt-auto px-4 py-3 rounded-xl bg-gradient-to-r from-warning to-amber-500 text-brand-bg font-semibold text-sm hover:opacity-90 transition shadow-lg shadow-warning/20 flex items-center justify-center gap-2">
                 <TrendingUp className="w-4 h-4" /> Adicionar creditos
               </button>
             </SpotlightCard>
@@ -471,7 +471,7 @@ export default function BillingPage() {
 
           {/* Card Proximo Pagamento */}
           <TiltCard className="h-full">
-            <SpotlightCard className="h-full p-7 shadow-2xl shadow-brand-accent/5" glow={currentPlan === 'free' ? '#22C55E' : '#EC4899'}>
+            <SpotlightCard className="h-full p-7 flex flex-col shadow-2xl shadow-brand-accent/5" glow={currentPlan === 'free' ? '#22C55E' : '#EC4899'}>
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold flex items-center gap-2"><RefreshCw className="w-4 h-4 text-success" /> Pagamento</h2>
                 <span className="px-2.5 py-1 rounded-full bg-success/10 text-success text-[10px] font-semibold uppercase tracking-wide border border-success/20">Mensal</span>
@@ -522,11 +522,11 @@ export default function BillingPage() {
               </div>
 
               {currentPlan === 'free' ? (
-                <Link href="#planos" className="w-full block text-center px-4 py-3 rounded-xl bg-brand-elevated border border-brand-border text-sm font-semibold hover:border-brand-accent transition">
+                <Link href="#planos" className="w-full mt-auto block text-center px-4 py-3 rounded-xl bg-brand-elevated border border-brand-border text-sm font-semibold hover:border-brand-accent transition">
                   Ver planos pagos
                 </Link>
               ) : (
-                <Link href="#planos" className="w-full block text-center px-4 py-3 rounded-xl bg-gradient-to-r from-success to-emerald-500 text-brand-bg text-sm font-semibold hover:opacity-90 transition shadow-lg shadow-success/20">
+                <Link href="#planos" className="w-full mt-auto block text-center px-4 py-3 rounded-xl bg-gradient-to-r from-success to-emerald-500 text-brand-bg text-sm font-semibold hover:opacity-90 transition shadow-lg shadow-success/20">
                   Renovar agora
                 </Link>
               )}
@@ -568,11 +568,11 @@ export default function BillingPage() {
               return (
                 <TiltCard key={plan.id} className="h-full">
                   <SpotlightCard
-                    className="h-full p-6 flex flex-col"
+                    className="h-full p-7 flex flex-col"
                     glow={plan.accent}
                     style={{ borderColor: isCurrent || plan.popular ? `${plan.accent}60` : undefined }}
                   >
-                    <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center justify-between mb-4">
                       <plan.icon className="w-5 h-5" style={{ color: plan.accent }} />
                       {isCurrent && (
                         <span className="px-2 py-0.5 rounded-full bg-success/10 text-success text-[10px] font-semibold border border-success/20">Plano atual</span>
@@ -583,9 +583,9 @@ export default function BillingPage() {
                     </div>
 
                     <h3 className="text-lg font-bold mb-1">{plan.name}</h3>
-                    <p className="text-xs text-brand-text-secondary mb-4">{plan.tagline}</p>
+                    <p className="text-xs text-brand-text-secondary mb-5">{plan.tagline}</p>
 
-                    <div className="mb-4">
+                    <div className="mb-5">
                       <div className="text-3xl font-bold flex items-baseline gap-2">
                         {formatPlanPrice(price)}
                         <span className="text-sm font-normal text-brand-text-secondary">/mes</span>
@@ -595,8 +595,8 @@ export default function BillingPage() {
                       )}
                     </div>
 
-                    <div className="space-y-2 mb-5 flex-1">
-                      {plan.features.slice(0, 6).map((feature) => (
+                    <div className="space-y-3 mb-6 flex-1">
+                      {plan.features.map((feature) => (
                         <div key={feature.label} className="flex items-center gap-2 text-xs">
                           {typeof feature.value === 'boolean' ? (
                             feature.value ? <Check className="w-3.5 h-3.5 text-success" /> : <X className="w-3.5 h-3.5 text-brand-text-secondary" />
@@ -613,7 +613,7 @@ export default function BillingPage() {
                     <button
                       onClick={() => handleUpgrade(plan.id)}
                       disabled={loading || isCurrent}
-                      className={`w-full mt-auto px-4 py-2.5 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-1.5 ${
+                      className={`w-full mt-auto px-4 py-3 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-1.5 ${
                         isCurrent
                           ? 'bg-brand-elevated border border-brand-border text-brand-text-secondary cursor-not-allowed'
                           : isFree
