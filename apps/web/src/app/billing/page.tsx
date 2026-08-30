@@ -3,6 +3,8 @@
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { FadeIn } from '@/components/animations';
+import { PlatformIcon } from '@/components/PlatformIcon';
+import { PLATFORMS } from '@/lib/platforms';
 
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
@@ -263,19 +265,6 @@ function FAQItem({ q, a }: { q: string; a: string }) {
     </div>
   );
 }
-
-const platformLogos = [
-  { name: 'Instagram', color: '#E4405F' },
-  { name: 'LinkedIn', color: '#0A66C2' },
-  { name: 'X', color: '#FFFFFF' },
-  { name: 'TikTok', color: '#FF0050' },
-  { name: 'Facebook', color: '#1877F2' },
-  { name: 'YouTube', color: '#FF0000' },
-  { name: 'Pinterest', color: '#BD081C' },
-  { name: 'Bluesky', color: '#0085FF' },
-  { name: 'Threads', color: '#FFFFFF' },
-  { name: 'Reddit', color: '#FF4500' },
-];
 
 const faqs = [
   { q: 'Posso cancelar a qualquer momento?', a: 'Sim. Nao ha contrato de fidelidade. Voce pode cancelar ou mudar de plano quando quiser, sem multa.' },
@@ -703,9 +692,9 @@ export default function BillingPage() {
           <h2 className="text-2xl md:text-3xl font-bold mb-3">Uma API, 15 plataformas</h2>
           <p className="text-brand-text-secondary mb-8">Publique em todas as redes sociais sem trocar de ferramenta.</p>
           <div className="flex flex-wrap items-center justify-center gap-4">
-            {platformLogos.map((p) => (
-              <div key={p.name} className="w-14 h-14 rounded-2xl bg-brand-surface/60 border border-brand-border/50 flex items-center justify-center" style={{ boxShadow: `0 0 20px ${p.color}20` }}>
-                <span className="text-lg font-bold" style={{ color: p.color }}>{p.name[0]}</span>
+            {PLATFORMS.map((p) => (
+              <div key={p.id} className="w-14 h-14 rounded-2xl bg-brand-surface/60 border border-brand-border/50 flex items-center justify-center" style={{ boxShadow: `0 0 20px ${p.color}20` }}>
+                <PlatformIcon id={p.id} size={24} color={p.color} />
               </div>
             ))}
           </div>
