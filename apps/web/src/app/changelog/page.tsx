@@ -5,15 +5,75 @@ import { FadeIn, ScrollReveal } from '@/components/animations';
 import Footer from '@/components/Footer';
 import { Breadcrumb } from '@/components/Breadcrumb';
 
-export const metadata: Metadata = { title: 'Changelog - Atualizacoes do StackPost', description: 'Historico de atualizacoes do StackPost: novas plataformas, endpoints, features e correcoes.', alternates: { canonical: '/changelog' } };
+export const metadata: Metadata = {
+  title: 'Changelog — Atualizações do StackPost',
+  description:
+    'Histórico de atualizações do StackPost: novas plataformas, endpoints, recursos e correções.',
+  alternates: { canonical: '/changelog' },
+};
 
 const releases = [
-  { version: 'v1.0.0', date: '2026-08-26', changes: ['Lancamento inicial', '15 plataformas suportadas', 'API REST com 114 endpoints', 'MCP server para AI agents', 'Multi-user com RBAC', 'Analytics historico indefinido'] },
-  { version: 'v0.9.0', date: '2026-08-20', changes: ['Adicionado Bluesky e Mastodon', 'tus upload protocol', 'Cursor pagination em todos endpoints', 'Webhook replay'] },
-  { version: 'v0.8.0', date: '2026-08-15', changes: ['A/B testing de posts', 'Best-time-to-post com ML', 'Auto-reconnect de contas', 'Approval workflow'] },
-  { version: 'v0.7.0', date: '2026-08-10', changes: ['AI caption com Nexus IA', 'Hashtag suggestions', 'Cross-post adaptativo', 'SSE real-time'] },
-  { version: 'v0.6.0', date: '2026-08-05', changes: ['Comments API em 11 plataformas', 'Post history import', 'CSV bulk import', 'Reviews import'] },
-  { version: 'v0.5.0', date: '2026-07-28', changes: ['9 plataformas funcionando', 'Analytics com metricas normalizadas', 'Raw analytics por plataforma'] },
+  {
+    version: 'v1.0.0',
+    date: '2026-08-26',
+    changes: [
+      'Lançamento inicial',
+      '15 plataformas suportadas',
+      'API REST com 114 endpoints',
+      'MCP server para agentes de IA',
+      'Multi-usuário com RBAC',
+      'Analytics com histórico ilimitado',
+    ],
+  },
+  {
+    version: 'v0.9.0',
+    date: '2026-08-20',
+    changes: [
+      'Adição de Bluesky e Mastodon',
+      'Protocolo de upload tus',
+      'Cursor pagination em todos os endpoints',
+      'Replay de webhooks',
+    ],
+  },
+  {
+    version: 'v0.8.0',
+    date: '2026-08-15',
+    changes: [
+      'A/B testing de publicações',
+      'Melhor horário para postar com ML',
+      'Reconexão automática de contas',
+      'Fluxo de aprovação',
+    ],
+  },
+  {
+    version: 'v0.7.0',
+    date: '2026-08-10',
+    changes: [
+      'Legendas com IA via Nexus IA',
+      'Sugestões de hashtags',
+      'Cross-post adaptativo',
+      'SSE em tempo real',
+    ],
+  },
+  {
+    version: 'v0.6.0',
+    date: '2026-08-05',
+    changes: [
+      'API de comentários em 11 plataformas',
+      'Importação de histórico de publicações',
+      'Importação em massa via CSV',
+      'Importação de avaliações',
+    ],
+  },
+  {
+    version: 'v0.5.0',
+    date: '2026-07-28',
+    changes: [
+      '9 plataformas em funcionamento',
+      'Analytics com métricas normalizadas',
+      'Analytics bruto por plataforma',
+    ],
+  },
 ];
 
 export default function ChangelogPage() {
@@ -31,7 +91,9 @@ export default function ChangelogPage() {
               <span className="text-xs font-mono text-brand-accent">Changelog</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-6">Changelog</h1>
-            <p className="text-lg text-brand-text-secondary">Historico de atualizacoes do StackPost.</p>
+            <p className="text-lg text-brand-text-secondary">
+              Histórico de atualizações do StackPost.
+            </p>
           </FadeIn>
         </div>
       </section>
@@ -47,8 +109,8 @@ export default function ChangelogPage() {
                   <span className="text-xs text-brand-text-secondary font-mono">{rel.date}</span>
                 </div>
                 <ul className="space-y-1.5">
-                  {rel.changes.map((c) => (
-                    <li key={c} className="text-sm text-brand-text-secondary flex items-start gap-2">
+                  {rel.changes.map((c, idx) => (
+                    <li key={`${rel.version}-${idx}`} className="text-sm text-brand-text-secondary flex items-start gap-2">
                       <span className="text-brand-accent mt-0.5">-</span>
                       {c}
                     </li>
