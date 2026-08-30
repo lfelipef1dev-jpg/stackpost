@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Check, X, Zap, Crown, Building2, Star, ChevronRight, Sparkles } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Check, X, Zap, Crown, Building2, Sparkles, ChevronRight, ArrowRight, Shield, RefreshCw, Clock, Users, ChevronDown, Lock, Server, TrendingUp, CreditCard } from 'lucide-react';
 import Link from 'next/link';
 import { FadeIn, ScrollReveal, StaggerGroup, StaggerItem } from '@/components/animations';
 import Footer from '@/components/Footer';
@@ -10,7 +10,7 @@ import Footer from '@/components/Footer';
 interface PlanFeature {
   label: string;
   value: string | number | boolean;
-  highlight?: boolean;
+  full?: string;
 }
 
 interface Plan {
@@ -23,200 +23,176 @@ interface Plan {
   popular?: boolean;
   trial?: boolean;
   cta: string;
-  ctaHref: string;
   features: PlanFeature[];
-  included: string[];
 }
 
 const plans: Plan[] = [
   {
     id: 'free',
     name: 'Free',
-    tagline: 'Para experimentar',
+    tagline: 'Para começar sem pagar',
     monthlyPrice: 0,
     yearlyPrice: 0,
     icon: Zap,
-    cta: 'Comecar gratis',
-    ctaHref: '/register',
+    cta: 'Criar conta grátis',
     features: [
-      { label: 'Posts', value: '20 / mes' },
-      { label: 'Comentarios', value: '50 / mes' },
-      { label: 'Importacao de posts', value: '5 / conta / mes' },
-      { label: 'Importacao de comentarios', value: '25 / post' },
+      { label: 'Volume/mês', value: '50 + 100', full: '50 posts e 100 comentários por mês' },
       { label: 'Contas sociais', value: '3' },
-      { label: 'Acesso a API', value: true },
-      { label: 'Biblioteca de midia', value: true },
-      { label: 'Analytics', value: true },
-      { label: 'Calendario', value: true },
-      { label: 'Postagem em massa', value: true },
+      { label: 'Usuários', value: '1' },
+      { label: 'Workspaces', value: '1' },
+      { label: 'Plataformas', value: '15' },
+      { label: 'API, SDK e CLI', value: true },
+      { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
-    ],
-    included: [
-      'Acesso a API',
-      'Biblioteca de midia',
-      'Analytics',
-      'Calendario',
-      'Postagem em massa',
-      'Link na bio',
+      { label: 'Upload de mídia', value: '100 MB' },
+      { label: 'AI caption', value: false },
+      { label: 'MCP server', value: false },
+      { label: 'Suporte', value: 'comunidade' },
     ],
   },
   {
-    id: 'pro',
-    name: 'Pro',
-    tagline: 'Para usuarios avancados',
-    monthlyPrice: 515,
-    yearlyPrice: 5150,
+    id: 'starter',
+    name: 'Inicial',
+    tagline: 'Para criadores e pequenos times',
+    monthlyPrice: 39,
+    yearlyPrice: 390,
     icon: Sparkles,
     trial: true,
-    cta: 'Iniciar teste de 14 dias',
-    ctaHref: '/register?plan=pro',
+    cta: 'Testar 14 dias grátis',
     features: [
-      { label: 'Posts', value: '10.000 / mes' },
-      { label: 'Comentarios', value: '5.000 / mes' },
-      { label: 'Importacao de posts', value: '100 / conta / mes' },
-      { label: 'Importacao de comentarios', value: '200 / post' },
-      { label: 'Contas sociais', value: 'Ilimitadas' },
-      { label: 'Acesso a API', value: true },
-      { label: 'Biblioteca de midia', value: true },
-      { label: 'Analytics', value: true },
-      { label: 'Calendario', value: true },
-      { label: 'Postagem em massa', value: true },
+      { label: 'Volume/mês', value: '2k + 1k', full: '2.000 posts e 1.000 comentários por mês' },
+      { label: 'Contas sociais', value: '5' },
+      { label: 'Usuários', value: '2' },
+      { label: 'Workspaces', value: '1' },
+      { label: 'Plataformas', value: '15' },
+      { label: 'API, SDK e CLI', value: true },
+      { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
+      { label: 'Upload de mídia', value: '500 MB' },
+      { label: 'AI caption', value: false },
+      { label: 'MCP server', value: false },
+      { label: 'Suporte', value: 'e-mail' },
     ],
-    included: [
-      'Acesso a API',
-      'Biblioteca de midia',
-      'Analytics',
-      'Calendario',
-      'Postagem em massa',
-      'Link na bio',
+  },
+  {
+    id: 'growth',
+    name: 'Crescimento',
+    tagline: 'Para agências e SaaS iniciantes',
+    monthlyPrice: 89,
+    yearlyPrice: 890,
+    icon: Building2,
+    popular: true,
+    trial: true,
+    cta: 'Testar 14 dias grátis',
+    features: [
+      { label: 'Volume/mês', value: '8k + 4k', full: '8.000 posts e 4.000 comentários por mês' },
+      { label: 'Contas sociais', value: '20' },
+      { label: 'Usuários', value: '5' },
+      { label: 'Workspaces', value: '3' },
+      { label: 'Plataformas', value: '15' },
+      { label: 'API, SDK e CLI', value: true },
+      { label: 'Calendário', value: true },
+      { label: 'Link na bio', value: true },
+      { label: 'Upload de mídia', value: '2 GB' },
+      { label: 'AI caption', value: true },
+      { label: 'MCP server', value: false },
+      { label: 'Suporte', value: 'e-mail prior.' },
+    ],
+  },
+  {
+    id: 'scale',
+    name: 'Escala',
+    tagline: 'Para SaaS e agências em escala',
+    monthlyPrice: 197,
+    yearlyPrice: 1970,
+    icon: Crown,
+    trial: true,
+    cta: 'Escolher Scale',
+    features: [
+      { label: 'Volume/mês', value: '40k + 20k', full: '40.000 posts e 20.000 comentários por mês' },
+      { label: 'Contas sociais', value: 'Ilimitadas' },
+      { label: 'Usuários', value: '20' },
+      { label: 'Workspaces', value: '10' },
+      { label: 'Plataformas', value: '15' },
+      { label: 'API, SDK e CLI', value: true },
+      { label: 'Calendário', value: true },
+      { label: 'Link na bio', value: true },
+      { label: 'Upload de mídia', value: '10 GB' },
+      { label: 'AI caption', value: true },
+      { label: 'MCP server', value: true },
+      { label: 'Suporte', value: 'prioritário' },
     ],
   },
   {
     id: 'business',
-    name: 'Business',
-    tagline: 'Para empresas em crescimento',
-    monthlyPrice: 2060,
-    yearlyPrice: 20600,
-    icon: Building2,
-    popular: true,
-    cta: 'Comecar com Business',
-    ctaHref: '/register?plan=business',
-    features: [
-      { label: 'Posts', value: '100.000 / mes' },
-      { label: 'Comentarios', value: '50.000 / mes' },
-      { label: 'Importacao de posts', value: '500 / conta / mes' },
-      { label: 'Importacao de comentarios', value: '1.000 / post' },
-      { label: 'Contas sociais', value: 'Ilimitadas' },
-      { label: 'Acesso a API', value: true },
-      { label: 'Biblioteca de midia', value: true },
-      { label: 'Analytics', value: true },
-      { label: 'Calendario', value: true },
-      { label: 'Postagem em massa', value: true },
-      { label: 'Link na bio', value: true },
-    ],
-    included: [
-      'Acesso a API',
-      'Biblioteca de midia',
-      'Analytics',
-      'Calendario',
-      'Postagem em massa',
-      'Link na bio',
-    ],
-  },
-  {
-    id: 'enterprise',
-    name: 'Enterprise',
-    tagline: 'Para grandes organizacoes',
-    monthlyPrice: null,
-    yearlyPrice: null,
+    name: 'Empresarial',
+    tagline: 'Para grandes operacoes',
+    monthlyPrice: 497,
+    yearlyPrice: 4970,
     icon: Crown,
-    cta: 'Falar com vendas',
-    ctaHref: '/contact',
+    cta: 'Solicitar proposta',
     features: [
-      { label: 'Posts', value: 'Custom' },
-      { label: 'Comentarios', value: 'Custom' },
-      { label: 'Importacao de posts', value: 'Custom' },
-      { label: 'Importacao de comentarios', value: 'Custom' },
+      { label: 'Volume/mes', value: '150k + 75k', full: '150.000 posts e 75.000 comentarios por mes' },
       { label: 'Contas sociais', value: 'Ilimitadas' },
-      { label: 'Acesso a API', value: true },
-      { label: 'Biblioteca de midia', value: true },
-      { label: 'Analytics', value: true },
+      { label: 'Usuarios', value: 'Ilimitados' },
+      { label: 'Workspaces', value: 'Ilimitados' },
+      { label: 'Plataformas', value: '15 + roadmap' },
+      { label: 'API, SDK e CLI', value: true },
       { label: 'Calendario', value: true },
-      { label: 'Postagem em massa', value: true },
       { label: 'Link na bio', value: true },
-    ],
-    included: [
-      'Acesso a API',
-      'Biblioteca de midia',
-      'Analytics',
-      'Calendario',
-      'Postagem em massa',
-      'Link na bio',
+      { label: 'Upload de midia', value: '50 GB' },
+      { label: 'AI caption', value: true },
+      { label: 'MCP server', value: true },
+      { label: 'Suporte', value: 'dedicado' },
     ],
   },
 ];
 
 const faqs = [
-  {
-    q: 'O StackPost cobra por conta social conectada?',
-    a: 'Nao. Todos os planos pagos incluem contas sociais ilimitadas. Voce escala por uso de API, posts e armazenamento, nao por numero de contas.',
-  },
-  {
-    q: 'Posso testar antes de pagar?',
-    a: 'Sim. O plano free permite conectar contas, publicar e testar a API sem detalhes de pagamento. Os planos Pro e Business oferecem teste gratuito de 14 dias. Voce faz upgrade quando seu uso crescer.',
-  },
-  {
-    q: 'Como funciona a cobranca por uso?',
-    a: 'Os planos incluem cotas mensais de posts e armazenamento. Se exceder, voce pode fazer upgrade ou falar com nosso time sobre um plano Enterprise.',
-  },
-  {
-    q: 'Planos Enterprise customizados estao disponiveis?',
-    a: 'Sim. Contate nosso time se precisar de limites maiores, SLAs customizados, suporte dedicado, white-label ou termos de cobranca especificos.',
-  },
-  {
-    q: 'Postar no X custa extra?',
-    a: 'O X mudou sua API para cobranca por chamada em 2025. Cada post no X custa $0.015, e posts com link custam $0.20. Esses custos sao do X, nao nossos. O saldo pre-pago e visivel no painel de billing.',
-  },
-  {
-    q: 'Os precos sao em reais (BRL)?',
-    a: 'Sim. Todos os precos listados estao em reais brasileiros (BRL). O pagamento e processado via Mercado Pago. Para clientes internacionais, entre em contato para cotacao em USD.',
-  },
-  {
-    q: 'O StackPost e uma alternativa ao Ayrshare?',
-    a: 'Sim. O StackPost e uma API de redes sociais developer-first para times que querem uma integracao unica entre todas as principais plataformas, com precos transparentes por uso e sem taxas por usuario.',
-  },
-  {
-    q: 'O StackPost e uma alternativa ao Zernio?',
-    a: 'Sim. O StackPost e uma alternativa ao Zernio para times que querem contas sociais ilimitadas em todos os planos pagos, com cobranca por uso de API em vez de precos por conta.',
-  },
-  {
-    q: 'O StackPost e uma alternativa ao Buffer, Publer, Metricool ou Postiz?',
-    a: 'Sim. O StackPost oferece API unificada para 15 plataformas, MCP server para AI agents, webhooks, analytics historico indefinido, A/B testing, AI caption e multi-user com RBAC - features que essas plataformas nao oferecem.',
-  },
+  { q: 'O StackPost cobra por conta social conectada?', a: 'Nao. Voce escala por volume de posts, nao por numero de perfis. Os planos Scale e Business tem contas ilimitadas.' },
+  { q: 'Posso testar antes de pagar?', a: 'Sim. O plano Free e para sempre com 50 posts/mes. Starter, Growth e Scale oferecem 14 dias de teste gratis.' },
+  { q: 'Como funciona a cobranca do X?', a: 'O X cobra por post da API oficial. Esse custo e pago com creditos X pre-pagos no painel de billing.' },
+  { q: 'Os precos sao em reais?', a: 'Sim. Cobranca via Mercado Pago com PIX e cartao. Sem surpresa de cambio.' },
+  { q: 'Preciso contrato ou posso cancelar?', a: 'Cancele quando quiser. Sem contrato, sem multa.' },
+  { q: 'Qual a diferenca entre Growth e Scale?', a: 'O Scale entrega 5x mais volume: 40.000 posts vs 8.000 do Growth, alem de MCP server, A/B testing e contas ilimitadas.' },
+  { q: 'Tem garantia?', a: 'Sim. 7 dias de garantia em todos os planos pagos. Se nao gostar, devolvemos 100%.' },
+  { q: 'Posso migrar de plano a qualquer momento?', a: 'Sim. Mude de plano quando quiser. A cobranca e proporcional ate o fim do ciclo atual.' },
 ];
 
 export default function PlansPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [yearly, setYearly] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [loading, setLoading] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
+  const [currentPlan, setCurrentPlan] = useState<string | null>(null);
 
-  async function startCheckout(plan: Plan) {
-    if (plan.id === 'free') {
-      router.push('/register');
-      return;
-    }
-    const token = localStorage.getItem('token');
-    if (!token) {
-      router.push('/login?redirect=plans');
+  useEffect(() => {
+    fetch('/api/usage/monthly')
+      .then((res) => res.json())
+      .then((data) => setCurrentPlan(data.plan || null))
+      .catch(() => setCurrentPlan(null));
+  }, []);
+
+  useEffect(() => {
+    const planId = searchParams.get('plan');
+    if (!planId) return;
+    const plan = plans.find((p) => p.id === planId);
+    if (!plan) return;
+    doCheckout(plan);
+  }, [searchParams, router]);
+
+  async function doCheckout(plan: Plan) {
+    if (plan.id === 'free' || plan.id === 'business') {
+      router.push(plan.id === 'free' ? '/register' : '/contact');
       return;
     }
     setLoading(true);
     try {
       const res = await fetch('/api/pagamentos/checkout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plano: plan.id }),
       });
       const data = await res.json();
@@ -228,6 +204,20 @@ export default function PlansPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function startCheckout(plan: Plan) {
+    setSelectedPlan(plan);
+  }
+
+  function handleContinue() {
+    if (!selectedPlan) return;
+    doCheckout(selectedPlan);
+    setSelectedPlan(null);
+  }
+
+  function handleClose() {
+    setSelectedPlan(null);
   }
 
   function formatPrice(plan: Plan) {
@@ -243,108 +233,116 @@ export default function PlansPage() {
     return yearly ? '/ano' : '/mes';
   }
 
+  const savings = yearly ? 'Economize 17% no anual' : 'Mude para anual e economize 17%';
+
   return (
     <main className="min-h-screen bg-brand-bg">
-      {/* Header */}
-      <header className="h-16 border-b border-brand-border bg-brand-surface/50 backdrop-blur-xl sticky top-0 z-20">
-        <div className="max-w-7xl mx-auto h-full px-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <img src="/brand/logo.png" alt="StackPost" className="h-14 w-auto" />
-          </Link>
-          <nav className="hidden md:flex gap-6 text-sm text-brand-text-secondary items-center">
-            <Link href="/" className="hover:text-brand-text transition">Inicio</Link>
-            <Link href="/plans" className="text-brand-text">Planos</Link>
-            <Link href="/login" className="hover:text-brand-text transition">Entrar</Link>
-            <Link
-              href="/register"
-              className="px-4 py-1.5 rounded-lg bg-brand-accent text-brand-bg font-medium hover:bg-brand-accent-hover transition"
-            >
-              Comecar gratis
-            </Link>
-          </nav>
+      {/* Hero */}
+      <section className="relative overflow-hidden pt-24 pb-12 md:pb-16">
+        <div className="absolute inset-0 pointer-events-none hidden md:block" aria-hidden="true">
+          <div className="absolute top-[-10%] right-[-10%] w-[40rem] h-[40rem] rounded-full bg-gradient-to-br from-brand-accent/10 to-brand-accent-hover/5 blur-[100px]"></div>
+          <div className="absolute bottom-[-10%] left-[-10%] w-[30rem] h-[30rem] rounded-full bg-gradient-to-br from-brand-accent/5 to-transparent blur-[100px]"></div>
         </div>
-      </header>
-
-      {/* Hero pricing */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-brand-accent/10 rounded-full blur-[100px]" />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 pt-16 pb-8 text-center">
+        <div className="relative max-w-6xl mx-auto px-4 md:px-6 text-center">
           <FadeIn>
-            <span className="text-brand-accent text-sm font-mono tracking-wider uppercase">Planos</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-success/10 border border-success/30 text-success text-xs font-medium mb-4">
+              <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
+              Free generoso: 50 posts/mes sem pagar
+            </div>
           </FadeIn>
           <FadeIn delay={0.06}>
-            <h1 className="text-4xl md:text-5xl font-bold mt-4 mb-4">
-              Precos transparentes para <span className="text-brand-accent">cada fase</span>
+            <h1 className="font-display text-4xl md:text-6xl font-black leading-[1.05] tracking-[-0.03em] text-brand-text mb-4">
+              Pague <span className="text-brand-accent">bem menos</span> e poste mais
             </h1>
           </FadeIn>
           <FadeIn delay={0.12}>
-            <p className="text-brand-text-secondary text-lg max-w-2xl mx-auto mb-8">
-              Comece gratis, depois escale conforme o uso. Todos os planos pagos incluem contas sociais ilimitadas em uma unica API.
+            <p className="text-brand-text-secondary text-lg md:text-xl max-w-2xl mx-auto mb-6">
+              Planos a partir de R$39. Nao cobramos por conta social. Cancele quando quiser.
             </p>
           </FadeIn>
-          <FadeIn delay={0.18}>
-            <div className="inline-flex items-center gap-3 p-1 rounded-xl bg-brand-surface/50 backdrop-blur border border-brand-border">
+          <FadeIn delay={0.16}>
+            <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-brand-text-secondary/80 mb-8">
+              <div className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-success" /> 14 dias gratis nos planos pagos</div>
+              <div className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-success" /> Cancele a qualquer momento</div>
+              <div className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-success" /> Sem taxa por conta social</div>
+              <div className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-success" /> 7 dias de garantia</div>
+            </div>
+          </FadeIn>
+          <FadeIn delay={0.22}>
+            <div className="inline-flex items-center gap-3 p-1.5 rounded-2xl bg-brand-surface/50 border border-brand-border">
               <button
                 onClick={() => setYearly(false)}
-                className={`px-5 py-2 rounded-lg text-sm font-medium transition ${!yearly ? 'bg-brand-accent text-brand-bg' : 'text-brand-text-secondary hover:text-brand-text'}`}
+                className={`px-5 py-2.5 rounded-xl text-sm font-bold transition ${!yearly ? 'bg-brand-accent text-brand-bg' : 'text-brand-text-secondary hover:text-brand-text'}`}
               >
                 Mensal
               </button>
               <button
                 onClick={() => setYearly(true)}
-                className={`px-5 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 ${yearly ? 'bg-brand-accent text-brand-bg' : 'text-brand-text-secondary hover:text-brand-text'}`}
+                className={`px-5 py-2.5 rounded-xl text-sm font-bold transition flex items-center gap-2 ${yearly ? 'bg-brand-accent text-brand-bg' : 'text-brand-text-secondary hover:text-brand-text'}`}
               >
-                Anual
-                <span className="text-xs text-success">-17%</span>
+                Anual <span className="text-xs opacity-90">-17%</span>
               </button>
             </div>
+            <p className="text-xs text-brand-text-secondary/60 mt-3 font-mono">{savings}</p>
           </FadeIn>
         </div>
       </section>
 
+      {/* Trust bar */}
+      <section className="max-w-6xl mx-auto px-4 md:px-6 pb-8">
+        <FadeIn>
+          <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10 text-xs md:text-sm text-brand-text-secondary/70">
+            <div className="flex items-center gap-2"><Shield className="w-4 h-4 text-brand-accent" /> Pagamento seguro</div>
+            <div className="flex items-center gap-2"><RefreshCw className="w-4 h-4 text-brand-accent" /> Reembolso em 7 dias</div>
+            <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-brand-accent" /> Setup em menos de 10 min</div>
+            <div className="flex items-center gap-2"><Users className="w-4 h-4 text-brand-accent" /> Times ilimitados nos planos pagos</div>
+          </div>
+        </FadeIn>
+      </section>
+
       {/* Plan cards */}
-      <section className="max-w-7xl mx-auto px-4 pb-20">
-        <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 items-start" stagger={0.08}>
+      <section className="max-w-7xl mx-auto px-4 md:px-6 pb-20">
+        <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-5 items-stretch" stagger={0.06}>
           {plans.map((plan) => {
             const isFree = plan.id === 'free';
-            const isPro = plan.id === 'pro';
+            const isGrowth = plan.id === 'growth';
             const isBusiness = plan.id === 'business';
-            const isEnterprise = plan.id === 'enterprise';
-            const accent = isFree ? '#94A3B8' : isPro ? '#22D3EE' : isBusiness ? '#8AB4F8' : '#C084FC';
+            const isCurrent = currentPlan === plan.id;
+            const hasBadge = plan.popular || (plan.trial && !plan.popular) || isCurrent;
+            const accent = isFree ? '#94A3B8' : isGrowth ? '#A78BFA' : isBusiness ? '#C084FC' : plan.id === 'starter' ? '#22D3EE' : '#8AB4F8';
 
             return (
               <StaggerItem key={plan.id} y={24}>
-                <div
-                  className="relative rounded-3xl border bg-brand-surface/40 backdrop-blur-sm p-6 flex flex-col h-full transition-all duration-300 hover:-translate-y-1"
-                  style={{
-                    borderColor: isBusiness ? `${accent}60` : 'var(--brand-border)',
-                    boxShadow: isBusiness ? `0 0 40px -12px ${accent}40` : 'none',
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = `${accent}80`; e.currentTarget.style.boxShadow = `0 0 40px -8px ${accent}35`; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = isBusiness ? `${accent}60` : 'var(--brand-border)'; e.currentTarget.style.boxShadow = isBusiness ? `0 0 40px -12px ${accent}40` : 'none'; }}
-                >
-                  {plan.popular && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-brand-accent text-brand-bg text-[10px] font-bold tracking-wide uppercase shadow-lg">
+                <div className="relative">
+                  {isCurrent && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10 px-4 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase shadow-lg flex items-center gap-1" style={{ backgroundColor: accent, color: '#0A0A0A' }}>
+                      <Crown className="w-3 h-3" /> Plano atual
+                    </div>
+                  )}
+                  {plan.popular && !isCurrent && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10 px-4 py-1 rounded-full bg-gradient-to-r from-brand-accent to-brand-accent-hover text-brand-bg text-[10px] font-bold tracking-wide uppercase shadow-lg">
                       Mais popular
                     </div>
                   )}
-                  {plan.trial && !plan.popular && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-brand-elevated border border-brand-border text-brand-text text-[10px] font-semibold tracking-wide shadow-lg">
+                  {plan.trial && !plan.popular && !isCurrent && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10 px-4 py-1 rounded-full bg-brand-elevated border border-brand-border text-brand-text text-[10px] font-semibold tracking-wide shadow-lg">
                       14 dias gratis
                     </div>
                   )}
+                  <div
+                    className={`rounded-3xl border bg-brand-surface/40 backdrop-blur-sm p-6 flex flex-col h-full transition-all duration-300 hover:-translate-y-1 ${hasBadge ? 'pt-9' : ''}`}
+                    style={{
+                      borderColor: isCurrent ? accent : (isGrowth ? `${accent}60` : 'var(--brand-border)'),
+                      boxShadow: isCurrent ? `0 0 40px -8px ${accent}50` : (isGrowth ? `0 0 40px -12px ${accent}40` : 'none'),
+                    }}
+                  >
 
                   <div className="flex items-start justify-between mb-5 min-h-[40px]">
                     <div>
                       <h3 className="text-2xl font-bold tracking-tight">{plan.name}</h3>
                       <p className="text-xs text-brand-text-secondary mt-0.5">{plan.tagline}</p>
                     </div>
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ml-3"
-                      style={{ backgroundColor: `${accent}15` }}
-                    >
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ml-3" style={{ backgroundColor: `${accent}15` }}>
                       <plan.icon className="w-5 h-5" style={{ color: accent }} />
                     </div>
                   </div>
@@ -357,90 +355,118 @@ export default function PlansPage() {
                     <p className="text-xs text-brand-text-secondary mt-1">por organizacao</p>
                   </div>
 
-                  <button
-                    onClick={() => startCheckout(plan)}
-                    disabled={loading}
-                    className="w-full mb-6 px-5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2"
-                    style={{
-                      backgroundColor: isBusiness ? accent : 'var(--brand-elevated)',
-                      color: isBusiness ? '#0A0A0A' : 'var(--brand-text)',
-                      border: `1px solid ${isBusiness ? accent : 'var(--brand-border)'}`,
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = isBusiness ? '#A3C4F9' : `${accent}20`;
-                      e.currentTarget.style.borderColor = accent;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = isBusiness ? accent : 'var(--brand-elevated)';
-                      e.currentTarget.style.borderColor = isBusiness ? accent : 'var(--brand-border)';
-                    }}
-                  >
-                    {plan.id === 'free' ? 'Comecar gratis' : plan.id === 'enterprise' ? 'Falar com vendas' : 'Escolher plano'}
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-
-                  <div className="space-y-2.5 flex-1">
+                  <div className="space-y-2.5 flex-1 mb-5">
                     {plan.features.map((f) => (
                       <div key={f.label} className="flex items-center justify-between py-1.5 border-b border-brand-border/30 last:border-0 text-sm">
                         <div className="flex items-center gap-2 text-brand-text-secondary">
                           {typeof f.value === 'boolean' ? (
                             f.value ? <Check className="w-3.5 h-3.5 text-success" /> : <X className="w-3.5 h-3.5 text-error" />
                           ) : (
-                            <span className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: `${accent}25` }} />
+                            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: accent }} />
                           )}
                           <span>{f.label}</span>
                         </div>
                         {typeof f.value !== 'boolean' && (
-                          <span className="font-semibold text-right" style={{ color: f.highlight ? accent : 'var(--brand-text)' }}>{f.value}</span>
+                          <span title={f.full || String(f.value)} className="font-semibold text-right text-brand-text text-xs whitespace-nowrap">{f.value}</span>
                         )}
                       </div>
                     ))}
                   </div>
+
+                  <button
+                    onClick={() => startCheckout(plan)}
+                    disabled={loading}
+                    className={`w-full mt-auto px-5 py-3 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 border ${isGrowth ? 'bg-[#A78BFA] text-[#0A0A0A] border-[#A78BFA]' : 'bg-brand-elevated text-brand-text border-brand-border hover:border-brand-accent'}`}
+                  >
+                    {isCurrent ? 'Plano atual' : plan.cta}
+                    {isCurrent ? <Check className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                  </button>
                 </div>
-              </StaggerItem>
+              </div>
+            </StaggerItem>
             );
           })}
         </StaggerGroup>
       </section>
 
-      {/* Comparison table */}
-      <section className="max-w-5xl mx-auto px-4 pb-20">
+      {/* Social proof */}
+      <section className="max-w-6xl mx-auto px-4 md:px-6 pb-20">
+        <FadeIn>
+          <div className="text-center">
+            <p className="text-sm text-brand-text-secondary/80 uppercase tracking-wider mb-6">Construido para quem publica em escala</p>
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
+              {['SaaS', 'Agencias', 'E-commerce', 'Fintechs', 'Clinicas', 'Creator economy'].map((segment) => (
+                <div key={segment} className="px-4 py-2 rounded-full bg-brand-surface/50 border border-brand-border text-sm font-medium text-brand-text-secondary">
+                  {segment}
+                </div>
+              ))}
+            </div>
+          </div>
+        </FadeIn>
+      </section>
+
+      {/* Value stack */}
+      <section className="max-w-5xl mx-auto px-4 md:px-6 pb-20">
         <ScrollReveal>
-          <div className="p-6 rounded-2xl bg-brand-surface/50 backdrop-blur border border-brand-border">
-            <h2 className="text-2xl font-bold mb-6">Comparacao detalhada</h2>
+          <div className="text-center mb-10">
+            <h2 className="font-display text-2xl md:text-3xl font-bold mb-3">Tudo que voce precisa para vender mais</h2>
+            <p className="text-brand-text-secondary">Uma plataforma. Uma API. Todas as redes.</p>
+          </div>
+        </ScrollReveal>
+        <StaggerGroup className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4" stagger={0.05}>
+          {[
+            { title: 'Unifique 15 redes', desc: 'Publique uma unica vez para Instagram, TikTok, LinkedIn, YouTube, X e mais.' },
+            { title: 'Sem cobranca por conta', desc: 'Conecte quantas contas quiser. Voce paga pelo uso, nao pelo tamanho do time.' },
+            { title: 'API e SDK prontos', desc: 'Integre em minutos com REST, SDKs e MCP server para seus agents de IA.' },
+            { title: 'Agendamento em massa', desc: 'Programe semanas de conteudo em poucos cliques com calendario visual.' },
+            { title: 'Primeiro comentario', desc: 'Adicione CTA automatico no primeiro comentario de cada post.' },
+            { title: 'Analytics normalizado', desc: 'Acompanhe resultados de todas as plataformas em um so painel.' },
+          ].map((item) => (
+            <StaggerItem key={item.title}>
+              <div className="p-5 rounded-2xl bg-brand-surface/50 backdrop-blur border border-brand-border hover:border-brand-accent/30 transition h-full">
+                <Check className="w-5 h-5 text-success mb-3" />
+                <h3 className="font-semibold text-brand-text mb-1">{item.title}</h3>
+                <p className="text-sm text-brand-text-secondary">{item.desc}</p>
+              </div>
+            </StaggerItem>
+          ))}
+        </StaggerGroup>
+      </section>
+
+      {/* Competitor comparison */}
+      <section className="max-w-5xl mx-auto px-4 md:px-6 pb-20">
+        <ScrollReveal>
+          <div className="text-center mb-8">
+            <h2 className="font-display text-2xl md:text-3xl font-bold mb-3">A diferenca para outras ferramentas</h2>
+            <p className="text-brand-text-secondary">Pare de pagar por canal e de depender de planilhas.</p>
+          </div>
+        </ScrollReveal>
+        <ScrollReveal>
+          <div className="rounded-2xl bg-brand-surface/50 backdrop-blur border border-brand-border overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead>
+                <thead className="sticky top-0 bg-brand-surface/95 backdrop-blur z-10">
                   <tr className="border-b border-brand-border">
-                    <th className="text-left py-3 px-2 text-brand-text-secondary font-medium">Recurso</th>
-                    {plans.map((p) => (
-                      <th key={p.id} className={`text-center py-3 px-2 font-semibold ${p.popular ? 'text-brand-accent' : ''}`}>{p.name}</th>
-                    ))}
+                    <th className="text-left py-4 px-4 text-brand-text-secondary font-medium">Diferencial</th>
+                    <th className="text-center py-4 px-3 font-bold text-brand-accent bg-brand-accent/5 min-w-[140px]">StackPost</th>
+                    <th className="text-center py-4 px-3 font-semibold text-brand-text-secondary min-w-[120px]">Ferramentas tradicionais</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-b border-brand-border/50">
-                    <td className="py-3 px-2 text-brand-text-secondary">Preco mensal</td>
-                    <td className="text-center py-3 px-2 font-mono">R$ 0</td>
-                    <td className="text-center py-3 px-2 font-mono text-brand-accent">R$ 515</td>
-                    <td className="text-center py-3 px-2 font-mono">R$ 2.060</td>
-                    <td className="text-center py-3 px-2 font-mono">Custom</td>
-                  </tr>
-                  {plans[0].features.map((_, idx) => (
-                    <tr key={idx} className="border-b border-brand-border/50">
-                      <td className="py-3 px-2 text-brand-text-secondary">{plans[0].features[idx].label}</td>
-                      {plans.map((p) => {
-                        const v = p.features[idx].value;
-                        return (
-                          <td key={p.id} className="text-center py-3 px-2">
-                            {typeof v === 'boolean' ? (
-                              v ? <Check className="w-4 h-4 text-success mx-auto" /> : <X className="w-4 h-4 text-error mx-auto" />
-                            ) : (
-                              <span className="font-medium">{v}</span>
-                            )}
-                          </td>
-                        );
-                      })}
+                  {[
+                    { feature: 'Cobranca por conta social', stackpost: 'Nunca', other: 'Comum' },
+                    { feature: 'API unificada nativa', stackpost: 'Sim, em todos os planos', other: 'Paga ou indisponivel' },
+                    { feature: 'MCP server e CLI', stackpost: 'Incluido', other: 'Raro' },
+                    { feature: 'Suporte em portugues', stackpost: 'Sim', other: 'Apenas em ingles' },
+                    { feature: 'Cobranca em reais', stackpost: 'PIX e cartao', other: 'Dolar' },
+                    { feature: 'Contas ilimitadas', stackpost: 'Sim, sem pagar por canal', other: 'Cobranca por canal' },
+                  ].map((row) => (
+                    <tr key={row.feature} className="border-b border-brand-border/50 last:border-0 hover:bg-brand-elevated/30 transition">
+                      <td className="py-3.5 px-4 text-brand-text-secondary">{row.feature}</td>
+                      <td className="text-center py-3.5 px-3 bg-brand-accent/[0.03]">
+                        <span className="font-semibold text-xs text-brand-accent">{row.stackpost}</span>
+                      </td>
+                      <td className="text-center py-3.5 px-3 text-brand-text-secondary text-xs">{row.other}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -450,177 +476,234 @@ export default function PlansPage() {
         </ScrollReveal>
       </section>
 
-      {/* X usage billing */}
-      <section className="max-w-3xl mx-auto px-4 pb-16">
-        <ScrollReveal className="p-6 rounded-2xl bg-brand-surface/50 backdrop-blur border border-brand-border">
-          <h2 className="text-xl font-bold mb-2">Cobranca de uso do X (creditos pre-pagos)</h2>
-          <p className="text-sm text-brand-text-secondary mb-4">
-            O X mudou sua API para cobranca por chamada em 2025. Os posts no X sao cobrados por uso
-            a partir de um saldo pre-pago que voce recarrega no painel de billing.
-          </p>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-brand-border">
-                  <th className="text-left py-2 px-3 text-brand-text">Acao</th>
-                  <th className="text-right py-2 px-3 text-brand-text">Custo</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-brand-border">
-                  <td className="py-2 px-3 text-brand-text-secondary">Post</td>
-                  <td className="py-2 px-3 text-right font-mono text-brand-text">$0.015</td>
-                </tr>
-                <tr>
-                  <td className="py-2 px-3 text-brand-text-secondary">Post com link</td>
-                  <td className="py-2 px-3 text-right font-mono text-brand-text">$0.20</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <p className="text-xs text-brand-text-secondary mt-4">
-            O composer estima a cobranca antes de publicar. Seu saldo e uso sao visiveis na pagina
-            de billing. Se o saldo acabar, os posts no X falham com instrucoes para adicionar fundos,
-            enquanto as outras plataformas continuam publicando normalmente.
-          </p>
-        </ScrollReveal>
-      </section>
-
-      {/* Hobbyist */}
-      <section className="max-w-3xl mx-auto px-4 pb-16 text-center">
+      {/* Trust badges */}
+      <section className="max-w-5xl mx-auto px-4 md:px-6 pb-20">
         <ScrollReveal>
-          <p className="text-brand-text-secondary">
-            Hobbyist e precisa de um plano menor?{' '}
-            <a href="mailto:contato@expostacker.com.br" className="text-brand-accent hover:underline">
-              Fale com a gente
-            </a>{' '}
-            e vamos adaptar as suas necessidades.
-          </p>
+          <div className="text-center mb-8">
+            <h2 className="font-display text-2xl md:text-3xl font-bold mb-3">Seguranca e conformidade</h2>
+            <p className="text-brand-text-secondary">Infraestrutura preparada para empresas.</p>
+          </div>
         </ScrollReveal>
+        <StaggerGroup className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4" stagger={0.05}>
+          {[
+            { icon: Lock, title: 'Criptografia TLS', desc: 'Toda comunicacao criptografada' },
+            { icon: Server, title: 'Cloudflare + Supabase', desc: 'Infra global e banco isolado' },
+            { icon: TrendingUp, title: 'Uptime 99.9%', desc: 'Monitoramento continuo' },
+            { icon: CreditCard, title: 'Mercado Pago', desc: 'Pagamento seguro com PIX' },
+          ].map((b) => (
+            <StaggerItem key={b.title}>
+              <div className="p-5 rounded-2xl bg-brand-surface/50 backdrop-blur border border-brand-border hover:border-brand-accent/30 transition h-full">
+                <b.icon className="w-6 h-6 text-brand-accent mb-3" />
+                <h3 className="font-semibold text-brand-text mb-1">{b.title}</h3>
+                <p className="text-sm text-brand-text-secondary">{b.desc}</p>
+              </div>
+            </StaggerItem>
+          ))}
+        </StaggerGroup>
       </section>
 
-      {/* Which pricing model */}
-      <section className="max-w-3xl mx-auto px-4 pb-16">
-        <ScrollReveal className="text-center mb-6">
-          <h2 className="text-2xl font-bold mb-3">Qual modelo de cobranca se encaixa?</h2>
-          <p className="text-brand-text-secondary">
-            Todos os planos sao cobrados por organizacao, nao por usuario ou por conta conectada.
-          </p>
+      {/* Comparison table */}
+      <section className="max-w-5xl mx-auto px-4 md:px-6 pb-20">
+        <ScrollReveal>
+          <div className="text-center mb-10">
+            <h2 className="font-display text-2xl md:text-3xl font-bold mb-3">Compare os planos</h2>
+            <p className="text-brand-text-secondary max-w-2xl mx-auto">Veja exatamente o que cada plano entrega e escolha o melhor para o seu momento.</p>
+          </div>
         </ScrollReveal>
-        <div className="grid md:grid-cols-3 gap-4">
-          {[
-            { title: 'Por organizacao', desc: 'Cada organizacao tem sua propria cota mensal de posts, comentarios e armazenamento. Times ilimitados dentro da org.' },
-            { title: 'Contas ilimitadas', desc: 'Todos os planos pagos incluem contas sociais ilimitadas. Conecte quantas paginas, perfis e canais quiser.' },
-            { title: 'Sem taxa por usuario', desc: 'Multi-user com RBAC incluido. Adicione quantos membros precisar, sem custo extra por seat.' },
-          ].map((item) => (
-            <ScrollReveal key={item.title}>
-              <div className="p-5 rounded-xl bg-brand-surface/50 backdrop-blur border border-brand-border hover:border-brand-accent/30 transition h-full">
-                <h3 className="font-semibold mb-2 text-brand-text">{item.title}</h3>
-                <p className="text-sm text-brand-text-secondary">{item.desc}</p>
-              </div>
-            </ScrollReveal>
-          ))}
-        </div>
+        <ScrollReveal>
+          <div className="rounded-2xl bg-brand-surface/50 backdrop-blur border border-brand-border overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="sticky top-0 bg-brand-surface/95 backdrop-blur z-10">
+                  <tr className="border-b border-brand-border">
+                    <th className="text-left py-4 px-4 text-brand-text-secondary font-medium">Recurso</th>
+                    {plans.map((p) => (
+                      <th
+                        key={p.id}
+                        className={`text-center py-4 px-3 font-semibold min-w-[100px] ${p.popular ? 'bg-brand-accent/5' : ''}`}
+                      >
+                        <div className="flex flex-col items-center gap-1">
+                          <span className={p.popular ? 'text-brand-accent' : 'text-brand-text'}>{p.name}</span>
+                          {p.popular && <span className="text-[10px] uppercase tracking-wider text-brand-accent bg-brand-accent/10 px-2 py-0.5 rounded-full">Recomendado</span>}
+                          {p.trial && !p.popular && <span className="text-[10px] text-brand-text-secondary">14 dias gratis</span>}
+                        </div>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {(() => {
+                    const allLabels = Array.from(new Set(plans.flatMap((p) => p.features.map((f) => f.label))));
+                    const featureMap = new Map(plans.map((p) => [p.id, new Map(p.features.map((f) => [f.label, f.value]))]));
+                    return allLabels.map((label) => (
+                      <tr key={label} className="border-b border-brand-border/50 last:border-0 hover:bg-brand-elevated/30 transition">
+                        <td className="py-3.5 px-4 text-brand-text-secondary">{label}</td>
+                        {plans.map((p) => {
+                          const v = featureMap.get(p.id)?.get(label) ?? false;
+                          const isPopular = p.popular;
+                          return (
+                            <td key={p.id} className={`text-center py-3.5 px-3 ${isPopular ? 'bg-brand-accent/[0.02]' : ''}`}>
+                              {typeof v === 'boolean' ? (
+                                v ? (
+                                  <div className="flex items-center justify-center gap-1.5 text-success">
+                                    <Check className="w-4 h-4" />
+                                    <span className="hidden md:inline text-xs">Sim</span>
+                                  </div>
+                                ) : (
+                                  <div className="flex items-center justify-center gap-1.5 text-brand-text-secondary/40">
+                                    <X className="w-4 h-4" />
+                                    <span className="hidden md:inline text-xs">Nao</span>
+                                  </div>
+                                )
+                              ) : (
+                                <span className={`font-semibold text-xs ${isPopular ? 'text-brand-accent' : 'text-brand-text'}`}>{v}</span>
+                              )}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ));
+                  })()}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </ScrollReveal>
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="max-w-3xl mx-auto px-4 pb-20">
-        <ScrollReveal className="text-center mb-8">
-          <h2 className="text-2xl font-bold">Perguntas frequentes</h2>
+      <section className="max-w-3xl mx-auto px-4 md:px-6 pb-24">
+        <ScrollReveal>
+          <h2 className="font-display text-2xl md:text-3xl font-bold mb-3 text-center">Perguntas frequentes</h2>
+          <p className="text-brand-text-secondary text-center mb-8">Tudo que voce precisa saber para decidir com seguranca.</p>
         </ScrollReveal>
-        <div className="space-y-3">
+        <StaggerGroup className="space-y-3" stagger={0.05}>
           {faqs.map((faq, i) => (
-            <ScrollReveal key={faq.q} delay={i * 0.05}>
-              <details className="group p-5 rounded-xl bg-brand-surface/50 backdrop-blur border border-brand-border hover:border-brand-text/20 transition">
-                <summary className="cursor-pointer font-medium flex items-center justify-between list-none">
-                  {faq.q}
-                  <ChevronRight className="w-4 h-4 text-brand-text-secondary group-open:rotate-90 transition" />
-                </summary>
-                <p className="mt-3 text-sm text-brand-text-secondary">{faq.a}</p>
-              </details>
-            </ScrollReveal>
+            <StaggerItem key={faq.q}>
+              <div className="rounded-2xl bg-brand-surface/50 border border-brand-border overflow-hidden transition-all duration-200 hover:border-brand-accent/30">
+                <button
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full flex items-center justify-between gap-4 p-5 text-left"
+                >
+                  <h3 className="font-semibold text-brand-text">{faq.q}</h3>
+                  <ChevronDown className={`w-4 h-4 text-brand-text-secondary shrink-0 transition-transform duration-200 ${openFaq === i ? 'rotate-180' : ''}`} />
+                </button>
+                <div className={`overflow-hidden transition-all duration-200 ${openFaq === i ? 'max-h-40' : 'max-h-0'}`}>
+                  <p className="text-sm text-brand-text-secondary leading-relaxed px-5 pb-5">{faq.a}</p>
+                </div>
+              </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerGroup>
       </section>
 
-      {/* Final CTA */}
-      <section className="max-w-7xl mx-auto px-4 py-12 text-center border-t border-brand-border relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[250px] bg-brand-accent/10 rounded-full blur-[100px]" />
-        </div>
-        <ScrollReveal className="relative">
-          <h2 className="text-3xl font-bold mb-6">Pronto para escalar seu conteudo?</h2>
-          <p className="text-brand-text-secondary mb-8 max-w-xl mx-auto">
-            Teste de graca. Nao precisa de cartao. Mude de plano quando quiser.
-          </p>
-          <Link
-            href="/register"
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-brand-accent text-brand-bg font-semibold hover:bg-brand-accent-hover transition shadow-[0_0_40px_rgba(138,180,248,0.3)]"
-          >
-            Comecar agora <ChevronRight className="w-4 h-4" />
-          </Link>
+      {/* Why StackPost */}
+      <section className="max-w-6xl mx-auto px-4 md:px-6 pb-24">
+        <ScrollReveal>
+          <div className="p-8 md:p-12 rounded-3xl bg-gradient-to-br from-brand-surface/80 to-brand-surface/40 border border-brand-border relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-accent/10 rounded-full blur-[100px]" />
+            <div className="relative grid md:grid-cols-2 gap-10 items-center">
+              <div>
+                <h2 className="font-display text-2xl md:text-4xl font-bold mb-4">Feito para quem vende na internet</h2>
+                <p className="text-brand-text-secondary mb-6">Nao importa se voce gerencia uma marca, uma agencia ou um SaaS. O StackPost foi pensado para escalar sem que voce precise contratar um time de integracao.</p>
+                <div className="flex flex-col gap-3">
+                  {[
+                    'Conecte quantas contas quiser sem pagar por cada uma',
+                    'Publique uma vez e chegue a 15 plataformas simultaneamente',
+                    'Automatize com API, SDK, CLI e MCP server',
+                    'Suporte humano e documentacao clara em portugues',
+                  ].map((item) => (
+                    <div key={item} className="flex items-start gap-3">
+                      <Check className="w-4 h-4 text-success mt-1 shrink-0" />
+                      <span className="text-sm text-brand-text-secondary">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="text-center md:text-right">
+                <div className="inline-block text-center md:text-left p-6 rounded-2xl bg-brand-elevated/60 border border-brand-border">
+                  <p className="text-xs text-brand-text-secondary uppercase tracking-wider mb-1">ROI medio reportado</p>
+                  <p className="text-4xl md:text-5xl font-black text-brand-accent mb-2">4.5x</p>
+                  <p className="text-sm text-brand-text-secondary">Reducao de tempo de operacao social</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </ScrollReveal>
       </section>
 
-      {/* Footer */}
-      <Footer />
+      {/* CTA */}
+      <section className="py-20 border-t border-brand-border text-center">
+        <ScrollReveal>
+          <div className="max-w-3xl mx-auto px-4">
+            <h2 className="font-display text-3xl md:text-4xl font-black tracking-tight text-brand-text mb-4">
+              Comece gratis. Escalone quando precisar.
+            </h2>
+            <p className="text-brand-text-secondary mb-8">Teste por 14 dias. Cancele com um clique. Sem ligacao.</p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                href="/register"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-brand-accent text-brand-bg font-bold hover:scale-105 transition-transform duration-200 shadow-[0_0_32px_rgba(138,180,248,0.35)]"
+              >
+                Criar conta gratis <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border border-brand-border text-brand-text hover:bg-brand-elevated transition"
+              >
+                Falar com vendas
+              </Link>
+            </div>
+            <p className="text-xs text-brand-text-secondary/60 mt-4 font-mono">Garantia de 7 dias · Sem contrato · Suporte em portugues</p>
+          </div>
+        </ScrollReveal>
+      </section>
 
+      {/* Modal de confirmacao do plano */}
       {selectedPlan && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedPlan(null)}>
-          <div className="w-full max-w-md p-8 rounded-2xl bg-brand-surface border border-brand-border" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center gap-3 mb-6">
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${selectedPlan.popular ? 'bg-brand-accent/20' : 'bg-brand-elevated'}`}>
-                <selectedPlan.icon className={`w-6 h-6 ${selectedPlan.popular ? 'text-brand-accent' : 'text-brand-text-secondary'}`} />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold">{selectedPlan.name}</h3>
-                <p className="text-sm text-brand-text-secondary">{selectedPlan.tagline}</p>
-              </div>
-            </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-3xl bg-brand-surface border border-brand-border p-6 md:p-8 shadow-2xl">
+            <button onClick={handleClose} className="absolute top-4 right-4 p-2 rounded-full hover:bg-brand-elevated text-brand-text-secondary">
+              <X className="w-5 h-5" />
+            </button>
 
-            <div className="mb-6">
-              <div className="flex items-baseline gap-1">
+            <h3 className="text-2xl font-bold mb-1">{selectedPlan.name}</h3>
+            <p className="text-sm text-brand-text-secondary mb-6">{selectedPlan.tagline}</p>
+
+            <div className="mb-6 p-5 rounded-2xl bg-brand-elevated border border-brand-border">
+              <div className="flex items-baseline gap-2">
                 <span className="text-4xl font-bold">{formatPrice(selectedPlan)}</span>
-                <span className="text-brand-text-secondary text-sm">{formatPeriod(selectedPlan)}</span>
+                <span className="text-brand-text-secondary">{formatPeriod(selectedPlan)}</span>
               </div>
-              <p className="text-xs text-brand-text-secondary mt-1">por organizacao</p>
+              <p className="text-xs text-brand-text-secondary mt-1">por organizacao · 14 dias gratis · 7 dias de garantia</p>
             </div>
 
-            <div className="space-y-2 mb-6 max-h-60 overflow-y-auto">
+            <ul className="space-y-2.5 mb-6 text-sm">
               {selectedPlan.features.map((f) => (
-                <div key={f.label} className="flex items-center justify-between text-sm">
+                <li key={f.label} className="flex items-center justify-between">
                   <span className="text-brand-text-secondary">{f.label}</span>
                   {typeof f.value === 'boolean' ? (
                     f.value ? <Check className="w-4 h-4 text-success" /> : <X className="w-4 h-4 text-error" />
                   ) : (
-                    <span className="font-medium text-brand-text">{f.value}</span>
+                    <span className="font-semibold text-brand-text whitespace-nowrap" title={f.full || String(f.value)}>{f.value}</span>
                   )}
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
 
             <div className="flex gap-3">
-              <button
-                onClick={() => setSelectedPlan(null)}
-                className="flex-1 px-4 py-3 rounded-xl border border-brand-border text-brand-text hover:bg-brand-elevated transition"
-              >
-                Fechar
+              <button onClick={handleClose} className="flex-1 px-4 py-3 rounded-xl border border-brand-border text-brand-text hover:bg-brand-elevated transition">
+                Voltar
               </button>
-              <button
-                onClick={() => startCheckout(selectedPlan)}
-                disabled={loading}
-                className={`flex-1 px-4 py-3 rounded-xl font-semibold transition ${
-                  selectedPlan.popular
-                    ? 'bg-brand-accent text-brand-bg hover:bg-brand-accent-hover'
-                    : 'bg-brand-elevated border border-brand-border text-brand-text hover:bg-brand-border'
-                }`}
-              >
-                {selectedPlan.id === 'free' ? 'Comecar gratis' : 'Pagar com Mercado Pago'}
+              <button onClick={handleContinue} disabled={loading} className="flex-1 px-4 py-3 rounded-xl bg-brand-accent text-brand-bg font-semibold hover:scale-105 transition disabled:opacity-50">
+                {loading ? 'Processando...' : selectedPlan.id === 'free' ? 'Criar conta gratis' : 'Continuar'}
               </button>
             </div>
           </div>
         </div>
       )}
+
+      <Footer />
     </main>
   );
 }
