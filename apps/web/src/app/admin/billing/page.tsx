@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { Search, Loader2, Filter, Eye, CreditCard, Calendar, TrendingUp, Users, AlertTriangle, Ban } from 'lucide-react';
+import { Search, Loader2, Filter, Eye, CreditCard, Calendar, TrendingUp, Users, AlertTriangle, Ban, DollarSign, Repeat, UserCheck, Activity } from 'lucide-react';
+import { SpotlightCard } from '@/components/SpotlightCard';
 
 interface Subscription {
   id: string;
@@ -25,6 +26,10 @@ interface Stats {
   canceled: number;
   total_subscriptions: number;
   by_plan: Record<string, { name: string; count: number; revenue: number }>;
+  monthly_revenue?: { month: string; revenue: number }[];
+  churn_rate?: number;
+  new_subscriptions?: { month: string; count: number }[];
+  canceled_by_month?: { month: string; count: number }[];
 }
 
 const STATUSES = ['all', 'active', 'past_due', 'canceled', 'trialing', 'paused'];
@@ -67,6 +72,62 @@ export default function AdminBillingPage() {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(cents / 100);
   }
 
+  // KPIs calculados no frontend se a API não retornar
+  const kpis = useMemo(() => {
+    const mrr = stats?.mrr || 0;
+    const arr = mrr * 12;
+    const activeCount = stats?.active_subscriptions || 0;
+    const canceledCount = stats?.canceled || 0;
+    const totalCount = stats?.total_subscriptions || 0;
+    const totalRev = stats?.total_revenue || 0;
+    const arpu = activeCount > 0 ? totalRev / activeCount : 0;
+    const ltv = arpu * 12; // estimativa simples: ARPU * 12 meses
+    const churnRate = totalCount > 0 ? (canceledCount / totalCount) * 100 : 0;
+    return { mrr, arr, arpu, ltv, churnRate };
+  }, [stats]);
+
+  // Top 5 planos por receita
+  const topPlans = useMemo(() => {
+    return Object.entries(stats?.by_plan || {})
+      .map(([slug, p]) => ({ slug, ...p }))
+      .sort((a, b) => b.revenue - a.revenue)
+      .slice(0, 5);
+  }, [stats]);
+
+  // Receita mensal (últimos 12 meses) — usa dados da API ou gera placeholder
+  const monthlyRevenue = useMemo(() => {
+    if (stats?.monthly_revenue && stats.monthly_revenue.length > 0) {
+      return stats.monthly_revenue.slice(-12);
+    }
+    // Placeholder com últimos 12 meses se API não retornar
+    const months: { month: string; revenue: number }[] = [];
+    const now = new Date();
+    for (let i = 11; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      months.push({
+        month: d.toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' }),
+        revenue: 0,
+      });
+    }
+    return months;
+  }, [stats]);
+
+  const maxRevenue = Math.max(...monthlyRevenue.map((m) => m.revenue), 1);
+
+  // Churn vs novas assinaturas
+  const subscriptionFlow = useMemo(() => {
+    const newSubs = stats?.new_subscriptions || [];
+    const canceled = stats?.canceled_by_month || [];
+    const months = monthlyRevenue.map((m) => m.month);
+    return months.map((month, i) => ({
+      month,
+      new: newSubs[i]?.count || 0,
+      canceled: canceled[i]?.count || 0,
+    }));
+  }, [stats, monthlyRevenue]);
+
+  const maxFlow = Math.max(...subscriptionFlow.map((f) => Math.max(f.new, f.canceled)), 1);
+
   if (loading) return <div className="flex items-center justify-center h-96"><Loader2 className="w-8 h-8 animate-spin text-brand-accent" /></div>;
 
   return (
@@ -75,8 +136,15 @@ export default function AdminBillingPage() {
       <p className="text-brand-text-secondary mb-8">Assinaturas, receita recorrente e métricas de billing da plataforma.</p>
       {error && <div className="mb-6 p-4 rounded-xl bg-red-500/10 text-red-400 border border-red-500/30">{error}</div>}
 
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+        <KpiCard icon={TrendingUp} label="MRR" value={formatMoney(kpis.mrr)} accent="success" />
+        <KpiCard icon={DollarSign} label="ARR" value={formatMoney(kpis.arr)} accent="info" />
+        <KpiCard icon={Repeat} label="Churn rate" value={`${kpis.churnRate.toFixed(1)}%`} accent="error" />
+        <KpiCard icon={UserCheck} label="LTV" value={formatMoney(kpis.ltv)} accent="brand" />
+        <KpiCard icon={Activity} label="ARPU" value={formatMoney(kpis.arpu)} accent="warning" />
+      </div>
+
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <Kpi icon={TrendingUp} label="MRR" value={formatMoney(stats?.mrr || 0)} />
         <Kpi icon={CreditCard} label="Receita total" value={formatMoney(stats?.total_revenue || 0)} />
         <Kpi icon={Calendar} label="Receita do mês" value={formatMoney(stats?.revenue_this_month || 0)} />
         <Kpi icon={Users} label="Assinaturas ativas" value={String(stats?.active_subscriptions || 0)} />
@@ -97,6 +165,91 @@ export default function AdminBillingPage() {
         </div>
         {Object.keys(stats?.by_plan || {}).length === 0 && (
           <div className="text-sm text-brand-text-secondary text-center py-4">Nenhuma assinatura ativa registrada ainda.</div>
+        )}
+      </div>
+
+      {/* Revenue analytics — gráfico de receita mensal */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <SpotlightCard className="p-6" spotlightColor="rgba(34, 197, 94, 0.15)">
+          <h2 className="text-lg font-bold mb-1">Receita mensal (últimos 12 meses)</h2>
+          <p className="text-sm text-brand-text-secondary mb-6">Receita total processada por mês.</p>
+          <div className="flex items-end gap-2 h-40" role="img" aria-label="Gráfico de receita mensal dos últimos 12 meses">
+            {monthlyRevenue.map((m, i) => (
+              <div key={i} className="flex-1 flex flex-col items-center gap-1 group relative">
+                <div
+                  className="w-full rounded-t bg-success/70 hover:bg-success transition-colors"
+                  style={{ height: `${(m.revenue / maxRevenue) * 100}%`, minHeight: m.revenue > 0 ? '4px' : '0' }}
+                  title={`${m.month}: ${formatMoney(m.revenue)}`}
+                />
+                <span className="text-[9px] text-brand-text-secondary">{m.month}</span>
+              </div>
+            ))}
+          </div>
+        </SpotlightCard>
+
+        {/* Churn vs novas assinaturas */}
+        <SpotlightCard className="p-6" spotlightColor="rgba(248, 113, 113, 0.15)">
+          <h2 className="text-lg font-bold mb-1">Novas vs canceladas (12 meses)</h2>
+          <p className="text-sm text-brand-text-secondary mb-6">Comparativo de assinaturas novas e canceladas por mês.</p>
+          <div className="flex items-end gap-2 h-40" role="img" aria-label="Gráfico de novas assinaturas vs cancelamentos">
+            {subscriptionFlow.map((f, i) => (
+              <div key={i} className="flex-1 flex flex-col items-center gap-1 group relative">
+                <div className="w-full flex flex-col gap-0.5 items-stretch" style={{ height: '100%' }}>
+                  <div className="flex-1 flex items-end">
+                    <div
+                      className="w-full rounded-t bg-success/60 hover:bg-success transition-colors"
+                      style={{ height: `${(f.new / maxFlow) * 50}%`, minHeight: f.new > 0 ? '3px' : '0' }}
+                      title={`Novas: ${f.new}`}
+                    />
+                  </div>
+                  <div className="flex-1 flex items-start">
+                    <div
+                      className="w-full rounded-b bg-error/60 hover:bg-error transition-colors"
+                      style={{ height: `${(f.canceled / maxFlow) * 50}%`, minHeight: f.canceled > 0 ? '3px' : '0' }}
+                      title={`Canceladas: ${f.canceled}`}
+                    />
+                  </div>
+                </div>
+                <span className="text-[9px] text-brand-text-secondary">{f.month}</span>
+              </div>
+            ))}
+          </div>
+          <div className="flex items-center gap-4 mt-4 text-xs">
+            <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-success/60" /> Novas</span>
+            <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-error/60" /> Canceladas</span>
+          </div>
+        </SpotlightCard>
+      </div>
+
+      {/* Top 5 planos por receita */}
+      <div className="p-6 rounded-2xl bg-brand-surface border border-brand-border mb-8">
+        <h2 className="text-lg font-bold mb-4">Top 5 planos por receita</h2>
+        {topPlans.length > 0 ? (
+          <div className="space-y-3">
+            {topPlans.map((p, i) => {
+              const maxRev = topPlans[0]?.revenue || 1;
+              return (
+                <div key={p.slug} className="flex items-center gap-4">
+                  <span className="text-sm font-bold text-brand-text-secondary w-6">{i + 1}º</span>
+                  <div className="flex-1">
+                    <div className="flex justify-between text-sm mb-1">
+                      <span className="font-medium">{p.name}</span>
+                      <span className="text-brand-accent font-semibold">{formatMoney(p.revenue)}</span>
+                    </div>
+                    <div className="w-full h-2 rounded-full bg-brand-elevated overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-brand-accent transition-all duration-300"
+                        style={{ width: `${(p.revenue / maxRev) * 100}%` }}
+                      />
+                    </div>
+                    <div className="text-xs text-brand-text-secondary mt-0.5">{p.count} assinatura(s)</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="text-sm text-brand-text-secondary text-center py-4">Nenhum dado de receita por plano disponível.</div>
         )}
       </div>
 
@@ -177,5 +330,26 @@ function Kpi({ icon: Icon, label, value }: { icon: any; label: string; value: st
         <div className="text-sm text-brand-text-secondary">{label}</div>
       </div>
     </div>
+  );
+}
+
+function KpiCard({ icon: Icon, label, value, accent }: { icon: any; label: string; value: string; accent: 'success' | 'error' | 'warning' | 'info' | 'brand' }) {
+  const colorMap = {
+    success: 'bg-success/10 text-success',
+    error: 'bg-error/10 text-error',
+    warning: 'bg-warning/10 text-warning',
+    info: 'bg-info/10 text-info',
+    brand: 'bg-brand-accent/10 text-brand-accent',
+  };
+  return (
+    <SpotlightCard className="p-5 flex items-center gap-4" spotlightColor="rgba(138, 180, 248, 0.15)">
+      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${colorMap[accent]}`}>
+        <Icon className="w-6 h-6" />
+      </div>
+      <div>
+        <div className="text-2xl font-bold">{value}</div>
+        <div className="text-sm text-brand-text-secondary">{label}</div>
+      </div>
+    </SpotlightCard>
   );
 }

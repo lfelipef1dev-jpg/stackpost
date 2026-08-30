@@ -1,7 +1,5 @@
 import { getSupabase } from '@/lib/supabase';
-import { execSync } from 'child_process';
-import { writeFileSync, existsSync, mkdirSync } from 'fs';
-import { join } from 'path';
+import { recordBillingEvent } from '@/lib/billing-metering';
 import {
   InstagramAdapter,
   FacebookAdapter,
@@ -39,10 +37,8 @@ const adapters: Record<string, any> = {
 };
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333';
-const UPLOAD_DIR = 'C:/Users/lfeli/Desktop/StackPost/videos';
 
 function buildImageUrl(uploadId: string, platform: string, derivatives: Record<string, string> = {}): string {
-  // Derivativas ja vem com URL completa do Supabase Storage
   if (platform === 'instagram') {
     if (derivatives.instagram_4x5) {
       const d = derivatives.instagram_4x5;
@@ -86,7 +82,14 @@ export async function publishPost(postId: string) {
   const accountsList = accounts || [];
   const derivatives = post.derivatives || {};
 
-  // Buscar URLs e tipos dos uploads no banco
+  // Buscar organization_id do time para metering
+  const { data: teamData } = await supabase
+    .from('teams')
+    .select('organization_id')
+    .eq('id', post.team_id)
+    .single();
+  const orgId = teamData?.organization_id || '';
+
   let uploadData: Record<string, { url: string; mime_type: string }> = {};
   if (post.upload_ids?.length) {
     const { data: uploads } = await supabase
@@ -113,7 +116,6 @@ export async function publishPost(postId: string) {
       let mediaUrls: string[] | undefined;
       let pdfUrl: string | undefined;
       if (post.upload_ids?.length) {
-        // Coletar todas as URLs de upload
         const allUrls: string[] = [];
         for (const uid of post.upload_ids) {
           const data = uploadData[uid];
@@ -131,7 +133,6 @@ export async function publishPost(postId: string) {
         const isVideo = firstData?.mime_type?.startsWith('video/') || firstUploadId.endsWith('.mp4');
         const isPdf = firstData?.mime_type === 'application/pdf' || firstUploadId.endsWith('.pdf');
 
-        // Se tem derivada especifica da plataforma, usar
         if (platform === 'instagram' && derivatives.instagram_4x5 && !isVideo) {
           imageUrl = derivatives.instagram_4x5.startsWith('http') ? derivatives.instagram_4x5 : `${BASE_URL}${derivatives.instagram_4x5}`;
         } else if (platform === 'linkedin' && derivatives.linkedin_1x1 && !isVideo && !isPdf) {
@@ -148,7 +149,6 @@ export async function publishPost(postId: string) {
           imageUrl = firstUploadId.startsWith('http') ? firstUploadId : `${BASE_URL}/uploads/${firstUploadId}`;
         }
 
-        // Multi-midia: se tem mais de 1 upload e nao e video nem PDF
         if (allUrls.length > 1 && !isVideo && !isPdf) {
           mediaUrls = allUrls;
         }
@@ -163,7 +163,6 @@ export async function publishPost(postId: string) {
         videoUrl,
         mediaUrls,
         pdfUrl,
-        // Preservar mediaType original se definido; apenas fallback para CAROUSEL se nao definido
         mediaType: post.media_type || (mediaUrls && mediaUrls.length > 1 ? 'CAROUSEL' : undefined),
       });
 
@@ -179,11 +178,45 @@ export async function publishPost(postId: string) {
         .eq('platform', platform);
       if (ppError) throw ppError;
 
+      // Metering: registra evento de billing após publicação bem-sucedida
+      if (result.success) {
+        const hasLink = /\bhttps?:\/\//i.test(post.content || '');
+        const idempotencyKey = `post_${postId}_${platform}`;
+
+        try {
+          await recordBillingEvent({
+            teamId: post.team_id,
+            orgId,
+            eventType: 'post',
+            platform,
+            units: 1,
+            unitCostCents: 15, // R$ 0,15 por post
+            idempotencyKey,
+            metadata: { post_id: postId, external_id: result.externalId },
+          });
+
+          // Post no X com link: evento adicional 'x_post_link' (R$ 0,20)
+          if (platform === 'x' && hasLink) {
+            await recordBillingEvent({
+              teamId: post.team_id,
+              orgId,
+              eventType: 'x_post_link',
+              platform: 'x',
+              units: 1,
+              unitCostCents: 20,
+              idempotencyKey: `${idempotencyKey}_link`,
+              metadata: { post_id: postId },
+            });
+          }
+        } catch {
+          // Metering não deve bloquear a publicação
+        }
+      }
+
       return { platform, ...result };
     })
   );
 
-  // allSettled garante que falha em uma plataforma nao afeta as outras
   const results = settled.map((s, i) =>
     s.status === 'fulfilled'
       ? s.value
