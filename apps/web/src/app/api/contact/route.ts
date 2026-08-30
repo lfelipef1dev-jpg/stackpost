@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { logger } from '@/lib/logger';
 import { getSupabase } from '@/lib/supabase';
 
-export const contactSchema = z.object({
+const contactSchema = z.object({
   name: z.string().min(2).max(120),
   email: z.string().email().max(200),
   subject: z.string().min(1).max(120),
