@@ -13,6 +13,10 @@ export default function LandingHeader() {
           <a href="#platforms" className="hover:text-brand-text transition-colors">Plataformas</a>
           <a href="/plans" className="hover:text-brand-text transition-colors">Planos</a>
           <a href="/docs" className="hover:text-brand-text transition-colors">Docs</a>
+          <a href="/docs/sdk" className="hover:text-brand-text transition-colors">Quick Start</a>
+          <a href="/docs/api-reference" className="hover:text-brand-text transition-colors">API Reference</a>
+          <a href="/compare" className="hover:text-brand-text transition-colors">Comparar</a>
+          <a href="/roadmap" className="hover:text-brand-text transition-colors">Roadmap</a>
         </nav>
         <div className="flex items-center gap-3">
           <a

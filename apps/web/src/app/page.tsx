@@ -41,9 +41,9 @@ const bentoFeatures = [
 ];
 
 const testimonials = [
-  { name: 'Vlad M.', role: 'CTO, SaaS Platform', country: 'EUA', text: 'Testamos praticamente todas as APIs de redes sociais e esta foi de longe a melhor. Super direta na integração e tem tudo que você precisa em recursos.' },
-  { name: 'Tucker J.', role: 'Agência de Marketing', country: 'EUA', text: 'Perfis ilimitados sem taxas por conta é um diferencial enorme se você gerencia vários clientes ou construiu sobre a API.' },
-  { name: 'Bruna L.', role: 'Social Media Manager', country: 'Brasil', text: 'Finalmente uma ferramenta que entende o mercado brasileiro. Preço em reais, suporte em português, e funciona com todas as plataformas que preciso.' },
+  { name: 'Vlad M.', role: 'CTO · Beta tester', country: 'EUA', text: 'Testamos praticamente todas as APIs de redes sociais e esta foi de longe a melhor. Super direta na integração e tem tudo que você precisa em recursos.' },
+  { name: 'Tucker J.', role: 'Agência · Beta tester', country: 'EUA', text: 'Perfis ilimitados sem taxas por conta é um diferencial enorme se você gerencia vários clientes ou construiu sobre a API.' },
+  { name: 'Bruna L.', role: 'Social Media · Beta tester', country: 'Brasil', text: 'Finalmente uma ferramenta que entende o mercado brasileiro. Preço em reais, suporte em português, e funciona com todas as plataformas que preciso.' },
 ];
 
 export default function Home() {
@@ -192,7 +192,7 @@ export default function Home() {
       <section className="py-20 md:py-28 max-w-6xl mx-auto px-4 md:px-6">
         <ScrollReveal className="text-center mb-12">
           <h2 className="font-display text-3xl md:text-4xl font-black tracking-tight text-brand-text mb-4">
-            Quem já confia
+            Feedback de beta testers
           </h2>
         </ScrollReveal>
 
