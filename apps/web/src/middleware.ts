@@ -3,7 +3,7 @@ import { rateLimit } from '@/lib/rate-limit';
 import { getUserFromToken } from '@/lib/auth';
 import { getSupabase } from '@/lib/supabase';
 
-const PUBLIC_PATHS = ['/', '/login', '/register', '/plans', '/about', '/features', '/pricing', '/contact', '/blog', '/docs', '/privacy', '/terms', '/status', '/changelog', '/partners', '/comparisons', '/glossary', '/brand-kit', '/platforms', '/onboarding'];
+const PUBLIC_PATHS = ['/', '/login', '/register', '/plans', '/about', '/features', '/pricing', '/contact', '/blog', '/docs', '/privacy', '/terms', '/status', '/changelog', '/partners', '/comparisons', '/glossary', '/brand-kit', '/platforms', '/onboarding', '/compare', '/roadmap'];
 const STATIC_PATHS = ['/_next', '/static', '/favicon.ico', '/robots.txt', '/sitemap.xml', '/icon.png', '/logo.png', '/og.png', '/manifest', '/uploads', '/brand', '/banner', '/cases', '/prints', '/videos', '/openapi.json', '/site.webmanifest', '/_headers'];
 
 function isPublic(path: string): boolean {
