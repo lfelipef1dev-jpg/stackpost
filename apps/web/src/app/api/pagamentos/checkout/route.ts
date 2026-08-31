@@ -43,7 +43,8 @@ export async function POST(request: Request) {
 
   const parsed = checkoutSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.issues }, { status: 400 });
+    const msg = parsed.error.issues.map(i => i.message).join(', ');
+    return NextResponse.json({ error: `Dados invalidos: ${msg}` }, { status: 400 });
   }
 
   const plano = (parsed.data.plano || '').toLowerCase().trim();

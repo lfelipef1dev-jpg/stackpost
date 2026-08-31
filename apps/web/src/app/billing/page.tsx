@@ -326,7 +326,7 @@ export default function BillingPage() {
       const res = await fetch('/api/pagamentos/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plano: planId, ciclo: isAnnual ? 'anual' : 'mensal' }),
+        body: JSON.stringify({ plano: planId, interval: isAnnual ? 'yearly' : 'monthly' }),
       });
       const data = await res.json();
       if (res.ok && data.init_point) {
