@@ -54,7 +54,7 @@ export default function DemoPage() {
   };
 
   return (
-    <main className="min-h-screen bg-brand-bg text-brand-text">
+    <main className="min-h-screen bg-brand-bg text-brand-text overflow-x-hidden">
       <LandingHeader />
 
       {/* Hero */}
@@ -168,7 +168,7 @@ export default function DemoPage() {
                     {copied ? 'Copiado' : 'Copiar'}
                   </button>
                 </div>
-                <pre className="p-4 rounded-lg bg-brand-bg border border-brand-border overflow-x-auto text-xs font-mono text-brand-text-secondary">
+                <pre className="p-4 rounded-lg bg-brand-bg border border-brand-border overflow-x-auto text-xs font-mono text-brand-text-secondary max-w-full">
                   <code>{jsonPayload}</code>
                 </pre>
                 <p className="text-xs text-brand-text-secondary mt-3">
@@ -181,7 +181,7 @@ export default function DemoPage() {
                 <h3 className="font-bold mb-4 text-sm uppercase tracking-wider text-brand-text-secondary">
                   Exemplo curl
                 </h3>
-                <pre className="p-4 rounded-lg bg-brand-bg border border-brand-border overflow-x-auto text-xs font-mono text-brand-text-secondary">
+                <pre className="p-4 rounded-lg bg-brand-bg border border-brand-border overflow-x-auto text-xs font-mono text-brand-text-secondary max-w-full">
                   <code>{`curl -X POST https://stackpost.expostacker.com.br/api/posts \\
   -H "Authorization: Bearer sk_live_..." \\
   -H "Content-Type: application/json" \\

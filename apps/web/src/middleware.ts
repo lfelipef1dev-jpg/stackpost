@@ -15,6 +15,8 @@ function isPublic(path: string): boolean {
   if (/-api$/.test(path) || /-alternative$/.test(path)) return true;
   // Paginas de migracao
   if (path.startsWith('/migrate-from-')) return true;
+  // Paginas SEO com sufixo -for-*
+  if (/-api-for-/.test(path)) return true;
   return false;
 }
 
