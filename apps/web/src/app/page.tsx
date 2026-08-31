@@ -83,7 +83,7 @@ export default function Home() {
           <div className="max-w-3xl mx-auto">
             <FadeIn delay={0.12}>
               <p className="text-base md:text-lg text-brand-text-secondary max-w-2xl mx-auto mb-6 leading-relaxed mt-6">
-                Publique, agende, analise e automatize em 15 plataformas com uma única API. Sem implementar 15 fluxos OAuth, sem manter integrações, sem pagar por conta.
+                Elimine meses de engenharia integrando redes sociais no seu produto. Uma API, 15 plataformas, sem manter OAuth, retry nem rate limits. Pague pelo uso, nao por conta.
               </p>
             </FadeIn>
 
@@ -167,7 +167,7 @@ export default function Home() {
               Por que escolher o StackPost
             </h2>
             <p className="text-brand-text-secondary max-w-2xl mx-auto">
-              Diferenciais que nenhuma outra API de redes sociais oferece no mesmo preço.
+              Recursos de infraestrutura pensados para producao.
             </p>
           </ScrollReveal>
 
