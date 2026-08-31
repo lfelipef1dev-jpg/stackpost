@@ -1,125 +1,145 @@
-﻿import Link from 'next/link';
-import type { Metadata } from 'next';
-import { Sparkles, ArrowRight, Rocket } from 'lucide-react';
-import { FadeIn, ScrollReveal } from '@/components/animations';
+﻿import type { Metadata } from 'next';
+import Link from 'next/link';
+import { ArrowRight, Plus, Wrench, Zap } from 'lucide-react';
+import { ScrollReveal } from '@/components/animations';
+import { JsonLd, serviceSchema } from '@/components/JsonLd';
+import LandingHeader from '@/components/LandingHeader';
 import Footer from '@/components/Footer';
-import { Breadcrumb } from '@/components/Breadcrumb';
 
 export const metadata: Metadata = {
-  title: 'Changelog — Atualizações do StackPost',
-  description:
-    'Histórico de atualizações do StackPost: novas plataformas, endpoints, recursos e correções.',
+  title: 'Changelog - StackPost',
+  description: 'Historico de atualizacoes do StackPost. Novas funcionalidades, correcoes e melhorias.',
   alternates: { canonical: '/changelog' },
 };
 
-const releases = [
+const jsonLd = serviceSchema('StackPost Changelog', 'Historico de atualizacoes.', '/changelog');
+
+type Entry = {
+  type: 'feature' | 'fix' | 'improvement';
+  text: string;
+};
+
+type Release = {
+  version: string;
+  date: string;
+  entries: Entry[];
+};
+
+const releases: Release[] = [
   {
-    version: 'v1.0.0',
-    date: '2026-08-26',
-    changes: [
-      'Lançamento inicial',
-      '15 plataformas suportadas',
-      'API REST com 114 endpoints',
-      'MCP server para agentes de IA',
-      'Multi-usuário com RBAC',
-      'Analytics com histórico ilimitado',
+    version: 'Agosto 2026',
+    date: '2026-08-31',
+    entries: [
+      { type: 'feature', text: 'Login OAuth com Google e Discord direto pelo StackPost' },
+      { type: 'feature', text: 'Landing pages SEO por plataforma (Instagram, Facebook, LinkedIn, Discord)' },
+      { type: 'feature', text: 'Pagina de comparacao com concorrentes' },
+      { type: 'feature', text: 'Roadmap publico' },
+      { type: 'feature', text: 'Status page e Changelog' },
+      { type: 'fix', text: 'postType (POST/REEL/STORY) agora persistido no banco' },
+      { type: 'fix', text: 'Discord webhook adapter corrigido (le platform_metadata)' },
+      { type: 'fix', text: 'NEXT_PUBLIC_API_URL adicionado ao Cloudflare Worker' },
+      { type: 'fix', text: 'Cookie SameSite=Lax para OAuth redirect funcionar' },
+      { type: 'improvement', text: 'Header com Docs, Quick Start, API Reference, Comparar e Roadmap' },
+      { type: 'improvement', text: 'Depoimentos marcados como beta testers' },
+      { type: 'improvement', text: 'Hero reescrito: infraestrutura social > features' },
     ],
   },
   {
-    version: 'v0.9.0',
-    date: '2026-08-20',
-    changes: [
-      'Adição de Bluesky e Mastodon',
-      'Protocolo de upload tus',
-      'Cursor pagination em todos os endpoints',
-      'Replay de webhooks',
+    version: 'Julho 2026',
+    date: '2026-07-15',
+    entries: [
+      { type: 'feature', text: 'MCP server para Claude, Cursor e AI agents' },
+      { type: 'feature', text: 'CLI @stackpost/cli' },
+      { type: 'feature', text: 'SDK TypeScript, Python e Go gerados de OpenAPI 3.1' },
+      { type: 'feature', text: 'Comment to DM no Instagram e Facebook' },
+      { type: 'feature', text: 'A/B testing de postagens' },
+      { type: 'improvement', text: 'Analytics com comparacao de periodos' },
+      { type: 'improvement', text: 'Upload TUS e URL import' },
     ],
   },
   {
-    version: 'v0.8.0',
-    date: '2026-08-15',
-    changes: [
-      'A/B testing de publicações',
-      'Melhor horário para postar com ML',
-      'Reconexão automática de contas',
-      'Fluxo de aprovação',
-    ],
-  },
-  {
-    version: 'v0.7.0',
-    date: '2026-08-10',
-    changes: [
-      'Legendas com IA via Nexus IA',
-      'Sugestões de hashtags',
-      'Cross-post adaptativo',
-      'SSE em tempo real',
-    ],
-  },
-  {
-    version: 'v0.6.0',
-    date: '2026-08-05',
-    changes: [
-      'API de comentários em 11 plataformas',
-      'Importação de histórico de publicações',
-      'Importação em massa via CSV',
-      'Importação de avaliações',
-    ],
-  },
-  {
-    version: 'v0.5.0',
-    date: '2026-07-28',
-    changes: [
-      '9 plataformas em funcionamento',
-      'Analytics com métricas normalizadas',
-      'Analytics bruto por plataforma',
+    version: 'Junho 2026',
+    date: '2026-06-01',
+    entries: [
+      { type: 'feature', text: 'Multi-tenant com RBAC (Owner, Admin, Editor, Viewer)' },
+      { type: 'feature', text: 'Webhooks com HMAC, retry e replay' },
+      { type: 'feature', text: 'Approval workflow (Draft -> Review -> Approved -> Scheduled)' },
+      { type: 'feature', text: 'Best-time ML para agendamento' },
+      { type: 'feature', text: 'Primeiro comentario automatico' },
+      { type: 'improvement', text: '15 plataformas suportadas' },
+      { type: 'improvement', text: '114 endpoints REST' },
     ],
   },
 ];
 
+function EntryIcon({ type }: { type: Entry['type'] }) {
+  if (type === 'feature') return <Plus className="w-4 h-4 text-success flex-shrink-0" />;
+  if (type === 'fix') return <Wrench className="w-4 h-4 text-brand-accent flex-shrink-0" />;
+  return <Zap className="w-4 h-4 text-warning flex-shrink-0" />;
+}
+
+function EntryLabel({ type }: { type: Entry['type'] }) {
+  const labels: Record<string, string> = {
+    feature: 'Novo',
+    fix: 'Correcao',
+    improvement: 'Melhoria',
+  };
+  const colors: Record<string, string> = {
+    feature: 'text-success',
+    fix: 'text-brand-accent',
+    improvement: 'text-warning',
+  };
+  return <span className={`text-xs font-bold uppercase ${colors[type]}`}>{labels[type]}</span>;
+}
+
 export default function ChangelogPage() {
   return (
     <main className="min-h-screen bg-brand-bg text-brand-text">
-      <Breadcrumb items={[{ name: 'Home', path: '/' }, { name: 'Changelog', path: '/changelog' }]} />
-      <section className="relative pt-32 pb-16 px-4 overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-brand-accent/10 rounded-full blur-[120px]" />
-        </div>
-        <div className="max-w-3xl mx-auto relative">
-          <FadeIn>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-brand-accent/30 bg-brand-accent/8 mb-6">
-              <Rocket className="w-3.5 h-3.5 text-brand-accent" />
-              <span className="text-xs font-mono text-brand-accent">Changelog</span>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">Changelog</h1>
-            <p className="text-lg text-brand-text-secondary">
-              Histórico de atualizações do StackPost.
-            </p>
-          </FadeIn>
-        </div>
+      <JsonLd data={jsonLd} />
+      <LandingHeader />
+
+      <section className="pt-24 pb-12 max-w-3xl mx-auto px-4 md:px-6">
+        <ScrollReveal>
+          <h1 className="font-display text-3xl md:text-4xl font-black tracking-tight mb-2">Changelog</h1>
+          <p className="text-brand-text-secondary mb-8">O que mudou no StackPost. Atualizado a cada release.</p>
+        </ScrollReveal>
       </section>
 
-      <section className="max-w-3xl mx-auto px-4 pb-20">
-        <div className="space-y-8">
-          {releases.map((rel, i) => (
-            <ScrollReveal key={rel.version} delay={i * 0.05}>
-              <div className="relative pl-8 border-l-2 border-brand-border">
-                <div className="absolute -left-[7px] top-1 w-3 h-3 rounded-full bg-brand-accent" />
-                <div className="flex items-center gap-3 mb-3">
-                  <h2 className="text-xl font-bold">{rel.version}</h2>
-                  <span className="text-xs text-brand-text-secondary font-mono">{rel.date}</span>
+      <section className="max-w-3xl mx-auto px-4 md:px-6 pb-20">
+        <div className="space-y-12">
+          {releases.map((release) => (
+            <ScrollReveal key={release.version}>
+              <div className="border-l-2 border-brand-border pl-6">
+                <div className="flex items-baseline gap-3 mb-4">
+                  <h2 className="text-xl font-bold">{release.version}</h2>
+                  <span className="text-sm text-brand-text-secondary">{release.date}</span>
                 </div>
-                <ul className="space-y-1.5">
-                  {rel.changes.map((c, idx) => (
-                    <li key={`${rel.version}-${idx}`} className="text-sm text-brand-text-secondary flex items-start gap-2">
-                      <span className="text-brand-accent mt-0.5">-</span>
-                      {c}
-                    </li>
+                <div className="space-y-3">
+                  {release.entries.map((entry, i) => (
+                    <div key={i} className="flex items-start gap-3">
+                      <EntryIcon type={entry.type} />
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <EntryLabel type={entry.type} />
+                        </div>
+                        <p className="text-sm text-brand-text">{entry.text}</p>
+                      </div>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
             </ScrollReveal>
           ))}
         </div>
+
+        <ScrollReveal className="mt-12">
+          <Link
+            href="/roadmap"
+            className="inline-flex items-center gap-2 text-brand-accent hover:underline"
+          >
+            Ver roadmap <ArrowRight className="w-4 h-4" />
+          </Link>
+        </ScrollReveal>
       </section>
 
       <Footer />

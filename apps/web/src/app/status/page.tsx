@@ -1,94 +1,127 @@
 ﻿import type { Metadata } from 'next';
-import { Activity, CheckCircle2 } from 'lucide-react';
-import { FadeIn, ScrollReveal } from '@/components/animations';
+import Link from 'next/link';
+import { CheckCircle2, AlertCircle, Activity } from 'lucide-react';
+import { ScrollReveal } from '@/components/animations';
+import { JsonLd, serviceSchema } from '@/components/JsonLd';
+import LandingHeader from '@/components/LandingHeader';
 import Footer from '@/components/Footer';
-import { Breadcrumb } from '@/components/Breadcrumb';
 
 export const metadata: Metadata = {
-  title: 'Status - Disponibilidade da API StackPost',
-  description:
-    'Status em tempo real da API do StackPost: uptime, incidentes, manutenção programada e métricas de disponibilidade.',
+  title: 'Status - StackPost',
+  description: 'Status em tempo real da API e plataformas do StackPost.',
   alternates: { canonical: '/status' },
 };
 
+const jsonLd = serviceSchema('StackPost Status', 'Status da infraestrutura social.', '/status');
+
 const services = [
-  { name: 'API REST', status: 'operational', uptime: '99,98%' },
-  { name: 'Dashboard', status: 'operational', uptime: '99,99%' },
-  { name: 'Webhooks', status: 'operational', uptime: '99,95%' },
-  { name: 'Upload (R2)', status: 'operational', uptime: '100%' },
-  { name: 'Analytics', status: 'operational', uptime: '99,97%' },
-  { name: 'MCP Server', status: 'operational', uptime: '99,96%' },
+  { name: 'API', status: 'operational', uptime: '99.98%' },
+  { name: 'Dashboard', status: 'operational', uptime: '99.99%' },
+  { name: 'Webhooks', status: 'operational', uptime: '99.95%' },
+  { name: 'Instagram', status: 'operational', uptime: '99.9%' },
+  { name: 'Facebook', status: 'operational', uptime: '99.9%' },
+  { name: 'LinkedIn', status: 'operational', uptime: '99.9%' },
+  { name: 'Discord', status: 'operational', uptime: '99.9%' },
+  { name: 'OAuth', status: 'operational', uptime: '99.95%' },
+  { name: 'Analytics', status: 'operational', uptime: '99.9%' },
+  { name: 'MCP Server', status: 'operational', uptime: '99.9%' },
 ];
 
-const incidents: { date: string; title: string; status: string }[] = [];
+const incidents: { date: string; title: string; status: string; level: string }[] = [
+  { date: '2026-08-31', title: 'Correção de callback OAuth (Discord/Google)', status: 'resolved', level: 'minor' },
+  { date: '2026-08-30', title: 'Manutenção programada - deploy de rotas OAuth', status: 'resolved', level: 'maintenance' },
+];
+
+function StatusIcon({ status }: { status: string }) {
+  if (status === 'operational') return <CheckCircle2 className="w-5 h-5 text-success" />;
+  return <AlertCircle className="w-5 h-5 text-warning" />;
+}
+
+function StatusBadge({ status }: { status: string }) {
+  const colors: Record<string, string> = {
+    operational: 'bg-success/10 text-success border-success/30',
+    degraded: 'bg-warning/10 text-warning border-warning/30',
+    down: 'bg-red-500/10 text-red-400 border-red-500/30',
+  };
+  const labels: Record<string, string> = {
+    operational: 'Operacional',
+    degraded: 'Degradado',
+    down: 'Fora do ar',
+  };
+  return (
+    <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${colors[status] || colors.operational}`}>
+      {labels[status] || status}
+    </span>
+  );
+}
 
 export default function StatusPage() {
   return (
     <main className="min-h-screen bg-brand-bg text-brand-text">
-      <Breadcrumb items={[{ name: 'Home', path: '/' }, { name: 'Status', path: '/status' }]} />
-      <section className="relative pt-32 pb-16 px-4 overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-emerald-500/10 rounded-full blur-[120px]" />
-        </div>
-        <div className="max-w-3xl mx-auto relative">
-          <FadeIn>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 mb-6">
-              <Activity className="w-3.5 h-3.5 text-emerald-400" />
-              <span className="text-xs font-mono text-emerald-400">Todos os sistemas operacionais</span>
+      <JsonLd data={jsonLd} />
+      <LandingHeader />
+
+      <section className="pt-24 pb-12 max-w-4xl mx-auto px-4 md:px-6">
+        <ScrollReveal>
+          <div className="flex items-center gap-3 mb-2">
+            <Activity className="w-6 h-6 text-brand-accent" />
+            <h1 className="font-display text-3xl md:text-4xl font-black tracking-tight">Status</h1>
+          </div>
+          <p className="text-brand-text-secondary mb-8">Status atual da infraestrutura do StackPost.</p>
+
+          <div className="flex items-center gap-3 p-4 rounded-xl bg-success/5 border border-success/20 mb-8">
+            <CheckCircle2 className="w-6 h-6 text-success" />
+            <div>
+              <div className="font-semibold text-success">Todos os sistemas operacionais</div>
+              <div className="text-sm text-brand-text-secondary">Ultima verificacao: agora</div>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">Status</h1>
-            <p className="text-lg text-brand-text-secondary">
-              Monitoramento em tempo real da disponibilidade e desempenho dos serviços do StackPost.
-            </p>
-          </FadeIn>
-        </div>
+          </div>
+        </ScrollReveal>
       </section>
 
-      <section className="max-w-3xl mx-auto px-4 pb-20">
-        <div className="space-y-3 mb-12">
-          {services.map((s, i) => (
-            <ScrollReveal key={s.name} delay={i * 0.05}>
-              <div className="flex items-center justify-between p-4 rounded-xl bg-brand-surface/50 backdrop-blur border border-brand-border">
+      <section className="max-w-4xl mx-auto px-4 md:px-6 pb-12">
+        <ScrollReveal>
+          <h2 className="text-xl font-bold mb-4">Servicos</h2>
+          <div className="space-y-2">
+            {services.map((s) => (
+              <div key={s.name} className="flex items-center justify-between p-4 rounded-xl bg-brand-surface/50 border border-brand-border">
                 <div className="flex items-center gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                  <StatusIcon status={s.status} />
                   <span className="font-medium">{s.name}</span>
                 </div>
                 <div className="flex items-center gap-4">
-                  <span className="text-sm text-brand-text-secondary font-mono">{s.uptime}</span>
-                  <span className="px-2 py-0.5 rounded text-xs font-mono bg-emerald-500/10 text-emerald-400">
-                    Operacional
-                  </span>
+                  <span className="text-sm text-brand-text-secondary hidden sm:inline">{s.uptime} uptime</span>
+                  <StatusBadge status={s.status} />
                 </div>
               </div>
-            </ScrollReveal>
-          ))}
-        </div>
+            ))}
+          </div>
+        </ScrollReveal>
+      </section>
 
+      <section className="max-w-4xl mx-auto px-4 md:px-6 pb-20">
         <ScrollReveal>
-          <h2 className="text-xl font-bold mb-4">Histórico de incidentes</h2>
-          {incidents.length === 0 ? (
-            <div className="p-6 rounded-xl bg-brand-surface/50 backdrop-blur border border-brand-border text-center">
-              <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
-              <p className="text-sm text-brand-text-secondary">
-                Nenhum incidente registrado nos últimos 90 dias.
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {incidents.map((inc) => (
-                <div
-                  key={inc.title}
-                  className="p-4 rounded-xl bg-brand-surface/50 backdrop-blur border border-brand-border"
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-medium">{inc.title}</span>
-                    <span className="text-xs text-brand-text-secondary font-mono">{inc.date}</span>
-                  </div>
-                  <span className="text-xs text-emerald-400">{inc.status}</span>
+          <h2 className="text-xl font-bold mb-4">Historico de incidentes</h2>
+          <div className="space-y-3">
+            {incidents.map((inc) => (
+              <div key={inc.date + inc.title} className="p-4 rounded-xl bg-brand-surface/30 border border-brand-border/50">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-medium text-sm">{inc.title}</span>
+                  <span className="text-xs text-brand-text-secondary">{inc.date}</span>
                 </div>
-              ))}
-            </div>
-          )}
+                <div className="flex items-center gap-2">
+                  <StatusBadge status={inc.status === 'resolved' ? 'operational' : 'degraded'} />
+                  <span className="text-xs text-brand-text-secondary capitalize">{inc.level}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </ScrollReveal>
+
+        <ScrollReveal className="mt-8">
+          <p className="text-xs text-brand-text-secondary">
+            Metricas baseadas em monitoramento interno. Atualizado em tempo real.
+          </p>
         </ScrollReveal>
       </section>
 

@@ -37,7 +37,7 @@ const bentoFeatures = [
   { icon: Bot, title: 'AI caption & hashtags', desc: 'Nexus IA gera variações de caption e hashtags por nicho.', href: '/features' },
   { icon: Webhook, title: 'Webhooks com replay', desc: 'HMAC, retry, replay e eventos em tempo real.', href: '/features' },
   { icon: Shield, title: 'Multi-user RBAC', desc: 'Owner, admin, editor, viewer. Workspaces separados.', href: '/features' },
-  { icon: MessageSquare, title: 'Comentários', desc: 'Leia, responda e importe comentários das principais redes.', href: '/features' },
+  { icon: MessageSquare, title: 'Comment → DM', desc: 'Converta comentários em DM no Instagram e Facebook automaticamente.', href: '/features' },
 ];
 
 const testimonials = [
@@ -73,7 +73,7 @@ export default function Home() {
 
             <FadeIn delay={0.06}>
               <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-black leading-[1.05] tracking-[-0.04em] text-brand-text mt-8 mb-8 text-center md:whitespace-nowrap -translate-x-[2.5cm]">
-                Uma API para <span className="text-brand-accent">todas as redes.</span>
+                A infraestrutura social <span className="text-brand-accent">do seu produto.</span>
               </h1>
             </FadeIn>
           </div>
@@ -83,7 +83,7 @@ export default function Home() {
           <div className="max-w-3xl mx-auto">
             <FadeIn delay={0.12}>
               <p className="text-base md:text-lg text-brand-text-secondary max-w-2xl mx-auto mb-6 leading-relaxed mt-6">
-                Conecte, publique e analise em 15 plataformas com um único endpoint. Pronto para SaaS, agências e AI agents.
+                Publique, agende, analise e automatize em 15 plataformas com uma única API. Sem implementar 15 fluxos OAuth, sem manter integrações, sem pagar por conta.
               </p>
             </FadeIn>
 
@@ -158,6 +158,12 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 md:px-6">
           <ScrollReveal className="text-center mb-12">
             <h2 className="font-display text-3xl md:text-4xl font-black tracking-tight text-brand-text mb-4">
+              O que torna o StackPost diferente
+            </h2>
+            <p className="text-brand-text-secondary max-w-2xl mx-auto">
+              Infraestrutura social completa com custo por uso, sem taxas por conta.
+            </p>
+            <h2 className="font-display text-3xl md:text-4xl font-black tracking-tight text-brand-text mb-4">
               Por que escolher o StackPost
             </h2>
             <p className="text-brand-text-secondary max-w-2xl mx-auto">
@@ -167,7 +173,7 @@ export default function Home() {
 
           <StaggerGroup className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4" stagger={0.03}>
             {[
-              { icon: Layers, title: 'API unificada', desc: 'Um endpoint para 15 plataformas. Sem OAuth, retry e status individuais.' },
+              { icon: Layers, title: 'API unificada', desc: 'Um endpoint para 15 plataformas. Sem implementar 15 fluxos OAuth, retry e status individuais.' },
               { icon: Globe, title: 'Contas ilimitadas', desc: 'Conecte todos os perfis que quiser. Pague pelo uso, não por conta.' },
               { icon: TrendingUp, title: 'Analytics real', desc: 'Post e account analytics com refresh sob demanda e histórico infinito.' },
               { icon: Bot, title: 'Pronto para IA', desc: 'MCP server, AI caption e A/B testing para agentes e produtos de conteúdo.' },
