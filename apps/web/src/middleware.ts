@@ -3,7 +3,7 @@ import { rateLimit } from '@/lib/rate-limit';
 import { getUserFromToken } from '@/lib/auth';
 import { getSupabase } from '@/lib/supabase';
 
-const PUBLIC_PATHS = ['/', '/login', '/register', '/plans', '/about', '/features', '/pricing', '/contact', '/blog', '/docs', '/privacy', '/terms', '/status', '/changelog', '/partners', '/comparisons', '/glossary', '/brand-kit', '/platforms', '/onboarding', '/compare', '/roadmap'];
+const PUBLIC_PATHS = ['/', '/login', '/register', '/plans', '/about', '/features', '/pricing', '/contact', '/blog', '/docs', '/privacy', '/terms', '/status', '/changelog', '/partners', '/comparisons', '/glossary', '/brand-kit', '/platforms', '/onboarding', '/compare', '/roadmap', '/demo', '/build-vs-buy', '/migrate', '/security', '/ai-agents', '/for-saas', '/for-agencies', '/for-enterprise'];
 const STATIC_PATHS = ['/_next', '/static', '/favicon.ico', '/robots.txt', '/sitemap.xml', '/icon.png', '/logo.png', '/og.png', '/manifest', '/uploads', '/brand', '/banner', '/cases', '/prints', '/videos', '/openapi.json', '/site.webmanifest', '/_headers'];
 
 function isPublic(path: string): boolean {
@@ -13,6 +13,8 @@ function isPublic(path: string): boolean {
   if (path.startsWith('/api/pagamentos/webhook')) return true;
   // Paginas publicas de marketing/SEO (terminadas em -api ou -alternative)
   if (/-api$/.test(path) || /-alternative$/.test(path)) return true;
+  // Paginas de migracao
+  if (path.startsWith('/migrate-from-')) return true;
   return false;
 }
 

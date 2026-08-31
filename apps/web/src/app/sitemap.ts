@@ -19,6 +19,7 @@ const staticPages = [
   '/docs/mcp',
   '/docs/webhooks',
   '/docs/oauth',
+  '/docs/api-reference',
   '/about',
   '/contact',
   '/platforms',
@@ -26,6 +27,23 @@ const staticPages = [
   '/comparisons',
   '/terms',
   '/privacy',
+  // Novas paginas comerciais
+  '/compare',
+  '/roadmap',
+  '/demo',
+  '/build-vs-buy',
+  '/migrate',
+  '/migrate-from-ayrshare',
+  '/security',
+  '/ai-agents',
+  '/for-saas',
+  '/for-agencies',
+  '/for-enterprise',
+  // Landing pages por plataforma
+  '/instagram-api',
+  '/facebook-api',
+  '/linkedin-api',
+  '/discord-api',
 ];
 
 const partnerPages = ['/partners/savedtime', '/partners/that-marketing-buddy'];
