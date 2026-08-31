@@ -2,10 +2,8 @@ import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { SignJWT } from 'jose';
-import { requireEnv } from '@/lib/env';
 import { setTokenCookie } from '@/lib/cookies';
 
-const JWT_SECRET = new TextEncoder().encode(requireEnv('JWT_SECRET'));
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3333';
 
 function decodeState(state: string): { redirect: string; nonce: string } | null {
@@ -27,17 +25,14 @@ export async function GET(req: NextRequest) {
   const stateParam = searchParams.get('state');
 
   if (!code) {
-    logger.error('Discord callback: code ausente');
     return NextResponse.redirect(new URL('/login?error=no_code', BASE_URL));
   }
   if (!stateParam) {
-    logger.error('Discord callback: state ausente');
     return NextResponse.redirect(new URL('/login?error=invalid_state', BASE_URL));
   }
 
   const stateData = decodeState(stateParam);
   if (!stateData) {
-    logger.error('Discord callback: state invalido');
     return NextResponse.redirect(new URL('/login?error=invalid_state', BASE_URL));
   }
 
@@ -45,8 +40,13 @@ export async function GET(req: NextRequest) {
 
   const clientId = process.env.DISCORD_CLIENT_ID;
   const clientSecret = process.env.DISCORD_CLIENT_SECRET;
+  const jwtSecret = process.env.JWT_SECRET;
   if (!clientId || !clientSecret) {
-    logger.error('DISCORD_CLIENT_ID ou DISCORD_CLIENT_SECRET nao configurado');
+    logger.error('Discord OAuth: credenciais nao configuradas');
+    return NextResponse.redirect(new URL('/login?error=oauth_config', BASE_URL));
+  }
+  if (!jwtSecret) {
+    logger.error('Discord OAuth: JWT_SECRET nao configurado');
     return NextResponse.redirect(new URL('/login?error=oauth_config', BASE_URL));
   }
 
@@ -68,7 +68,7 @@ export async function GET(req: NextRequest) {
     const tokenData = await tokenRes.json();
     if (!tokenRes.ok) {
       logger.error('Discord token exchange failed:', JSON.stringify(tokenData));
-      throw new Error(tokenData.error_description || tokenData.error || 'Discord token exchange failed');
+      return NextResponse.redirect(new URL(`/login?error=oauth_failed&reason=${encodeURIComponent(tokenData.error || 'token_exchange')}`, BASE_URL));
     }
 
     // 2. Pegar dados do usuario
@@ -76,13 +76,9 @@ export async function GET(req: NextRequest) {
       headers: { Authorization: `Bearer ${tokenData.access_token}` },
     });
     const userInfo = await userRes.json();
-    if (!userRes.ok) {
+    if (!userRes.ok || !userInfo.email) {
       logger.error('Discord userinfo failed:', JSON.stringify(userInfo));
-      throw new Error('Falha ao obter dados do usuario Discord');
-    }
-    if (!userInfo.email) {
-      logger.error('Discord user sem email:', JSON.stringify(userInfo));
-      throw new Error('Conta Discord sem email verificado');
+      return NextResponse.redirect(new URL('/login?error=oauth_failed&reason=no_email', BASE_URL));
     }
 
     const email = userInfo.email;
@@ -91,9 +87,7 @@ export async function GET(req: NextRequest) {
       ? `https://cdn.discordapp.com/avatars/${userInfo.id}/${userInfo.avatar}.png`
       : null;
 
-    logger.info(`Discord OAuth: usuario ${email} autenticado`);
-
-    // 3. Buscar ou criar usuario no StackPost
+    // 3. Buscar ou criar usuario
     const supabase = getSupabase();
 
     let { data: user } = await supabase
@@ -103,7 +97,6 @@ export async function GET(req: NextRequest) {
       .single();
 
     if (!user) {
-      // Criar organizacao + team + usuario (mesmo padrao do register)
       const { data: orgRow, error: orgError } = await supabase
         .from('organizations')
         .insert({ name: `${name} Org`, plan: 'free' })
@@ -111,7 +104,7 @@ export async function GET(req: NextRequest) {
         .single();
       if (orgError || !orgRow) {
         logger.error('Erro ao criar organizacao:', orgError?.message);
-        throw new Error('Erro ao criar organizacao');
+        return NextResponse.redirect(new URL('/login?error=oauth_failed&reason=org_create', BASE_URL));
       }
 
       const { data: teamRow, error: teamError } = await supabase
@@ -121,7 +114,7 @@ export async function GET(req: NextRequest) {
         .single();
       if (teamError || !teamRow) {
         logger.error('Erro ao criar team:', teamError?.message);
-        throw new Error('Erro ao criar team');
+        return NextResponse.redirect(new URL('/login?error=oauth_failed&reason=team_create', BASE_URL));
       }
 
       const { data: newUser, error: userError } = await supabase
@@ -139,7 +132,7 @@ export async function GET(req: NextRequest) {
         .single();
       if (userError || !newUser) {
         logger.error('Erro ao criar usuario:', userError?.message);
-        throw new Error('Erro ao criar usuario');
+        return NextResponse.redirect(new URL('/login?error=oauth_failed&reason=user_create', BASE_URL));
       }
 
       user = newUser;
@@ -147,17 +140,11 @@ export async function GET(req: NextRequest) {
       await supabase
         .from('team_members')
         .insert({ team_id: teamRow.id, user_id: user.id, role: 'admin' });
-
-      logger.info(`Discord OAuth: novo usuario criado ${email}`);
-    } else {
-      // Atualizar avatar se tiver
-      if (avatar) {
-        await supabase.from('users').update({ avatar_url: avatar }).eq('id', user.id);
-      }
-      logger.info(`Discord OAuth: usuario existente ${email}`);
+    } else if (avatar) {
+      await supabase.from('users').update({ avatar_url: avatar }).eq('id', user.id);
     }
 
-    // 4. Emitir JWT (mesmo padrao do login/register)
+    // 4. Emitir JWT
     const token = await new SignJWT({
       sub: user.id,
       email: user.email,
@@ -167,7 +154,7 @@ export async function GET(req: NextRequest) {
     })
       .setProtectedHeader({ alg: 'HS256' })
       .setExpirationTime('7d')
-      .sign(JWT_SECRET);
+      .sign(new TextEncoder().encode(jwtSecret));
 
     // 5. Setar cookie e redirecionar
     const res = NextResponse.redirect(new URL(safeRedirect, BASE_URL));
