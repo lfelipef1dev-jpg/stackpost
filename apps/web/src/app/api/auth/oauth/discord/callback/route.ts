@@ -8,22 +8,40 @@ import { setTokenCookie } from '@/lib/cookies';
 const JWT_SECRET = new TextEncoder().encode(requireEnv('JWT_SECRET'));
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3333';
 
+function decodeState(state: string): { redirect: string; nonce: string } | null {
+  try {
+    const json = Buffer.from(state, 'base64url').toString('utf-8');
+    const parsed = JSON.parse(json);
+    if (typeof parsed.redirect === 'string' && typeof parsed.nonce === 'string') {
+      return parsed;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const code = searchParams.get('code');
-  const state = searchParams.get('state');
-  const storedState = req.cookies.get('oauth_state_auth')?.value;
+  const stateParam = searchParams.get('state');
 
   if (!code) {
+    logger.error('Discord callback: code ausente');
     return NextResponse.redirect(new URL('/login?error=no_code', BASE_URL));
   }
-  if (!state || state !== storedState) {
+  if (!stateParam) {
+    logger.error('Discord callback: state ausente');
     return NextResponse.redirect(new URL('/login?error=invalid_state', BASE_URL));
   }
 
-  // Extrair redirect do state (formato: provider:redirect:random)
-  const redirect = state.split(':')[1] || '/dashboard';
-  const safeRedirect = redirect.startsWith('/') ? redirect : '/dashboard';
+  const stateData = decodeState(stateParam);
+  if (!stateData) {
+    logger.error('Discord callback: state invalido');
+    return NextResponse.redirect(new URL('/login?error=invalid_state', BASE_URL));
+  }
+
+  const safeRedirect = stateData.redirect.startsWith('/') ? stateData.redirect : '/dashboard';
 
   const clientId = process.env.DISCORD_CLIENT_ID;
   const clientSecret = process.env.DISCORD_CLIENT_SECRET;
@@ -49,6 +67,7 @@ export async function GET(req: NextRequest) {
     });
     const tokenData = await tokenRes.json();
     if (!tokenRes.ok) {
+      logger.error('Discord token exchange failed:', tokenData.error_description || tokenData.error);
       throw new Error(tokenData.error_description || 'Discord token exchange failed');
     }
 
@@ -58,6 +77,7 @@ export async function GET(req: NextRequest) {
     });
     const userInfo = await userRes.json();
     if (!userRes.ok || !userInfo.email) {
+      logger.error('Discord userinfo failed:', JSON.stringify(userInfo));
       throw new Error('Falha ao obter email do usuario Discord');
     }
 
@@ -66,6 +86,8 @@ export async function GET(req: NextRequest) {
     const avatar = userInfo.avatar
       ? `https://cdn.discordapp.com/avatars/${userInfo.id}/${userInfo.avatar}.png`
       : null;
+
+    logger.info(`Discord OAuth: usuario ${email} autenticado`);
 
     // 3. Buscar ou criar usuario no StackPost
     const supabase = getSupabase();
@@ -83,14 +105,20 @@ export async function GET(req: NextRequest) {
         .insert({ name: `${name} Org`, plan: 'free' })
         .select('id')
         .single();
-      if (orgError || !orgRow) throw new Error('Erro ao criar organizacao');
+      if (orgError || !orgRow) {
+        logger.error('Erro ao criar organizacao:', orgError?.message);
+        throw new Error('Erro ao criar organizacao');
+      }
 
       const { data: teamRow, error: teamError } = await supabase
         .from('teams')
         .insert({ organization_id: orgRow.id, name: 'Default' })
         .select('id')
         .single();
-      if (teamError || !teamRow) throw new Error('Erro ao criar team');
+      if (teamError || !teamRow) {
+        logger.error('Erro ao criar team:', teamError?.message);
+        throw new Error('Erro ao criar team');
+      }
 
       const { data: newUser, error: userError } = await supabase
         .from('users')
@@ -105,18 +133,24 @@ export async function GET(req: NextRequest) {
         })
         .select('id, team_id, email, name, role')
         .single();
-      if (userError || !newUser) throw new Error('Erro ao criar usuario');
+      if (userError || !newUser) {
+        logger.error('Erro ao criar usuario:', userError?.message);
+        throw new Error('Erro ao criar usuario');
+      }
 
       user = newUser;
 
       await supabase
         .from('team_members')
         .insert({ team_id: teamRow.id, user_id: user.id, role: 'admin' });
+
+      logger.info(`Discord OAuth: novo usuario criado ${email}`);
     } else {
       // Atualizar avatar se tiver
       if (avatar) {
         await supabase.from('users').update({ avatar_url: avatar }).eq('id', user.id);
       }
+      logger.info(`Discord OAuth: usuario existente ${email}`);
     }
 
     // 4. Emitir JWT (mesmo padrao do login/register)
@@ -134,11 +168,9 @@ export async function GET(req: NextRequest) {
     // 5. Setar cookie e redirecionar
     const res = NextResponse.redirect(new URL(safeRedirect, BASE_URL));
     setTokenCookie(req, res, token);
-    // Limpar cookie de state
-    res.cookies.delete('oauth_state_auth');
     return res;
   } catch (err: any) {
-    logger.error('Discord OAuth callback error:', err);
+    logger.error('Discord OAuth callback error:', err?.message || err);
     return NextResponse.redirect(new URL(`/login?error=oauth_failed`, BASE_URL));
   }
 }

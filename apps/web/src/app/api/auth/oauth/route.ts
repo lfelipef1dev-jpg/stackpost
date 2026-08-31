@@ -14,8 +14,11 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Provider invalido' }, { status: 400 });
   }
 
-  // State para protecao CSRF - guardamos no cookie
-  const state = `${provider}:${redirect}:${Math.random().toString(36).slice(2)}`;
+  // State: base64 do JSON {redirect, nonce} — nao depende de cookie cross-site
+  const nonce = Math.random().toString(36).slice(2);
+  const statePayload = JSON.stringify({ redirect, nonce });
+  const state = Buffer.from(statePayload).toString('base64url');
+
   const callbackUrl = `${BASE_URL}/api/auth/oauth/${provider}/callback`;
 
   let authUrl: string;
@@ -53,13 +56,5 @@ export async function GET(req: NextRequest) {
     authUrl = `https://discord.com/api/oauth2/authorize?${params.toString()}`;
   }
 
-  const res = NextResponse.redirect(authUrl);
-  res.cookies.set('oauth_state_auth', state, {
-    httpOnly: true,
-    secure: !BASE_URL.includes('localhost'),
-    sameSite: 'lax',
-    maxAge: 600,
-    path: '/',
-  });
-  return res;
+  return NextResponse.redirect(authUrl);
 }
