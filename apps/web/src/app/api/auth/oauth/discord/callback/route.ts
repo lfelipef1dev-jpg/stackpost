@@ -67,8 +67,8 @@ export async function GET(req: NextRequest) {
     });
     const tokenData = await tokenRes.json();
     if (!tokenRes.ok) {
-      logger.error('Discord token exchange failed:', tokenData.error_description || tokenData.error);
-      throw new Error(tokenData.error_description || 'Discord token exchange failed');
+      logger.error('Discord token exchange failed:', JSON.stringify(tokenData));
+      throw new Error(tokenData.error_description || tokenData.error || 'Discord token exchange failed');
     }
 
     // 2. Pegar dados do usuario
@@ -76,9 +76,13 @@ export async function GET(req: NextRequest) {
       headers: { Authorization: `Bearer ${tokenData.access_token}` },
     });
     const userInfo = await userRes.json();
-    if (!userRes.ok || !userInfo.email) {
+    if (!userRes.ok) {
       logger.error('Discord userinfo failed:', JSON.stringify(userInfo));
-      throw new Error('Falha ao obter email do usuario Discord');
+      throw new Error('Falha ao obter dados do usuario Discord');
+    }
+    if (!userInfo.email) {
+      logger.error('Discord user sem email:', JSON.stringify(userInfo));
+      throw new Error('Conta Discord sem email verificado');
     }
 
     const email = userInfo.email;
@@ -170,7 +174,8 @@ export async function GET(req: NextRequest) {
     setTokenCookie(req, res, token);
     return res;
   } catch (err: any) {
-    logger.error('Discord OAuth callback error:', err?.message || err);
-    return NextResponse.redirect(new URL(`/login?error=oauth_failed`, BASE_URL));
+    const errMsg = err?.message || 'unknown';
+    logger.error('Discord OAuth callback error:', errMsg);
+    return NextResponse.redirect(new URL(`/login?error=oauth_failed&reason=${encodeURIComponent(errMsg)}`, BASE_URL));
   }
 }
