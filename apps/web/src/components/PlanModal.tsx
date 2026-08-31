@@ -9,26 +9,32 @@ const plans = [
     id: 'free',
     name: 'Free',
     price: 0,
-    features: ['1 conta social', '10 posts/mes', 'Agendamento basico'],
+    features: ['3 contas sociais', '50 posts/mes', 'API e SDK'],
   },
   {
-    id: 'pro',
-    name: 'Pro',
+    id: 'starter',
+    name: 'Inicial',
     price: 39,
-    features: ['3 contas sociais', 'Posts ilimitados', 'Analytics basico'],
+    features: ['5 contas sociais', '2.000 posts/mes', '2 usuarios'],
     popular: true,
   },
   {
-    id: 'business',
-    name: 'Business',
-    price: 79,
-    features: ['10 contas sociais', 'AI para captions', '3 membros'],
+    id: 'growth',
+    name: 'Crescimento',
+    price: 89,
+    features: ['20 contas sociais', '8.000 posts/mes', 'AI caption + webhooks'],
   },
   {
-    id: 'enterprise',
-    name: 'Enterprise',
-    price: 199,
-    features: ['50 contas sociais', 'White-label', 'API completa'],
+    id: 'scale',
+    name: 'Escala',
+    price: 197,
+    features: ['Contas ilimitadas', '40.000 posts/mes', 'MCP server + CLI'],
+  },
+  {
+    id: 'business',
+    name: 'Empresarial',
+    price: 497,
+    features: ['Contas ilimitadas', '150.000 posts/mes', 'White label + SLA'],
   },
 ];
 
@@ -37,7 +43,7 @@ export default function PlanModal({ currentPlan, onClose }: { currentPlan: strin
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-      <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl bg-brand-surface border border-brand-border p-6 md:p-8">
+      <div className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-2xl bg-brand-surface border border-brand-border p-6 md:p-8">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-2 rounded-full hover:bg-brand-elevated text-brand-text-secondary"
@@ -48,7 +54,7 @@ export default function PlanModal({ currentPlan, onClose }: { currentPlan: strin
         <h2 className="text-2xl font-bold mb-2">Mudar de plano</h2>
         <p className="text-brand-text-secondary mb-8">Escolha o plano que faz sentido para voce.</p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
           {plans.map((plan) => (
             <div
               key={plan.id}

@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger';
+import { oauth_facebook_callbackQuerySchema } from '@/lib/schemas';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 
@@ -7,6 +9,9 @@ const FACEBOOK_REDIRECT_URI = process.env.FACEBOOK_REDIRECT_URI || 'https://stac
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
+  const queryRaw = Object.fromEntries(searchParams);
+  const parsedQuery = oauth_facebook_callbackQuerySchema.safeParse(queryRaw);
+  if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const code = searchParams.get('code');
   const state = searchParams.get('state') || 'facebook';
 
@@ -129,14 +134,14 @@ export async function GET(req: NextRequest) {
           .from('social_accounts')
           .update(pageAccountData)
           .eq('id', existingPage.id);
-        if (updErr) console.warn(`Erro ao atualizar Page ${page.name}:`, updErr.message);
+        if (updErr) logger.warn(`Erro ao atualizar Page ${page.name}:`, updErr.message);
       } else {
         const { error: insErr } = await supabase.from('social_accounts').insert({
           team_id: resolvedTeamId,
           platform: 'facebook',
           ...pageAccountData,
         });
-        if (insErr) console.warn(`Erro ao inserir Page ${page.name}:`, insErr.message);
+        if (insErr) logger.warn(`Erro ao inserir Page ${page.name}:`, insErr.message);
       }
 
       connectedPages.push(page.name);
@@ -148,7 +153,7 @@ export async function GET(req: NextRequest) {
       `${siteUrl}/accounts?connected=facebook&pages=${pages.length}&names=${pagesParam}`
     );
   } catch (error: any) {
-    console.error('Facebook OAuth error:', error);
+    logger.error('Facebook OAuth error:', error);
     return NextResponse.redirect(`${siteUrl}/accounts?error=${encodeURIComponent(error.message)}`);
   }
 }

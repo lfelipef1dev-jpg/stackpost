@@ -1,8 +1,13 @@
+import { logger } from '@/lib/logger';
+import { oauth_tiktok_callbackQuerySchema } from '@/lib/schemas';
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { exchangeCodeForToken, saveAccount, OAUTH_CONFIGS } from '@/lib/oauth';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
+  const queryRaw = Object.fromEntries(searchParams);
+  const parsedQuery = oauth_tiktok_callbackQuerySchema.safeParse(queryRaw);
+  if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const code = searchParams.get('code');
   const state = searchParams.get('state');
   const storedState = req.cookies.get('oauth_state_tiktok')?.value;
@@ -19,7 +24,7 @@ export async function GET(req: NextRequest) {
     });
     return NextResponse.redirect(new URL('/dashboard?connected=tiktok', req.url));
   } catch (err: any) {
-    console.error('tiktok OAuth error:', err);
+    logger.error('tiktok OAuth error:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

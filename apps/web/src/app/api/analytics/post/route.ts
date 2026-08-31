@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger';
+import { analytics_postQuerySchema } from '@/lib/schemas';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
@@ -8,6 +10,9 @@ export async function GET(req: NextRequest) {
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
+  const queryRaw = Object.fromEntries(searchParams);
+  const parsedQuery = analytics_postQuerySchema.safeParse(queryRaw);
+  if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const postId = searchParams.get('postId');
 
   if (!postId) return NextResponse.json({ error: 'postId obrigatorio' }, { status: 400 });
@@ -53,7 +58,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ postId, totals, byPlatform, snapshots: snapshots || [] });
   } catch (error: any) {
-    console.error('analytics/post error:', error);
+    logger.error('analytics/post error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

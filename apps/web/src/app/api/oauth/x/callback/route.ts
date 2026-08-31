@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger';
+import { oauth_x_callbackQuerySchema } from '@/lib/schemas';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
@@ -6,6 +8,9 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_SITE
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
+  const queryRaw = Object.fromEntries(searchParams);
+  const parsedQuery = oauth_x_callbackQuerySchema.safeParse(queryRaw);
+  if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const code = searchParams.get('code');
   const state = searchParams.get('state');
   const storedState = req.cookies.get('oauth_state_x')?.value;
@@ -84,7 +89,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.redirect(new URL('/dashboard?connected=x', req.url));
   } catch (err: any) {
-    console.error('X OAuth error:', err);
+    logger.error('X OAuth error:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

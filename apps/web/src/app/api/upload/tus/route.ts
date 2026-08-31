@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { requireRole, PERMISSIONS } from '@/lib/rbac';
@@ -139,7 +140,7 @@ export async function PATCH(req: NextRequest) {
       },
     });
   } catch (err: any) {
-    console.error(err);
+    logger.error((err as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

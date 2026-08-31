@@ -1,3 +1,4 @@
+import { oauth_metaQuerySchema } from '@/lib/schemas';
 import { NextRequest, NextResponse } from 'next/server';
 import { getInstagramAuthUrl } from '@/lib/adapters/instagram-api';
 import { getUserFromToken } from '@/lib/auth';

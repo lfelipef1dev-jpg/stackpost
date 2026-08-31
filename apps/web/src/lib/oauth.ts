@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
+import { requireEnv } from './env';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3333';
+const BASE_URL = requireEnv('NEXT_PUBLIC_SITE_URL');
 
 export interface OAuthConfig {
   platform: string;
@@ -79,7 +80,6 @@ export async function saveAccount(
     ? new Date(Date.now() + tokenData.expiresIn * 1000).toISOString()
     : null;
 
-  // Check existing
   const { data: existing } = await supabase
     .from('social_accounts')
     .select('id')
@@ -137,6 +137,16 @@ export const OAUTH_CONFIGS: Record<string, OAuthConfig> = {
     redirectPath: '/api/oauth/youtube/callback',
     extraAuthParams: { access_type: 'offline', prompt: 'consent' },
   },
+  google_business: {
+    platform: 'google_business',
+    authUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
+    tokenUrl: 'https://oauth2.googleapis.com/token',
+    scope: 'https://www.googleapis.com/auth/business.manage',
+    clientIdEnv: 'GOOGLE_CLIENT_ID',
+    clientSecretEnv: 'GOOGLE_CLIENT_SECRET',
+    redirectPath: '/api/oauth/google-business/callback',
+    extraAuthParams: { access_type: 'offline', prompt: 'consent' },
+  },
   pinterest: {
     platform: 'pinterest',
     authUrl: 'https://www.pinterest.com/oauth/',
@@ -182,5 +192,69 @@ export const OAUTH_CONFIGS: Record<string, OAuthConfig> = {
     clientIdEnv: 'META_APP_ID',
     clientSecretEnv: 'META_APP_SECRET',
     redirectPath: '/api/oauth/threads/callback',
+  },
+  instagram: {
+    platform: 'instagram',
+    authUrl: 'https://www.facebook.com/v19.0/dialog/oauth',
+    tokenUrl: 'https://graph.facebook.com/v19.0/oauth/access_token',
+    scope: 'instagram_basic,instagram_content_publish,pages_read_engagement',
+    clientIdEnv: 'IG_APP_ID',
+    clientSecretEnv: 'IG_APP_SECRET',
+    redirectPath: '/api/oauth/instagram/callback',
+  },
+  facebook: {
+    platform: 'facebook',
+    authUrl: 'https://www.facebook.com/v19.0/dialog/oauth',
+    tokenUrl: 'https://graph.facebook.com/v19.0/oauth/access_token',
+    scope: 'pages_manage_posts,pages_read_engagement,pages_show_list',
+    clientIdEnv: 'META_APP_ID',
+    clientSecretEnv: 'META_APP_SECRET',
+    redirectPath: '/api/oauth/facebook/callback',
+  },
+  linkedin: {
+    platform: 'linkedin',
+    authUrl: 'https://www.linkedin.com/oauth/v2/authorization',
+    tokenUrl: 'https://www.linkedin.com/oauth/v2/accessToken',
+    scope: 'r_basicprofile,r_organization_social,w_organization_social,r_organization_social_feed',
+    clientIdEnv: 'LINKEDIN_CLIENT_ID',
+    clientSecretEnv: 'LINKEDIN_CLIENT_SECRET',
+    redirectPath: '/api/oauth/linkedin/callback',
+  },
+  x: {
+    platform: 'x',
+    authUrl: 'https://twitter.com/i/oauth2/authorize',
+    tokenUrl: 'https://api.twitter.com/2/oauth2/token',
+    scope: 'tweet.read tweet.write users.read offline.access',
+    clientIdEnv: 'TWITTER_CLIENT_ID',
+    clientSecretEnv: 'TWITTER_CLIENT_SECRET',
+    redirectPath: '/api/oauth/x/callback',
+    extraAuthParams: { code_challenge: 'challenge', code_challenge_method: 'plain' },
+  },
+  mastodon: {
+    platform: 'mastodon',
+    authUrl: 'https://mastodon.social/oauth/authorize',
+    tokenUrl: 'https://mastodon.social/oauth/token',
+    scope: 'read write',
+    clientIdEnv: 'MASTODON_CLIENT_ID',
+    clientSecretEnv: 'MASTODON_CLIENT_SECRET',
+    redirectPath: '/api/oauth/mastodon/callback',
+  },
+  discord: {
+    platform: 'discord',
+    authUrl: 'https://discord.com/oauth2/authorize',
+    tokenUrl: 'https://discord.com/api/oauth2/token',
+    scope: 'webhook.incoming identify',
+    clientIdEnv: 'DISCORD_CLIENT_ID',
+    clientSecretEnv: 'DISCORD_CLIENT_SECRET',
+    redirectPath: '/api/oauth/discord/callback',
+  },
+  slack: {
+    platform: 'slack',
+    authUrl: 'https://slack.com/oauth/v2/authorize',
+    tokenUrl: 'https://slack.com/api/oauth.v2.access',
+    scope: 'incoming-webhook',
+    clientIdEnv: 'SLACK_CLIENT_ID',
+    clientSecretEnv: 'SLACK_CLIENT_SECRET',
+    redirectPath: '/api/oauth/slack/callback',
   },
 };

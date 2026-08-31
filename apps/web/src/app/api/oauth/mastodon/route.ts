@@ -1,9 +1,13 @@
+import { oauth_mastodonQuerySchema } from '@/lib/schemas';
 import { NextRequest, NextResponse } from 'next/server';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3333';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
+  const queryRaw = Object.fromEntries(searchParams);
+  const parsedQuery = oauth_mastodonQuerySchema.safeParse(queryRaw);
+  if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const instance = searchParams.get('instance') || 'mastodon.social';
 
   // Mastodon OAuth requires per-instance client registration

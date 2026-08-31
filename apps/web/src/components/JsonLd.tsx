@@ -16,7 +16,7 @@ export function JsonLd({ data }: JsonLdProps) {
   );
 }
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://stackpost.expostacker.com.br';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://stackpost.com.br';
 
 /**
  * Gera schema BreadcrumbList a partir de uma lista de {name, path}.
@@ -100,9 +100,23 @@ export function productSchema(name: string, description: string, price: number |
 }
 
 /**
- * Schema Article para blog posts.
+ * Schema FAQPage a partir de array de {q, a}.
  */
-export function articleSchema(title: string, description: string, datePublished: string, dateModified: string, path: string, authorName = 'ExpoStacker') {
+export function faqSchema(faqs: { q: string; a: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.a,
+      },
+    })),
+  };
+}
+export function articleSchema(title: string, description: string, datePublished: string, dateModified: string, path: string, authorName = 'StackPost') {
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -114,7 +128,7 @@ export function articleSchema(title: string, description: string, datePublished:
     author: {
       '@type': 'Organization',
       name: authorName,
-      url: 'https://expostacker.com.br',
+      url: 'https://stackpost.com.br',
     },
     publisher: { '@id': `${SITE_URL}/#organization` },
   };

@@ -1,4 +1,5 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+﻿import { logger } from '@/lib/logger';
+import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 
 // Cron: Resetar contadores de uso mensal (dia 1 de cada mes)
@@ -35,7 +36,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ ok: true, cron: 'monthly-usage-reset', reset, total: (teams || []).length, timestamp: today });
   } catch (err: any) {
-    console.error('Cron monthly-usage-reset error:', err);
+    logger.error('Cron monthly-usage-reset error:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

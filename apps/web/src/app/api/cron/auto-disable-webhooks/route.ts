@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 
@@ -32,7 +33,7 @@ export async function GET(req: NextRequest) {
         .update({ status: 'disabled', disabled_reason: '7 dias sem sucesso' })
         .eq('id', webhook.id);
       if (disableErr) {
-        console.error(`Failed to disable webhook ${webhook.id}:`, disableErr);
+        logger.error(`Failed to disable webhook ${webhook.id}:`, disableErr);
       } else {
         disabled++;
       }
@@ -40,7 +41,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ ok: true, cron: 'auto-disable-webhooks', disabled, total: (webhooks || []).length, timestamp: now.toISOString() });
   } catch (err: any) {
-    console.error('Cron auto-disable-webhooks error:', err);
+    logger.error('Cron auto-disable-webhooks error:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

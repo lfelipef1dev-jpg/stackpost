@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { imports_facebook_recommendationsBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 
@@ -7,7 +9,10 @@ export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
-  const { socialAccountId, limit } = await req.json().catch(() => ({}));
+  const bodyRaw1 = await req.json().catch(() => ({}));
+  const parsed1 = imports_facebook_recommendationsBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const { socialAccountId, limit } = bodyRaw1;
   if (!socialAccountId) return NextResponse.json({ error: 'socialAccountId obrigatorio' }, { status: 400 });
 
   const supabase = getSupabase();
@@ -56,7 +61,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ imported, platform: 'facebook', type: 'recommendations' });
   } catch (error: any) {
-    console.error('Facebook recommendations import error:', error);
+    logger.error('Facebook recommendations import error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

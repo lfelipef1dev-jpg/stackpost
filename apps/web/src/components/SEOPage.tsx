@@ -15,6 +15,10 @@ export interface SEOPageData {
   features: { name: string; desc: string }[];
   endpoints?: { method: string; path: string; desc: string }[];
   faqs?: { q: string; a: string }[];
+  specs?: { label: string; value: string }[];
+  codeExample?: string;
+  oauthFlow?: string[];
+  useCases?: { title: string; desc: string }[];
 }
 
 const platformColors: Record<string, string> = {
@@ -93,7 +97,7 @@ export function SEOPage({ data }: { data: SEOPageData }) {
                   <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold hover:brightness-110 transition" style={{ backgroundColor: brandColor || 'var(--brand-accent)', color: '#0A0A0A' }}>
                     Começar grátis <ArrowRight className="w-4 h-4" />
                   </Link>
-                  <Link href="/docs" className="px-6 py-3 rounded-xl border border-brand-border text-brand-text hover:bg-brand-elevated transition">
+                  <Link href="/docs/api" className="px-6 py-3 rounded-xl border border-brand-border text-brand-text hover:bg-brand-elevated transition">
                     Ver documentação
                   </Link>
                 </div>
@@ -104,7 +108,7 @@ export function SEOPage({ data }: { data: SEOPageData }) {
                     className="relative w-48 h-48 lg:w-64 lg:h-64 rounded-3xl flex items-center justify-center border"
                     style={{ borderColor: `${brandColor}30`, background: `radial-gradient(circle at 50% 50%, ${brandColor}20, transparent 70%)`, boxShadow: `0 0 80px -20px ${brandColor}40` }}
                   >
-                    <PlatformIcon id={brandId} size={120} color={brandColor} className="w-28 h-28 lg:w-36 lg:h-36 drop-shadow-[0_0_40px_rgba(255,255,255,0.2)]" />
+                    <PlatformIcon id={brandId} size={120} color={brandColor} className="w-28 h-28 lg:w-36 lg:h-36 drop-shadow-[0_0_50px_var(--platform-color)]" style={{ '--platform-color': brandColor } as React.CSSProperties} />
                   </div>
                 </div>
               )}
@@ -153,6 +157,80 @@ export function SEOPage({ data }: { data: SEOPageData }) {
                   </span>
                   <code className="text-sm font-mono text-brand-text flex-shrink-0">{ep.path}</code>
                   <span className="text-sm text-brand-text-secondary ml-auto">{ep.desc}</span>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Especificacoes tecnicas */}
+      {data.specs && data.specs.length > 0 && (
+        <section className="max-w-5xl mx-auto px-4 pb-20">
+          <ScrollReveal className="mb-6">
+            <h2 className="text-2xl font-bold">Especificações técnicas</h2>
+          </ScrollReveal>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {data.specs.map((s) => (
+              <ScrollReveal key={s.label}>
+                <div className="p-4 rounded-xl bg-brand-surface/50 border border-brand-border" style={{ borderColor: brandColor ? `${brandColor}20` : undefined }}>
+                  <span className="text-[10px] text-brand-text-secondary uppercase tracking-wider">{s.label}</span>
+                  <span className="block text-sm font-semibold text-brand-text mt-1">{s.value}</span>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Exemplo de codigo */}
+      {data.codeExample && (
+        <section className="max-w-5xl mx-auto px-4 pb-20">
+          <ScrollReveal className="mb-6">
+            <div className="flex items-center gap-3">
+              <Code className="w-6 h-6 text-brand-accent" />
+              <h2 className="text-2xl font-bold">Exemplo de código</h2>
+            </div>
+          </ScrollReveal>
+          <div className="p-6 rounded-xl bg-brand-surface border border-brand-border overflow-x-auto">
+            <pre className="text-sm font-mono text-brand-text-secondary"><code>{data.codeExample}</code></pre>
+          </div>
+        </section>
+      )}
+
+      {/* Fluxo OAuth */}
+      {data.oauthFlow && data.oauthFlow.length > 0 && (
+        <section className="max-w-5xl mx-auto px-4 pb-20">
+          <ScrollReveal className="mb-6">
+            <h2 className="text-2xl font-bold">Como conectar</h2>
+          </ScrollReveal>
+          <div className="space-y-3">
+            {data.oauthFlow.map((step, i) => (
+              <ScrollReveal key={i}>
+                <div className="flex items-start gap-4 p-4 rounded-xl bg-brand-surface/50 border border-brand-border">
+                  <span className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold font-mono shrink-0" style={{ backgroundColor: brandColor ? `${brandColor}15` : undefined, color: brandColor || 'var(--brand-accent)' }}>
+                    {i + 1}
+                  </span>
+                  <p className="text-sm text-brand-text-secondary leading-relaxed pt-1.5">{step}</p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Casos de uso */}
+      {data.useCases && data.useCases.length > 0 && (
+        <section className="max-w-5xl mx-auto px-4 pb-20">
+          <ScrollReveal className="mb-6">
+            <h2 className="text-2xl font-bold">Casos de uso</h2>
+          </ScrollReveal>
+          <div className="grid sm:grid-cols-2 gap-4">
+            {data.useCases.map((u) => (
+              <ScrollReveal key={u.title}>
+                <div className="p-5 rounded-xl bg-brand-surface/50 border border-brand-border" style={{ borderColor: brandColor ? `${brandColor}20` : undefined }}>
+                  <h3 className="font-semibold mb-1" style={{ color: brandColor || undefined }}>{u.title}</h3>
+                  <p className="text-sm text-brand-text-secondary">{u.desc}</p>
                 </div>
               </ScrollReveal>
             ))}

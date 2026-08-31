@@ -1,8 +1,13 @@
+import { logger } from '@/lib/logger';
+import { oauth_snapchat_callbackQuerySchema } from '@/lib/schemas';
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { exchangeCodeForToken, saveAccount, OAUTH_CONFIGS } from '@/lib/oauth';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
+  const queryRaw = Object.fromEntries(searchParams);
+  const parsedQuery = oauth_snapchat_callbackQuerySchema.safeParse(queryRaw);
+  if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const code = searchParams.get('code');
   const state = searchParams.get('state');
   const storedState = req.cookies.get('oauth_state_snapchat')?.value;
@@ -19,7 +24,7 @@ export async function GET(req: NextRequest) {
     });
     return NextResponse.redirect(new URL('/dashboard?connected=snapchat', req.url));
   } catch (err: any) {
-    console.error('snapchat OAuth error:', err);
+    logger.error('snapchat OAuth error:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

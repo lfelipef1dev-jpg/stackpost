@@ -62,3 +62,19 @@ tests/.auth/
 .supabase-token.txt
 supabase/.temp/
 
+
+# Backups locais com dados sensiveis
+backups/
+scripts/backups/
+
+# Tokens e backups locais na raiz
+scripts/.token
+backup_*.json
+apps/web/used_env.txt
+apps/web/tsconfig.tsbuildinfo
+audit_*.txt
+build*.txt
+prod-html.txt
+packages_*.txt
+composer_*.png
+debug_*.png

@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { imports_post_historyBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 
@@ -7,7 +9,10 @@ export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
-  const { socialAccountId, platform, limit } = await req.json().catch(() => ({}));
+  const bodyRaw1 = await req.json().catch(() => ({}));
+  const parsed1 = imports_post_historyBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const { socialAccountId, platform, limit } = bodyRaw1;
   if (!socialAccountId || !platform) {
     return NextResponse.json({ error: 'socialAccountId e platform obrigatorios' }, { status: 400 });
   }
@@ -93,7 +98,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ imported, platform });
   } catch (error: any) {
-    console.error('Post history import error:', error);
+    logger.error('Post history import error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

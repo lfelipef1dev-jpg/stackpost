@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3333",
+    "dev": "next dev -p 3333 --turbopack",
     "build": "next build",
     "start": "next start",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
@@ -13,6 +13,7 @@
     "@playwright/test": "^1.62.1",
     "@supabase/supabase-js": "^2.49.1",
     "@types/pg": "^8.23.1",
+    "bcryptjs": "^3.0.3",
     "dotenv": "^16.6.1",
     "framer-motion": "^13.1.1",
     "jose": "^5.9.6",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "@opennextjs/cloudflare": "^1.20.2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

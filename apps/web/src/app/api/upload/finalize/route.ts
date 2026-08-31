@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { upload_finalizeBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 import { writeFile } from 'fs/promises';
@@ -10,7 +12,10 @@ export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
-  const body = await req.json();
+  const bodyRaw1 = await req.json();
+  const parsed1 = upload_finalizeBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const body = bodyRaw1;
   const { path: savedName, fileName, mimeType, size } = body;
 
   if (!savedName) {
@@ -29,7 +34,7 @@ export async function POST(req: NextRequest) {
       .single();
     if (error) throw error;
   } catch (e) {
-    console.error('DB error on finalize:', e);
+    logger.error('DB error on finalize:', e);
   }
 
   return NextResponse.json({ id: savedName, url: publicUrl });

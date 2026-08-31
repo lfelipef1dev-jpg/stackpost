@@ -1,32 +1,31 @@
 'use client';
 
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 const nav = [
-  { href: '/dashboard', label: 'Dashboard' },
+  { href: '/dashboard', label: 'Painel' },
   { href: '/composer', label: 'Criar post' },
   { href: '/calendar', label: 'Calendario' },
   { href: '/accounts', label: 'Contas' },
-  { href: '/analytics', label: 'Analytics' },
-  { href: '/billing', label: 'Billing' },
+  { href: '/analytics', label: 'Metricas' },
+  { href: '/billing', label: 'Cobranca' },
   { href: '/settings', label: 'Config' },
 ];
 
 export default function Header({ activeHref }: { activeHref?: string }) {
   const router = useRouter();
 
-  function logout() {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('token');
-      window.location.href = '/login';
-    }
+  async function logout() {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    router.push('/login');
   }
 
   return (
     <header className="h-16 border-b border-brand-border bg-brand-surface/50 backdrop-blur sticky top-0 z-20">
       <div className="max-w-7xl mx-auto h-full px-4 flex items-center justify-between">
         <a href="/dashboard" className="flex items-center gap-2">
-          <img src="/brand/logo.png" alt="StackPost" className="h-14 w-auto" />
+          <Image src="/brand/logo.png" alt="StackPost" width={56} height={56} className="h-14 w-auto" priority />
         </a>
         <nav className="hidden md:flex gap-6 text-sm text-brand-text-secondary items-center">
           {nav.map((item) => (

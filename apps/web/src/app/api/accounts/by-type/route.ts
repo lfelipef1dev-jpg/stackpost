@@ -1,3 +1,4 @@
+import { accounts_by_typeQuerySchema } from '@/lib/schemas';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
@@ -8,6 +9,9 @@ export async function GET(req: NextRequest) {
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
+  const queryRaw = Object.fromEntries(searchParams);
+  const parsedQuery = accounts_by_typeQuerySchema.safeParse(queryRaw);
+  if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const platform = searchParams.get('platform');
 
   const supabase = getSupabase();

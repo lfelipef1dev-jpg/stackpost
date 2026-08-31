@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
@@ -43,7 +44,7 @@ async function processAndSave(file: File, teamId: string): Promise<{ id: string;
     .from('uploads')
     .insert({ id: uploadId, team_id: teamId, file_name: file.name, mime_type: file.type, size: file.size, url: publicUrl });
   if (dbErr) {
-    console.error('Upload db insert error:', dbErr);
+    logger.error('Upload db insert error:', dbErr);
   }
 
   return { id: uploadId, url: publicUrl, derivatives };
@@ -66,7 +67,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ error: 'Content-type nao suportado' }, { status: 400 });
   } catch (err: any) {
-    console.error('Upload error:', err);
+    logger.error('Upload error:', err);
     return NextResponse.json({ error: err.message || 'Erro no upload' }, { status: 500 });
   }
 }
@@ -86,7 +87,7 @@ export async function GET(req: NextRequest) {
     if (error) throw error;
     return NextResponse.json(data);
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

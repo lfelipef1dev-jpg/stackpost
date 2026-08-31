@@ -1,14 +1,24 @@
 import { jwtVerify } from 'jose';
 import { NextRequest } from 'next/server';
 import { getSupabase } from './supabase';
+import { requireEnv } from './env';
+import { getTokenFromCookie } from './cookies';
 
-const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'dev-secret');
+const JWT_SECRET = (() => {
+  const secret = requireEnv('JWT_SECRET');
+  return new TextEncoder().encode(secret);
+})();
+
+function getToken(req: NextRequest): string | null {
+  const auth = req.headers.get('authorization');
+  if (auth && auth.startsWith('Bearer ')) return auth.slice(7);
+  return getTokenFromCookie(req);
+}
 
 export async function getUserFromToken(req: NextRequest) {
-  const auth = req.headers.get('authorization');
-  if (!auth || !auth.startsWith('Bearer ')) return null;
+  const token = getToken(req);
+  if (!token) return null;
 
-  const token = auth.slice(7);
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET);
     const userId = payload.sub as string;

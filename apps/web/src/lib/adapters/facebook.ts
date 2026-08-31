@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { PlatformAdapter, PublishParams, PublishResult } from './base';
 import { normalizeError } from '@/lib/errors';
 
@@ -26,7 +27,7 @@ export class FacebookAdapter extends PlatformAdapter {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message: firstComment, access_token: accessToken }),
-        }).catch((err) => console.warn('Facebook first comment error:', err));
+        }).catch((err) => logger.warn('Facebook first comment error:', err));
       }
 
       return postResult;

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { imports_csvBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 
@@ -8,7 +9,10 @@ export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
-  const body = await req.json().catch(() => ({}));
+  const bodyRaw1 = await req.json().catch(() => ({}));
+  const parsed1 = imports_csvBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const body = bodyRaw1;
   const { csv, teamId } = body;
   if (!csv || typeof csv !== 'string') {
     return NextResponse.json({ error: 'CSV obrigatorio (string)' }, { status: 400 });

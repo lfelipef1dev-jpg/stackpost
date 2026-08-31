@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 
@@ -69,14 +70,14 @@ export async function GET(req: NextRequest) {
         });
         synced++;
       } catch (err) {
-        console.error(`Failed to sync analytics for ${pp.platform}:`, err);
+        logger.error(`Failed to sync analytics for ${pp.platform}:`, err);
         failed++;
       }
     }
 
     return NextResponse.json({ ok: true, cron: 'sync-analytics', synced, failed, total: (posts || []).length, timestamp: now });
   } catch (err: any) {
-    console.error('Cron sync-analytics error:', err);
+    logger.error('Cron sync-analytics error:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

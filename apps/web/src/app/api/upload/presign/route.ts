@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { upload_presignBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 import { v4 as uuid } from 'uuid';
@@ -10,7 +12,10 @@ export async function POST(req: NextRequest) {
     const user = await getUserFromToken(req);
     if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
-    const { fileName, contentType, size } = await req.json();
+    const bodyRaw1 = await req.json();
+    const parsed1 = upload_presignBodySchema.safeParse(bodyRaw1);
+    if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+    const { fileName, contentType, size } = bodyRaw1;
     if (!fileName) return NextResponse.json({ error: 'fileName obrigatorio' }, { status: 400 });
 
     const MAX_SIZE = 100 * 1024 * 1024;
@@ -30,7 +35,7 @@ export async function POST(req: NextRequest) {
       .createSignedUploadUrl(savedName);
 
     if (error) {
-      console.error('Presign error:', error);
+      logger.error('Presign error:', error);
       return NextResponse.json({ error: 'Erro ao gerar URL' }, { status: 500 });
     }
 
@@ -51,7 +56,7 @@ export async function POST(req: NextRequest) {
       .from('uploads')
       .insert({ id: uploadId, team_id: user.teamId, file_name: fileName, mime_type: contentType || '', size: size || 0, url: publicUrl });
     if (dbErr) {
-      console.error('Upload db insert error:', dbErr);
+      logger.error('Upload db insert error:', dbErr);
     }
 
     return NextResponse.json({
@@ -63,7 +68,7 @@ export async function POST(req: NextRequest) {
       token: data.token,
     });
   } catch (err: any) {
-    console.error('Presign error:', err);
+    logger.error('Presign error:', err);
     return NextResponse.json({ error: err.message || 'Erro interno' }, { status: 500 });
   }
 }

@@ -1,4 +1,5 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+﻿import { logger } from '@/lib/logger';
+import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 
 // Cron: Health check das contas sociais conectadas
@@ -43,7 +44,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ ok: true, cron: 'health-check', healthy, expired, needsReconnect, total: (accounts || []).length, timestamp: now });
   } catch (err: any) {
-    console.error('Cron health-check error:', err);
+    logger.error('Cron health-check error:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

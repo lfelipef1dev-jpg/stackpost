@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { webhooks_replayBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 import { createHmac } from 'crypto';
@@ -7,7 +9,10 @@ export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
-  const body = await req.json();
+  const bodyRaw1 = await req.json();
+  const parsed1 = webhooks_replayBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const body = bodyRaw1;
   const { eventId } = body;
 
   if (!eventId) return NextResponse.json({ error: 'eventId obrigatorio' }, { status: 400 });
@@ -77,7 +82,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: err.message }, { status: 500 });
     }
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

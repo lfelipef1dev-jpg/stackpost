@@ -4,8 +4,11 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Check, X, Zap, Crown, Building2, Sparkles, ChevronRight, ArrowRight, Shield, RefreshCw, Clock, Users, ChevronDown, Lock, Server, TrendingUp, CreditCard } from 'lucide-react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FadeIn, ScrollReveal, StaggerGroup, StaggerItem } from '@/components/animations';
 import Footer from '@/components/Footer';
+import { PlatformIcon } from '@/components/PlatformIcon';
+import { PLATFORMS } from '@/lib/platforms';
 
 interface PlanFeature {
   label: string;
@@ -17,6 +20,7 @@ interface Plan {
   id: string;
   name: string;
   tagline: string;
+  description: string;
   monthlyPrice: number | null;
   yearlyPrice: number | null;
   icon: typeof Zap;
@@ -31,6 +35,7 @@ const plans: Plan[] = [
     id: 'free',
     name: 'Free',
     tagline: 'Para começar sem pagar',
+    description: 'Conecte até 3 contas nas 15 plataformas disponíveis. Publique 50 posts e 100 comentários por mês com API completa, calendário e analytics — sem cartão de crédito.',
     monthlyPrice: 0,
     yearlyPrice: 0,
     icon: Zap,
@@ -54,6 +59,7 @@ const plans: Plan[] = [
     id: 'starter',
     name: 'Inicial',
     tagline: 'Para criadores e pequenos times',
+    description: 'Conecte até 5 contas nas 15 plataformas e publique 2.000 posts por mês. Ideal para criadores de conteúdo e pequenos negócios que começam a automatizar publicação e engajamento.',
     monthlyPrice: 39,
     yearlyPrice: 390,
     icon: Sparkles,
@@ -78,6 +84,7 @@ const plans: Plan[] = [
     id: 'growth',
     name: 'Crescimento',
     tagline: 'Para agências e SaaS iniciantes',
+    description: 'Conecte até 20 contas nas 15 plataformas com 8.000 posts e 4.000 comentários mensais. Para times que precisam de calendário editorial, analytics avançado, AI caption e múltiplos workspaces.',
     monthlyPrice: 89,
     yearlyPrice: 890,
     icon: Building2,
@@ -103,6 +110,7 @@ const plans: Plan[] = [
     id: 'scale',
     name: 'Escala',
     tagline: 'Para SaaS e agências em escala',
+    description: 'Contas ilimitadas nas 15 plataformas e 40.000 posts/mês. Para SaaS e agências que publicam em alto volume com API, SDK, CLI e MCP server completos. Suporte prioritário dedicado.',
     monthlyPrice: 197,
     yearlyPrice: 1970,
     icon: Crown,
@@ -126,7 +134,8 @@ const plans: Plan[] = [
   {
     id: 'business',
     name: 'Empresarial',
-    tagline: 'Para grandes operacoes',
+    tagline: 'Para grandes operações',
+    description: 'Tudo ilimitado: contas nas 15 plataformas, usuários e workspaces. 150.000 posts/mês com SLA dedicado, MCP server e suporte prioritário. Para grandes operações que precisam de escala e confiabilidade.',
     monthlyPrice: 497,
     yearlyPrice: 4970,
     icon: Crown,
@@ -659,49 +668,166 @@ export default function PlansPage() {
         </ScrollReveal>
       </section>
 
-      {/* Modal de confirmacao do plano */}
-      {selectedPlan && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-3xl bg-brand-surface border border-brand-border p-6 md:p-8 shadow-2xl">
-            <button onClick={handleClose} className="absolute top-4 right-4 p-2 rounded-full hover:bg-brand-elevated text-brand-text-secondary">
-              <X className="w-5 h-5" />
-            </button>
+      {/* Modal de confirmacao do plano — versão profissional */}
+      <AnimatePresence>
+        {selectedPlan && (() => {
+          const accent = selectedPlan.id === 'free' ? '#94A3B8' : selectedPlan.id === 'starter' ? '#22D3EE' : selectedPlan.id === 'growth' ? '#A78BFA' : selectedPlan.id === 'scale' ? '#8AB4F8' : '#C084FC';
+          const contasSociais = selectedPlan.features.find((f) => f.label === 'Contas sociais')?.value;
+          const contasTexto = contasSociais === 'Ilimitadas' || contasSociais === 'Ilimitados'
+            ? 'contas ilimitadas'
+            : `até ${contasSociais} contas`;
+          return (
+            <motion.div
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={handleClose}
+            >
+              <div className="absolute inset-0 bg-black/80 backdrop-blur-md" />
 
-            <h3 className="text-2xl font-bold mb-1">{selectedPlan.name}</h3>
-            <p className="text-sm text-brand-text-secondary mb-6">{selectedPlan.tagline}</p>
+              <motion.div
+                className="relative w-full max-w-lg rounded-2xl bg-brand-surface border border-brand-border shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
+                initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                onClick={(e) => e.stopPropagation()}
+                style={{ boxShadow: `0 0 60px ${accent}25, 0 20px 50px rgba(0,0,0,0.5)` }}
+              >
+                {/* Header compacto sticky */}
+                <div
+                  className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b border-brand-border/50 backdrop-blur-xl"
+                  style={{ background: `linear-gradient(135deg, ${accent}10 0%, var(--brand-surface) 100%)` }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center border shrink-0"
+                      style={{ backgroundColor: `${accent}15`, borderColor: `${accent}30` }}
+                    >
+                      <selectedPlan.icon className="w-5 h-5" style={{ color: accent }} />
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="text-lg font-bold text-brand-text leading-tight truncate">{selectedPlan.name}</h3>
+                      <p className="text-xs text-brand-text-secondary truncate">{selectedPlan.tagline}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleClose}
+                    className="p-2 rounded-lg hover:bg-brand-elevated text-brand-text-secondary transition-colors shrink-0"
+                    aria-label="Fechar"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
 
-            <div className="mb-6 p-5 rounded-2xl bg-brand-elevated border border-brand-border">
-              <div className="flex items-baseline gap-2">
-                <span className="text-4xl font-bold">{formatPrice(selectedPlan)}</span>
-                <span className="text-brand-text-secondary">{formatPeriod(selectedPlan)}</span>
-              </div>
-              <p className="text-xs text-brand-text-secondary mt-1">por organizacao · 14 dias gratis · 7 dias de garantia</p>
-            </div>
+                {/* Conteúdo com scroll */}
+                <div className="overflow-y-auto px-6 py-5 space-y-5">
+                  {/* Descrição comercial */}
+                  <p className="text-sm text-brand-text leading-relaxed">{selectedPlan.description}</p>
 
-            <ul className="space-y-2.5 mb-6 text-sm">
-              {selectedPlan.features.map((f) => (
-                <li key={f.label} className="flex items-center justify-between">
-                  <span className="text-brand-text-secondary">{f.label}</span>
-                  {typeof f.value === 'boolean' ? (
-                    f.value ? <Check className="w-4 h-4 text-success" /> : <X className="w-4 h-4 text-error" />
-                  ) : (
-                    <span className="font-semibold text-brand-text whitespace-nowrap" title={f.full || String(f.value)}>{f.value}</span>
-                  )}
-                </li>
-              ))}
-            </ul>
+                  {/* Preço */}
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-black text-brand-text">{formatPrice(selectedPlan)}</span>
+                    <span className="text-brand-text-secondary text-sm">{formatPeriod(selectedPlan)}</span>
+                  </div>
+                  <p className="text-xs text-brand-text-secondary -mt-3">por organização · 14 dias grátis · 7 dias de garantia</p>
 
-            <div className="flex gap-3">
-              <button onClick={handleClose} className="flex-1 px-4 py-3 rounded-xl border border-brand-border text-brand-text hover:bg-brand-elevated transition">
-                Voltar
-              </button>
-              <button onClick={handleContinue} disabled={loading} className="flex-1 px-4 py-3 rounded-xl bg-brand-accent text-brand-bg font-semibold hover:scale-105 transition disabled:opacity-50">
-                {loading ? 'Processando...' : selectedPlan.id === 'free' ? 'Criar conta gratis' : 'Continuar'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+                  {/* Features */}
+                  <div>
+                    <h4 className="text-[11px] font-mono font-bold text-brand-accent uppercase tracking-[0.2em] mb-2">O que está incluído</h4>
+                    <motion.ul
+                      className="space-y-1.5 text-sm"
+                      initial="hidden"
+                      animate="visible"
+                      variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.03 } } }}
+                    >
+                      {selectedPlan.features.map((f) => (
+                        <motion.li
+                          key={f.label}
+                          className="flex items-center justify-between py-1 border-b border-brand-border/20"
+                          variants={{
+                            hidden: { opacity: 0, x: -8 },
+                            visible: { opacity: 1, x: 0, transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] } },
+                          }}
+                        >
+                          <span className="text-brand-text-secondary">{f.label}</span>
+                          {typeof f.value === 'boolean' ? (
+                            f.value ? <Check className="w-3.5 h-3.5 text-success" /> : <X className="w-3.5 h-3.5 text-error" />
+                          ) : (
+                            <span className="font-semibold text-brand-text whitespace-nowrap text-xs" title={f.full || String(f.value)}>{f.value}</span>
+                          )}
+                        </motion.li>
+                      ))}
+                    </motion.ul>
+                  </div>
+
+                  {/* Redes sociais */}
+                  <div
+                    className="p-4 rounded-xl border"
+                    style={{ background: `${accent}08`, borderColor: `${accent}20` }}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="text-[11px] font-mono font-bold uppercase tracking-[0.2em]" style={{ color: accent }}>
+                        {contasTexto}
+                      </h4>
+                      <span className="text-[10px] font-mono text-brand-text-secondary">15 plataformas</span>
+                    </div>
+
+                    <motion.div
+                      className="grid grid-cols-5 gap-2 mb-3"
+                      initial="hidden"
+                      animate="visible"
+                      variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.04 } } }}
+                    >
+                      {PLATFORMS.map((p) => (
+                        <motion.div
+                          key={p.id}
+                          className="aspect-square rounded-lg bg-brand-surface/80 border border-brand-border flex items-center justify-center"
+                          style={{ boxShadow: `0 0 10px ${p.color}15` }}
+                          title={p.name}
+                          variants={{
+                            hidden: { opacity: 0, scale: 0.5 },
+                            visible: { opacity: 1, scale: 1, transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] } },
+                          }}
+                          whileHover={{ scale: 1.15, boxShadow: `0 0 16px ${p.color}40` }}
+                        >
+                          <PlatformIcon id={p.id} size={18} color={p.color} className="w-4 h-4" />
+                        </motion.div>
+                      ))}
+                    </motion.div>
+
+                    <p className="text-[11px] text-brand-text-secondary leading-relaxed">
+                      Todas as 15 plataformas disponíveis em todos os planos. O limite é apenas a quantidade de contas conectadas ao mesmo tempo.
+                    </p>
+                  </div>
+                </div>
+
+                {/* CTAs sticky no rodapé */}
+                <div className="sticky bottom-0 flex gap-3 px-6 py-4 border-t border-brand-border/50 bg-brand-surface/95 backdrop-blur-xl">
+                  <button
+                    onClick={handleClose}
+                    className="flex-1 px-4 py-3 rounded-xl border border-brand-border text-brand-text hover:bg-brand-elevated transition font-semibold text-sm"
+                  >
+                    Voltar
+                  </button>
+                  <motion.button
+                    onClick={handleContinue}
+                    disabled={loading}
+                    className="flex-1 px-4 py-3 rounded-xl font-bold text-sm disabled:opacity-50"
+                    style={{ backgroundColor: accent, color: '#0A0A0A', boxShadow: `0 0 20px ${accent}30` }}
+                    whileHover={{ scale: loading ? 1 : 1.02, boxShadow: `0 0 30px ${accent}50` }}
+                    whileTap={{ scale: 0.97 }}
+                  >
+                    {loading ? 'Processando...' : selectedPlan.id === 'free' ? 'Criar conta grátis' : 'Continuar'}
+                  </motion.button>
+                </div>
+              </motion.div>
+            </motion.div>
+          );
+        })()}
+      </AnimatePresence>
 
       <Footer />
     </main>

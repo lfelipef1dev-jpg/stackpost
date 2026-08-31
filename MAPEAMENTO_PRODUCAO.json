@@ -1,0 +1,100 @@
+{
+  "bot": "StackPost",
+  "criado": "2026-08-27",
+  "status": "PRODUCAO ATIVA",
+  "descricao": "StackPost - ferramenta comercial de agendamento e publicacao",
+  "url": "https://stackpost.expostacker.com.br",
+  "repo": "https://github.com/lfelipef1dev-jpg/stackpost",
+
+  "plataformas_ativas": {
+    "instagram": {
+      "status": "PRODUCAO",
+      "posts_publicados": 35,
+      "external_ids_confirmados": 35,
+      "adapter": "publishToInstagram (Graph API)",
+      "media_types": ["IMAGE", "VIDEO"],
+      "oauth": "/api/oauth/meta -> callback",
+      "travado": true,
+      "data_travamento": "2026-08-27"
+    },
+    "linkedin": {
+      "status": "PRODUCAO",
+      "posts_publicados": 26,
+      "external_ids_confirmados": 25,
+      "adapter": "publishToLinkedIn (LinkedIn API v2)",
+      "media_types": ["IMAGE", "VIDEO", "TEXT_ONLY"],
+      "oauth": "/api/oauth/linkedin -> callback",
+      "video_recipe": "urn:li:digitalmediaRecipe:feedshare-video",
+      "image_recipe": "urn:li:digitalmediaRecipe:feedshare-image",
+      "travado": true,
+      "data_travamento": "2026-08-27"
+    }
+  },
+
+  "cron": {
+    "cloudflare_triggers": ["* * * * *", "*/5 * * * *", "0 * * * *", "0 3 * * *", "0 0 1 * *"],
+    "github_actions_backup": "*/5 * * * *",
+    "custom_worker": "apps/web/custom-worker.ts (padrao oficial OpenNext)",
+    "rotas_cron": ["/api/cron/publish-scheduled", "/api/cron/refresh-tokens"],
+    "travado": true
+  },
+
+  "deploy": {
+    "metodo": "git push main -> GitHub Actions -> OpenNext Cloudflare",
+    "proibido": "wrangler deploy manual",
+    "worker": "stackpost",
+    "dominio": "stackpost.expostacker.com.br"
+  },
+
+  "videos_nexus_publicados": {
+    "pdf_executivo": {
+      "linkedin_id": "urn:li:ugcPost:7498856891784253440",
+      "data": "2026-08-27",
+      "travado": true
+    },
+    "4_modelos": {
+      "linkedin_id": "urn:li:ugcPost:7498857693802139648",
+      "data": "2026-08-27",
+      "travado": true
+    },
+    "word": {
+      "linkedin_id": "urn:li:ugcPost:7498855918424649728",
+      "data": "2026-08-27",
+      "travado": true
+    },
+    "excel": {
+      "linkedin_id": "urn:li:ugcPost:7498855935621095424",
+      "data": "2026-08-27",
+      "travado": true
+    }
+  },
+
+  "banners_nexus_publicados": {
+    "hero": {
+      "instagram_id": "in:18103778660245958",
+      "linkedin_id": "urn:li:share:749886071207",
+      "data": "2026-08-27",
+      "travado": true
+    },
+    "banner_900x900": {
+      "instagram_id": "in:18138696166590449",
+      "linkedin_id": "urn:li:share:749886131366",
+      "data": "2026-08-27",
+      "travado": true
+    },
+    "apresentacao_png": {
+      "instagram_id": "in:18113255225072235",
+      "linkedin_id": "urn:li:share:749886244248",
+      "data": "2026-08-27",
+      "travado": true
+    }
+  },
+
+  "regras_absolutas": {
+    "nao_publicar_duplicatas": "Nunca repetir texto ou imagem",
+    "5_minutos_entre_posts": "Posts agendados de 5 em 5 min",
+    "deploy_automatico": "git push main -> GitHub Actions",
+    "sem_wrangler_manual": "Proibido wrangler deploy manual",
+    "backup_antes_banco": "Backup antes de qualquer alteracao no banco"
+  }
+}

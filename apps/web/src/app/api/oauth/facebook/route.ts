@@ -1,3 +1,4 @@
+import { oauth_facebookQuerySchema } from '@/lib/schemas';
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromToken } from '@/lib/auth';
 

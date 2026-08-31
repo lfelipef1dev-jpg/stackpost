@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { upload_multipartBodySchema, upload_multipartQuerySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 import { v4 as uuid } from 'uuid';
@@ -17,7 +19,10 @@ export async function POST(req: NextRequest) {
   const action = url.searchParams.get('action') || 'init';
 
   if (action === 'init') {
-    const body = await req.json();
+    const bodyRaw1 = await req.json();
+    const parsed1 = upload_multipartBodySchema.safeParse(bodyRaw1);
+    if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+    const body = bodyRaw1;
     const { fileName, mimeType, fileSize } = body;
 
     if (!fileName) return NextResponse.json({ error: 'fileName obrigatorio' }, { status: 400 });
@@ -47,7 +52,10 @@ export async function POST(req: NextRequest) {
   }
 
   if (action === 'complete') {
-    const body = await req.json();
+    const bodyRaw2 = await req.json();
+    const parsed2 = upload_multipartBodySchema.safeParse(bodyRaw2);
+    if (!parsed2.success) return NextResponse.json(parsed2.error.issues, { status: 400 });
+    const body = bodyRaw2;
     const { path: savedName, uploadId, parts, fileName, mimeType, size } = body;
 
     if (!savedName || !uploadId) {
@@ -65,14 +73,17 @@ export async function POST(req: NextRequest) {
         .single();
       if (error) throw error;
     } catch (e) {
-      console.error('DB error on multipart complete:', e);
+      logger.error('DB error on multipart complete:', e);
     }
 
     return NextResponse.json({ id: savedName, url: publicUrl, parts: parts?.length || 0 });
   }
 
   if (action === 'abort') {
-    const body = await req.json();
+    const bodyRaw3 = await req.json();
+    const parsed3 = upload_multipartBodySchema.safeParse(bodyRaw3);
+    if (!parsed3.success) return NextResponse.json(parsed3.error.issues, { status: 400 });
+    const body = bodyRaw3;
     const { path: savedName } = body;
     // Cleanup partial parts would go here
     return NextResponse.json({ success: true });

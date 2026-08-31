@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 
@@ -39,7 +40,7 @@ export async function GET(req: NextRequest) {
           .from(bucketName)
           .remove([path]);
         if (storageErr) {
-          console.warn(`Storage delete failed for ${upload.id}:`, storageErr.message);
+          logger.warn(`Storage delete failed for ${upload.id}:`, storageErr.message);
           storageFailed++;
         } else {
           storageDeleted++;
@@ -61,7 +62,7 @@ export async function GET(req: NextRequest) {
       timestamp: now,
     });
   } catch (err: any) {
-    console.error('Cron cleanup-uploads error:', err);
+    logger.error('Cron cleanup-uploads error:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

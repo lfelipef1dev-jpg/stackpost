@@ -1,4 +1,5 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+﻿import { logger } from '@/lib/logger';
+import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 
 // Cron: Reenviar webhooks com falha (a cada 5 minutos)
@@ -66,14 +67,14 @@ export async function GET(req: NextRequest) {
           failed++;
         }
       } catch (err) {
-        console.error(`Failed to retry webhook event ${event.id}:`, err);
+        logger.error(`Failed to retry webhook event ${event.id}:`, err);
         failed++;
       }
     }
 
     return NextResponse.json({ ok: true, cron: 'webhook-retry', retried, failed, total: (events || []).length, timestamp: now });
   } catch (err: any) {
-    console.error('Cron webhook-retry error:', err);
+    logger.error('Cron webhook-retry error:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

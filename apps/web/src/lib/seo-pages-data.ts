@@ -35,6 +35,53 @@ export const platformPages: Record<string, SEOPageData> = {
       { name: 'Primeiro comentário', desc: 'Comente automaticamente após publicar (até 150 caracteres).' },
       { name: 'Content API oficial', desc: 'Integração direta com a TikTok Content API.' },
     ],
+    endpoints: [
+      { method: 'POST', path: '/post', desc: 'Publicar vídeo ou Photo Mode no TikTok' },
+      { method: 'POST', path: '/comment', desc: 'Comentar em vídeos (até 150 caracteres)' },
+      { method: 'GET', path: '/analytics/post/raw', desc: 'Analytics brutos do vídeo' },
+      { method: 'GET', path: '/misc/tiktok/cml/trending-list', desc: 'Lista de músicas trending da CML' },
+      { method: 'POST', path: '/post-csv-import', desc: 'Importação em lote via CSV' },
+      { method: 'GET', path: '/accounts', desc: 'Listar contas conectadas' },
+      { method: 'POST', path: '/post/bulk', desc: 'Publicação em lote (até 100 posts)' },
+    ],
+    specs: [
+      { label: 'Formatos de mídia', value: 'MP4, WebM' },
+      { label: 'Tamanho máx. vídeo', value: '1 GB' },
+      { label: 'Limite de texto', value: '2.200 caracteres' },
+      { label: 'Proporção', value: '9:16' },
+      { label: 'Photo Mode', value: 'JPG, WebP (PNG rejeitado)' },
+      { label: 'Primeiro comentário', value: 'Até 150 caracteres' },
+    ],
+    codeExample: `curl -X POST https://api.stackpost.com/post \\
+  -H "x-api-key: sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "platform": "tiktok",
+    "channelId": "tiktok_123",
+    "text": "Vídeo novo no TikTok 🎵 #fyp #stackpost",
+    "media": [{ "type": "video", "url": "https://cdn.exemplo.com/video.mp4" }],
+    "privacyLevel": "PUBLIC",
+    "firstComment": "Comente se curtiu 👇"
+  }'`,
+    oauthFlow: [
+      'Inicie o fluxo OAuth do TikTok em /auth/tiktok com content.publish e video.upload no escopo.',
+      'Autorize a conta TikTok com acesso de publicação de conteúdo.',
+      'Após o redirect, selecione o canal via set-channel com o ID da conta TikTok.',
+      'O token de acesso é criptografado e armazenado para chamadas à Content API.',
+      'Re-check automático do status REVIEW até a aprovação final do conteúdo.',
+    ],
+    faqs: [
+      { q: 'O TikTok aceita PNG no Photo Mode?', a: 'Não. O Photo Mode aceita apenas JPG e WebP. Arquivos PNG são rejeitados pela Content API do TikTok.' },
+      { q: 'Como funciona o status REVIEW?', a: 'Após publicar, o TikTok revisa o conteúdo. O StackPost faz re-check automático até o status mudar para PUBLISHED.' },
+      { q: 'Posso adicionar música comercial?', a: 'Sim. Use o endpoint /misc/tiktok/cml/trending-list para listar músicas da Commercial Music Library com licença comercial.' },
+      { q: 'Qual o limite do primeiro comentário?', a: 'O TikTok permite primeiro comentário com até 150 caracteres via API.' },
+    ],
+    useCases: [
+      { title: 'Marcas virais', desc: 'Publique vídeos em escala com hashtags trending e música comercial da CML para maximizar alcance.' },
+      { title: 'Agências de short-form', desc: 'Gerencie múltiplas contas TikTok de clientes com agendamento e analytics unificados.' },
+      { title: 'E-commerce', desc: 'Photo Mode com catálogo de produtos e link no perfil, com primeiro comentário automático.' },
+      { title: 'Criadores de conteúdo', desc: 'Agende séries de vídeos semanais com privacy level configurável por público.' },
+    ],
   },
   'facebook-api': {
     slug: 'facebook-api',
@@ -49,6 +96,52 @@ export const platformPages: Record<string, SEOPageData> = {
       { name: 'OAuth Meta', desc: 'Selecione TODAS as Pages durante o fluxo OAuth.' },
       { name: 'Meta Graph API', desc: 'Integração oficial com a Meta Graph API.' },
       { name: 'Auto Reply', desc: 'Resposta automática a comentários recebidos.' },
+    ],
+    endpoints: [
+      { method: 'POST', path: '/post', desc: 'Publicar em Page (post, Reel, Story, Carrossel)' },
+      { method: 'POST', path: '/comment', desc: 'Comentar em Page posts (até 8.000 caracteres)' },
+      { method: 'GET', path: '/analytics/post/raw', desc: 'Analytics brutos do post' },
+      { method: 'POST', path: '/comment/import', desc: 'Importar comentários de Page posts' },
+      { method: 'POST', path: '/post-csv-import', desc: 'Importação em lote via CSV' },
+      { method: 'GET', path: '/accounts', desc: 'Listar Pages conectadas' },
+      { method: 'POST', path: '/comment/auto-reply', desc: 'Configurar auto-resposta a comentários' },
+    ],
+    specs: [
+      { label: 'Formatos de mídia', value: 'JPG, PNG, MP4' },
+      { label: 'Tamanho máx. imagem', value: '8 MB' },
+      { label: 'Tamanho máx. vídeo', value: '1 GB' },
+      { label: 'Limite de texto', value: '63.206 caracteres' },
+      { label: 'Proporção', value: '1.91:1, 1:1, 4:5' },
+      { label: 'Mídia por post', value: '4 imagens ou 1 vídeo' },
+    ],
+    codeExample: `curl -X POST https://api.stackpost.com/post \\
+  -H "x-api-key: sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "platform": "facebook",
+    "channelId": "fb_page_123",
+    "text": "Promoção de Black Friday! 🛍️ Aproveite até 70% OFF",
+    "media": [{ "type": "image", "url": "https://cdn.exemplo.com/promo.jpg" }],
+    "firstComment": "Link da promoção: https://exemplo.com/promo"
+  }'`,
+    oauthFlow: [
+      'Inicie o fluxo OAuth da Meta em /auth/meta com pages_manage_posts e pages_read_engagement no escopo.',
+      'Selecione TODAS as Pages que deseja gerenciar durante o fluxo de autorização.',
+      'Após o redirect, selecione o canal via set-channel com o ID da Page específica.',
+      'O token de acesso da Page é criptografado e armazenado para chamadas à Graph API.',
+      'Renovação automática de token de longa duração antes da expiração.',
+    ],
+    faqs: [
+      { q: 'Preciso selecionar todas as Pages no OAuth?', a: 'Sim. Durante o fluxo OAuth da Meta, selecione todas as Pages que deseja gerenciar. Pages não selecionadas não poderão ser usadas.' },
+      { q: 'Qual o limite de texto em posts de Page?', a: 'O Facebook permite até 63.206 caracteres de texto em posts de Page via Graph API.' },
+      { q: 'Posso responder comentários automaticamente?', a: 'Sim. O StackPost oferece Auto Reply com regras inteligentes por palavra-chave e horário para comentários em Page posts.' },
+      { q: 'Quantas imagens por post?', a: 'Até 4 imagens ou 1 vídeo por post de Page, com validação automática de formato e tamanho.' },
+    ],
+    useCases: [
+      { title: 'Gerenciamento de Pages', desc: 'Publique em múltiplas Pages de clientes com agendamento, analytics e auto-reply unificados.' },
+      { title: 'E-commerce', desc: 'Promoções e lançamentos com carrossel de produtos e primeiro comentário com link de compra.' },
+      { title: 'Atendimento ao cliente', desc: 'Auto-reply a comentários e comment-to-DM para nutrir leads em conversas privadas via Messenger.' },
+      { title: 'Agências', desc: 'Multi-Page com RBAC: cada cliente tem sua Page isolada com permissões granulares por usuário.' },
     ],
   },
   'youtube-api': {
@@ -65,6 +158,54 @@ export const platformPages: Record<string, SEOPageData> = {
       { name: 'Analytics com monetização', desc: 'withBusinessScope + rawYoutubeAnalyticsEnabled.' },
       { name: 'Playlists', desc: 'CRUD completo de playlists e itens.' },
     ],
+    endpoints: [
+      { method: 'POST', path: '/post', desc: 'Upload de vídeo ou Short no YouTube' },
+      { method: 'POST', path: '/comment', desc: 'Comentar em vídeos (até 10.000 caracteres)' },
+      { method: 'GET', path: '/analytics/post/raw', desc: 'Analytics brutos com monetização' },
+      { method: 'POST', path: '/media/upload', desc: 'Upload resumível de vídeos (até 128 GB)' },
+      { method: 'GET', path: '/playlists', desc: 'Listar e gerenciar playlists' },
+      { method: 'POST', path: '/post-csv-import', desc: 'Importação em lote via CSV' },
+      { method: 'GET', path: '/accounts', desc: 'Listar canais conectados' },
+    ],
+    specs: [
+      { label: 'Formato de vídeo', value: 'MP4' },
+      { label: 'Tamanho máx. vídeo', value: '128 GB' },
+      { label: 'Limite de descrição', value: '5.000 caracteres' },
+      { label: 'Limite de título', value: '100 caracteres' },
+      { label: 'Proporção', value: '16:9, 9:16' },
+      { label: 'Shorts', value: 'Auto-detectado (até 60s)' },
+    ],
+    codeExample: `curl -X POST https://api.stackpost.com/post \\
+  -H "x-api-key: sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "platform": "youtube",
+    "channelId": "yt_channel_123",
+    "text": "Tutorial completo de integração com API 🎥",
+    "title": "Como integrar a StackPost API em 5 minutos",
+    "media": [{ "type": "video", "url": "https://cdn.exemplo.com/tutorial.mp4" }],
+    "madeForKids": false,
+    "firstComment": "Código no repositório: github.com/exemplo"
+  }'`,
+    oauthFlow: [
+      'Inicie o fluxo OAuth do Google em /auth/google com youtube.upload e youtube.readonly no escopo.',
+      'Autorize a conta Google vinculada ao canal do YouTube.',
+      'Após o redirect, selecione o canal via set-channel com o ID do canal YouTube.',
+      'O token de acesso é criptografado e armazenado para chamadas à Data API v3.',
+      'Para analytics com monetização, habilite withBusinessScope e rawYoutubeAnalyticsEnabled.',
+    ],
+    faqs: [
+      { q: 'O que é madeForKids e por que é obrigatório?', a: 'O campo madeForKids é obrigatório por conformidade com a COPPA. Indica se o conteúdo é direcionado a crianças, afetando comentários e personalização de anúncios.' },
+      { q: 'Como o StackPost diferencia Shorts de vídeos longos?', a: 'Shorts são auto-detectados pela duração: vídeos com até 60 segundos são publicados como Shorts automaticamente.' },
+      { q: 'Posso acessar analytics de monetização?', a: 'Sim. Com withBusinessScope e rawYoutubeAnalyticsEnabled, o StackPost retorna métricas de receita estimada e RPM por vídeo.' },
+      { q: 'Qual o limite de tamanho para upload?', a: 'O YouTube permite vídeos de até 128 GB via upload resumível, suportado pelo StackPost com protocolo multipart.' },
+    ],
+    useCases: [
+      { title: 'Canais de conteúdo', desc: 'Agende vídeos longos e Shorts semanalmente com thumbnails personalizados e playlists organizadas.' },
+      { title: 'Educação e cursos', desc: 'Publique aulas em playlists estruturadas com legendas e primeiro comentário com material complementar.' },
+      { title: 'Agências de vídeo', desc: 'Gerencie múltiplos canais de clientes com analytics de monetização e upload resumível em escala.' },
+      { title: 'SaaS de video marketing', desc: 'Integre upload e publicação no YouTube no seu produto com API unificada e webhooks em tempo real.' },
+    ],
   },
   'linkedin-api': {
     slug: 'linkedin-api',
@@ -79,6 +220,52 @@ export const platformPages: Record<string, SEOPageData> = {
       { name: 'Mentions builder', desc: 'Construa menções via /misc/linkedin/mentions/builder.' },
       { name: 'Marketing API', desc: 'Integração oficial com a LinkedIn Marketing API.' },
       { name: 'mediaTitle 200 caracteres', desc: 'Título de mídia suportado em cada post.' },
+    ],
+    endpoints: [
+      { method: 'POST', path: '/post', desc: 'Publicar no perfil ou Company Page' },
+      { method: 'POST', path: '/comment', desc: 'Comentar em posts (até 1.250 caracteres)' },
+      { method: 'GET', path: '/analytics/post/raw', desc: 'Analytics brutos do post' },
+      { method: 'GET', path: '/misc/linkedin/mentions/builder', desc: 'Construir menções a perfis e empresas' },
+      { method: 'POST', path: '/post-csv-import', desc: 'Importação em lote via CSV' },
+      { method: 'GET', path: '/accounts', desc: 'Listar perfis e Company Pages conectados' },
+      { method: 'POST', path: '/media/upload', desc: 'Upload de mídia (até 10 imagens ou 1 PDF)' },
+    ],
+    specs: [
+      { label: 'Formatos de mídia', value: 'JPG, PNG, GIF, PDF' },
+      { label: 'Tamanho máx. mídia', value: '8 MB' },
+      { label: 'Limite de texto', value: '3.000 caracteres' },
+      { label: 'Proporção', value: '1.91:1, 1:1' },
+      { label: 'Mídia por post', value: '10 imagens ou 1 PDF' },
+      { label: 'mediaTitle', value: 'Até 200 caracteres' },
+    ],
+    codeExample: `curl -X POST https://api.stackpost.com/post \\
+  -H "x-api-key: sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "platform": "linkedin",
+    "channelId": "li_company_123",
+    "text": "Estamos contratando! 🚀 Venha fazer parte do nosso time de engenharia.",
+    "media": [{ "type": "image", "url": "https://cdn.exemplo.com/vaga.jpg", "title": "Vaga Engenheiro Sênior" }],
+    "firstComment": "Candidate-se em: https://exemplo.com/carreiras"
+  }'`,
+    oauthFlow: [
+      'Inicie o fluxo OAuth do LinkedIn em /auth/linkedin com w_member_social e rw_organization no escopo.',
+      'Autorize a conta LinkedIn com permissão de publicação em perfil e/ou Company Pages.',
+      'Após o redirect, selecione o canal via set-channel: perfil pessoal ou Company Page específica.',
+      'O token de acesso é criptografado e armazenado para chamadas à Marketing API.',
+      'Use /misc/linkedin/mentions/builder para construir menções a perfis e empresas antes de publicar.',
+    ],
+    faqs: [
+      { q: 'Posso publicar como perfil e como empresa?', a: 'Sim. O StackPost suporta publicação no perfil pessoal e em Company Pages via set-channel, selecionando o destino a cada post.' },
+      { q: 'Como funcionam as menções?', a: 'Use o endpoint /misc/linkedin/mentions/builder para construir menções a perfis e empresas, que são inseridas no texto do post.' },
+      { q: 'Qual o limite de mídia por post?', a: 'Até 10 imagens ou 1 PDF por post, com suporte a JPG, PNG, GIF e PDF de até 8 MB cada.' },
+      { q: 'O LinkedIn suporta primeiro comentário?', a: 'Sim. O StackPost comenta automaticamente após publicar, com até 1.250 caracteres.' },
+    ],
+    useCases: [
+      { title: 'Employer branding', desc: 'Publique vagas e cultura da empresa em Company Pages com PDF de detalhes e primeiro comentário com link de candidatura.' },
+      { title: 'B2B e thought leadership', desc: 'Agende posts de liderança no perfil pessoal com menções a empresas parceiras e analytics de engajamento.' },
+      { title: 'Agências B2B', desc: 'Gerencie Company Pages de múltiplos clientes com RBAC, agendamento e analytics unificados.' },
+      { title: 'SaaS de recrutamento', desc: 'Integre publicação de vagas no LinkedIn no seu ATS com API unificada e webhooks em tempo real.' },
     ],
   },
   'x-api': {
@@ -123,6 +310,50 @@ export const platformPages: Record<string, SEOPageData> = {
       { name: 'OAuth sem set-channel', desc: 'Boards sincronizados via refresh automático.' },
       { name: 'Sem primeiro comentário', desc: 'O Pinterest não suporta comentários via API.' },
     ],
+    endpoints: [
+      { method: 'POST', path: '/post', desc: 'Publicar pin em board específico' },
+      { method: 'GET', path: '/boards', desc: 'Listar boards disponíveis da conta' },
+      { method: 'POST', path: '/media/upload', desc: 'Upload de imagem ou vídeo para o pin' },
+      { method: 'POST', path: '/boards', desc: 'Criar novo board' },
+      { method: 'GET', path: '/analytics/post/raw', desc: 'Métricas brutas de impressões e cliques' },
+      { method: 'DELETE', path: '/post/:id', desc: 'Excluir pin publicado' },
+    ],
+    specs: [
+      { label: 'Formatos de mídia', value: 'JPG, PNG' },
+      { label: 'Tamanho máximo', value: '20 MB' },
+      { label: 'Limite de texto', value: '500 caracteres' },
+      { label: 'Aspecto recomendado', value: '2:3 (vertical) ou 1:1 (quadrado)' },
+      { label: 'Limite de mídia', value: '1 imagem ou 1 vídeo por pin' },
+      { label: 'Board obrigatório', value: 'Sim, todo pin deve ser publicado em um board' },
+    ],
+    codeExample: `curl -X POST https://api.stackpost.com/post \\
+  -H "x-api-key: SUA_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "platform": "pinterest",
+    "boardName": "meu-board",
+    "text": "Inspiração para decoração 📌",
+    "mediaUrl": "https://exemplo.com/pin.jpg",
+    "link": "https://meusite.com/decoracao"
+  }'`,
+    oauthFlow: [
+      'Clique em "Conectar Pinterest" no painel do StackPost',
+      'Autorize o aplicativo na janela OAuth do Pinterest',
+      'Conceda permissões de leitura e escrita de pins e boards',
+      'Os boards são sincronizados automaticamente via refresh',
+    ],
+    faqs: [
+      { q: 'Preciso informar o board?', a: 'Sim, o boardName é obrigatório em toda publicação no Pinterest.' },
+      { q: 'O Pinterest suporta primeiro comentário?', a: 'Não. O Pinterest não suporta comentários via API.' },
+      { q: 'Posso publicar vídeos?', a: 'Sim, 1 vídeo por pin, até 20 MB.' },
+      { q: 'Como adiciono um link de destino?', a: 'Use o campo "link" no payload do post para definir a URL de destino.' },
+    ],
+    useCases: [
+      { title: 'Marketing visual', desc: 'Distribua inspirações e produtos em formato de pin.' },
+      { title: 'Tráfego para e-commerce', desc: 'Use links de destino para direcionar cliques ao site.' },
+      { title: 'Organização por boards', desc: 'Categorize conteúdo em boards temáticos.' },
+      { title: 'Analytics de impressões', desc: 'Acompanhe performance de pins com métricas brutas.' },
+    ],
   },
   'reddit-api': {
     slug: 'reddit-api',
@@ -153,6 +384,47 @@ export const platformPages: Record<string, SEOPageData> = {
       { name: 'Primeiro comentário', desc: 'Comente automaticamente após publicar (até 300 caracteres).' },
       { name: 'Texto 300 caracteres', desc: 'Limite de texto por post.' },
     ],
+    endpoints: [
+      { method: 'POST', path: '/post', desc: 'Publicar post com texto e mídia no Bluesky' },
+      { method: 'POST', path: '/media/upload', desc: 'Upload de mídia para anexar ao post' },
+      { method: 'POST', path: '/post/quote', desc: 'Quote post referenciando outro post' },
+      { method: 'POST', path: '/comment', desc: 'Primeiro comentário automático (até 300 caracteres)' },
+      { method: 'GET', path: '/analytics/post/raw', desc: 'Métricas brutas de likes e reposts' },
+    ],
+    specs: [
+      { label: 'Formatos de mídia', value: 'JPG, PNG, GIF, MP4, WEBM' },
+      { label: 'Tamanho máximo', value: '1 MB imagem / 50 MB vídeo' },
+      { label: 'Limite de texto', value: '300 caracteres' },
+      { label: 'Aspecto recomendado', value: '1:1 ou 16:9' },
+      { label: 'Limite de mídia', value: 'Até 4 mídias por post' },
+      { label: 'Protocolo', value: 'AT Protocol (aberto e descentralizado)' },
+    ],
+    codeExample: `curl -X POST https://api.stackpost.com/post \\
+  -H "x-api-key: SUA_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "platform": "bluesky",
+    "text": "Postando no Bluesky via API! 🦋",
+    "mediaUrls": ["https://exemplo.com/imagem.jpg"]
+  }'`,
+    oauthFlow: [
+      'Clique em "Conectar Bluesky" no painel do StackPost',
+      'Informe seu handle e senha de app (ou use OAuth do AT Protocol)',
+      'Defina serverUrl opcional (padrão bsky.social) se usar instância custom',
+      'O identificador é armazenado criptografado e vinculado à sua equipe',
+    ],
+    faqs: [
+      { q: 'Posso usar instância custom do Bluesky?', a: 'Sim. Informe serverUrl no payload; o padrão é bsky.social.' },
+      { q: 'O Bluesky suporta primeiro comentário?', a: 'Sim, até 300 caracteres via endpoint /comment.' },
+      { q: 'Quantas mídias posso anexar?', a: 'Até 4 mídias por post no Bluesky.' },
+      { q: 'O que é AT Protocol?', a: 'É o protocolo aberto e descentralizado por trás do Bluesky, sem lock-in.' },
+    ],
+    useCases: [
+      { title: 'Publicação descentralizada', desc: 'Publique em uma rede aberta sem lock-in de plataforma.' },
+      { title: 'Posts com link card', desc: 'Inclua cards de preview de links com rich metadata.' },
+      { title: 'Quote posts', desc: 'Referencie e comente posts de outros usuários.' },
+      { title: 'Multi-mídia', desc: 'Anexe até 4 imagens ou vídeos em um único post.' },
+    ],
   },
   'mastodon-api': {
     slug: 'mastodon-api',
@@ -166,6 +438,49 @@ export const platformPages: Record<string, SEOPageData> = {
       { name: 'Privacidade + spoiler', desc: 'Controle de privacidade e spoiler text por post.' },
       { name: 'Primeiro comentário', desc: 'Comente automaticamente após publicar (até 500 caracteres).' },
       { name: 'Status', desc: 'Publicação de status com mídia anexada.' },
+    ],
+    endpoints: [
+      { method: 'POST', path: '/api/v1/statuses', desc: 'Publicar um novo status' },
+      { method: 'POST', path: '/api/v1/media', desc: 'Upload de mídia para anexar ao status' },
+      { method: 'POST', path: '/api/v1/statuses/:id/reply', desc: 'Responder a um status (primeiro comentário)' },
+      { method: 'GET', path: '/api/v1/statuses/:id', desc: 'Consultar um status publicado' },
+      { method: 'DELETE', path: '/api/v1/statuses/:id', desc: 'Remover um status publicado' },
+      { method: 'GET', path: '/api/v1/accounts/verify_credentials', desc: 'Verificar credenciais da conta' },
+    ],
+    specs: [
+      { label: 'Formatos de mídia', value: 'JPG, PNG, GIF, WEBP, MP4' },
+      { label: 'Tamanho máximo (imagem)', value: '8 MB' },
+      { label: 'Tamanho máximo (vídeo)', value: '40 MB' },
+      { label: 'Limite de texto', value: '500 caracteres' },
+      { label: 'Aspecto', value: 'Variável (1:1, 16:9, 1.91:1)' },
+      { label: 'Limite de mídia', value: '4 mídias por status' },
+    ],
+    codeExample: `curl -X POST https://sua-instancia.social/api/v1/statuses \\
+  -H "Authorization: Bearer ACCESS_TOKEN" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "status": "Publicando via Mastodon API com StackPost 🐘",
+    "visibility": "public",
+    "media_ids": ["12345"]
+  }'`,
+    oauthFlow: [
+      'Registre seu app na instância Mastodon para obter client_id e client_secret.',
+      'Redirecione o usuário para /oauth/authorize com escopo read:statuses write:statuses.',
+      'Troque o código de autorização por um access_token em /oauth/token.',
+      'Informe o serverUrl da instância no set-channel do StackPost.',
+      'Use o access_token no header Authorization: Bearer para todas as chamadas.',
+    ],
+    faqs: [
+      { q: 'Preciso informar a instância Mastodon?', a: 'Sim, o serverUrl é obrigatório no set-channel. O StackPost suporta qualquer instância Mastodon.' },
+      { q: 'Quantas mídias posso anexar por status?', a: 'Até 4 mídias por status, com validação automática de formato e tamanho.' },
+      { q: 'Posso controlar a privacidade do post?', a: 'Sim, o campo visibility aceita public, unlisted, private e direct.' },
+      { q: 'O StackPost suporta spoiler text?', a: 'Sim, o campo spoiler_text adiciona aviso de conteúdo sensível ao status.' },
+    ],
+    useCases: [
+      { title: 'Federação multi-instância', desc: 'Publique em múltiplas instâncias Mastodon com serverUrl custom por conta.' },
+      { title: 'Posts com mídia', desc: 'Anexe até 4 imagens ou vídeos a cada status com validação automática.' },
+      { title: 'Privacidade granular', desc: 'Controle visibility e spoiler_text por post para audiências específicas.' },
+      { title: 'Primeiro comentário', desc: 'Responda automaticamente ao status logo após a publicação.' },
     ],
   },
   'slack-api': {
@@ -181,6 +496,46 @@ export const platformPages: Record<string, SEOPageData> = {
       { name: 'Texto 30.000 caracteres', desc: 'Limite de texto generoso por mensagem.' },
       { name: 'Primeiro comentário', desc: 'Comente automaticamente após publicar (até 30.000 caracteres).' },
     ],
+    endpoints: [
+      { method: 'POST', path: '/post', desc: 'Publicar mensagem no canal do Slack' },
+      { method: 'POST', path: '/comment', desc: 'Publicar primeiro comentário na thread' },
+      { method: 'POST', path: '/media', desc: 'Upload de mídia para anexar à mensagem' },
+      { method: 'GET', path: '/channels', desc: 'Listar canais disponíveis do workspace' },
+      { method: 'POST', path: '/webhook', desc: 'Enviar mensagem via webhook URL nativo' },
+    ],
+    specs: [
+      { label: 'Formatos de mídia', value: 'Qualquer formato suportado pelo Slack' },
+      { label: 'Tamanho máximo', value: '8 MB por anexo' },
+      { label: 'Limite de texto', value: '30.000 caracteres' },
+      { label: 'Aspecto', value: 'Variável (sem restrição de aspect ratio)' },
+      { label: 'Limite de mídia', value: '4 attachments por mensagem' },
+    ],
+    codeExample: `curl -X POST https://hooks.slack.com/services/T000/B000/XXXX \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "channel": "C0123ABCDEF",
+    "text": "Publicando no Slack via webhook com StackPost 💬",
+    "attachments": [{"text": "Anexo 1"}]
+  }'`,
+    oauthFlow: [
+      'Crie um Slack App no diretório de apps do seu workspace.',
+      'Adicione os scopes chat:write e channels:read ao app.',
+      'Instale o app no workspace e obtenha o Bot User OAuth Token.',
+      'Configure o webhook URL ou use o token no set-channel do StackPost.',
+      'Informe o channelId de destino para cada publicação.',
+    ],
+    faqs: [
+      { q: 'Preciso de webhook URL ou OAuth token?', a: 'O StackPost suporta ambos. Webhook URL é mais simples; OAuth token permite listar canais e threads.' },
+      { q: 'Quantos attachments posso enviar por mensagem?', a: 'Até 4 attachments por mensagem, com validação automática de tamanho.' },
+      { q: 'O channelId é obrigatório?', a: 'Sim, o canal de destino deve ser informado em cada publicação.' },
+      { q: 'Posso responder em threads?', a: 'Sim, o primeiro comentário é publicado como reply na thread da mensagem original.' },
+    ],
+    useCases: [
+      { title: 'Notificações de equipe', desc: 'Publique atualizações e alertas em canais específicos do workspace.' },
+      { title: 'Relatórios automatizados', desc: 'Envie relatórios com anexos e formatação rica para canais de monitoramento.' },
+      { title: 'Integração com CI/CD', desc: 'Notifique deploys e builds via webhook URL sem OAuth completo.' },
+      { title: 'Primeiro comentário em thread', desc: 'Adicione contexto adicional como reply na thread logo após publicar.' },
+    ],
   },
   'discord-api': {
     slug: 'discord-api',
@@ -194,6 +549,46 @@ export const platformPages: Record<string, SEOPageData> = {
       { name: '10 attachments', desc: 'Anexos por mensagem com validação automática.' },
       { name: 'Texto 2.000 caracteres', desc: 'Limite de texto por mensagem.' },
       { name: 'Primeiro comentário', desc: 'Comente automaticamente após publicar (até 2.000 caracteres).' },
+    ],
+    endpoints: [
+      { method: 'POST', path: '/post', desc: 'Publicar mensagem no canal do Discord' },
+      { method: 'POST', path: '/comment', desc: 'Publicar primeiro comentário na thread' },
+      { method: 'POST', path: '/media', desc: 'Upload de mídia para anexar à mensagem' },
+      { method: 'GET', path: '/channels', desc: 'Listar canais disponíveis do servidor' },
+      { method: 'POST', path: '/webhook', desc: 'Enviar mensagem via webhook URL nativo' },
+    ],
+    specs: [
+      { label: 'Formatos de mídia', value: 'Qualquer formato suportado pelo Discord' },
+      { label: 'Tamanho máximo', value: '25 MB por anexo' },
+      { label: 'Limite de texto', value: '2.000 caracteres' },
+      { label: 'Aspecto', value: 'Variável (sem restrição de aspect ratio)' },
+      { label: 'Limite de mídia', value: '10 attachments por mensagem' },
+    ],
+    codeExample: `curl -X POST https://discord.com/api/webhooks/123456/abcdef \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "content": "Publicando no Discord via webhook com StackPost 🎮",
+    "embeds": [{"title": "Embed", "description": "Conteúdo rich"}],
+    "attachments": []
+  }'`,
+    oauthFlow: [
+      'Crie um aplicativo no Discord Developer Portal.',
+      'Adicione os scopes bot e applications.commands ao app.',
+      'Gere o webhook URL no canal desejado ou use o token do bot.',
+      'Configure o webhook URL ou token no set-channel do StackPost.',
+      'Informe o channelId de destino para cada publicação.',
+    ],
+    faqs: [
+      { q: 'Preciso de webhook URL ou bot token?', a: 'O StackPost suporta ambos. Webhook URL é mais simples; bot token permite embeds e gestão de canais.' },
+      { q: 'Quantos attachments posso enviar por mensagem?', a: 'Até 10 attachments por mensagem, com validação automática de tamanho.' },
+      { q: 'Posso usar embeds?', a: 'Sim, embeds rich são suportados com título, descrição e campos customizados.' },
+      { q: 'O texto suporta Markdown?', a: 'Sim, o Discord suporta formatação Markdown nativa no conteúdo das mensagens.' },
+    ],
+    useCases: [
+      { title: 'Anúncios de comunidade', desc: 'Publique novidades e anúncios em canais específicos do servidor.' },
+      { title: 'Bots de notificação', desc: 'Integre alertas de sistemas via webhook URL sem OAuth completo.' },
+      { title: 'Embeds rich', desc: 'Envie mensagens com embeds formatados contendo título, descrição e campos.' },
+      { title: 'Primeiro comentário em thread', desc: 'Adicione contexto adicional como reply na thread logo após publicar.' },
     ],
   },
   'google-business-api': {
@@ -210,6 +605,49 @@ export const platformPages: Record<string, SEOPageData> = {
       { name: 'Reviews API', desc: 'Importação e resposta de reviews de clientes.' },
       { name: 'Sem primeiro comentário', desc: 'O Google Business Profile não suporta.' },
     ],
+    endpoints: [
+      { method: 'POST', path: '/post', desc: 'Publicar post local no Google Business Profile' },
+      { method: 'GET', path: '/locations', desc: 'Listar locations do business' },
+      { method: 'POST', path: '/locations', desc: 'Criar nova location' },
+      { method: 'GET', path: '/reviews', desc: 'Importar reviews de clientes' },
+      { method: 'POST', path: '/reviews/:id/reply', desc: 'Responder a um review' },
+      { method: 'GET', path: '/analytics/post/raw', desc: 'Analytics brutos dos posts locais' },
+    ],
+    specs: [
+      { label: 'Formatos de mídia', value: 'JPG, PNG' },
+      { label: 'Tamanho máximo', value: '5 MB por imagem' },
+      { label: 'Limite de texto', value: '1.500 caracteres' },
+      { label: 'Aspecto', value: '1:1 ou 4:3' },
+      { label: 'Limite de mídia', value: '1 imagem por post' },
+    ],
+    codeExample: `curl -X POST https://mybusiness.googleapis.com/v4/accounts/123/locations/456/localPosts \\
+  -H "Authorization: Bearer ACCESS_TOKEN" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "languageCode": "pt-BR",
+    "summary": "Post local via Google Business API com StackPost 📍",
+    "topicType": "STANDARD",
+    "media": [{"mediaFormat": "PHOTO", "sourceUrl": "https://exemplo.com/foto.jpg"}]
+  }'`,
+    oauthFlow: [
+      'Crie um projeto no Google Cloud Console e ative a My Business API.',
+      'Configure a tela de consentimento OAuth com escopos business.manage.',
+      'Gere credenciais OAuth 2.0 (client_id e client_secret).',
+      'Autorize a conta e selecione as locations no set-channel do StackPost.',
+      'Use o access_token para publicar posts locais e gerenciar reviews.',
+    ],
+    faqs: [
+      { q: 'Quais tipos de post são suportados?', a: 'STANDARD, EVENT, OFFER e ALERT, conforme a My Business API oficial.' },
+      { q: 'Posso gerenciar múltiplas locations?', a: 'Sim, o set-channel permite selecionar a location específica para cada publicação.' },
+      { q: 'Posso responder reviews via API?', a: 'Sim, o StackPost importa e responde reviews de clientes via Reviews API.' },
+      { q: 'Existe primeiro comentário?', a: 'Não, o Google Business Profile não suporta comentários via API.' },
+    ],
+    useCases: [
+      { title: 'Posts locais', desc: 'Publique ofertas e novidades no perfil do Google Business da sua empresa.' },
+      { title: 'Multi-location', desc: 'Gerencie posts em múltiplas locations com set-channel por publicação.' },
+      { title: 'Eventos e ofertas', desc: 'Crie posts do tipo EVENT e OFFER com datas e cupons de desconto.' },
+      { title: 'Gestão de reviews', desc: 'Importe e responda reviews de clientes automaticamente via API.' },
+    ],
   },
   'snapchat-api': {
     slug: 'snapchat-api',
@@ -223,6 +661,48 @@ export const platformPages: Record<string, SEOPageData> = {
       { name: '1 mídia por post', desc: 'Mídia única com validação automática.' },
       { name: 'Marketing API', desc: 'Integração oficial com a Snapchat Marketing API.' },
       { name: 'Sem primeiro comentário', desc: 'O Snapchat não suporta via API.' },
+    ],
+    endpoints: [
+      { method: 'POST', path: '/post', desc: 'Publicar Story ou Spotlight no Snapchat' },
+      { method: 'POST', path: '/media', desc: 'Upload de mídia para o post' },
+      { method: 'GET', path: '/me', desc: 'Consultar dados do Public Profile' },
+      { method: 'GET', path: '/analytics/post/raw', desc: 'Analytics brutos de Stories e Spotlights' },
+      { method: 'GET', path: '/lenses', desc: 'Listar lentes disponíveis para o perfil' },
+    ],
+    specs: [
+      { label: 'Formatos de mídia', value: 'MP4' },
+      { label: 'Tamanho máximo', value: '1 GB por vídeo' },
+      { label: 'Limite de texto', value: '1.000 caracteres' },
+      { label: 'Aspecto', value: '9:16 (vertical)' },
+      { label: 'Limite de mídia', value: '1 mídia por post' },
+    ],
+    codeExample: `curl -X POST https://ads.snapchat.com/api/v1/campaigns \\
+  -H "Authorization: Bearer ACCESS_TOKEN" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "public_profile_id": "abc123",
+    "media": {"type": "VIDEO", "url": "https://exemplo.com/video.mp4"},
+    "text": "Story via Snapchat Marketing API com StackPost 👻",
+    "placement": "STORY"
+  }'`,
+    oauthFlow: [
+      'Crie um app no Snapchat Developer Portal e configure a Marketing API.',
+      'Adicione os scopes necessários (snapchat-marketing, public_profile).',
+      'Redirecione o usuário para o fluxo OAuth oficial do Snapchat.',
+      'Selecione o Public Profile no set-channel do StackPost.',
+      'Use o access_token para publicar Stories e Spotlights via Marketing API.',
+    ],
+    faqs: [
+      { q: 'Quais formatos são suportados?', a: 'Apenas MP4 em aspecto 9:16 (vertical), com até 1 GB por vídeo.' },
+      { q: 'Posso publicar Stories e Spotlights?', a: 'Sim, o StackPost suporta ambos os formatos nativos do Snapchat.' },
+      { q: 'Preciso de Public Profile?', a: 'Sim, o OAuth é feito via Public Profile do Snapchat para publicação via API.' },
+      { q: 'Existe primeiro comentário?', a: 'Não, o Snapchat não suporta comentários via Marketing API.' },
+    ],
+    useCases: [
+      { title: 'Stories verticais', desc: 'Publique vídeos 9:16 diretamente nos Stories do seu Public Profile.' },
+      { title: 'Spotlight', desc: 'Distribua conteúdo vertical no Spotlight para alcance ampliado.' },
+      { title: 'Conteúdo com lentes', desc: 'Aplique lentes e sounds disponíveis via Marketing API.' },
+      { title: 'Publicação em escala', desc: 'Automatize a publicação de vídeos verticais em massa via API.' },
     ],
   },
 };

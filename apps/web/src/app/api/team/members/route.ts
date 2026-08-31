@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { uuidSchema, team_membersQuerySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { requireRole, PERMISSIONS } from '@/lib/rbac';
 
@@ -33,7 +35,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(members);
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }
@@ -43,7 +45,13 @@ export async function DELETE(req: NextRequest) {
   if (error) return error;
 
   const { searchParams } = new URL(req.url);
-  const id = searchParams.get('id');
+  const queryRaw = Object.fromEntries(searchParams);
+  const parsedQuery = team_membersQuerySchema.safeParse(queryRaw);
+  if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
+  const idRaw = searchParams.get('id');
+  const idParsed1 = uuidSchema.safeParse(idRaw);
+  if (!idParsed1.success) return NextResponse.json({ error: 'id inválido ou ausente' }, { status: 400 });
+  const id = idParsed1.data;
   if (!id) return NextResponse.json({ error: 'ID obrigatorio' }, { status: 400 });
 
   try {
@@ -67,7 +75,7 @@ export async function DELETE(req: NextRequest) {
     if (dbError) throw dbError;
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

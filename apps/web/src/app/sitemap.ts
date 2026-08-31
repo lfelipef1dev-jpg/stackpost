@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { platformPages, apiPages, comparisonPages, specializedPages, auxPages } from '@/lib/seo-pages-data';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://stackpost.expostacker.com.br';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://stackpost.com.br';
 
 const staticPages = [
   '',

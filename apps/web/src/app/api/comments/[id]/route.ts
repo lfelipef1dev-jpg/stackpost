@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
@@ -60,7 +61,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
         }
       }
     } catch (err) {
-      console.warn('Delete comment on platform error:', err);
+      logger.warn('Delete comment on platform error:', err);
     }
   }
 

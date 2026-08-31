@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 
@@ -111,14 +112,14 @@ export async function GET(req: NextRequest) {
           }
         }
       } catch (err) {
-        console.warn(`Import history ${account.platform} ${account.id} error:`, err);
+        logger.warn(`Import history ${account.platform} ${account.id} error:`, err);
         failed++;
       }
     }
 
     return NextResponse.json({ ok: true, cron: 'import-history', imported, failed, total: (accounts || []).length, timestamp: now });
   } catch (err: any) {
-    console.error('Cron import-history error:', err);
+    logger.error('Cron import-history error:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

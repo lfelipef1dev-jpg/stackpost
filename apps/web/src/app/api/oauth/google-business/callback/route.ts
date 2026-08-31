@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger';
+import { oauth_google_business_callbackQuerySchema } from '@/lib/schemas';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
@@ -6,6 +8,9 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_SITE
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
+  const queryRaw = Object.fromEntries(searchParams);
+  const parsedQuery = oauth_google_business_callbackQuerySchema.safeParse(queryRaw);
+  if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const code = searchParams.get('code');
   const state = searchParams.get('state');
   const storedState = req.cookies.get('oauth_state_gb')?.value;
@@ -58,7 +63,7 @@ export async function GET(req: NextRequest) {
         }
       }
     } catch (err) {
-      console.warn('Google Business locations fetch error:', err);
+      logger.warn('Google Business locations fetch error:', err);
     }
 
     // Se tem locations, criar uma conta por location; senao, uma conta generica
@@ -96,7 +101,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.redirect(new URL(`/accounts?connected=google_business&locations=${locations.length}`, req.url));
   } catch (err: any) {
-    console.error('Google Business OAuth error:', err);
+    logger.error('Google Business OAuth error:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

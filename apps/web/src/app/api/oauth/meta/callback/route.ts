@@ -1,9 +1,14 @@
+import { logger } from '@/lib/logger';
+import { oauth_meta_callbackQuerySchema } from '@/lib/schemas';
 import { NextRequest, NextResponse } from 'next/server';
 import { handleInstagramCallback } from '@/lib/adapters/instagram-api';
 import { getSupabase } from '@/lib/supabase';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
+  const queryRaw = Object.fromEntries(searchParams);
+  const parsedQuery = oauth_meta_callbackQuerySchema.safeParse(queryRaw);
+  if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const code = searchParams.get('code');
   const state = searchParams.get('state') || 'instagram';
 
@@ -72,7 +77,7 @@ export async function GET(req: NextRequest) {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://stackpost.expostacker.com.br';
     return NextResponse.redirect(`${siteUrl}/accounts?connected=instagram`);
   } catch (error: any) {
-    console.error('Meta OAuth error:', error);
+    logger.error('Meta OAuth error:', error);
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://stackpost.expostacker.com.br';
     return NextResponse.redirect(`${siteUrl}/accounts?error=${encodeURIComponent(error.message)}`);
   }

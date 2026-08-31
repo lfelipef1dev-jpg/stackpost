@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
@@ -20,21 +21,24 @@ export async function GET(req: NextRequest) {
       .single();
 
     let plan = 'free';
+    let organizationCreatedAt: string | null = null;
     if (team?.organization_id) {
       const { data: org } = await supabase
         .from('organizations')
-        .select('plan')
+        .select('plan, created_at')
         .eq('id', team.organization_id)
         .single();
       if (org?.plan) plan = org.plan;
+      if (org?.created_at) organizationCreatedAt = org.created_at;
     }
 
     // Limites por plano
     const planLimits: Record<string, { posts: number; comments: number; uploads: number }> = {
-      free: { posts: 20, comments: 50, uploads: 100 },
-      pro: { posts: 10000, comments: 5000, uploads: 100000 },
-      business: { posts: 100000, comments: 50000, uploads: 500000 },
-      enterprise: { posts: 999999, comments: 999999, uploads: 999999 },
+      free: { posts: 50, comments: 100, uploads: 100 * 1024 * 1024 }, // 100 MB
+      starter: { posts: 2000, comments: 1000, uploads: 500 * 1024 * 1024 }, // 500 MB
+      growth: { posts: 8000, comments: 4000, uploads: 2 * 1024 * 1024 * 1024 }, // 2 GB
+      scale: { posts: 40000, comments: 20000, uploads: 10 * 1024 * 1024 * 1024 }, // 10 GB
+      business: { posts: 150000, comments: 75000, uploads: 50 * 1024 * 1024 * 1024 }, // 50 GB
     };
     const limits = planLimits[plan] || planLimits.free;
 
@@ -46,16 +50,22 @@ export async function GET(req: NextRequest) {
     if (postsError) throw postsError;
     if (uploadsError) throw uploadsError;
 
-    return NextResponse.json({
+    return new NextResponse(JSON.stringify({
       plan,
+      organizationCreatedAt,
       credits: 0,
       month: firstOfMonth.split('T')[0],
       posts: { used: postsCount || 0, limit: limits.posts, remaining: limits.posts - (postsCount || 0) },
       comments: { used: 0, limit: limits.comments, remaining: limits.comments },
       uploads: { used: uploadsCount || 0, limit: limits.uploads, remaining: limits.uploads - (uploadsCount || 0) },
+    }), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'private, max-age=30, stale-while-revalidate=300',
+      },
     });
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

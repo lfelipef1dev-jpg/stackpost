@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { analytics_account_forceBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 
@@ -7,7 +9,10 @@ export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
-  const { accountId } = await req.json().catch(() => ({}));
+  const bodyRaw1 = await req.json().catch(() => ({}));
+  const parsed1 = analytics_account_forceBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const { accountId } = bodyRaw1;
   if (!accountId) return NextResponse.json({ error: 'accountId obrigatorio' }, { status: 400 });
 
   const supabase = getSupabase();
@@ -116,7 +121,7 @@ export async function POST(req: NextRequest) {
         });
         refreshed++;
       } catch (err) {
-        console.warn(`Force refresh ${pp.platform} post ${pp.post_id} error:`, err);
+        logger.warn(`Force refresh ${pp.platform} post ${pp.post_id} error:`, err);
         failed++;
       }
     }

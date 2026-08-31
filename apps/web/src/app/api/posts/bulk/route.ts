@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { posts_bulkBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 
@@ -11,7 +13,10 @@ export async function POST(req: NextRequest) {
     let posts: any[] = [];
 
     if (contentType.includes('application/json')) {
-      const body = await req.json();
+      const bodyRaw1 = await req.json();
+      const parsed1 = posts_bulkBodySchema.safeParse(bodyRaw1);
+      if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+      const body = bodyRaw1;
       posts = Array.isArray(body) ? body : body.posts || [];
     } else if (contentType.includes('text/csv') || contentType.includes('application/csv')) {
       const text = await req.text();
@@ -27,7 +32,10 @@ export async function POST(req: NextRequest) {
         posts.push(post);
       }
     } else {
-      const body = await req.json();
+      const bodyRaw2 = await req.json();
+      const parsed2 = posts_bulkBodySchema.safeParse(bodyRaw2);
+      if (!parsed2.success) return NextResponse.json(parsed2.error.issues, { status: 400 });
+      const body = bodyRaw2;
       posts = Array.isArray(body) ? body : [body];
     }
 
@@ -68,7 +76,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ created: created.length, posts: created }, { status: 201 });
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

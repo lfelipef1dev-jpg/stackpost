@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { comments_importBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 
@@ -7,7 +9,10 @@ export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
-  const { postId, platform, limit } = await req.json().catch(() => ({}));
+  const bodyRaw1 = await req.json().catch(() => ({}));
+  const parsed1 = comments_importBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const { postId, platform, limit } = bodyRaw1;
   if (!postId || !platform) return NextResponse.json({ error: 'postId e platform obrigatorios' }, { status: 400 });
 
   const supabase = getSupabase();
@@ -122,7 +127,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ imported, platform, postId });
   } catch (error: any) {
-    console.error('Import comments error:', error);
+    logger.error('Import comments error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

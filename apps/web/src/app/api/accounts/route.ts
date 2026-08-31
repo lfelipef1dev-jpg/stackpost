@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { accountsBodySchema, uuidSchema, accountsQuerySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { requireRole, PERMISSIONS } from '@/lib/rbac';
 
@@ -16,7 +18,7 @@ export async function GET(req: NextRequest) {
     if (dbError) throw dbError;
     return NextResponse.json(data);
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }
@@ -25,7 +27,10 @@ export async function POST(req: NextRequest) {
   const { user, error } = await requireRole(req, PERMISSIONS.MANAGE);
   if (error) return error;
 
-  const body = await req.json();
+  const bodyRaw1 = await req.json();
+  const parsed1 = accountsBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const body = bodyRaw1;
   try {
     const supabase = getSupabase();
     const { data, error: dbError } = await supabase
@@ -43,7 +48,7 @@ export async function POST(req: NextRequest) {
     if (dbError) throw dbError;
     return NextResponse.json(data);
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }
@@ -53,7 +58,13 @@ export async function DELETE(req: NextRequest) {
   if (error) return error;
 
   const { searchParams } = new URL(req.url);
-  const id = searchParams.get('id');
+  const queryRaw = Object.fromEntries(searchParams);
+  const parsedQuery = accountsQuerySchema.safeParse(queryRaw);
+  if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
+  const idRaw = searchParams.get('id');
+  const idParsed1 = uuidSchema.safeParse(idRaw);
+  if (!idParsed1.success) return NextResponse.json({ error: 'id inválido ou ausente' }, { status: 400 });
+  const id = idParsed1.data;
   if (!id) return NextResponse.json({ error: 'ID obrigatorio' }, { status: 400 });
 
   try {
@@ -66,7 +77,7 @@ export async function DELETE(req: NextRequest) {
     if (dbError) throw dbError;
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

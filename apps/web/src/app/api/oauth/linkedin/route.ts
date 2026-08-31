@@ -1,3 +1,4 @@
+import { oauth_linkedinQuerySchema } from '@/lib/schemas';
 import { NextRequest, NextResponse } from 'next/server';
 import { getLinkedInAuthUrl } from '@/lib/adapters/linkedin-api';
 import { getUserFromToken } from '@/lib/auth';

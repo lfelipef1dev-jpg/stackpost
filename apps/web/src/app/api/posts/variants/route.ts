@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { posts_variantsBodySchema, posts_variantsQuerySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { requireRole, PERMISSIONS } from '@/lib/rbac';
 import { v4 as uuid } from 'uuid';
@@ -8,6 +10,9 @@ export async function GET(req: NextRequest) {
   if (error) return error;
 
   const { searchParams } = new URL(req.url);
+  const queryRaw = Object.fromEntries(searchParams);
+  const parsedQuery = posts_variantsQuerySchema.safeParse(queryRaw);
+  if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const postId = searchParams.get('postId');
 
   try {
@@ -50,7 +55,7 @@ export async function GET(req: NextRequest) {
     if (queryError) throw queryError;
     return NextResponse.json(data || []);
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }
@@ -59,7 +64,10 @@ export async function POST(req: NextRequest) {
   const { user, error } = await requireRole(req, PERMISSIONS.EDIT);
   if (error) return error;
 
-  const body = await req.json();
+  const bodyRaw1 = await req.json();
+  const parsed1 = posts_variantsBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const body = bodyRaw1;
   const { postId, label, content, weight } = body;
 
   if (!postId || !content) {
@@ -94,7 +102,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(data, { status: 201 });
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }
@@ -103,7 +111,10 @@ export async function PUT(req: NextRequest) {
   const { user, error } = await requireRole(req, PERMISSIONS.EDIT);
   if (error) return error;
 
-  const body = await req.json();
+  const bodyRaw2 = await req.json();
+  const parsed2 = posts_variantsBodySchema.safeParse(bodyRaw2);
+  if (!parsed2.success) return NextResponse.json(parsed2.error.issues, { status: 400 });
+  const body = bodyRaw2;
   const { id, weight, status, metrics } = body;
 
   if (!id) return NextResponse.json({ error: 'id obrigatorio' }, { status: 400 });
@@ -150,7 +161,7 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

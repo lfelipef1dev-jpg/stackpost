@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { link_in_bioBodySchema, uuidSchema, link_in_bioQuerySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 
@@ -17,7 +19,7 @@ export async function GET(req: NextRequest) {
     if (error) throw error;
     return NextResponse.json(data);
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }
@@ -26,7 +28,10 @@ export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
-  const body = await req.json();
+  const bodyRaw1 = await req.json();
+  const parsed1 = link_in_bioBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const body = bodyRaw1;
   const { title, url } = body;
 
   if (!title || !url) return NextResponse.json({ error: 'title e url obrigatorios' }, { status: 400 });
@@ -51,7 +56,7 @@ export async function POST(req: NextRequest) {
     if (error) throw error;
     return NextResponse.json(data, { status: 201 });
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }
@@ -60,7 +65,10 @@ export async function PUT(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
-  const body = await req.json();
+  const bodyRaw2 = await req.json();
+  const parsed2 = link_in_bioBodySchema.safeParse(bodyRaw2);
+  if (!parsed2.success) return NextResponse.json(parsed2.error.issues, { status: 400 });
+  const body = bodyRaw2;
   const { id, direction } = body;
 
   if (!id || !direction) return NextResponse.json({ error: 'id e direction obrigatorios' }, { status: 400 });
@@ -98,7 +106,7 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }
@@ -108,7 +116,13 @@ export async function DELETE(req: NextRequest) {
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
-  const id = searchParams.get('id');
+  const queryRaw = Object.fromEntries(searchParams);
+  const parsedQuery = link_in_bioQuerySchema.safeParse(queryRaw);
+  if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
+  const idRaw = searchParams.get('id');
+  const idParsed1 = uuidSchema.safeParse(idRaw);
+  if (!idParsed1.success) return NextResponse.json({ error: 'id inválido ou ausente' }, { status: 400 });
+  const id = idParsed1.data;
   if (!id) return NextResponse.json({ error: 'ID obrigatorio' }, { status: 400 });
 
   const supabase = getSupabase();
@@ -122,7 +136,7 @@ export async function DELETE(req: NextRequest) {
     if (error) throw error;
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

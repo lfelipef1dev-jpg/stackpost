@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { commentsBodySchema, uuidSchema, commentsQuerySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { requireRole, PERMISSIONS } from '@/lib/rbac';
 import { normalizeError } from '@/lib/errors';
@@ -8,6 +10,9 @@ export async function GET(req: NextRequest) {
   if (error) return error;
 
   const { searchParams } = new URL(req.url);
+  const queryRaw = Object.fromEntries(searchParams);
+  const parsedQuery = commentsQuerySchema.safeParse(queryRaw);
+  if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const postId = searchParams.get('postId');
 
   const supabase = getSupabase();
@@ -56,7 +61,7 @@ export async function GET(req: NextRequest) {
     const rows = (comments || []).map((c: any) => ({ ...c, team_id: user.teamId }));
     return NextResponse.json(rows);
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }
@@ -65,7 +70,10 @@ export async function POST(req: NextRequest) {
   const { user, error } = await requireRole(req, PERMISSIONS.EDIT);
   if (error) return error;
 
-  const body = await req.json();
+  const bodyRaw1 = await req.json();
+  const parsed1 = commentsBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const body = bodyRaw1;
   const { postId, platform, text, scheduledAt } = body;
 
   if (!postId || !platform || !text) {
@@ -105,7 +113,13 @@ export async function DELETE(req: NextRequest) {
   if (error) return error;
 
   const { searchParams } = new URL(req.url);
-  const id = searchParams.get('id');
+  const queryRaw = Object.fromEntries(searchParams);
+  const parsedQuery = commentsQuerySchema.safeParse(queryRaw);
+  if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
+  const idRaw = searchParams.get('id');
+  const idParsed1 = uuidSchema.safeParse(idRaw);
+  if (!idParsed1.success) return NextResponse.json({ error: 'id inválido ou ausente' }, { status: 400 });
+  const id = idParsed1.data;
   if (!id) return NextResponse.json({ error: 'ID obrigatorio' }, { status: 400 });
 
   const supabase = getSupabase();
@@ -129,7 +143,7 @@ export async function DELETE(req: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

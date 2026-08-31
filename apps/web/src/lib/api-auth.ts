@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { createHmac } from 'crypto';
+import { requireEnv } from './env';
 
 export async function authenticateApiKey(req: NextRequest): Promise<{ teamId: string; orgId: string } | null> {
   const apiKey = req.headers.get('x-api-key');
   if (!apiKey || !apiKey.startsWith('pk_')) return null;
 
-  const keyHash = createHmac('sha256', process.env.JWT_SECRET || 'fallback').update(apiKey).digest('hex');
+  const keyHash = createHmac('sha256', requireEnv('JWT_SECRET')).update(apiKey).digest('hex');
 
   try {
     const supabase = getSupabase();
@@ -48,7 +49,7 @@ export async function requireAuth(req: NextRequest): Promise<{ teamId: string; o
   const { getUserFromToken } = await import('@/lib/auth');
   const user = await getUserFromToken(req);
   if (user) {
-    return { teamId: user.teamId, orgId: (user as any).orgId || '', source: 'jwt' };
+    return { teamId: user.teamId, orgId: user.teamId ? '' : '', source: 'jwt' };
   }
 
   return NextResponse.json({ error: 'Unauthorized. Use x-api-key or Bearer token.' }, { status: 401 });

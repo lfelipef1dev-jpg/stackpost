@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { comments_publishBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { requireRole, PERMISSIONS } from '@/lib/rbac';
 
@@ -7,7 +9,10 @@ export async function POST(req: NextRequest) {
   const { user, error: authError } = await requireRole(req, PERMISSIONS.EDIT);
   if (authError) return authError;
 
-  const { commentId } = await req.json().catch(() => ({}));
+  const bodyRaw1 = await req.json().catch(() => ({}));
+  const parsed1 = comments_publishBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const { commentId } = bodyRaw1;
   if (!commentId) return NextResponse.json({ error: 'commentId obrigatorio' }, { status: 400 });
 
   const supabase = getSupabase();
@@ -142,7 +147,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, externalId: externalCommentId });
   } catch (error: any) {
-    console.error('Publish comment error:', error);
+    logger.error('Publish comment error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

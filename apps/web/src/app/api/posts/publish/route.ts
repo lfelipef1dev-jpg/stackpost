@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { publishSchema } from '@/lib/schemas';
 import { publishPost } from '@/lib/publisher';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
@@ -7,8 +8,10 @@ export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
-  const body = await req.json();
-  const { postId } = body;
+  const bodyRaw1 = await req.json();
+  const parsed1 = publishSchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json({ error: parsed1.error.issues }, { status: 400 });
+  const { postId } = parsed1.data;
   if (!postId) return NextResponse.json({ error: 'postId obrigatorio' }, { status: 400 });
 
   const supabase = getSupabase();

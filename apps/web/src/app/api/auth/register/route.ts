@@ -1,18 +1,17 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { registerSchema } from '@/lib/schemas';
 import { SignJWT } from 'jose';
-import { createHash } from 'crypto';
+import { hash } from 'bcryptjs';
+import { requireEnv } from '@/lib/env';
+import { setTokenCookie } from '@/lib/cookies';
 
-const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'dev-secret');
-
-function sha256(input: string) {
-  return createHash('sha256').update(input).digest('hex');
-}
+const JWT_SECRET = new TextEncoder().encode(requireEnv('JWT_SECRET'));
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const parsed = registerSchema.safeParse(body);
+  const bodyRaw1 = await req.json();
+  const parsed = registerSchema.safeParse(bodyRaw1);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.issues }, { status: 400 });
   }
@@ -50,10 +49,12 @@ export async function POST(req: NextRequest) {
     }
     const teamId = teamRow.id;
 
+    const passwordHash = await hash(password, 12);
+
     const { data: user, error: userError } = await supabase
       .from('users')
-      .insert({ team_id: teamId, email, name, password_hash: sha256(password), role: 'admin' })
-      .select('*')
+      .insert({ team_id: teamId, email, name, password_hash: passwordHash, role: 'admin' })
+      .select('id, team_id, email, name, role')
       .single();
     if (userError || !user) {
       return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
@@ -68,9 +69,11 @@ export async function POST(req: NextRequest) {
       .setExpirationTime('7d')
       .sign(JWT_SECRET);
 
-    return NextResponse.json({ user, token });
+    const res = NextResponse.json({ user });
+    setTokenCookie(req, res, token);
+    return res;
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

@@ -47,10 +47,11 @@ interface PlatformIconProps {
   size?: number;
   color?: string;
   className?: string;
+  style?: React.CSSProperties;
 }
 
-export function PlatformIcon({ id, size = 18, color, className }: PlatformIconProps) {
+export function PlatformIcon({ id, size = 18, color, className, style }: PlatformIconProps) {
   const Icon = getPlatformIcon(id);
   if (!Icon) return <div className="w-2 h-2 rounded-full bg-brand-text/30" />;
-  return <Icon size={size} color={color} className={className} />;
+  return <Icon size={size} color={color} className={className} style={style} />;
 }

@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger';
+import { best_timeQuerySchema } from '@/lib/schemas';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { requireRole, PERMISSIONS } from '@/lib/rbac';
@@ -14,6 +16,9 @@ export async function GET(req: NextRequest) {
   if (error) return error;
 
   const { searchParams } = new URL(req.url);
+  const queryRaw = Object.fromEntries(searchParams);
+  const parsedQuery = best_timeQuerySchema.safeParse(queryRaw);
+  if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const platform = searchParams.get('platform');
 
   const supabase = getSupabase();
@@ -117,7 +122,7 @@ export async function GET(req: NextRequest) {
       basedOn: rows.length > 0 ? `${rows.length} horas com dados historicos` : 'Padroes da industria',
     });
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

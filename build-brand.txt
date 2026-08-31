@@ -1,0 +1,236 @@
+﻿
+> @stackpost/web@0.1.0 build
+> next build
+
+   Ôû▓ Next.js 15.5.24
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ Ô£ô Compiled successfully in 16.6s
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/201) ...
+   Generating static pages (50/201) 
+   Generating static pages (100/201) 
+   Generating static pages (150/201) 
+ Ô£ô Generating static pages (201/201)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                     Size  First Load JS
+Ôöî Ôùï /                                        2.18 kB         162 kB
+Ôö£ Ôùï /_not-found                                991 B         104 kB
+Ôö£ Ôùï /about                                     575 B         155 kB
+Ôö£ Ôùï /accounts                                5.35 kB         126 kB
+Ôö£ Ôùï /analytics                               3.35 kB         119 kB
+Ôö£ Ôùï /analytics-api                             745 B         155 kB
+Ôö£ Ôùï /api-for-ai-agents                         745 B         155 kB
+Ôö£ Ôùï /api-for-saas                              745 B         155 kB
+Ôö£ ãÆ /api/accounts                              402 B         103 kB
+Ôö£ ãÆ /api/accounts/by-type                      402 B         103 kB
+Ôö£ ãÆ /api/accounts/connect                      402 B         103 kB
+Ôö£ ãÆ /api/accounts/connection-check             402 B         103 kB
+Ôö£ ãÆ /api/accounts/copy                         402 B         103 kB
+Ôö£ ãÆ /api/accounts/disconnect                   402 B         103 kB
+Ôö£ ãÆ /api/accounts/profile-refresh              402 B         103 kB
+Ôö£ ãÆ /api/accounts/refresh-channels             402 B         103 kB
+Ôö£ ãÆ /api/accounts/refresh-token                402 B         103 kB
+Ôö£ ãÆ /api/accounts/set-channel                  402 B         103 kB
+Ôö£ ãÆ /api/accounts/unset-channel                402 B         103 kB
+Ôö£ ãÆ /api/ai/caption                            402 B         103 kB
+Ôö£ ãÆ /api/ai/hashtags                           402 B         103 kB
+Ôö£ ãÆ /api/analytics                             402 B         103 kB
+Ôö£ ãÆ /api/analytics/account                     402 B         103 kB
+Ôö£ ãÆ /api/analytics/account/force               402 B         103 kB
+Ôö£ ãÆ /api/analytics/account/raw                 402 B         103 kB
+Ôö£ ãÆ /api/analytics/post                        402 B         103 kB
+Ôö£ ãÆ /api/analytics/post/bulk                   402 B         103 kB
+Ôö£ ãÆ /api/analytics/post/force                  402 B         103 kB
+Ôö£ ãÆ /api/analytics/post/raw                    402 B         103 kB
+Ôö£ ãÆ /api/api-keys                              402 B         103 kB
+Ôö£ ãÆ /api/auth/login                            402 B         103 kB
+Ôö£ ãÆ /api/auth/register                         402 B         103 kB
+Ôö£ ãÆ /api/best-time                             402 B         103 kB
+Ôö£ ãÆ /api/comments                              402 B         103 kB
+Ôö£ ãÆ /api/comments/[id]                         402 B         103 kB
+Ôö£ ãÆ /api/comments/[id]/retry                   402 B         103 kB
+Ôö£ ãÆ /api/comments/import                       402 B         103 kB
+Ôö£ ãÆ /api/comments/import/[importId]            402 B         103 kB
+Ôö£ ãÆ /api/comments/import/comments              402 B         103 kB
+Ôö£ ãÆ /api/cron/auto-disable-webhooks            402 B         103 kB
+Ôö£ ãÆ /api/cron/auto-reconnect                   402 B         103 kB
+Ôö£ ãÆ /api/cron/best-time-ml                     402 B         103 kB
+Ôö£ ãÆ /api/cron/cleanup-uploads                  402 B         103 kB
+Ôö£ ãÆ /api/cron/health-check                     402 B         103 kB
+Ôö£ ãÆ /api/cron/import-history                   402 B         103 kB
+Ôö£ ãÆ /api/cron/monthly-usage-reset              402 B         103 kB
+Ôö£ ãÆ /api/cron/publish-scheduled                402 B         103 kB
+Ôö£ ãÆ /api/cron/refresh-tokens                   402 B         103 kB
+Ôö£ ãÆ /api/cron/sync-analytics                   402 B         103 kB
+Ôö£ ãÆ /api/cron/webhook-retry                    402 B         103 kB
+Ôö£ ãÆ /api/cross-post                            402 B         103 kB
+Ôö£ ãÆ /api/events                                402 B         103 kB
+Ôö£ ãÆ /api/imports                               402 B         103 kB
+Ôö£ ãÆ /api/link-in-bio                           402 B         103 kB
+Ôö£ ãÆ /api/me                                    402 B         103 kB
+Ôö£ ãÆ /api/oauth/bluesky                         402 B         103 kB
+Ôö£ ãÆ /api/oauth/bluesky/callback                402 B         103 kB
+Ôö£ ãÆ /api/oauth/linkedin                        402 B         103 kB
+Ôö£ ãÆ /api/oauth/linkedin/callback               402 B         103 kB
+Ôö£ ãÆ /api/oauth/mastodon                        402 B         103 kB
+Ôö£ ãÆ /api/oauth/mastodon/callback               402 B         103 kB
+Ôö£ ãÆ /api/oauth/meta                            402 B         103 kB
+Ôö£ ãÆ /api/oauth/meta/callback                   402 B         103 kB
+Ôö£ ãÆ /api/oauth/pinterest                       402 B         103 kB
+Ôö£ ãÆ /api/oauth/pinterest/callback              402 B         103 kB
+Ôö£ ãÆ /api/oauth/reddit                          402 B         103 kB
+Ôö£ ãÆ /api/oauth/reddit/callback                 402 B         103 kB
+Ôö£ ãÆ /api/oauth/snapchat                        402 B         103 kB
+Ôö£ ãÆ /api/oauth/snapchat/callback               402 B         103 kB
+Ôö£ ãÆ /api/oauth/threads                         402 B         103 kB
+Ôö£ ãÆ /api/oauth/threads/callback                402 B         103 kB
+Ôö£ ãÆ /api/oauth/tiktok                          402 B         103 kB
+Ôö£ ãÆ /api/oauth/tiktok/callback                 402 B         103 kB
+Ôö£ ãÆ /api/oauth/x                               402 B         103 kB
+Ôö£ ãÆ /api/oauth/x/callback                      402 B         103 kB
+Ôö£ ãÆ /api/oauth/youtube                         402 B         103 kB
+Ôö£ ãÆ /api/oauth/youtube/callback                402 B         103 kB
+Ôö£ ãÆ /api/onboarding                            402 B         103 kB
+Ôö£ ãÆ /api/organization                          402 B         103 kB
+Ôö£ ãÆ /api/pagamentos/checkout                   402 B         103 kB
+Ôö£ ãÆ /api/pagamentos/webhook                    402 B         103 kB
+Ôö£ ãÆ /api/posts                                 402 B         103 kB
+Ôö£ ãÆ /api/posts/[id]                            402 B         103 kB
+Ôö£ ãÆ /api/posts/[id]/retry                      402 B         103 kB
+Ôö£ ãÆ /api/posts/approve                         402 B         103 kB
+Ôö£ ãÆ /api/posts/bulk                            402 B         103 kB
+Ôö£ ãÆ /api/posts/publish                         402 B         103 kB
+Ôö£ ãÆ /api/posts/reference-key/[referenceKey]    402 B         103 kB
+Ôö£ ãÆ /api/posts/variants                        402 B         103 kB
+Ôö£ ãÆ /api/status                                402 B         103 kB
+Ôö£ ãÆ /api/team                                  402 B         103 kB
+Ôö£ ãÆ /api/upload                                402 B         103 kB
+Ôö£ ãÆ /api/upload/finalize                       402 B         103 kB
+Ôö£ ãÆ /api/upload/from-url                       402 B         103 kB
+Ôö£ ãÆ /api/upload/init                           402 B         103 kB
+Ôö£ ãÆ /api/upload/multipart                      402 B         103 kB
+Ôö£ ãÆ /api/upload/tus                            402 B         103 kB
+Ôö£ ãÆ /api/usage/comments                        402 B         103 kB
+Ôö£ ãÆ /api/usage/daily-limits                    402 B         103 kB
+Ôö£ ãÆ /api/usage/imports                         402 B         103 kB
+Ôö£ ãÆ /api/usage/monthly                         402 B         103 kB
+Ôö£ ãÆ /api/usage/posts                           402 B         103 kB
+Ôö£ ãÆ /api/usage/uploads                         402 B         103 kB
+Ôö£ ãÆ /api/webhooks                              402 B         103 kB
+Ôö£ ãÆ /api/webhooks/deliver                      402 B         103 kB
+Ôö£ ãÆ /api/webhooks/replay                       402 B         103 kB
+Ôö£ Ôùï /ayrshare-alternative                      745 B         155 kB
+Ôö£ Ôùï /billing                                 4.49 kB         120 kB
+Ôö£ Ôùï /blog                                      575 B         155 kB
+Ôö£ Ôùï /blotato-alternative                       745 B         155 kB
+Ôö£ Ôùï /bluesky-api                               745 B         155 kB
+Ôö£ Ôùï /brand-kit                                 575 B         155 kB
+Ôö£ Ôùï /buffer-alternative                        745 B         155 kB
+Ôö£ Ôùï /bulk                                     2.6 kB         105 kB
+Ôö£ Ôùï /bulk-posting                              745 B         155 kB
+Ôö£ Ôùï /calendar                                3.62 kB         119 kB
+Ôö£ Ôùï /changelog                                 575 B         155 kB
+Ôö£ Ôùï /claude-code-social-media                  745 B         155 kB
+Ôö£ Ôùï /comment-to-dm                             745 B         155 kB
+Ôö£ Ôùï /comments                                3.19 kB         119 kB
+Ôö£ Ôùï /comments-api                              745 B         155 kB
+Ôö£ Ôùï /comparisons                               545 B         155 kB
+Ôö£ Ôùï /composer                                6.63 kB         128 kB
+Ôö£ Ôùï /contact                                   575 B         155 kB
+Ôö£ Ôùï /cursor-social-media                       745 B         155 kB
+Ôö£ Ôùï /dashboard                               3.43 kB         119 kB
+Ôö£ Ôùï /discord-api                               745 B         155 kB
+Ôö£ Ôùï /docs                                      745 B         155 kB
+Ôö£ Ôùï /docs/api                                  572 B         155 kB
+Ôö£ Ôùï /docs/api-reference                        174 B         116 kB
+Ôö£ Ôùï /docs/cli                                  572 B         155 kB
+Ôö£ Ôùï /docs/mcp                                  572 B         155 kB
+Ôö£ Ôùï /docs/oauth                                572 B         155 kB
+Ôö£ Ôùï /docs/sdk                                  572 B         155 kB
+Ôö£ Ôùï /docs/webhooks                             572 B         155 kB
+Ôö£ Ôùï /errors                                    745 B         155 kB
+Ôö£ Ôùï /facebook-api                              745 B         155 kB
+Ôö£ Ôùï /facebook-auto-reply                       745 B         155 kB
+Ôö£ Ôùï /facebook-comments-api                     745 B         155 kB
+Ôö£ Ôùï /facebook-messenger-api                    745 B         155 kB
+Ôö£ Ôùï /features                                  546 B         155 kB
+Ôö£ Ôùï /first-comment-api                         745 B         155 kB
+Ôö£ Ôùï /glossary                                  575 B         155 kB
+Ôö£ Ôùï /google-ads-api                            745 B         155 kB
+Ôö£ Ôùï /google-business-api                       745 B         155 kB
+Ôö£ Ôùï /google-business-profile-posts-api         745 B         155 kB
+Ôö£ Ôùï /google-business-profile-reviews-api       745 B         155 kB
+Ôö£ Ôùï /imports                                 2.73 kB         118 kB
+Ôö£ Ôùï /instagram-api                             745 B         155 kB
+Ôö£ Ôùï /instagram-auto-reply                      745 B         155 kB
+Ôö£ Ôùï /instagram-comments-api                    745 B         155 kB
+Ôö£ Ôùï /instagram-dm-api                          745 B         155 kB
+Ôö£ Ôùï /instagram-music-api                       745 B         155 kB
+Ôö£ Ôùï /link-in-bio                             3.23 kB         119 kB
+Ôö£ Ôùï /linkedin-api                              745 B         155 kB
+Ôö£ Ôùï /linkedin-company-page-api                 745 B         155 kB
+Ôö£ Ôùï /login                                   1.28 kB         104 kB
+Ôö£ Ôùï /mastodon-api                              745 B         155 kB
+Ôö£ Ôùï /media                                   3.39 kB         119 kB
+Ôö£ Ôùï /media-upload-api                          745 B         155 kB
+Ôö£ Ôùï /meta-ads-api                              745 B         155 kB
+Ôö£ Ôùï /meta-app-review-rejected                  745 B         155 kB
+Ôö£ Ôùï /meta-automation                           745 B         155 kB
+Ôö£ Ôùï /metricool-alternative                     745 B         155 kB
+Ôö£ Ôùï /multi-tenant-social-media-api             745 B         155 kB
+Ôö£ Ôùï /onboarding                              2.71 kB         105 kB
+Ôö£ Ôùï /partners/savedtime                        572 B         155 kB
+Ôö£ Ôùï /partners/that-marketing-buddy             572 B         155 kB
+Ôö£ Ôùï /pinterest-api                             745 B         155 kB
+Ôö£ Ôùï /plans                                   7.11 kB         162 kB
+Ôö£ Ôùï /platforms                                 745 B         155 kB
+Ôö£ Ôùï /post-history-api                          745 B         155 kB
+Ôö£ Ôùï /posting-api                               745 B         155 kB
+Ôö£ Ôùï /postiz-alternative                        745 B         155 kB
+Ôö£ Ôùï /privacy                                   575 B         155 kB
+Ôö£ Ôùï /publer-alternative                        745 B         155 kB
+Ôö£ Ôùï /reddit-api                                745 B         155 kB
+Ôö£ Ôùï /register                                1.31 kB         104 kB
+Ôö£ Ôùï /robots.txt                                402 B         103 kB
+Ôö£ Ôùï /scheduling-api                            745 B         155 kB
+Ôö£ Ôùï /settings                                3.62 kB         119 kB
+Ôö£ Ôùï /sitemap.xml                               402 B         103 kB
+Ôö£ Ôùï /slack-api                                 745 B         155 kB
+Ôö£ Ôùï /snapchat-api                              745 B         155 kB
+Ôö£ Ôùï /social-ads-api                            745 B         155 kB
+Ôö£ Ôùï /social-dm-api                             745 B         155 kB
+Ôö£ Ôùï /social-media-api                          745 B         155 kB
+Ôö£ Ôùï /social-media-cli                          745 B         155 kB
+Ôö£ Ôùï /social-media-mcp-server                   745 B         155 kB
+Ôö£ Ôùï /socialpilot-alternative                   745 B         155 kB
+Ôö£ Ôùï /status                                    575 B         155 kB
+Ôö£ Ôùï /team                                    3.38 kB         119 kB
+Ôö£ Ôùï /terms                                     575 B         155 kB
+Ôö£ Ôùï /threads-api                               745 B         155 kB
+Ôö£ Ôùï /tiktok-api                                745 B         155 kB
+Ôö£ Ôùï /tiktok-content-posting-api                745 B         155 kB
+Ôö£ Ôùï /tiktok-music-api                          745 B         155 kB
+Ôö£ Ôùï /unified-api                               745 B         155 kB
+Ôö£ Ôùï /upload-post-alternative                   745 B         155 kB
+Ôö£ Ôùï /webhooks                                3.42 kB         119 kB
+Ôö£ Ôùï /white-label-social-media-api              745 B         155 kB
+Ôö£ Ôùï /x-api                                     745 B         155 kB
+Ôö£ Ôùï /youtube-api                               745 B         155 kB
+Ôö£ Ôùï /youtube-upload-api                        745 B         155 kB
+Ôöö Ôùï /zernio-alternative                        745 B         155 kB
++ First Load JS shared by all                 103 kB
+  Ôö£ chunks/18-51732c0e3a66e117.js            46.4 kB
+  Ôö£ chunks/87c73c54-24122e7b92478d00.js      54.2 kB
+  Ôöö other shared chunks (total)                 2 kB
+
+
+ãÆ Middleware                                   35 kB
+
+Ôùï  (Static)   prerendered as static content
+ãÆ  (Dynamic)  server-rendered on demand
+

@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { upload_registerBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 
@@ -7,7 +9,10 @@ export async function POST(req: NextRequest) {
     const user = await getUserFromToken(req);
     if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
-    const { id, fileName, contentType, size, url } = await req.json();
+    const bodyRaw1 = await req.json();
+    const parsed1 = upload_registerBodySchema.safeParse(bodyRaw1);
+    if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+    const { id, fileName, contentType, size, url } = bodyRaw1;
     if (!id || !url) return NextResponse.json({ error: 'id e url obrigatorios' }, { status: 400 });
 
     const supabase = getSupabase();
@@ -27,13 +32,13 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (error) {
-      console.error('Register upload error:', error);
+      logger.error('Register upload error:', error);
       return NextResponse.json({ error: 'Erro ao registrar' }, { status: 500 });
     }
 
     return NextResponse.json({ ok: true, id });
   } catch (err: any) {
-    console.error('Register upload error:', err);
+    logger.error('Register upload error:', err);
     return NextResponse.json({ error: err.message || 'Erro interno' }, { status: 500 });
   }
 }

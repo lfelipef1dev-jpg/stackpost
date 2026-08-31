@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { posts_approveBodySchema, posts_approveQuerySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { requireRole, PERMISSIONS } from '@/lib/rbac';
 
@@ -16,7 +18,10 @@ export async function POST(req: NextRequest) {
   const { user, error } = await requireRole(req, PERMISSIONS.EDIT);
   if (error) return error;
 
-  const body = await req.json();
+  const bodyRaw1 = await req.json();
+  const parsed1 = posts_approveBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const body = bodyRaw1;
   const { postId, action } = body;
 
   if (!postId || !action) {
@@ -79,7 +84,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }
@@ -89,6 +94,9 @@ export async function GET(req: NextRequest) {
   if (error) return error;
 
   const { searchParams } = new URL(req.url);
+  const queryRaw = Object.fromEntries(searchParams);
+  const parsedQuery = posts_approveQuerySchema.safeParse(queryRaw);
+  if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const status = searchParams.get('status') || 'review';
 
   try {
@@ -102,7 +110,7 @@ export async function GET(req: NextRequest) {
     if (queryError) throw queryError;
     return NextResponse.json(data || []);
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

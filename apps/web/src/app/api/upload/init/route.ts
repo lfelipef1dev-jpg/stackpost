@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { upload_initBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 import { v4 as uuid } from 'uuid';
@@ -12,7 +13,10 @@ export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
-  const body = await req.json();
+  const bodyRaw1 = await req.json();
+  const parsed1 = upload_initBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const body = bodyRaw1;
   const { fileName, mimeType, fileSize, teamId } = body;
 
   if (!fileName || !mimeType) {

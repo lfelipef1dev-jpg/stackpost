@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { posts_idBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 
@@ -25,7 +27,10 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
-  const body = await req.json().catch(() => ({}));
+  const bodyRaw1 = await req.json().catch(() => ({}));
+  const parsed1 = posts_idBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const body = bodyRaw1;
   const supabase = getSupabase();
 
   const updates: any = {};
@@ -98,7 +103,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
         });
       }
     } catch (err) {
-      console.warn(`Delete on ${pp.platform} error:`, err);
+      logger.warn(`Delete on ${pp.platform} error:`, err);
     }
   }
 

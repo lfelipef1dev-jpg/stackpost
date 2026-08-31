@@ -15,7 +15,7 @@ const config: Config = {
         'brand-text-secondary': 'rgba(230, 230, 230, 0.70)',
         'brand-accent': '#8AB4F8',
         'brand-accent-hover': '#AECBFA',
-        'success': '#4ADE80',
+        'success': '#22C55E',
         'error': '#F87171',
         'warning': '#FBBF24',
         'info': '#60A5FA',

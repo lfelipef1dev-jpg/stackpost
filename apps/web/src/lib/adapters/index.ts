@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { PlatformAdapter, PublishParams, PublishResult } from './base';
 import { publishToInstagram } from './instagram-api';
 import { publishToLinkedIn } from './linkedin-api';
@@ -42,7 +43,7 @@ export class LinkedInAdapter extends PlatformAdapter {
       return { success: false, error: { code: 'VALIDATION', message: 'LinkedIn: texto maximo 3000 caracteres.' } };
     }
     if (params.firstComment) {
-      console.warn('LinkedIn: firstComment nao suportado pela API oficial. Ignorando.');
+      logger.warn('LinkedIn: firstComment nao suportado pela API oficial. Ignorando.');
     }
     return publishToLinkedIn(params.account, params.content, params.imageUrl || '', params.videoUrl || '', params.mediaUrls, params.pdfUrl);
   }

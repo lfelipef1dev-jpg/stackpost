@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
@@ -28,7 +29,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     const result = await publishPost(postId);
     return NextResponse.json({ success: true, postId, result });
   } catch (error: any) {
-    console.error('Retry post error:', error);
+    logger.error('Retry post error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

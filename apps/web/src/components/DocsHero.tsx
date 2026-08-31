@@ -8,9 +8,10 @@ interface DocsHeroProps {
   title: string;
   description: string;
   color?: string;
+  docsHref?: string;
 }
 
-export function DocsHero({ icon: Icon, label, title, description, color = '#8AB4F8' }: DocsHeroProps) {
+export function DocsHero({ icon: Icon, label, title, description, color = '#8AB4F8', docsHref = '/docs/api' }: DocsHeroProps) {
   return (
     <section className="relative pt-24 pb-20 px-4 overflow-hidden">
       {/* Glow effects */}
@@ -72,7 +73,7 @@ export function DocsHero({ icon: Icon, label, title, description, color = '#8AB4
                   Começar grátis <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
-                  href="/docs"
+                  href={docsHref}
                   className="px-6 py-3 rounded-xl border border-brand-border text-brand-text hover:bg-brand-elevated transition"
                 >
                   Ver documentação
@@ -96,8 +97,8 @@ export function DocsHero({ icon: Icon, label, title, description, color = '#8AB4
                   style={{ borderColor: `${color}20` }}
                 />
                 <Icon
-                  className="w-28 h-28 lg:w-36 lg:h-36 drop-shadow-[0_0_40px_rgba(255,255,255,0.2)]"
-                  style={{ color }}
+                  className="w-28 h-28 lg:w-36 lg:h-36"
+                  style={{ color, filter: `drop-shadow(0 0 50px ${color})` }}
                 />
               </div>
             </div>

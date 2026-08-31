@@ -1,9 +1,14 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { accounts_set_channelBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 
 // Define/atualiza o canal selecionado para uma social_account
 export async function POST(req: NextRequest) {
-  const body = await req.json().catch(() => ({}));
+  const bodyRaw1 = await req.json().catch(() => ({}));
+  const parsed1 = accounts_set_channelBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const body = bodyRaw1;
   const { accountId, platformAccountId, platformMetadata } = body;
 
   if (!accountId) {
@@ -46,7 +51,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, accountId, ...updates });
   } catch (error: any) {
-    console.error('set-channel error:', error);
+    logger.error('set-channel error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

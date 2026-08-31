@@ -1,18 +1,17 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { loginSchema } from '@/lib/schemas';
 import { SignJWT } from 'jose';
-import { createHash } from 'crypto';
+import { compare } from 'bcryptjs';
+import { requireEnv } from '@/lib/env';
+import { setTokenCookie } from '@/lib/cookies';
 
-const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'dev-secret');
-
-function sha256(input: string) {
-  return createHash('sha256').update(input).digest('hex');
-}
+const JWT_SECRET = new TextEncoder().encode(requireEnv('JWT_SECRET'));
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const parsed = loginSchema.safeParse(body);
+  const bodyRaw1 = await req.json();
+  const parsed = loginSchema.safeParse(bodyRaw1);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.issues }, { status: 400 });
   }
@@ -24,23 +23,26 @@ export async function POST(req: NextRequest) {
 
     const { data: user, error } = await supabase
       .from('users')
-      .select('*')
+      .select('id, team_id, email, name, role, password_hash')
       .eq('email', email)
-      .eq('password_hash', sha256(password))
       .single();
 
-    if (error || !user) {
+    if (error || !user || !(await compare(password, user.password_hash))) {
       return NextResponse.json({ error: 'Credenciais invalidas' }, { status: 401 });
     }
+
+    const { password_hash, ...safeUser } = user;
 
     const token = await new SignJWT({ sub: user.id, email, name: user.name, role: user.role })
       .setProtectedHeader({ alg: 'HS256' })
       .setExpirationTime('7d')
       .sign(JWT_SECRET);
 
-    return NextResponse.json({ user, token });
+    const res = NextResponse.json({ user: safeUser });
+    setTokenCookie(req, res, token);
+    return res;
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

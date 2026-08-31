@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { teamBodySchema, uuidSchema, teamQuerySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { requireRole, PERMISSIONS } from '@/lib/rbac';
 
@@ -32,7 +34,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(rows);
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }
@@ -41,7 +43,10 @@ export async function POST(req: NextRequest) {
   const { user, error } = await requireRole(req, PERMISSIONS.MANAGE);
   if (error) return error;
 
-  const body = await req.json();
+  const bodyRaw1 = await req.json();
+  const parsed1 = teamBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const body = bodyRaw1;
   const { email, role } = body;
 
   if (!email || !role) return NextResponse.json({ error: 'email e role obrigatorios' }, { status: 400 });
@@ -70,7 +75,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(data, { status: 201 });
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }
@@ -79,7 +84,10 @@ export async function PUT(req: NextRequest) {
   const { user, error } = await requireRole(req, PERMISSIONS.MANAGE);
   if (error) return error;
 
-  const body = await req.json();
+  const bodyRaw2 = await req.json();
+  const parsed2 = teamBodySchema.safeParse(bodyRaw2);
+  if (!parsed2.success) return NextResponse.json(parsed2.error.issues, { status: 400 });
+  const body = bodyRaw2;
   const { id, role } = body;
 
   if (!id || !role) return NextResponse.json({ error: 'id e role obrigatorios' }, { status: 400 });
@@ -95,7 +103,7 @@ export async function PUT(req: NextRequest) {
     if (updateError) throw updateError;
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }
@@ -105,7 +113,13 @@ export async function DELETE(req: NextRequest) {
   if (error) return error;
 
   const { searchParams } = new URL(req.url);
-  const id = searchParams.get('id');
+  const queryRaw = Object.fromEntries(searchParams);
+  const parsedQuery = teamQuerySchema.safeParse(queryRaw);
+  if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
+  const idRaw = searchParams.get('id');
+  const idParsed1 = uuidSchema.safeParse(idRaw);
+  if (!idParsed1.success) return NextResponse.json({ error: 'id inválido ou ausente' }, { status: 400 });
+  const id = idParsed1.data;
   if (!id) return NextResponse.json({ error: 'ID obrigatorio' }, { status: 400 });
 
   const supabase = getSupabase();
@@ -120,7 +134,7 @@ export async function DELETE(req: NextRequest) {
     if (deleteError) throw deleteError;
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

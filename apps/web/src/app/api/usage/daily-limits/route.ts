@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger';
+import { usage_daily_limitsQuerySchema } from '@/lib/schemas';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
@@ -7,6 +9,9 @@ export async function GET(req: NextRequest) {
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
+  const queryRaw = Object.fromEntries(searchParams);
+  const parsedQuery = usage_daily_limitsQuerySchema.safeParse(queryRaw);
+  if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const socialAccountId = searchParams.get('socialAccountId');
   const date = searchParams.get('date') || new Date().toISOString().split('T')[0];
 
@@ -63,7 +68,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

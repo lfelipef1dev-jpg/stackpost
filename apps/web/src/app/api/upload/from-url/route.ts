@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { upload_from_urlBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 import { writeFile, mkdir } from 'fs/promises';
@@ -11,7 +13,10 @@ export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
-  const body = await req.json();
+  const bodyRaw1 = await req.json();
+  const parsed1 = upload_from_urlBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const body = bodyRaw1;
   const { url, fileName, mimeType } = body;
 
   if (!url || !url.startsWith('http')) {
@@ -57,7 +62,7 @@ export async function POST(req: NextRequest) {
     if (err.name === 'AbortError') {
       return NextResponse.json({ error: 'Timeout ao baixar (60s)' }, { status: 408 });
     }
-    console.error(err);
+    logger.error((err as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

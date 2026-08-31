@@ -4,6 +4,7 @@ import { Code, ArrowRight } from 'lucide-react';
 import { ScrollReveal } from '@/components/animations';
 import { Breadcrumb } from '@/components/Breadcrumb';
 import { DocsHero } from '@/components/DocsHero';
+import { DocsSidebar } from '@/components/DocsSidebar';
 import { JsonLd, serviceSchema } from '@/components/JsonLd';
 import Footer from '@/components/Footer';
 
@@ -18,30 +19,100 @@ const jsonLd = serviceSchema('StackPost API Reference', '114 endpoints REST com 
 const methodStyles: Record<string, string> = {
   GET: 'bg-info/20 text-info',
   POST: 'bg-success/20 text-success',
+  PATCH: 'bg-yellow-500/20 text-yellow-400',
+  DELETE: 'bg-error/20 text-error',
 };
 
 const endpoints = [
-  { method: 'POST', path: '/post', desc: 'Criar post' },
+  // Posts
+  { method: 'POST', path: '/post', desc: 'Criar post (rascunho ou agendado)' },
   { method: 'GET', path: '/post', desc: 'Listar posts (cursor pagination)' },
-  { method: 'POST', path: '/post/publish', desc: 'Publicar post' },
+  { method: 'GET', path: '/post/{id}', desc: 'Detalhes de um post' },
+  { method: 'PATCH', path: '/post/{id}', desc: 'Editar post' },
+  { method: 'DELETE', path: '/post/{id}', desc: 'Deletar post' },
+  { method: 'POST', path: '/post/publish', desc: 'Publicar post agendado' },
   { method: 'POST', path: '/post/bulk', desc: 'Postagem em massa (CSV)' },
   { method: 'POST', path: '/post/variants', desc: 'Criar variantes A/B' },
   { method: 'POST', path: '/post/approve', desc: 'Aprovar post (workflow)' },
+  { method: 'GET', path: '/post/{id}/events', desc: 'SSE - status em tempo real' },
+  // Social Accounts
+  { method: 'POST', path: '/social-account/connect', desc: 'Conectar conta social (OAuth)' },
+  { method: 'POST', path: '/social-account/set-channel', desc: 'Definir canal (Meta)' },
+  { method: 'POST', path: '/social-account/refresh-channels', desc: 'Atualizar canais' },
   { method: 'GET', path: '/social-accounts', desc: 'Listar contas conectadas' },
-  { method: 'POST', path: '/upload', desc: 'Upload simples (multipart)' },
-  { method: 'POST', path: '/upload/init', desc: 'Iniciar direct upload (presigned)' },
-  { method: 'POST', path: '/upload/multipart', desc: 'Multipart resumable (64 MiB chunks)' },
-  { method: 'POST', path: '/upload/from-url', desc: 'Upload from URL (1 GB max)' },
+  { method: 'DELETE', path: '/social-account/{id}', desc: 'Desconectar conta' },
+  // Upload
+  { method: 'POST', path: '/upload', desc: 'Upload simples (multipart, 90 MB)' },
+  { method: 'POST', path: '/upload/init', desc: 'Direct upload (presigned URL, 30 min)' },
+  { method: 'POST', path: '/upload/finalize', desc: 'Confirmar direct upload' },
+  { method: 'POST', path: '/upload/multipart/init', desc: 'Multipart init (64 MiB chunks, 6h)' },
+  { method: 'POST', path: '/upload/multipart/sign', desc: 'Re-sign part expirada' },
+  { method: 'POST', path: '/upload/multipart/complete', desc: 'Completar multipart (ETags)' },
+  { method: 'POST', path: '/upload/multipart/abort', desc: 'Abortar multipart' },
+  { method: 'POST', path: '/upload/from-url', desc: 'Upload from URL (1 GB, 60s)' },
   { method: 'POST', path: '/upload/tus', desc: 'tus protocol (resumable)' },
-  { method: 'GET', path: '/analytics', desc: 'Analytics normalizado' },
-  { method: 'GET', path: '/analytics/raw', desc: 'Analytics raw por plataforma' },
+  // Analytics
+  { method: 'GET', path: '/analytics/post/{id}', desc: 'Analytics de um post' },
+  { method: 'POST', path: '/analytics/post/force', desc: 'Forçar refresh analytics do post' },
+  { method: 'GET', path: '/analytics/social-account/{id}', desc: 'Analytics de conta' },
+  { method: 'POST', path: '/analytics/social-account/force', desc: 'Forçar refresh analytics da conta' },
+  { method: 'GET', path: '/analytics/post/raw', desc: 'Analytics raw do post' },
+  { method: 'GET', path: '/analytics/social-account/raw', desc: 'Analytics raw da conta' },
+  // Comments
   { method: 'GET', path: '/comments', desc: 'Listar comentários' },
-  { method: 'POST', path: '/comments', desc: 'Postar comentário' },
+  { method: 'POST', path: '/comment', desc: 'Postar comentário (11 plataformas)' },
+  { method: 'DELETE', path: '/comment/{id}', desc: 'Deletar comentário' },
+  { method: 'POST', path: '/comment/import', desc: 'Importar comentários (async, 9 plataformas)' },
+  // Imports
+  { method: 'POST', path: '/post-history-import', desc: 'Importar histórico (15 plataformas)' },
+  { method: 'POST', path: '/post-csv-import', desc: 'Importar CSV em massa' },
+  // Webhooks
   { method: 'GET', path: '/webhooks', desc: 'Listar webhooks' },
   { method: 'POST', path: '/webhooks', desc: 'Criar webhook' },
+  { method: 'PATCH', path: '/webhooks/{id}', desc: 'Editar webhook' },
+  { method: 'DELETE', path: '/webhooks/{id}', desc: 'Deletar webhook' },
   { method: 'POST', path: '/webhooks/replay', desc: 'Reenviar eventos (replay)' },
+  { method: 'GET', path: '/webhook-events', desc: 'Listar eventos entregues' },
+  // Usage
   { method: 'GET', path: '/usage/daily-limits', desc: 'Limites diários por conta' },
   { method: 'GET', path: '/usage/monthly', desc: 'Uso mensal da organização' },
+  // Organization
+  { method: 'GET', path: '/organization', desc: 'Dados da organização' },
+  { method: 'PATCH', path: '/organization', desc: 'Editar organização' },
+  { method: 'GET', path: '/organization/teams', desc: 'Listar times' },
+  { method: 'POST', path: '/organization/teams', desc: 'Criar time' },
+  { method: 'GET', path: '/organization/api-keys', desc: 'Listar API keys' },
+  { method: 'POST', path: '/organization/api-keys', desc: 'Criar API key' },
+  { method: 'DELETE', path: '/organization/api-keys/{id}', desc: 'Revogar API key' },
+  // Misc - Instagram
+  { method: 'GET', path: '/misc/instagram/audio', desc: 'Reels Music API' },
+  { method: 'GET', path: '/misc/instagram/locations', desc: 'Localizações' },
+  { method: 'GET', path: '/misc/instagram/tags', desc: 'Business discovery (tags)' },
+  // Misc - LinkedIn
+  { method: 'GET', path: '/misc/linkedin/mentions/builder', desc: 'Menções' },
+  // Misc - YouTube
+  { method: 'GET', path: '/misc/youtube/playlists', desc: 'Listar playlists' },
+  { method: 'POST', path: '/misc/youtube/playlists', desc: 'Criar playlist' },
+  { method: 'POST', path: '/misc/youtube/playlists/items', desc: 'Adicionar item à playlist' },
+  // Misc - TikTok
+  { method: 'GET', path: '/misc/tiktok/cml/trending-list', desc: 'CML trending list' },
+  // Misc - Reddit
+  { method: 'GET', path: '/misc/reddit/subreddit-flairs', desc: 'Flairs do subreddit' },
+  { method: 'GET', path: '/misc/reddit/post-requirements', desc: 'Regras de postagem' },
+  // Misc - Google Business
+  { method: 'GET', path: '/misc/google-business/locations', desc: 'Listar locations' },
+  { method: 'POST', path: '/misc/google-business/locations', desc: 'Criar location' },
+  { method: 'PATCH', path: '/misc/google-business/locations/{id}', desc: 'Editar location' },
+  { method: 'GET', path: '/misc/google-business/reviews', desc: 'Listar reviews' },
+  { method: 'POST', path: '/misc/google-business/reviews/reply', desc: 'Responder review' },
+  // AI
+  { method: 'POST', path: '/post/ai-caption', desc: 'Gerar legendas com IA (Nexus)' },
+  { method: 'POST', path: '/post/ai-hashtags', desc: 'Sugerir hashtags com IA' },
+  // Link in bio
+  { method: 'GET', path: '/link-in-bio', desc: 'Listar páginas link in bio' },
+  { method: 'POST', path: '/link-in-bio', desc: 'Criar página link in bio' },
+  { method: 'PATCH', path: '/link-in-bio/{id}', desc: 'Editar página' },
+  { method: 'DELETE', path: '/link-in-bio/{id}', desc: 'Deletar página' },
 ];
 
 export default function DocsApiPage() {
@@ -57,22 +128,30 @@ export default function DocsApiPage() {
         color="#25F4EE"
       />
 
-      <section className="max-w-4xl mx-auto px-4 pb-12">
-        <ScrollReveal className="mb-6">
-          <h2 className="text-2xl font-bold">Endpoints principais</h2>
-        </ScrollReveal>
-        <div className="space-y-2">
-          {endpoints.map((ep) => (
-            <div key={`${ep.method}-${ep.path}`} className="flex items-center gap-4 p-4 rounded-xl bg-brand-surface/50 backdrop-blur border border-brand-border">
-              <span className={`px-2.5 py-1 rounded text-xs font-mono font-bold ${methodStyles[ep.method]}`}>
-                {ep.method}
-              </span>
-              <code className="text-sm font-mono text-brand-text">{ep.path}</code>
-              <span className="text-sm text-brand-text-secondary ml-auto">{ep.desc}</span>
+      <div className="max-w-6xl mx-auto px-4 pb-12">
+        <div className="grid lg:grid-cols-[240px_1fr] gap-10">
+          <aside className="hidden lg:block border-r border-brand-border/40 pr-6">
+            <DocsSidebar />
+          </aside>
+          <div className="min-w-0">
+            <ScrollReveal className="mb-6">
+              <h2 className="text-2xl font-bold">Endpoints principais</h2>
+              <p className="text-sm text-brand-text-secondary mt-1">{endpoints.length} endpoints documentados de 114 totais.</p>
+            </ScrollReveal>
+            <div className="space-y-2">
+              {endpoints.map((ep) => (
+                <div key={`${ep.method}-${ep.path}`} className="flex items-center gap-4 p-3 rounded-xl bg-brand-surface/50 border border-brand-border hover:border-brand-accent/30 transition">
+                  <span className={`px-2.5 py-1 rounded text-xs font-mono font-bold w-16 text-center ${methodStyles[ep.method]}`}>
+                    {ep.method}
+                  </span>
+                  <code className="text-sm font-mono text-brand-text flex-shrink-0">{ep.path}</code>
+                  <span className="text-sm text-brand-text-secondary ml-auto text-right">{ep.desc}</span>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
-      </section>
+      </div>
 
       <section className="max-w-3xl mx-auto px-4 pb-20">
         <ScrollReveal>

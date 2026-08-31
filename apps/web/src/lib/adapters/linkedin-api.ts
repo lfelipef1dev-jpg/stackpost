@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
 const LINKEDIN_CLIENT_ID = process.env.LINKEDIN_CLIENT_ID;
@@ -69,7 +70,7 @@ export async function handleLinkedInCallback(code: string) {
       }
     }
   } catch (err) {
-    console.warn('LinkedIn Company Pages fetch error:', err);
+    logger.warn('LinkedIn Company Pages fetch error:', err);
   }
 
   return accounts;

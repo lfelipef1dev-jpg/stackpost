@@ -1,4 +1,5 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+﻿import { logger } from '@/lib/logger';
+import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { publishPost } from '@/lib/publisher';
 
@@ -39,7 +40,7 @@ export async function GET(req: NextRequest) {
           errors.push({ id: post.id, result });
         }
       } catch (err: any) {
-        console.error(`Failed to publish ${post.id}:`, err);
+        logger.error(`Failed to publish ${post.id}:`, err);
         failed++;
         errors.push({ id: post.id, error: err.message, stack: err.stack });
       }
@@ -47,7 +48,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ ok: true, cron: 'publish-scheduled', published, failed, total: (posts || []).length, errors, timestamp: now });
   } catch (err: any) {
-    console.error('Cron publish-scheduled error:', err);
+    logger.error('Cron publish-scheduled error:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

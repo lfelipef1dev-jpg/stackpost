@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { PlatformAdapter, PublishParams, PublishResult } from './base';
 import { normalizeError, NormalizedError } from '@/lib/errors';
 
@@ -35,7 +36,7 @@ export class TwitterAdapter extends PlatformAdapter {
           if (isHttpUrl) {
             const dlRes = await fetch(url);
             if (!dlRes.ok) {
-              console.warn(`Twitter: falha ao baixar midia ${url}`);
+              logger.warn(`Twitter: falha ao baixar midia ${url}`);
               continue;
             }
             mimeType = dlRes.headers.get('content-type') || (url.match(/\.(mp4|mov)$/i) ? 'video/mp4' : 'image/jpeg');
@@ -43,7 +44,7 @@ export class TwitterAdapter extends PlatformAdapter {
             mediaBuffer = Buffer.from(arrayBuf);
           } else {
             // Se nao for URL, nao temos binario - pular
-            console.warn(`Twitter: uploadId sem URL http nao suportado (${url})`);
+            logger.warn(`Twitter: uploadId sem URL http nao suportado (${url})`);
             continue;
           }
 
@@ -60,7 +61,7 @@ export class TwitterAdapter extends PlatformAdapter {
           if (mediaData.media_id_string) {
             mediaIds.push(mediaData.media_id_string);
           } else {
-            console.warn(`Twitter: upload falhou`, mediaData);
+            logger.warn(`Twitter: upload falhou`, mediaData);
           }
         }
         if (mediaIds.length > 0) body.media = { media_ids: mediaIds };

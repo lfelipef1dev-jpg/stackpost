@@ -3,7 +3,7 @@ import { Space_Grotesk, Inter, JetBrains_Mono } from 'next/font/google';
 import { GoogleAnalytics } from 'nextjs-google-analytics';
 import './globals.css';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://stackpost.expostacker.com.br';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://stackpost.com.br';
 const SITE_NAME = 'StackPost';
 const SITE_DESC = 'StackPost e a API unificada de redes sociais para SaaS, agencias e AI agents. Uma integracao, 15 plataformas, 114 endpoints, MCP server e analytics historico.';
 
@@ -31,9 +31,9 @@ export const metadata: Metadata = {
   },
   description: SITE_DESC,
   keywords: ['API redes sociais', 'publicacao multi-rede', 'Instagram API', 'TikTok API', 'LinkedIn API', 'MCP server', 'social media API', 'cross-post', 'agendamento posts'],
-  authors: [{ name: 'ExpoStacker', url: 'https://expostacker.com.br' }],
-  creator: 'ExpoStacker',
-  publisher: 'ExpoStacker',
+  authors: [{ name: 'StackPost', url: 'https://stackpost.com.br' }],
+  creator: 'StackPost',
+  publisher: 'StackPost',
   alternates: {
     canonical: '/',
   },
@@ -94,14 +94,14 @@ const organizationJsonLd = {
   description: SITE_DESC,
   founder: {
     '@type': 'Organization',
-    name: 'ExpoStacker',
-    url: 'https://expostacker.com.br',
+    name: 'StackPost',
+    url: 'https://stackpost.com.br',
   },
   sameAs: [
-    'https://github.com/expostacker',
-    'https://instagram.com/expostacker',
-    'https://linkedin.com/company/expostacker',
-    'https://x.com/expostacker',
+    'https://github.com/stackpost',
+    'https://instagram.com/stackpost',
+    'https://linkedin.com/company/stackpost',
+    'https://x.com/stackpost',
   ],
 };
 

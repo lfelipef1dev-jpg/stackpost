@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { team_inviteBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { requireRole, PERMISSIONS } from '@/lib/rbac';
 
@@ -9,7 +11,10 @@ export async function POST(req: NextRequest) {
   if (error) return error;
 
   try {
-    const body = await req.json();
+    const bodyRaw1 = await req.json();
+    const parsed1 = team_inviteBodySchema.safeParse(bodyRaw1);
+    if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+    const body = bodyRaw1;
     const email = (body.email || '').trim().toLowerCase();
     const role = (body.role || 'editor').toLowerCase();
 
@@ -58,7 +63,7 @@ export async function POST(req: NextRequest) {
       message: `${targetUser.name || targetUser.email} adicionado como ${role}`,
     });
   } catch (error: any) {
-    console.error(error);
+    logger.error((error as string));
     return NextResponse.json({ error: error.message || 'Erro interno' }, { status: 500 });
   }
 }

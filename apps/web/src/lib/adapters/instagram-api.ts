@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { getSupabase } from '@/lib/supabase';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -145,7 +146,7 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
       await fetch(`https://graph.instagram.com/v23.0/${publish.id}/comments`, {
         method: 'POST',
         body: new URLSearchParams({ message: firstComment.trim(), access_token: token }),
-      }).catch((err) => console.warn('Instagram first comment error:', err));
+      }).catch((err) => logger.warn('Instagram first comment error:', err));
     }
 
     return { success: true, externalId: publish.id };
@@ -217,7 +218,7 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
         message: firstComment.trim(),
         access_token: token,
       }),
-    }).catch((err) => console.warn('Instagram first comment error:', err));
+    }).catch((err) => logger.warn('Instagram first comment error:', err));
   }
 
   return { success: true, externalId: publish.id };

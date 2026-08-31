@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 
@@ -101,14 +102,14 @@ export async function GET(req: NextRequest) {
 
         recalculated++;
       } catch (err) {
-        console.warn(`Best-time ML ${account.platform} ${account.id} error:`, err);
+        logger.warn(`Best-time ML ${account.platform} ${account.id} error:`, err);
         failed++;
       }
     }
 
     return NextResponse.json({ ok: true, cron: 'best-time-ml', recalculated, failed, total: (accounts || []).length, timestamp: now });
   } catch (err: any) {
-    console.error('Cron best-time-ml error:', err);
+    logger.error('Cron best-time-ml error:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

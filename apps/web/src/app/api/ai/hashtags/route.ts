@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { ai_hashtagsBodySchema } from '@/lib/schemas';
 import { getUserFromToken } from '@/lib/auth';
 
 // AI Hashtags - generates relevant hashtags from content
@@ -7,7 +9,10 @@ export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
-  const body = await req.json();
+  const bodyRaw1 = await req.json();
+  const parsed1 = ai_hashtagsBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const body = bodyRaw1;
   const { content, platform } = body;
 
   if (!content || content.length < 3) {
@@ -54,7 +59,7 @@ export async function POST(req: NextRequest) {
         }
       }
     } catch (err) {
-      console.error('AI hashtag generation failed, falling back to keyword extraction:', err);
+      logger.error('AI hashtag generation failed, falling back to keyword extraction:', err);
     }
   }
 

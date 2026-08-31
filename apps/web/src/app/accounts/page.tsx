@@ -597,9 +597,9 @@ export default function AccountsPage() {
         )}
 
         {/* Cards informativos inferiores */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <TiltCard>
-            <SpotlightCard className="p-6" glow="#6366F1">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 items-stretch">
+          <TiltCard className="h-full">
+            <SpotlightCard className="p-6 h-full" glow="#6366F1">
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="w-5 h-5 text-brand-accent" />
                 <h3 className="text-lg font-semibold">Dicas de gestão de contas</h3>
@@ -628,8 +628,8 @@ export default function AccountsPage() {
               </ul>
             </SpotlightCard>
           </TiltCard>
-          <TiltCard>
-            <SpotlightCard className="p-6" glow="#A78BFA">
+          <TiltCard className="h-full">
+            <SpotlightCard className="p-6 h-full" glow="#A78BFA">
               <div className="flex items-center gap-2 mb-4">
                 <TrendingUp className="w-5 h-5 text-brand-accent" />
                 <h3 className="text-lg font-semibold">StackPost vs concorrentes</h3>

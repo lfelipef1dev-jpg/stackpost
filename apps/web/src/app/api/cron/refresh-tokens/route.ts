@@ -1,4 +1,5 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+﻿import { logger } from '@/lib/logger';
+import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 
 // Cron: Renovar tokens OAuth prestes a expirar (proximas 24h)
@@ -158,7 +159,7 @@ export async function GET(req: NextRequest) {
 
         refreshed++;
       } catch (err) {
-        console.error(`Failed to refresh ${account.platform}:`, err);
+        logger.error(`Failed to refresh ${account.platform}:`, err);
         failed++;
       }
     }
@@ -173,7 +174,7 @@ export async function GET(req: NextRequest) {
       timestamp: now.toISOString(),
     });
   } catch (err: any) {
-    console.error('Cron refresh-tokens error:', err);
+    logger.error('Cron refresh-tokens error:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

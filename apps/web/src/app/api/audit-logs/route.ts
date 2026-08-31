@@ -1,4 +1,6 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
+import { audit_logsBodySchema, audit_logsQuerySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 
@@ -8,6 +10,9 @@ export async function GET(req: NextRequest) {
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
+  const queryRaw = Object.fromEntries(searchParams);
+  const parsedQuery = audit_logsQuerySchema.safeParse(queryRaw);
+  if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const limit = Math.min(parseInt(searchParams.get('limit') || '100'), 200);
   const action = searchParams.get('action');
   const cursor = searchParams.get('cursor');
@@ -36,7 +41,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(data || []);
   } catch (error: any) {
-    console.error('Audit logs error:', error);
+    logger.error('Audit logs error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
@@ -46,7 +51,10 @@ export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
-  const { action, resource, resourceId, metadata } = await req.json().catch(() => ({}));
+  const bodyRaw1 = await req.json().catch(() => ({}));
+  const parsed1 = audit_logsBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const { action, resource, resourceId, metadata } = bodyRaw1;
   if (!action) return NextResponse.json({ error: 'action obrigatorio' }, { status: 400 });
 
   const supabase = getSupabase();

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { accounts_copyBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 
@@ -7,7 +8,10 @@ export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
-  const { accountId, targetTeamId } = await req.json().catch(() => ({}));
+  const bodyRaw1 = await req.json().catch(() => ({}));
+  const parsed1 = accounts_copyBodySchema.safeParse(bodyRaw1);
+  if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
+  const { accountId, targetTeamId } = bodyRaw1;
   if (!accountId || !targetTeamId) {
     return NextResponse.json({ error: 'accountId e targetTeamId obrigatorios' }, { status: 400 });
   }

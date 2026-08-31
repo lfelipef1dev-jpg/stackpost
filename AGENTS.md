@@ -44,13 +44,17 @@ Usuario → Cloudflare Worker (stackpost) → Next.js App Router → Supabase Po
 
 ## 7. Comandos
 
+```powershell
 npm run build      # build local
 npm run deploy     # build + deploy local (NUNCA usar em prod)
 npm run preview    # preview local
+npx tsc --noEmit   # Type check
+```
 
 ## 8. Variaveis de ambiente obrigatorias
 
-Build-time (GitHub):
+### Build-time (GitHub)
+
 - CLOUDFLARE_API_TOKEN
 - CLOUDFLARE_ACCOUNT_ID
 - NEXT_PUBLIC_SUPABASE_URL
@@ -58,35 +62,54 @@ Build-time (GitHub):
 - SUPABASE_SERVICE_ROLE_KEY
 - NEXT_PUBLIC_SITE_URL
 
-Runtime (Cloudflare Worker):
+### Runtime (Cloudflare Worker)
+
 - SUPABASE_SERVICE_ROLE_KEY
 - NEXT_PUBLIC_SUPABASE_URL
 - NEXT_PUBLIC_SUPABASE_ANON_KEY
 - NEXT_PUBLIC_SITE_URL
 - JWT_SECRET
+- TOKEN_ENCRYPTION_KEY
 - MERCADOPAGO_ACCESS_TOKEN
 - MERCADOPAGO_WEBHOOK_SECRET
+- CRON_SECRET
+
+### OAuth por plataforma
+
+- META_APP_ID, META_APP_SECRET
+- IG_APP_ID, IG_APP_SECRET
+- LINKEDIN_CLIENT_ID, LINKEDIN_CLIENT_SECRET
+- TWITTER_CLIENT_ID, TWITTER_CLIENT_SECRET
+- TIKTOK_CLIENT_KEY, TIKTOK_CLIENT_SECRET
+- GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET
+- PINTEREST_CLIENT_ID, PINTEREST_CLIENT_SECRET
+- REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET
+- SNAPCHAT_CLIENT_ID, SNAPCHAT_CLIENT_SECRET
+- DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET
+- SLACK_CLIENT_ID, SLACK_CLIENT_SECRET
 
 ## 9. Supabase
 
 - RLS deve estar ativado em TODAS as tabelas.
-- Policy padrao: llow_service com 	rue (service role bypassa).
+- Policy padrao: allow_service com true (service role bypassa).
 - Auth URL: https://stackpost.expostacker.com.br
 - Redirect URL: https://stackpost.expostacker.com.br/auth/callback
+- Migrações: `supabase/migrations/`
 
-## 10. Pagamento
+## 10. Segurança
+
+- Senhas com bcrypt (nunca SHA-256).
+- JWT em cookie HttpOnly, Secure, SameSite=Strict.
+- Todas as rotas validam entrada com Zod.
+- Mercado Pago webhook validado via HMAC-SHA256.
+- Sem `console.log` em produção.
+
+## 11. Pagamento
 
 - Gateway: Mercado Pago.
 - Rota checkout: /api/pagamentos/checkout
 - Rota webhook: /api/pagamentos/webhook
 - Idempotencia via external_reference prefixado stackpost_.
-
-## 11. Plano
-
-/mes (Free)
-R/mes (Pro)
-R/mes (Business)
-RTrue (Enterprise — custom)
 
 ## 12. Plataformas suportadas
 

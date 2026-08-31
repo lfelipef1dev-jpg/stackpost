@@ -1,11 +1,11 @@
 import { createCipheriv, createDecipheriv, randomBytes } from 'crypto';
+import { requireEnv } from './env';
 
 const ALGORITHM = 'aes-256-gcm';
 const IV_LENGTH = 12;
 
 function getKey(): Buffer {
-  const raw = process.env.TOKEN_ENCRYPTION_KEY || process.env.JWT_SECRET || 'stackpost-default-key-change-me';
-  // Garantir 32 bytes para AES-256
+  const raw = requireEnv('TOKEN_ENCRYPTION_KEY');
   return Buffer.from(raw.padEnd(32, '0').slice(0, 32), 'utf8');
 }
 
@@ -15,7 +15,6 @@ export function encryptToken(plaintext: string): string {
   const cipher = createCipheriv(ALGORITHM, key, iv);
   const encrypted = Buffer.concat([cipher.update(plaintext, 'utf8'), cipher.final()]);
   const authTag = cipher.getAuthTag();
-  // Formato: iv:authTag:encrypted (todos em hex)
   return `${iv.toString('hex')}:${authTag.toString('hex')}:${encrypted.toString('hex')}`;
 }
 
