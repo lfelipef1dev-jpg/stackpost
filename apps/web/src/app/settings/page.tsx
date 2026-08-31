@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import { PlatformIcon } from '@/components/PlatformIcon';
 import { PLATFORMS } from '@/lib/platforms';
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   AlertTriangle,
   Bell,
@@ -219,6 +220,7 @@ function ProgressBar({ value, max, color = '#8AB4F8' }: { value: number; max: nu
 }
 
 export default function SettingsPage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<Tab>('profile');
   const [org, setOrg] = useState('');
   const [plan, setPlan] = useState('free');
@@ -383,6 +385,51 @@ export default function SettingsPage() {
     navigator.clipboard.writeText(text);
     setCopied(text);
     setTimeout(() => setCopied(null), 2000);
+  }
+
+  function handleEnable2FA() {
+    router.push('/settings?tab=security&action=enable-2fa');
+  }
+
+  function handleUpgradePlan() {
+    router.push('/billing');
+  }
+
+  function handleTransferOwnership() {
+    const email = window.prompt('Email do novo owner (deve ser admin do workspace):');
+    if (!email) return;
+    fetch('/api/team/transfer-ownership', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    }).then((r) => {
+      if (r.ok) {
+        window.alert('Solicitação de transferência enviada.');
+      } else {
+        window.alert('Falha ao transferir. Verifique se o email é de um admin.');
+      }
+    });
+  }
+
+  function handleExportData() {
+    window.open('/api/me/export', '_blank');
+  }
+
+  async function handleDeleteAccount() {
+    if (deleteConfirm !== 'EXCLUIR MINHA CONTA') return;
+    if (!window.confirm('Tem certeza? Esta ação não pode ser desfeita.')) return;
+    setLoading(true);
+    try {
+      const res = await fetch('/api/me', { method: 'DELETE' });
+      if (res.ok) {
+        router.push('/login');
+      } else {
+        window.alert('Falha ao excluir conta. Tente novamente.');
+      }
+    } catch {
+      window.alert('Erro de conexão. Tente novamente.');
+    }
+    setLoading(false);
   }
 
   const limits = PLAN_LIMITS[plan] || PLAN_LIMITS.free;
@@ -1070,7 +1117,7 @@ export default function SettingsPage() {
                         quando você acessar de um novo dispositivo.
                       </p>
                     </div>
-                    <button className="px-4 py-2 rounded-xl bg-success/10 border border-success/30 text-success text-sm font-medium hover:bg-success/20 transition flex items-center gap-2">
+                    <button onClick={handleEnable2FA} className="px-4 py-2 rounded-xl bg-success/10 border border-success/30 text-success text-sm font-medium hover:bg-success/20 transition flex items-center gap-2">
                       <ShieldCheck className="w-4 h-4" />
                       Ativar 2FA
                     </button>
@@ -1115,7 +1162,7 @@ export default function SettingsPage() {
                       Centralize o acesso da equipe com login unico via SAML/OIDC.
                     </p>
                     <button
-                      disabled
+                      onClick={handleUpgradePlan}
                       className="px-4 py-2 rounded-xl bg-brand-elevated/50 border border-brand-border text-brand-text-secondary text-sm cursor-not-allowed flex items-center gap-2"
                     >
                       <Lock className="w-4 h-4" />
@@ -1217,6 +1264,7 @@ export default function SettingsPage() {
                         </div>
                       </div>
                       <button
+                        onClick={handleTransferOwnership}
                         disabled={!isOwner}
                         className="px-3 py-1.5 rounded-lg bg-error/10 border border-error/30 text-error text-xs font-medium hover:bg-error/20 transition disabled:opacity-50"
                       >
@@ -1232,7 +1280,7 @@ export default function SettingsPage() {
                           Baixe todos os seus dados em JSON/CSV.
                         </div>
                       </div>
-                      <button className="px-3 py-1.5 rounded-lg bg-brand-elevated border border-brand-border text-xs font-medium hover:border-brand-accent transition flex items-center gap-1.5">
+                      <button onClick={handleExportData} className="px-3 py-1.5 rounded-lg bg-brand-elevated border border-brand-border text-xs font-medium hover:border-brand-accent transition flex items-center gap-1.5">
                         <Download className="w-3 h-3" />
                         Exportar
                       </button>
@@ -1252,6 +1300,7 @@ export default function SettingsPage() {
                           className="flex-1 px-3 py-2 rounded-lg bg-brand-elevated border border-error/30 text-sm focus:outline-none focus:border-error transition"
                         />
                         <button
+                          onClick={handleDeleteAccount}
                           disabled={deleteConfirm !== 'EXCLUIR MINHA CONTA' || !isOwner}
                           className="px-4 py-2 rounded-lg bg-error text-brand-bg text-xs font-semibold hover:bg-error/80 transition disabled:opacity-30 disabled:cursor-not-allowed"
                         >

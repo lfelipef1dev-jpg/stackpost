@@ -454,7 +454,7 @@ export default function ComposerPage() {
                   className="border-2 border-dashed border-brand-border rounded-2xl p-10 text-center cursor-pointer hover:border-brand-accent transition group"
                 >
                   {mediaPreview ? (
-                    <img src={mediaPreview} alt="preview" className="max-h-56 mx-auto rounded-xl shadow-lg" />
+                    <img src={mediaPreview} alt="Pré-visualização da mídia selecionada" className="max-h-56 mx-auto rounded-xl shadow-lg" />
                   ) : (
                     <div className="text-brand-text-secondary">
                       <ImageIcon className="w-10 h-10 mx-auto mb-3 text-brand-text-secondary/50 group-hover:text-brand-accent transition" />
@@ -522,9 +522,10 @@ export default function ComposerPage() {
               <SpotlightCard className="p-6" glow="#FBBF24">
                 <div className="flex items-center gap-2 mb-3">
                   <CalIcon className="w-4 h-4 text-warning" />
-                  <label className="text-sm font-semibold">Agendar para</label>
+                  <label htmlFor="scheduled-at" className="text-sm font-semibold">Agendar para</label>
                 </div>
                 <input
+                  id="scheduled-at"
                   type="datetime-local"
                   value={scheduledAt}
                   onChange={(e) => setScheduledAt(e.target.value)}
@@ -600,7 +601,7 @@ export default function ComposerPage() {
                   </div>
                   <div className="aspect-[4/5] bg-black/40 flex items-center justify-center border-t border-brand-border">
                     {currentPreviewUrl ? (
-                      <img src={currentPreviewUrl} alt="preview" className="w-full h-full object-cover" />
+                      <img src={currentPreviewUrl} alt={`Pré-visualização como ${previewPlatform}`} className="w-full h-full object-cover" />
                     ) : (
                       <div className="text-brand-text-secondary text-sm flex flex-col items-center gap-2">
                         <ImageIcon className="w-8 h-8 opacity-50" />
@@ -705,8 +706,14 @@ export default function ComposerPage() {
       {/* Modal de confirmação */}
       {showConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <TiltCard className="w-full max-w-md">
-            <SpotlightCard className="p-6" glow={pendingAction === 'publish' ? '#22C55E' : '#FBBF24'}>
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={pendingAction === 'publish' ? 'Confirmar publicação' : 'Confirmar agendamento'}
+            className="w-full max-w-md"
+          >
+            <TiltCard>
+              <SpotlightCard className="p-6" glow={pendingAction === 'publish' ? '#22C55E' : '#FBBF24'}>
               <div className="flex items-center gap-3 mb-4">
                 {pendingAction === 'publish' ? (
                   <Send className="w-6 h-6 text-success" />
@@ -738,7 +745,8 @@ export default function ComposerPage() {
                 </button>
               </div>
             </SpotlightCard>
-          </TiltCard>
+            </TiltCard>
+          </div>
         </div>
       )}
 

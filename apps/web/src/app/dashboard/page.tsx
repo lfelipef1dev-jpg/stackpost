@@ -422,7 +422,7 @@ export default function DashboardPage() {
                         >
                           <div className="h-32 bg-brand-elevated border-b border-brand-border/50 flex items-center justify-center relative">
                             {thumb ? (
-                              <img src={thumb} alt="" className="w-full h-full object-cover" loading="lazy" />
+                              <img src={thumb} alt={`Thumbnail do post em ${platforms[0] || 'rede social'}`} className="w-full h-full object-cover" loading="lazy" />
                             ) : (
                               <div className="flex flex-col items-center text-brand-text-secondary">
                                 <PlatformIcon className="w-10 h-10 mb-2" color={platformColor} />

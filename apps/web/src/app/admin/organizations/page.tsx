@@ -132,11 +132,12 @@ export default function AdminOrganizationsPage() {
             Gerencie workspaces, empresas e assinaturas ativas na plataforma.
           </p>
         </div>
-        <button
+        <Link
+          href="/admin/organizations/new"
           className="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-accent text-brand-bg font-bold hover:bg-brand-accent-hover transition"
         >
           <Plus className="w-4 h-4" aria-hidden="true" /> Nova organização
-        </button>
+        </Link>
       </div>
 
       <div className="flex flex-col md:flex-row gap-4 mb-6 mt-6">

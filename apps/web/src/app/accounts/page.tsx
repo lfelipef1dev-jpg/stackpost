@@ -433,6 +433,7 @@ export default function AccountsPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Buscar conta..."
+                aria-label="Buscar contas"
                 className="w-full pl-9 pr-3 py-2 rounded-xl bg-brand-elevated border border-brand-border text-sm placeholder:text-brand-text-secondary focus:outline-none focus:border-brand-accent transition"
               />
             </div>
@@ -514,6 +515,7 @@ export default function AccountsPage() {
                             checked={isSelected}
                             onClick={(e) => e.stopPropagation()}
                             onChange={() => toggleSelect(acc.id)}
+                            aria-label={`Selecionar conta ${acc.username}`}
                             className="mt-1 w-4 h-4 rounded accent-brand-accent cursor-pointer"
                           />
                           {avatar ? (
@@ -718,6 +720,9 @@ export default function AccountsPage() {
           onClick={() => setBulkConfirm(null)}
         >
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={bulkConfirm === 'delete' ? 'Confirmar exclusão de contas' : 'Confirmar renovação de tokens'}
             className="max-w-sm w-full p-6 rounded-2xl bg-brand-surface border border-brand-border"
             onClick={(e) => e.stopPropagation()}
           >
@@ -765,6 +770,9 @@ export default function AccountsPage() {
           onClick={() => setDrawerAccount(null)}
         >
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Detalhes da conta"
             className="absolute right-0 top-0 bottom-0 w-full max-w-md bg-brand-surface border-l border-brand-border overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
@@ -784,6 +792,7 @@ export default function AccountsPage() {
                     <h3 className="text-lg font-semibold">Detalhes da conta</h3>
                     <button
                       onClick={() => setDrawerAccount(null)}
+                      aria-label="Fechar"
                       className="p-2 rounded-xl hover:bg-brand-elevated text-brand-text-secondary hover:text-brand-text transition"
                     >
                       <X className="w-5 h-5" />

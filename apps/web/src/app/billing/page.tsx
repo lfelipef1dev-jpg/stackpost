@@ -902,6 +902,9 @@ export default function BillingPage() {
               <div className="absolute inset-0 bg-black/80 backdrop-blur-md" />
 
               <motion.div
+                role="dialog"
+                aria-modal="true"
+                aria-label={`Plano ${selectedPlan.name}`}
                 className="relative w-full max-w-lg rounded-2xl bg-brand-surface border border-brand-border shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
                 initial={{ scale: 0.95, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -1048,7 +1051,12 @@ export default function BillingPage() {
       {/* Modal de créditos */}
       {showCreditModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md p-6 rounded-3xl bg-brand-surface border border-brand-border shadow-2xl">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Adicionar créditos X"
+            className="w-full max-w-md p-6 rounded-3xl bg-brand-surface border border-brand-border shadow-2xl"
+          >
             <h3 className="text-xl font-bold mb-2">Adicionar créditos X</h3>
             <p className="text-sm text-brand-text-secondary mb-6">Escolha o valor para adicionar aos créditos da API do X/Twitter.</p>
 
@@ -1064,8 +1072,9 @@ export default function BillingPage() {
               ))}
             </div>
 
-            <label className="block text-sm text-brand-text-secondary mb-2">Ou digite um valor personalizado</label>
+            <label htmlFor="credit-amount" className="block text-sm text-brand-text-secondary mb-2">Ou digite um valor personalizado</label>
             <input
+              id="credit-amount"
               type="number"
               min="30"
               value={creditAmount}

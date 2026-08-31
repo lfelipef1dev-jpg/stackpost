@@ -688,6 +688,9 @@ export default function PlansPage() {
               <div className="absolute inset-0 bg-black/80 backdrop-blur-md" />
 
               <motion.div
+                role="dialog"
+                aria-modal="true"
+                aria-label={`Plano ${selectedPlan.name}`}
                 className="relative w-full max-w-lg rounded-2xl bg-brand-surface border border-brand-border shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
                 initial={{ scale: 0.95, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
