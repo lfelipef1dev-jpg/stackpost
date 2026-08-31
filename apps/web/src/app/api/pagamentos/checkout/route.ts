@@ -1,7 +1,7 @@
 import { logger } from '@/lib/logger';
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
-import { criarPreferencia, criarPreapproval } from '@/lib/mercadopago';
+import { criarPreferencia } from '@/lib/mercadopago';
 import { getUserFromToken } from '@/lib/auth';
 import { z } from 'zod';
 
@@ -134,75 +134,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    // Planos recorrentes (monthly/yearly) usam preapproval (assinatura)
-    // Compra de créditos continua com preference única (PIX)
-    const isRecurring = interval === 'monthly' || interval === 'yearly';
-
-    if (isRecurring) {
-      const frequency = interval === 'yearly' ? 12 : 1;
-      const preapproval = await criarPreapproval({
-        planId: plano,
-        amount: planoInfo.valor,
-        frequency,
-        frequencyType: 'months',
-        payerEmail: email,
-        externalReference: orderId,
-      });
-
-      await supabase
-        .from('stackpost_orders')
-        .update({
-          mp_preference_id: preapproval.id,
-          atualizado_em: new Date().toISOString(),
-        })
-        .eq('order_id', orderId);
-
-      // Cria/atualiza subscription com provider_subscription_id
-      const { data: existingSub } = await supabase
-        .from('subscriptions')
-        .select('id')
-        .eq('organization_id', team.organization_id)
-        .maybeSingle();
-
-      const periodStart = new Date();
-      const periodEnd = new Date();
-      periodEnd.setMonth(periodEnd.getMonth() + frequency);
-
-      if (existingSub) {
-        await supabase
-          .from('subscriptions')
-          .update({
-            plan_slug: plano,
-            status: 'active',
-            payment_provider: 'mercadopago',
-            provider_subscription_id: preapproval.id,
-            current_period_start: periodStart.toISOString(),
-            current_period_end: periodEnd.toISOString(),
-            updated_at: new Date().toISOString(),
-          })
-          .eq('id', existingSub.id);
-      } else {
-        await supabase.from('subscriptions').insert({
-          organization_id: team.organization_id,
-          plan_slug: plano,
-          status: 'active',
-          payment_provider: 'mercadopago',
-          provider_subscription_id: preapproval.id,
-          current_period_start: periodStart.toISOString(),
-          current_period_end: periodEnd.toISOString(),
-        });
-      }
-
-      return NextResponse.json({
-        order_id: orderId,
-        preapproval_id: preapproval.id,
-        init_point: preapproval.init_point,
-        total: planoInfo.valor,
-        recurring: true,
-      });
-    }
-
-    // Fluxo único (PIX) — mantém comportamento original
+    // Fluxo PIX (mesmo dos creditos) — preference unica com QR code
     const pref = await criarPreferencia({
       team_id: user.teamId,
       plano,
