@@ -10,7 +10,7 @@ function isSecureHost(req: NextRequest): boolean {
 
 function cookieOptions(req: NextRequest) {
   const secure = isSecureHost(req) ? 'Secure; ' : '';
-  return `HttpOnly; ${secure}SameSite=Strict; Path=/`;
+  return `HttpOnly; ${secure}SameSite=Lax; Path=/`;
 }
 
 export function setTokenCookie(req: NextRequest, res: NextResponse, token: string) {
