@@ -46,7 +46,7 @@ const CSP = "default-src 'self'; " +
   "img-src 'self' https: data: blob:; " +
   "connect-src 'self'; " +
   "font-src 'self'; " +
-  "frame-ancestors 'none'; " +
+  "frame-ancestors https://expostacker.com.br https://*.expostacker.com.br http://localhost:* http://127.0.0.1:*; " +
   "base-uri 'self'; " +
   "form-action 'self';";
 
@@ -77,7 +77,7 @@ export async function middleware(req: NextRequest) {
 
   const res = NextResponse.next();
   res.headers.set('X-Content-Type-Options', 'nosniff');
-  res.headers.set('X-Frame-Options', 'DENY');
+  res.headers.set('X-Frame-Options', 'SAMEORIGIN');
   res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
   res.headers.set('Content-Security-Policy', CSP);
