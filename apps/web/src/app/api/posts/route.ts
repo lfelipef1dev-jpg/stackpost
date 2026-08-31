@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
   const parsed = postSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues }, { status: 400 });
 
-  const { content, platforms, uploadIds, scheduledAt, firstComment, derivatives } = parsed.data as any;
+  const { content, platforms, uploadIds, scheduledAt, firstComment, derivatives, postType } = parsed.data as any;
   const status = scheduledAt ? 'scheduled' : 'draft';
 
   try {
@@ -73,6 +73,7 @@ export async function POST(req: NextRequest) {
         status,
         first_comment: firstComment || null,
         derivatives: derivatives || {},
+        media_type: postType || 'POST',
       })
       .select()
       .single();
@@ -104,7 +105,7 @@ export async function PUT(req: NextRequest) {
   const parsed2 = postsBodySchema.safeParse(bodyRaw2);
   if (!parsed2.success) return NextResponse.json(parsed2.error.issues, { status: 400 });
   const body = bodyRaw2;
-  const { id, content, platforms, uploadIds, scheduledAt, status, firstComment, derivatives } = body;
+  const { id, content, platforms, uploadIds, scheduledAt, status, firstComment, derivatives, postType } = body;
 
   if (!id) return NextResponse.json({ error: 'ID obrigatorio' }, { status: 400 });
 
@@ -126,6 +127,7 @@ export async function PUT(req: NextRequest) {
     if (uploadIds !== undefined) updates.upload_ids = uploadIds;
     if (firstComment !== undefined) updates.first_comment = firstComment;
     if (derivatives !== undefined) updates.derivatives = derivatives;
+    if (postType !== undefined) updates.media_type = postType;
 
     const { data, error: updateError } = await supabase
       .from('posts')
