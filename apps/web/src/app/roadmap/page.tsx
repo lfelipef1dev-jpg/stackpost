@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, Check, Circle } from 'lucide-react';
-import { ScrollReveal } from '@/components/animations';
+import { ArrowRight, Check, Circle, Map } from 'lucide-react';
+import { ScrollReveal, FadeIn } from '@/components/animations';
 import { JsonLd, serviceSchema } from '@/components/JsonLd';
 import LandingHeader from '@/components/LandingHeader';
 import Footer from '@/components/Footer';
@@ -49,15 +49,26 @@ export default function RoadmapPage() {
       <JsonLd data={jsonLd} />
       <LandingHeader />
 
-      <section className="pt-24 pb-12 max-w-4xl mx-auto px-4 md:px-6 text-center">
-        <ScrollReveal>
-          <h1 className="font-display text-4xl md:text-5xl font-black tracking-tight mb-4">
-            Roadmap
-          </h1>
-          <p className="text-lg text-brand-text-secondary max-w-2xl mx-auto">
-            Transparência total. Veja o que já está pronto e o que vem por aí.
-          </p>
-        </ScrollReveal>
+      {/* Hero com glow */}
+      <section className="relative pt-24 pb-12 px-4 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-[140px]" style={{ background: '#22C55E15' }} />
+          <div className="absolute bottom-0 left-1/3 w-[400px] h-[400px] rounded-full blur-[120px]" style={{ background: '#22C55E10' }} />
+        </div>
+        <div className="max-w-4xl mx-auto relative text-center">
+          <FadeIn>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border mb-6" style={{ borderColor: '#22C55E40', backgroundColor: '#22C55E10' }}>
+              <Map className="w-3.5 h-3.5" style={{ color: '#22C55E' }} />
+              <span className="text-xs font-mono" style={{ color: '#22C55E' }}>Roadmap</span>
+            </div>
+            <h1 className="font-display text-4xl md:text-5xl font-black tracking-tight mb-4" style={{ color: 'color-mix(in srgb, #22C55E 25%, white)' }}>
+              Roadmap
+            </h1>
+            <p className="text-lg text-brand-text-secondary max-w-2xl mx-auto">
+              Transparencia total. Veja o que ja esta pronto e o que vem por ai.
+            </p>
+          </FadeIn>
+        </div>
       </section>
 
       <section className="max-w-4xl mx-auto px-4 md:px-6 pb-12">

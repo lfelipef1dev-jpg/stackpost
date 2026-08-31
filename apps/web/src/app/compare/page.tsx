@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, Check, X, Minus } from 'lucide-react';
-import { ScrollReveal } from '@/components/animations';
+import { ArrowRight, Check, X, Minus, Scale } from 'lucide-react';
+import { ScrollReveal, FadeIn } from '@/components/animations';
 import { JsonLd, serviceSchema } from '@/components/JsonLd';
 import LandingHeader from '@/components/LandingHeader';
 import Footer from '@/components/Footer';
@@ -41,15 +41,26 @@ export default function ComparePage() {
       <JsonLd data={jsonLd} />
       <LandingHeader />
 
-      <section className="pt-24 pb-12 max-w-5xl mx-auto px-4 md:px-6 text-center">
-        <ScrollReveal>
-          <h1 className="font-display text-4xl md:text-5xl font-black tracking-tight mb-4">
-            StackPost vs alternativas
-          </h1>
-          <p className="text-lg text-brand-text-secondary max-w-2xl mx-auto">
-            Compare recursos de infraestrutura social. Dados baseados em documentação pública dos concorrentes.
-          </p>
-        </ScrollReveal>
+      {/* Hero com glow */}
+      <section className="relative pt-24 pb-12 px-4 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-[140px]" style={{ background: '#8AB4F815' }} />
+          <div className="absolute bottom-0 left-1/3 w-[400px] h-[400px] rounded-full blur-[120px]" style={{ background: '#8AB4F810' }} />
+        </div>
+        <div className="max-w-5xl mx-auto relative text-center">
+          <FadeIn>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border mb-6" style={{ borderColor: '#8AB4F840', backgroundColor: '#8AB4F810' }}>
+              <Scale className="w-3.5 h-3.5" style={{ color: '#8AB4F8' }} />
+              <span className="text-xs font-mono" style={{ color: '#8AB4F8' }}>Comparacao</span>
+            </div>
+            <h1 className="font-display text-4xl md:text-5xl font-black tracking-tight mb-4" style={{ color: 'color-mix(in srgb, #8AB4F8 25%, white)' }}>
+              StackPost vs alternativas
+            </h1>
+            <p className="text-lg text-brand-text-secondary max-w-2xl mx-auto">
+              Compare recursos de infraestrutura social. Dados baseados em documentacao publica dos concorrentes.
+            </p>
+          </FadeIn>
+        </div>
       </section>
 
       <section className="max-w-5xl mx-auto px-4 md:px-6 pb-20">

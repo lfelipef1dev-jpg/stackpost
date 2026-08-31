@@ -1,9 +1,11 @@
 ﻿import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { FaDiscord } from 'react-icons/fa6';
 import { ScrollReveal } from '@/components/animations';
 import { Breadcrumb } from '@/components/Breadcrumb';
 import { JsonLd, serviceSchema } from '@/components/JsonLd';
+import { PlatformHero } from '@/components/PlatformHero';
 import Footer from '@/components/Footer';
 import LandingHeader from '@/components/LandingHeader';
 
@@ -60,34 +62,15 @@ export default function DiscordApiPage() {
           ]}
         />
 
-        {/* Hero */}
-        <section className="max-w-4xl mx-auto px-4 pt-10 pb-16 text-center">
-          <ScrollReveal>
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6 text-xs font-bold uppercase tracking-widest text-brand-accent border border-brand-accent/25 rounded-full bg-brand-accent/10">
-              API de Discord
-            </span>
-            <h1 className="font-display text-4xl md:text-6xl font-black leading-[1.05] tracking-[-0.04em] text-brand-text mb-6">
-              API de <span className="text-brand-accent">Discord</span>
-            </h1>
-            <p className="text-lg md:text-xl text-brand-text-secondary max-w-2xl mx-auto">
-              Envie mensagens via webhook e embeds com imagem via uma unica API. OAuth2 com webhook.incoming scope, multi-canal e agendamento sem necessidade de bot.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-              <Link
-                href="/register"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-brand-accent text-brand-bg text-sm font-bold rounded-lg hover:scale-105 transition-transform"
-              >
-                Comecar agora <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link
-                href="/docs"
-                className="inline-flex items-center gap-2 px-6 py-3 border border-brand-border text-brand-text text-sm font-bold rounded-lg hover:bg-brand-surface transition-colors"
-              >
-                Ver documentacao
-              </Link>
-            </div>
-          </ScrollReveal>
-        </section>
+        {/* Hero com cor e icone oficial */}
+        <PlatformHero
+          icon={FaDiscord}
+          label="API de Discord"
+          title="API de Discord"
+          description="Envie mensagens via webhook e embeds com imagem via uma unica API. OAuth2 com webhook.incoming scope, multi-canal e agendamento sem necessidade de bot."
+          color="#5865F2"
+          docsHref="/docs"
+        />
 
         {/* Recursos */}
         <section className="max-w-6xl mx-auto px-4 py-16">

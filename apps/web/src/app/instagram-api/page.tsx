@@ -1,9 +1,11 @@
 ﻿import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { FaInstagram } from 'react-icons/fa6';
 import { ScrollReveal } from '@/components/animations';
 import { Breadcrumb } from '@/components/Breadcrumb';
 import { JsonLd, serviceSchema } from '@/components/JsonLd';
+import { PlatformHero } from '@/components/PlatformHero';
 import Footer from '@/components/Footer';
 import LandingHeader from '@/components/LandingHeader';
 
@@ -60,34 +62,15 @@ export default function InstagramApiPage() {
           ]}
         />
 
-        {/* Hero */}
-        <section className="max-w-4xl mx-auto px-4 pt-10 pb-16 text-center">
-          <ScrollReveal>
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6 text-xs font-bold uppercase tracking-widest text-brand-accent border border-brand-accent/25 rounded-full bg-brand-accent/10">
-              API de Instagram
-            </span>
-            <h1 className="font-display text-4xl md:text-6xl font-black leading-[1.05] tracking-[-0.04em] text-brand-text mb-6">
-              API de <span className="text-brand-accent">Instagram</span>
-            </h1>
-            <p className="text-lg md:text-xl text-brand-text-secondary max-w-2xl mx-auto">
-              Publique feed posts, Reels, Stories e Carrossel via uma unica API. OAuth via Meta Business, primeiro comentario automatico e analytics completo de likes, comments, reach e impressions.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-              <Link
-                href="/register"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-brand-accent text-brand-bg text-sm font-bold rounded-lg hover:scale-105 transition-transform"
-              >
-                Comecar agora <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link
-                href="/docs"
-                className="inline-flex items-center gap-2 px-6 py-3 border border-brand-border text-brand-text text-sm font-bold rounded-lg hover:bg-brand-surface transition-colors"
-              >
-                Ver documentacao
-              </Link>
-            </div>
-          </ScrollReveal>
-        </section>
+        {/* Hero com cor e icone oficial */}
+        <PlatformHero
+          icon={FaInstagram}
+          label="API de Instagram"
+          title="API de Instagram"
+          description="Publique feed posts, Reels, Stories e Carrossel via uma unica API. OAuth via Meta Business, primeiro comentario automatico e analytics completo de likes, comments, reach e impressions."
+          color="#E4405F"
+          docsHref="/docs"
+        />
 
         {/* Recursos */}
         <section className="max-w-6xl mx-auto px-4 py-16">
