@@ -65,10 +65,8 @@ const columns = [
     href: '/docs/api',
     links: [
       { label: 'API Reference', href: '/docs/api' },
-      { label: 'SDK', href: '/docs/sdk' },
-      { label: 'CLI', href: '/docs/cli' },
-      { label: 'MCP Server', href: '/docs/mcp' },
       { label: 'Webhooks', href: '/docs/webhooks' },
+      { label: 'MCP Server', href: '/docs/mcp' },
     ],
   },
   {

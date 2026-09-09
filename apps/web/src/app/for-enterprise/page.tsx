@@ -38,7 +38,7 @@ const features = [
   {
     icon: Users,
     title: 'Suporte dedicado',
-    desc: 'SLA de resposta, onboarding assistido e canal direto com o time de engenharia.',
+    desc: 'Tempo de resposta, onboarding assistido e canal direto com o time de engenharia.'
   },
 ];
 

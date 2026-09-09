@@ -6,7 +6,7 @@ import { Breadcrumb } from '@/components/Breadcrumb';
 
 export const metadata: Metadata = {
   title: 'Termos de uso - StackPost',
-  description: 'Termos de uso do StackPost: regras para uso da API, limites, responsabilidades e SLA.',
+  description: 'Termos de uso do StackPost: regras para uso da API, limites, responsabilidades e condições de uso.',
   alternates: { canonical: '/terms' },
 };
 
