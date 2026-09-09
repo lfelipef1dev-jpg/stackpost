@@ -112,7 +112,7 @@ const columns = [
       { label: 'Blog', href: '/blog' },
       { label: 'Contato', href: '/contact' },
       { label: 'Status', href: '/status' },
-      { label: 'StackPost', href: 'https://stackpost.com.br' },
+      { label: 'Site', href: '/' },
     ],
   },
 ];
@@ -149,8 +149,8 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Redes sociais */}
-        <div className="flex flex-wrap gap-3 justify-center py-8 border-t border-brand-border mt-10" aria-label="Redes sociais">
+        {/* Integrações e documentação de plataformas */}
+        <div className="flex flex-wrap gap-3 justify-center py-8 border-t border-brand-border mt-10" aria-label="Integrações e documentação de plataformas">
           {[
             { label: 'Instagram', href: '/instagram-api', color: '#E4405F', icon: FaInstagram },
             { label: 'Facebook', href: '/facebook-api', color: '#1877F2', icon: FaFacebook },

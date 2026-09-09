@@ -2,6 +2,7 @@
 // Segue padrao oficial: https://opennext.js.org/cloudflare/howtos/custom-worker
 // @ts-ignore `.open-next/worker.js` is generated at build time
 import { default as handler } from "./.open-next/worker.js";
+import { logger } from "./src/lib/logger";
 
 // Mapeia cada expressao de cron para as rotas que ela deve executar.
 // Antes: TODOS os triggers executavam as mesmas 2 rotas via HTTP publico,
@@ -39,23 +40,37 @@ export default {
     if (routes.length === 0) return;
 
     const cronSecret = env.CRON_SECRET;
-    if (!cronSecret) return;
+    if (!cronSecret) {
+      logger.error('CRON_SECRET ausente; cron abortado', { cron: cronKey });
+      return;
+    }
+
+    logger.setLogContext({ route: `cron:${cronKey}` });
 
     ctx.waitUntil(
       (async () => {
-        for (const route of routes) {
-          try {
-            // Fetch interno direto no handler: evita subrequest externo
-            // e o round-trip completo de middleware/CORS/TLS do dominio publico.
-            const req = new Request(`https://worker.internal${route}`, {
-              headers: { Authorization: `Bearer ${cronSecret}` },
-            });
-            // @ts-ignore - signature interna do OpenNext
-            const resp = await handler.fetch(req, env, ctx);
-            await resp.body?.cancel();
-          } catch {
-            // Silencioso: falhas de cron nao devem travar o Worker
+        try {
+          for (const route of routes) {
+            try {
+              // Fetch interno direto no handler: evita subrequest externo
+              // e o round-trip completo de middleware/CORS/TLS do dominio publico.
+              const req = new Request(`https://worker.internal${route}`, {
+                headers: { Authorization: `Bearer ${cronSecret}` },
+              });
+              // @ts-ignore - signature interna do OpenNext
+              const resp = await handler.fetch(req, env, ctx);
+              await resp.body?.cancel();
+              if (resp.status >= 400) {
+                logger.warn(`Cron ${route} retornou ${resp.status}`, { cron: cronKey });
+              } else {
+                logger.info(`Cron ${route} -> ${resp.status}`, { cron: cronKey });
+              }
+            } catch (err) {
+              logger.error(`Erro no cron ${route}`, err);
+            }
           }
+        } finally {
+          logger.clearLogContext();
         }
       })()
     );

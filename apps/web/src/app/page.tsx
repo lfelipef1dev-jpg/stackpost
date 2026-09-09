@@ -18,15 +18,15 @@ export const metadata: Metadata = {
 
 const homeJsonLd = softwareApplicationSchema(
   'StackPost',
-  'API unificada de redes sociais para SaaS, agências e AI agents. 15 plataformas, 114 endpoints, MCP server, publishing, scheduling, analytics, comments, webhooks e contas ilimitadas.',
+  'API unificada de redes sociais para SaaS, agências e AI agents. 15 plataformas, 114 endpoints, MCP server, publishing, scheduling, analytics, comments, webhooks e escala por volume.',
   '/'
 );
 
 const stats = [
   { value: '15', label: 'plataformas conectadas' },
   { value: '114', label: 'endpoints prontos' },
-  { value: '0', label: 'custo por conta' },
-  { value: '99.9%', label: 'uptime' },
+  { value: '0', label: 'custo por conta conectada' },
+  { value: '—', label: 'uptime monitorado' },
 ];
 
 const bentoFeatures = [

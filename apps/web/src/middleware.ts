@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { rateLimit } from '@/lib/rate-limit';
 import { getUserFromToken } from '@/lib/auth';
 import { getSupabase } from '@/lib/supabase';
+import { logger } from '@/lib/logger';
 
 const PUBLIC_PATHS = ['/', '/login', '/register', '/plans', '/about', '/features', '/pricing', '/contact', '/blog', '/docs', '/privacy', '/terms', '/status', '/changelog', '/partners', '/comparisons', '/glossary', '/brand-kit', '/platforms', '/onboarding', '/compare', '/roadmap', '/demo', '/build-vs-buy', '/migrate', '/security', '/ai-agents', '/for-saas', '/for-agencies', '/for-enterprise'];
 const STATIC_PATHS = ['/_next', '/static', '/favicon.ico', '/robots.txt', '/sitemap.xml', '/icon.png', '/logo.png', '/og.png', '/manifest', '/uploads', '/brand', '/banner', '/cases', '/prints', '/videos', '/openapi.json', '/site.webmanifest', '/_headers'];
@@ -63,55 +64,65 @@ async function isAdmin(userId: string): Promise<boolean> {
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const origin = req.headers.get('origin');
+  const requestId = crypto.randomUUID();
+  logger.setLogContext({
+    route: `${req.method} ${pathname}`,
+    requestId,
+    version: process.env.VERCEL_GIT_COMMIT_SHA || process.env.CF_VERSION_METADATA,
+  });
 
-  if (pathname.startsWith('/api/')) {
-    const blocked = rateLimit(req);
-    if (blocked) return blocked;
-  }
+  try {
+    if (pathname.startsWith('/api/')) {
+      const blocked = rateLimit(req);
+      if (blocked) return blocked;
+    }
 
-  if (req.method === 'OPTIONS' && pathname.startsWith('/api/')) {
-    const res = new NextResponse(null, { status: 204 });
-    Object.entries(corsHeaders(origin)).forEach(([k, v]) => res.headers.set(k, v));
+    if (req.method === 'OPTIONS' && pathname.startsWith('/api/')) {
+      const res = new NextResponse(null, { status: 204 });
+      Object.entries(corsHeaders(origin)).forEach(([k, v]) => res.headers.set(k, v));
+      return res;
+    }
+
+    const res = NextResponse.next();
+    res.headers.set('X-Content-Type-Options', 'nosniff');
+    res.headers.set('X-Frame-Options', 'SAMEORIGIN');
+    res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+    res.headers.set('Content-Security-Policy', CSP);
+
+    if (pathname.startsWith('/api/')) {
+      Object.entries(corsHeaders(origin)).forEach(([k, v]) => res.headers.set(k, v));
+    }
+
+    if (pathname.startsWith('/admin/')) {
+      const user = await getUserFromToken(req);
+      if (!user || !(await isAdmin(user.id))) {
+        return NextResponse.redirect(new URL('/login', req.url));
+      }
+    }
+
+    if (pathname.startsWith('/api/admin/')) {
+      const user = await getUserFromToken(req);
+      if (!user || !(await isAdmin(user.id))) {
+        return NextResponse.json({ error: 'Acesso restrito a administradores' }, { status: 403 });
+      }
+    }
+
+    if (pathname.startsWith('/api/')) {
+      return res;
+    }
+
+    if (!isPublic(pathname)) {
+      const user = await getUserFromToken(req);
+      if (!user) {
+        return NextResponse.redirect(new URL('/login', req.url));
+      }
+    }
+
     return res;
+  } finally {
+    logger.clearLogContext();
   }
-
-  const res = NextResponse.next();
-  res.headers.set('X-Content-Type-Options', 'nosniff');
-  res.headers.set('X-Frame-Options', 'SAMEORIGIN');
-  res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-  res.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
-  res.headers.set('Content-Security-Policy', CSP);
-
-  if (pathname.startsWith('/api/')) {
-    Object.entries(corsHeaders(origin)).forEach(([k, v]) => res.headers.set(k, v));
-  }
-
-  if (pathname.startsWith('/admin/')) {
-    const user = await getUserFromToken(req);
-    if (!user || !(await isAdmin(user.id))) {
-      return NextResponse.redirect(new URL('/login', req.url));
-    }
-  }
-
-  if (pathname.startsWith('/api/admin/')) {
-    const user = await getUserFromToken(req);
-    if (!user || !(await isAdmin(user.id))) {
-      return NextResponse.json({ error: 'Acesso restrito a administradores' }, { status: 403 });
-    }
-  }
-
-  if (pathname.startsWith('/api/')) {
-    return res;
-  }
-
-  if (!isPublic(pathname)) {
-    const user = await getUserFromToken(req);
-    if (!user) {
-      return NextResponse.redirect(new URL('/login', req.url));
-    }
-  }
-
-  return res;
 }
 
 export const config = {

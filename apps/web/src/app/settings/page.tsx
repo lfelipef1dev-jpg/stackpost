@@ -4,6 +4,7 @@ import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { PlatformIcon } from '@/components/PlatformIcon';
 import { PLATFORMS } from '@/lib/platforms';
+import { publishableAccounts } from '@/lib/accounts';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
@@ -86,8 +87,13 @@ const PLAN_LIMITS: Record<string, { seats: number; apiKeys: number; webhooks: nu
   starter: { seats: 3, apiKeys: 5, webhooks: 3, accounts: 10 },
   growth: { seats: 5, apiKeys: 10, webhooks: 10, accounts: 25 },
   scale: { seats: 10, apiKeys: 25, webhooks: 25, accounts: 50 },
-  business: { seats: 25, apiKeys: 100, webhooks: 100, accounts: 999 },
+  business: { seats: Infinity, apiKeys: 100, webhooks: 100, accounts: Infinity },
 };
+
+function formatLimit(value: number, max: number): string {
+  if (!Number.isFinite(max)) return `${value} / Ilimitado`;
+  return `${value} / ${max}`;
+}
 
 const planLabels: Record<string, string> = {
   free: 'Free',
@@ -228,6 +234,7 @@ export default function SettingsPage() {
   const [members, setMembers] = useState<any[]>([]);
   const [webhooks, setWebhooks] = useState<any[]>([]);
   const [me, setMe] = useState<any>(null);
+  const [accountsCount, setAccountsCount] = useState(0);
   const [newKeyName, setNewKeyName] = useState('');
   const [newKey, setNewKey] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -263,7 +270,17 @@ export default function SettingsPage() {
       loadMembers(),
       loadWebhooks(),
       loadMe(),
+      loadAccounts(),
     ]);
+  }
+
+  async function loadAccounts() {
+    try {
+      const res = await fetch('/api/accounts');
+      const data = await res.json();
+      const visible = publishableAccounts(Array.isArray(data) ? data : []);
+      setAccountsCount(visible.length);
+    } catch {}
   }
 
   async function loadApiKeys() {
@@ -441,7 +458,7 @@ export default function SettingsPage() {
   const onboardingSteps = [
     { done: !!profile.name, label: 'Complete seu perfil' },
     { done: !!org, label: 'Configure a organização' },
-    { done: false, label: 'Conecte suas contas' },
+    { done: accountsCount > 0, label: 'Conecte suas contas' },
     { done: members.length > 1, label: 'Convide o time' },
     { done: false, label: 'Configure notificações' },
   ];
@@ -1045,7 +1062,7 @@ export default function SettingsPage() {
                       <div>
                         <h3 className="font-semibold text-sm">Plano atual</h3>
                         <p className="text-[10px] text-brand-text-secondary mt-0.5">
-                          {planLabels[plan] || plan} · {limits.accounts} contas · {limits.seats} assentos
+                          {planLabels[plan] || plan} · {formatLimit(accountsCount, limits.accounts)} contas · {formatLimit(members.length, limits.seats)} assentos
                         </p>
                       </div>
                       <span className="px-3 py-1 rounded-lg bg-brand-accent/10 border border-brand-accent/30 text-brand-accent text-xs font-medium">
@@ -1058,21 +1075,21 @@ export default function SettingsPage() {
                       <div>
                         <div className="flex justify-between text-xs mb-1">
                           <span className="text-brand-text-secondary">Contas conectadas</span>
-                          <span className="font-mono">0/{limits.accounts}</span>
+                          <span className="font-mono">{formatLimit(accountsCount, limits.accounts)}</span>
                         </div>
-                        <ProgressBar value={0} max={limits.accounts} />
+                        <ProgressBar value={accountsCount} max={limits.accounts} />
                       </div>
                       <div>
                         <div className="flex justify-between text-xs mb-1">
                           <span className="text-brand-text-secondary">Assentos</span>
-                          <span className="font-mono">{members.length}/{limits.seats}</span>
+                          <span className="font-mono">{formatLimit(members.length, limits.seats)}</span>
                         </div>
                         <ProgressBar value={members.length} max={limits.seats} color="#A78BFA" />
                       </div>
                       <div>
                         <div className="flex justify-between text-xs mb-1">
                           <span className="text-brand-text-secondary">Chaves de API</span>
-                          <span className="font-mono">{apiKeys.length}/{limits.apiKeys}</span>
+                          <span className="font-mono">{formatLimit(apiKeys.length, limits.apiKeys)}</span>
                         </div>
                         <ProgressBar value={apiKeys.length} max={limits.apiKeys} color="#FBBF24" />
                       </div>
@@ -1179,7 +1196,7 @@ export default function SettingsPage() {
                       <h3 className="font-semibold text-sm">Confiança e conformidade</h3>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                      {['LGPD', 'SOC 2', 'ISO 27001', '99.9% uptime'].map((badge) => (
+                      {['OAuth 2.0', 'RLS', 'CSP', 'Tokens JWT'].map((badge) => (
                         <div
                           key={badge}
                           className="flex items-center justify-center gap-1.5 p-2.5 rounded-xl bg-brand-elevated/30 border border-brand-border/30"

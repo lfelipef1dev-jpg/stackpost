@@ -264,6 +264,14 @@ export default function AnalyticsPage() {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState<'7d' | '30d' | '90d'>('30d');
+  const [plan, setPlan] = useState('free');
+
+  useEffect(() => {
+    fetch('/api/organization')
+      .then((res) => res.json())
+      .then((d) => setPlan(d?.plan || 'free'))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -937,55 +945,53 @@ export default function AnalyticsPage() {
         {/* ============================================================ */}
         {/* 11. Upsell comercial                                         */}
         {/* ============================================================ */}
-        <SpotlightCard className="p-8 mb-8" glow="#A78BFA">
-          <div className="flex flex-col lg:flex-row gap-8 items-start">
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-brand-accent/15 border border-brand-accent/30 flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-brand-accent" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold text-brand-text">
-                    Desbloqueie análises avançadas
-                  </h2>
-                  <p className="text-xs text-brand-text-secondary">
-                    StackPost Pro — para quem leva dados a sério
-                  </p>
-                </div>
-              </div>
-              <p className="text-sm text-brand-text-secondary mb-5 max-w-lg">
-                Veja além do básico. Compare períodos, entenda seus melhores horários e gere
-                relatórios prontos para sua equipe ou clientes.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {proFeatures.map((f, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-brand-elevated border border-brand-border flex items-center justify-center flex-shrink-0">
-                      <f.icon className="w-4 h-4 text-brand-accent" />
-                    </div>
-                    <span className="text-sm text-brand-text">{f.text}</span>
+        {!['growth', 'scale', 'business'].includes(plan) && (
+          <SpotlightCard className="p-8 mb-8" glow="#A78BFA">
+            <div className="flex flex-col lg:flex-row gap-8 items-start">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-brand-accent/15 border border-brand-accent/30 flex items-center justify-center">
+                    <Zap className="w-5 h-5 text-brand-accent" />
                   </div>
-                ))}
+                  <div>
+                    <h2 className="text-xl font-bold text-brand-text">
+                      Desbloqueie análises avançadas
+                    </h2>
+                    <p className="text-xs text-brand-text-secondary">
+                      Disponível nos planos Crescimento, Escala e Empresarial
+                    </p>
+                  </div>
+                </div>
+                <p className="text-sm text-brand-text-secondary mb-5 max-w-lg">
+                  Veja além do básico. Compare períodos, entenda seus melhores horários e gere
+                  relatórios prontos para sua equipe ou clientes.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {proFeatures.map((f, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-brand-elevated border border-brand-border flex items-center justify-center flex-shrink-0">
+                        <f.icon className="w-4 h-4 text-brand-accent" />
+                      </div>
+                      <span className="text-sm text-brand-text">{f.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="flex flex-col gap-3 lg:w-56 flex-shrink-0">
+                <a
+                  href="/plans"
+                  className="flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-brand-accent text-white text-sm font-semibold hover:bg-brand-accent/90 transition"
+                >
+                  Ver planos
+                  <ArrowRight className="w-4 h-4" />
+                </a>
+                <p className="text-xs text-brand-text-secondary text-center lg:text-right">
+                  Cancele quando quiser. Sem fidelidade.
+                </p>
               </div>
             </div>
-            <div className="flex flex-col gap-3 lg:w-56 flex-shrink-0">
-              <div className="text-center lg:text-right">
-                <span className="text-3xl font-bold text-brand-text">R$ 49</span>
-                <span className="text-sm text-brand-text-secondary">/mês</span>
-              </div>
-              <a
-                href="/billing"
-                className="flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-brand-accent text-white text-sm font-semibold hover:bg-brand-accent/90 transition"
-              >
-                Fazer upgrade para Pro
-                <ArrowRight className="w-4 h-4" />
-              </a>
-              <p className="text-xs text-brand-text-secondary text-center lg:text-right">
-                Cancele quando quiser. Sem fidelidade.
-              </p>
-            </div>
-          </div>
-        </SpotlightCard>
+          </SpotlightCard>
+        )}
       </main>
 
       {/* ============================================================ */}

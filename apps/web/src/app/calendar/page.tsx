@@ -43,8 +43,8 @@ const DAYS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 const WORKSPACES = [
   { id: 'all', name: 'Todas as marcas', client: 'Visão geral' },
   { id: 'stackpost', name: 'StackPost', client: 'Próprio' },
-  { id: 'cliente_a', name: 'Cliente A', client: 'Agência' },
-  { id: 'cliente_b', name: 'Cliente B', client: 'Agência' },
+  { id: 'cliente_a', name: 'Cliente A (demonstrativo)', client: 'Agência (demonstrativo)' },
+  { id: 'cliente_b', name: 'Cliente B (demonstrativo)', client: 'Agência (demonstrativo)' },
 ];
 
 const CAMPAIGNS = ['Black Friday', 'Lançamento', 'Evergreen', 'Dicas', 'Vendas'];
@@ -112,6 +112,7 @@ export default function CalendarPage() {
   const [filterPlatform, setFilterPlatform] = useState<string[]>([]);
   const [filterCampaign, setFilterCampaign] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [plan, setPlan] = useState('free');
   const [message, setMessage] = useState('');
   const [editingPost, setEditingPost] = useState<any | null>(null);
   const [editContent, setEditContent] = useState('');
@@ -122,6 +123,10 @@ export default function CalendarPage() {
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
+    fetch('/api/organization')
+      .then((res) => res.json())
+      .then((data) => { if (!cancelled) setPlan(data?.plan || 'free'); })
+      .catch(() => {});
     fetch('/api/posts')
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -428,7 +433,7 @@ export default function CalendarPage() {
         </section>
 
         {/* Upsell contextual */}
-        <section className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <section className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
           {gaps > 5 && (
             <div className="p-4 rounded-2xl bg-warning/10 border border-warning/30 text-warning text-sm flex items-center gap-3">
               <AlertCircle className="w-5 h-5" />
@@ -436,16 +441,20 @@ export default function CalendarPage() {
               <button onClick={() => router.push('/composer')} className="px-3 py-1.5 rounded-lg bg-warning text-brand-bg text-xs font-semibold">Criar</button>
             </div>
           )}
-          <div className="p-4 rounded-2xl bg-brand-accent/10 border border-brand-accent/30 text-brand-accent text-sm flex items-center gap-3">
-            <Sparkles className="w-5 h-5" />
-            <div className="flex-1">Ative aprovações de cliente no plano Business.</div>
-            <button onClick={() => router.push('/plans')} className="px-3 py-1.5 rounded-lg bg-brand-accent text-brand-bg text-xs font-semibold">Ver planos</button>
-          </div>
-          <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/30 text-purple-400 text-sm flex items-center gap-3">
-            <Users className="w-5 h-5" />
-            <div className="flex-1">Gerencie múltiplas marcas no plano Agency.</div>
-            <button onClick={() => router.push('/plans')} className="px-3 py-1.5 rounded-lg bg-purple-500 text-brand-bg text-xs font-semibold">Upgrade</button>
-          </div>
+          {plan !== 'business' && (
+            <div className="p-4 rounded-2xl bg-brand-accent/10 border border-brand-accent/30 text-brand-accent text-sm flex items-center gap-3">
+              <Sparkles className="w-5 h-5" />
+              <div className="flex-1">Aprovações de cliente a partir do plano Empresarial.</div>
+              <button onClick={() => router.push('/plans')} className="px-3 py-1.5 rounded-lg bg-brand-accent text-brand-bg text-xs font-semibold">Ver planos</button>
+            </div>
+          )}
+          {plan !== 'business' && plan !== 'scale' && (
+            <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/30 text-purple-400 text-sm flex items-center gap-3">
+              <Users className="w-5 h-5" />
+              <div className="flex-1">Múltiplas marcas a partir do plano Escala.</div>
+              <button onClick={() => router.push('/plans')} className="px-3 py-1.5 rounded-lg bg-purple-500 text-brand-bg text-xs font-semibold">Upgrade</button>
+            </div>
+          )}
         </section>
 
         {/* Controles */}

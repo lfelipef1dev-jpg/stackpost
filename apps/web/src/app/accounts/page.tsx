@@ -246,6 +246,7 @@ export default function AccountsPage() {
     active: { icon: CheckCircle2, color: 'text-success', bg: 'bg-success/10', label: 'Ativa', dot: 'bg-success' },
     expired: { icon: AlertCircle, color: 'text-error', bg: 'bg-error/10', label: 'Expirada', dot: 'bg-error' },
     reconnect_required: { icon: AlertCircle, color: 'text-warning', bg: 'bg-warning/10', label: 'Reconectar', dot: 'bg-warning' },
+    needs_reconnect: { icon: AlertCircle, color: 'text-warning', bg: 'bg-warning/10', label: 'Reconectar', dot: 'bg-warning' },
     pending: { icon: Clock, color: 'text-brand-text-secondary', bg: 'bg-brand-elevated', label: 'Pendente', dot: 'bg-brand-text-secondary' },
   };
 
@@ -258,7 +259,7 @@ export default function AccountsPage() {
         if (!matchName && !matchUser) return false;
       }
       if (filter === 'active') return a.status === 'active';
-      if (filter === 'attention') return a.status === 'expired' || a.status === 'reconnect_required';
+      if (filter === 'attention') return a.status === 'expired' || a.status === 'reconnect_required' || a.status === 'needs_reconnect';
       return true;
     })
     .sort((a, b) => {
@@ -280,7 +281,7 @@ export default function AccountsPage() {
   const stats = {
     total: accounts.length,
     active: accounts.filter((a) => a.status === 'active').length,
-    expired: accounts.filter((a) => a.status === 'expired' || a.status === 'reconnect_required').length,
+    expired: accounts.filter((a) => a.status === 'expired' || a.status === 'reconnect_required' || a.status === 'needs_reconnect').length,
     platforms: new Set(accounts.map((a) => a.platform)).size,
   };
 
@@ -679,7 +680,7 @@ export default function AccountsPage() {
       {/* Social proof */}
       <div className="border-t border-brand-border/50 bg-brand-surface/30">
         <div className="max-w-7xl mx-auto px-4 py-4 text-center text-xs text-brand-text-secondary">
-          StackPost · 50.000+ criadores · OAuth 2.0 · Suporte a 15 plataformas
+          StackPost · OAuth 2.0 · Suporte a 15 plataformas
         </div>
       </div>
 

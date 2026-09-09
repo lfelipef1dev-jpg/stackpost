@@ -502,7 +502,7 @@ export default function PlansPage() {
           {[
             { icon: Lock, title: 'Criptografia TLS', desc: 'Toda comunicacao criptografada' },
             { icon: Server, title: 'Cloudflare + Supabase', desc: 'Infra global e banco isolado' },
-            { icon: TrendingUp, title: 'Uptime 99.9%', desc: 'Monitoramento continuo' },
+            { icon: TrendingUp, title: 'Uptime monitorado', desc: 'Disponibilidade acompanhada em tempo real' },
             { icon: CreditCard, title: 'Mercado Pago', desc: 'Pagamento seguro com PIX' },
           ].map((b) => (
             <StaggerItem key={b.title}>
@@ -636,9 +636,8 @@ export default function PlansPage() {
               </div>
               <div className="text-center md:text-right">
                 <div className="inline-block text-center md:text-left p-6 rounded-2xl bg-brand-elevated/60 border border-brand-border">
-                  <p className="text-xs text-brand-text-secondary uppercase tracking-wider mb-1">ROI medio reportado</p>
-                  <p className="text-4xl md:text-5xl font-black text-brand-accent mb-2">4.5x</p>
-                  <p className="text-sm text-brand-text-secondary">Reducao de tempo de operacao social</p>
+                  <p className="text-sm text-brand-text-secondary mb-2">Automacao de operacao social</p>
+                  <p className="text-lg font-semibold text-brand-text">Economia de tempo com IA e scheduling</p>
                 </div>
               </div>
             </div>

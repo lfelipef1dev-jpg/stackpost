@@ -8,29 +8,26 @@ import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Status - StackPost',
-  description: 'Status em tempo real da API e plataformas do StackPost.',
+  description: 'Status dos serviços do StackPost. Valores reais serão exibidos após integração com o monitoramento de produção.',
   alternates: { canonical: '/status' },
 };
 
 const jsonLd = serviceSchema('StackPost Status', 'Status da infraestrutura social.', '/status');
 
 const services = [
-  { name: 'API', status: 'operational', uptime: '99.98%' },
-  { name: 'Dashboard', status: 'operational', uptime: '99.99%' },
-  { name: 'Webhooks', status: 'operational', uptime: '99.95%' },
-  { name: 'Instagram', status: 'operational', uptime: '99.9%' },
-  { name: 'Facebook', status: 'operational', uptime: '99.9%' },
-  { name: 'LinkedIn', status: 'operational', uptime: '99.9%' },
-  { name: 'Discord', status: 'operational', uptime: '99.9%' },
-  { name: 'OAuth', status: 'operational', uptime: '99.95%' },
-  { name: 'Analytics', status: 'operational', uptime: '99.9%' },
-  { name: 'MCP Server', status: 'operational', uptime: '99.9%' },
+  { name: 'API', status: 'operational' },
+  { name: 'Dashboard', status: 'operational' },
+  { name: 'Webhooks', status: 'operational' },
+  { name: 'Instagram', status: 'operational' },
+  { name: 'Facebook', status: 'operational' },
+  { name: 'LinkedIn', status: 'operational' },
+  { name: 'Discord', status: 'operational' },
+  { name: 'OAuth', status: 'operational' },
+  { name: 'Analytics', status: 'operational' },
+  { name: 'MCP Server', status: 'operational' },
 ];
 
-const incidents: { date: string; title: string; status: string; level: string }[] = [
-  { date: '2026-08-31', title: 'Correção de callback OAuth (Discord/Google)', status: 'resolved', level: 'minor' },
-  { date: '2026-08-30', title: 'Manutenção programada - deploy de rotas OAuth', status: 'resolved', level: 'maintenance' },
-];
+const incidents: { date: string; title: string; status: string; level: string }[] = [];
 
 function StatusIcon({ status }: { status: string }) {
   if (status === 'operational') return <CheckCircle2 className="w-5 h-5 text-success" />;
@@ -67,7 +64,8 @@ export default function StatusPage() {
             <Activity className="w-6 h-6 text-brand-accent" />
             <h1 className="font-display text-3xl md:text-4xl font-black tracking-tight">Status</h1>
           </div>
-          <p className="text-brand-text-secondary mb-8">Status atual da infraestrutura do StackPost.</p>
+          <p className="text-brand-text-secondary mb-4">Status de referência dos serviços do StackPost.</p>
+          <p className="text-sm text-brand-text-secondary/70 mb-8">Valores de uptime e incidentes serão exibidos após integração com monitoramento de produção.</p>
 
           <div className="flex items-center gap-3 p-4 rounded-xl bg-success/5 border border-success/20 mb-8">
             <CheckCircle2 className="w-6 h-6 text-success" />
@@ -90,7 +88,6 @@ export default function StatusPage() {
                   <span className="font-medium">{s.name}</span>
                 </div>
                 <div className="flex items-center gap-4">
-                  <span className="text-sm text-brand-text-secondary hidden sm:inline">{s.uptime} uptime</span>
                   <StatusBadge status={s.status} />
                 </div>
               </div>
@@ -120,7 +117,7 @@ export default function StatusPage() {
 
         <ScrollReveal className="mt-8">
           <p className="text-xs text-brand-text-secondary">
-            Métricas baseadas em monitoramento interno. Atualizado em tempo real.
+            Esta pagina exibe referencias de status. Dados reais serão integrados ao monitoramento de producão.
           </p>
         </ScrollReveal>
       </section>
