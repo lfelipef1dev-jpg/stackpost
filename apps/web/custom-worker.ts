@@ -7,10 +7,8 @@ import { default as handler } from "./.open-next/worker.js";
 // Antes: TODOS os triggers executavam as mesmas 2 rotas via HTTP publico,
 // o que consumia CPU/subrequests em excesso e contribuia para Error 1102.
 const CRON_ROUTES: Record<string, string[]> = {
-  // A cada minuto: apenas publicacao de posts agendados
-  "* * * * *": ["/api/cron/publish-scheduled"],
-  // A cada 5 minutos: retry de webhooks + health-check leve
-  "*/5 * * * *": ["/api/cron/webhook-retry", "/api/cron/health-check"],
+  // A cada 5 minutos: publicacao de posts agendados + retry de webhooks
+  "*/5 * * * *": ["/api/cron/publish-scheduled", "/api/cron/webhook-retry"],
   // A cada hora: renovacao de tokens + manutencao de conexoes
   "0 * * * *": [
     "/api/cron/refresh-tokens",
