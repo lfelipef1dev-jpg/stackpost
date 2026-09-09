@@ -78,7 +78,7 @@ export function PlatformHero({
                   style={{ backgroundColor: color, color: '#0A0A0A' }}
                 >
                   <Sparkles className="w-4 h-4" />
-                  Comecar grátis <ArrowRight className="w-4 h-4" />
+                  Começar grátis <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
                   href={docsHref}

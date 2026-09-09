@@ -102,7 +102,7 @@ export default function ComparePage() {
             href="/register"
             className="inline-flex items-center gap-2 px-6 py-3 bg-brand-accent text-brand-bg font-bold rounded-lg hover:scale-105 transition-transform"
           >
-            Comecar grátis <ArrowRight className="w-4 h-4" />
+            Começar grátis <ArrowRight className="w-4 h-4" />
           </Link>
         </ScrollReveal>
       </section>

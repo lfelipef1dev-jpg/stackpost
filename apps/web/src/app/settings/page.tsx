@@ -1139,7 +1139,7 @@ export default function SettingsPage() {
                       <div className="flex items-center gap-3 p-3 rounded-xl bg-brand-elevated/30 border border-brand-border/30 opacity-50">
                         <Smartphone className="w-4 h-4 text-brand-text-secondary flex-shrink-0" />
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm">Nenhuma outra sessao</div>
+                          <div className="text-sm">Nenhuma outra sessão</div>
                           <div className="text-[10px] text-brand-text-secondary">Aparecera aqui quando houver</div>
                         </div>
                       </div>

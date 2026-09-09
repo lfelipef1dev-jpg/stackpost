@@ -383,15 +383,17 @@ export default function AnalyticsPage() {
   const insights = [
     {
       label: 'Taxa de sucesso',
-      value: `${s.successRate}%`,
+      value: s.total > 0 ? `${s.successRate}%` : '—',
       detail:
-        s.successRate >= 80
-          ? 'Acima da média. Suas publicações estão saindo sem problemas.'
-          : s.successRate >= 50
-            ? 'Na média. Algumas publicações falham — revise suas contas.'
-            : 'Abaixo da média. Verifique tokens e permissões das contas.',
-      color: s.successRate >= 80 ? '#34D399' : s.successRate >= 50 ? '#FBBF24' : '#F87171',
-      icon: s.successRate >= 50 ? TrendingUp : TrendingDown,
+        s.total === 0
+          ? 'Sem dados suficientes. Publique posts para calcular a taxa.'
+          : s.successRate >= 80
+            ? 'Acima da média. Suas publicações estão saindo sem problemas.'
+            : s.successRate >= 50
+              ? 'Na média. Algumas publicações falham — revise suas contas.'
+              : 'Abaixo da média. Verifique tokens e permissões das contas.',
+      color: s.total === 0 ? '#8B949E' : s.successRate >= 80 ? '#34D399' : s.successRate >= 50 ? '#FBBF24' : '#F87171',
+      icon: s.total === 0 || s.successRate >= 50 ? TrendingUp : TrendingDown,
     },
     {
       label: 'Taxa de engajamento',

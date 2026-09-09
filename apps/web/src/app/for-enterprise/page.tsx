@@ -97,7 +97,7 @@ export default function ForEnterprisePage() {
               className="inline-flex items-center gap-2 px-6 py-3 font-bold rounded-lg hover:scale-105 transition-transform"
               style={{ backgroundColor: '#22C55E', color: '#0A0A0A' }}
             >
-              Comecar grátis <ArrowRight className="w-4 h-4" />
+              Começar grátis <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               href="/contact"

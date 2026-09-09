@@ -28,7 +28,7 @@ const features = [
   },
   {
     title: 'Artigos',
-    desc: 'Publique artigos longos com formatacao rica e capa personalizada.',
+    desc: 'Publique artigos longos com formatação rica e capa personalizada.',
   },
   {
     title: 'Mídia (imagem, vídeo, PDF)',
@@ -127,7 +127,7 @@ const post = await client.posts.create({
               href="/register"
               className="inline-flex items-center gap-2 px-8 py-4 bg-brand-accent text-brand-bg text-base font-bold rounded-lg hover:scale-105 transition-transform"
             >
-              Comecar agora <ArrowRight className="w-5 h-5" />
+              Começar agora <ArrowRight className="w-5 h-5" />
             </Link>
           </ScrollReveal>
         </section>

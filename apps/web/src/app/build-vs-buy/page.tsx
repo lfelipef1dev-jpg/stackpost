@@ -58,7 +58,7 @@ export default function BuildVsBuyPage() {
           <div className="grid md:grid-cols-2 gap-8">
             {/* Inputs */}
             <div className="p-8 rounded-2xl bg-brand-surface/50 border border-brand-border">
-              <h2 className="text-xl font-bold mb-6">Seu cenario</h2>
+              <h2 className="text-xl font-bold mb-6">Seu cenário</h2>
 
               <div className="space-y-6">
                 <div>
@@ -199,7 +199,7 @@ export default function BuildVsBuyPage() {
             href="/register"
             className="inline-flex items-center gap-2 px-8 py-4 bg-brand-accent text-brand-bg font-bold rounded-lg hover:scale-105 transition-transform"
           >
-            Comecar agora <ArrowRight className="w-5 h-5" />
+            Começar agora <ArrowRight className="w-5 h-5" />
           </Link>
         </ScrollReveal>
       </section>

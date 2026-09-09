@@ -81,7 +81,7 @@ function EntryIcon({ type }: { type: Entry['type'] }) {
 function EntryLabel({ type }: { type: Entry['type'] }) {
   const labels: Record<string, string> = {
     feature: 'Novo',
-    fix: 'Correcao',
+    fix: 'Correção',
     improvement: 'Melhoria',
   };
   const colors: Record<string, string> = {

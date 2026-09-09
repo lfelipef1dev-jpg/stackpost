@@ -57,7 +57,7 @@ function AnimatedNumber({ value, prefix = '', suffix = '' }: { value: number; pr
     }
     requestAnimationFrame(tick);
   }, [value]);
-  return <span>{prefix}{display.toFixed(2)}{suffix}</span>;
+  return <span>{prefix}{display.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}{suffix}</span>;
 }
 
 function SpotlightCard({ children, className = '', glow = '#6366F1', style }: { children: React.ReactNode; className?: string; glow?: string; style?: React.CSSProperties }) {
@@ -276,7 +276,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 
 const faqs = [
   { q: 'Posso cancelar a qualquer momento?', a: 'Sim. Não há contrato de fidelidade. Você pode cancelar ou mudar de plano quando quiser, sem multa.' },
-  { q: 'Como funciona o teste grátis?', a: 'Planos pagos têm 15 dias de teste grátis. Não é necessário cartão para começar. Depois, pague via PIX ou cartão pelo Mercado Pago.' },
+  { q: 'Como funciona o teste grátis?', a: 'Planos pagos têm 14 dias de teste grátis. Não é necessário cartão para começar. Depois, pague via PIX ou cartão pelo Mercado Pago.' },
   { q: 'O que são créditos X?', a: 'A API do X/Twitter cobra por post publicado. Você adiciona créditos e só paga pelo que usar: R$ 0,015 por post de texto e R$ 0,20 por post com link.' },
   { q: 'Posso trocar de plano depois?', a: 'Sim. Ao fazer upgrade, você mantém todas as contas conectadas, conteúdo e dados. O downgrade não exclui nada, apenas limita os novos usos.' },
   { q: 'Qual a garantia?', a: 'Garantimos 7 dias de reembolso em todos os planos pagos. Se não gostar, devolvemos 100% do valor.' },
@@ -409,7 +409,7 @@ export default function BillingPage() {
                 </div>
                 <div className="flex items-center gap-2 text-xs text-brand-text-secondary">
                   <Check className="w-4 h-4 text-success" />
-                  <span>15 dias de teste em planos pagos</span>
+                  <span>14 dias de teste em planos pagos</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-brand-text-secondary">
                   <Check className="w-4 h-4 text-success" />
@@ -439,12 +439,12 @@ export default function BillingPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <div className="text-[10px] uppercase tracking-wide text-brand-text-secondary mb-1">Texto</div>
-                    <div className="font-semibold text-sm">R$ 0.015</div>
+                    <div className="font-semibold text-sm">R$ 0,015</div>
                     <div className="text-[10px] text-brand-text-secondary">por post</div>
                   </div>
                   <div>
                     <div className="text-[10px] uppercase tracking-wide text-brand-text-secondary mb-1">Com link</div>
-                    <div className="font-semibold text-sm">R$ 0.20</div>
+                    <div className="font-semibold text-sm">R$ 0,20</div>
                     <div className="text-[10px] text-brand-text-secondary">por post</div>
                   </div>
                   <div>

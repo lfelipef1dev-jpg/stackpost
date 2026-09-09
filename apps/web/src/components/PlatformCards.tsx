@@ -216,7 +216,7 @@ export const platforms: PlatformCardData[] = [
     users: '200M',
     tagline: 'Comunidades e notificações',
     shortDescription: 'Mensagens por webhook para servidores e canais.',
-    description: 'Envie mensagens por webhook para servidores e canais. Suporte a até 10 anexos, embeds e formatacao avançada.',
+    description: 'Envie mensagens por webhook para servidores e canais. Suporte a até 10 anexos, embeds e formatação avançada.',
     supports: ['Webhook', 'Mensagens', '10 anexos', 'Embeds', 'Canais', 'Markdown'],
     details: [
       { label: 'Formatos', value: 'qualquer' },
