@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 
     const { password_hash, ...safeUser } = user;
 
-    const token = await new SignJWT({ sub: user.id, email, name: user.name, role: user.role })
+    const token = await new SignJWT({ sub: user.id, email, name: user.name, role: user.role, tid: user.team_id })
       .setProtectedHeader({ alg: 'HS256' })
       .setExpirationTime('7d')
       .sign(JWT_SECRET);

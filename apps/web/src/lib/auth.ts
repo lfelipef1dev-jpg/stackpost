@@ -24,6 +24,19 @@ export async function getUserFromToken(req: NextRequest) {
     const userId = payload.sub as string;
     if (!userId) return null;
 
+    // Tokens novos carregam tid/teamId — evita query ao banco por request
+    const teamId = (payload.tid ?? payload.teamId) as string | undefined;
+    if (teamId) {
+      return {
+        id: userId,
+        teamId,
+        email: payload.email as string,
+        name: payload.name as string | undefined,
+        role: payload.role as string | undefined,
+      };
+    }
+
+    // Fallback para tokens antigos sem tid: consulta o banco uma vez
     const supabase = getSupabase();
     const { data: user, error } = await supabase
       .from('users')
