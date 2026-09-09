@@ -11,7 +11,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CreditCard, Loader2, Check, X, Zap, Sparkles, Building2, Crown, ChevronRight, ArrowRight, TrendingUp, Shield, RefreshCw, Users, HelpCircle, CheckCircle2, Star, Calendar, Clock, MessageCircle, Smartphone, ExternalLink } from 'lucide-react';
+import { CreditCard, Loader2, Check, X, Zap, Sparkles, Building2, Crown, ChevronRight, ArrowRight, TrendingUp, Shield, RefreshCw, Users, HelpCircle, CheckCircle2, Star, Calendar, Clock, MessageCircle, Smartphone, ExternalLink, AlertCircle, RotateCcw } from 'lucide-react';
 
 interface BillingFeature {
   label: string;
@@ -296,9 +296,12 @@ export default function BillingPage() {
   const [selectedPlan, setSelectedPlan] = useState<BillingPlan | null>(null);
   const [selectedPlatform, setSelectedPlatform] = useState<PlatformCardData | null>(null);
   const [isAnnual, setIsAnnual] = useState(false);
+  const [planLoadError, setPlanLoadError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/usage/monthly')
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    fetch('/api/usage/monthly', { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
         const apiPlan = data.plan || 'free';
@@ -308,12 +311,19 @@ export default function BillingPage() {
         setOrganizationCreatedAt(data.organizationCreatedAt || null);
         if (data.posts) setUsage({ posts: data.posts, comments: data.comments, uploads: data.uploads });
       })
-      .catch(() => {
+      .catch((err) => {
+        if (err.name === 'AbortError') {
+          setPlanLoadError('Tempo limite excedido ao carregar dados de cobrança. Tente novamente.');
+        } else {
+          setPlanLoadError('Não foi possível carregar os dados de cobrança. Tente novamente.');
+        }
         setCurrentPlan('free');
       })
       .finally(() => {
+        clearTimeout(timeout);
         setPlanLoading(false);
       });
+    return () => clearTimeout(timeout);
   }, []);
 
   async function handleUpgrade(planId: string) {
@@ -378,6 +388,19 @@ export default function BillingPage() {
               <div className="h-64 bg-brand-elevated/60 rounded-2xl" />
               <div className="h-64 bg-brand-elevated/60 rounded-2xl" />
             </div>
+          </div>
+        </main>
+      ) : planLoadError ? (
+        <main className="max-w-7xl mx-auto px-4 py-8">
+          <div className="h-96 flex flex-col items-center justify-center text-center">
+            <AlertCircle className="w-10 h-10 text-error mb-3" />
+            <p className="text-brand-text mb-4">{planLoadError}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 rounded-xl bg-brand-accent text-brand-bg font-semibold text-sm hover:bg-brand-accent-hover transition flex items-center gap-2"
+            >
+              <RotateCcw className="w-4 h-4" /> Tentar novamente
+            </button>
           </div>
         </main>
       ) : (

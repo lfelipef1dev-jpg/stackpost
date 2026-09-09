@@ -118,16 +118,20 @@ export default function CalendarPage() {
   const [editContent, setEditContent] = useState('');
   const [editScheduledAt, setEditScheduledAt] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
+    setLoadError(null);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
     fetch('/api/organization')
       .then((res) => res.json())
       .then((data) => { if (!cancelled) setPlan(data?.plan || 'free'); })
       .catch(() => {});
-    fetch('/api/posts')
+    fetch('/api/posts', { signal: controller.signal })
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
@@ -146,13 +150,20 @@ export default function CalendarPage() {
         setPosts(enriched);
       })
       .catch((err) => {
-        logger.error('[calendar] Falha ao carregar posts:', err);
-        if (!cancelled) setPosts([]);
+        if (cancelled) return;
+        if (err.name === 'AbortError') {
+          setLoadError('Tempo limite excedido ao carregar posts. Verifique sua conexão e tente novamente.');
+        } else {
+          logger.error('[calendar] Falha ao carregar posts:', err);
+          setLoadError('Não foi possível carregar os posts. Tente novamente.');
+        }
+        setPosts([]);
       })
       .finally(() => {
+        clearTimeout(timeout);
         if (!cancelled) setLoading(false);
       });
-    return () => { cancelled = true; };
+    return () => { cancelled = true; clearTimeout(timeout); };
   }, []);
 
   const year = currentDate.getFullYear();
@@ -347,6 +358,27 @@ export default function CalendarPage() {
         <main className="max-w-7xl mx-auto px-4 py-8">
           <div className="h-96 flex items-center justify-center text-brand-text-secondary">
             <Loader2 className="w-8 h-8 animate-spin mr-2" /> Carregando calendário...
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="min-h-screen bg-brand-bg">
+        <Header activeHref="/calendar" />
+        <main className="max-w-7xl mx-auto px-4 py-8">
+          <div className="h-96 flex flex-col items-center justify-center text-center">
+            <AlertCircle className="w-10 h-10 text-error mb-3" />
+            <p className="text-brand-text mb-4">{loadError}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 rounded-xl bg-brand-accent text-brand-bg font-semibold text-sm hover:bg-brand-accent-hover transition flex items-center gap-2"
+            >
+              <RotateCcw className="w-4 h-4" /> Tentar novamente
+            </button>
           </div>
         </main>
         <Footer />

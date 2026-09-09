@@ -265,12 +265,13 @@ export default function AnalyticsPage() {
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState<'7d' | '30d' | '90d'>('30d');
   const [plan, setPlan] = useState('free');
+  const [planLoaded, setPlanLoaded] = useState(false);
 
   useEffect(() => {
     fetch('/api/organization')
       .then((res) => res.json())
-      .then((d) => setPlan(d?.plan || 'free'))
-      .catch(() => {});
+      .then((d) => { setPlan(d?.plan || 'free'); setPlanLoaded(true); })
+      .catch(() => { setPlanLoaded(true); });
   }, []);
 
   useEffect(() => {
@@ -445,7 +446,7 @@ export default function AnalyticsPage() {
     { label: 'Rascunhos', value: s.drafts, icon: FileEdit, color: 'text-brand-text-secondary', bg: 'bg-brand-elevated' },
     { label: 'Processando', value: s.processing, icon: Loader2, color: 'text-info', bg: 'bg-info/10' },
     { label: 'Erros', value: s.errors, icon: AlertCircle, color: 'text-error', bg: 'bg-error/10' },
-    { label: 'Taxa sucesso', value: `${s.successRate}%`, icon: TrendingUp, color: 'text-success', bg: 'bg-success/10' },
+    { label: 'Taxa sucesso', value: s.total === 0 ? '—' : `${s.successRate}%`, icon: TrendingUp, color: 'text-success', bg: 'bg-success/10' },
   ];
 
   /* ---- Donut segments ---- */
@@ -945,7 +946,7 @@ export default function AnalyticsPage() {
         {/* ============================================================ */}
         {/* 11. Upsell comercial                                         */}
         {/* ============================================================ */}
-        {!['growth', 'scale', 'business'].includes(plan) && (
+        {planLoaded && !['growth', 'scale', 'business'].includes(plan) && (
           <SpotlightCard className="p-8 mb-8" glow="#A78BFA">
             <div className="flex flex-col lg:flex-row gap-8 items-start">
               <div className="flex-1">

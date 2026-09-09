@@ -9,7 +9,7 @@ import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'CLI — Linha de comando do StackPost',
-  description: 'CLI do StackPost: publique posts, gerencie contas, visualize analytics e importe histórico direto do terminal. Disponível no repositório (publicação no npm em breve).',
+  description: 'CLI do StackPost: publique posts, gerencie contas, visualize analytics e importe histórico direto do terminal. Disponível no repositório.',
   alternates: { canonical: '/docs/cli' },
 };
 
@@ -28,16 +28,24 @@ export default function DocsCliPage() {
         icon={Terminal}
         label="CLI"
         title="CLI"
-        description="Linha de comando do StackPost. Publique posts, gerencie contas, visualize analytics e importe histórico diretamente do terminal. Disponível no repositório (publicação no npm em breve)."
+        description="Linha de comando do StackPost. Publique posts, gerencie contas, visualize analytics e importe histórico diretamente do terminal. Disponível no repositório."
         color="#FFFC00"
       />
 
       <section className="max-w-3xl mx-auto px-4 pb-12 space-y-8">
         <ScrollReveal>
           <h2 className="text-2xl font-bold mb-4">Instalação</h2>
-          <pre className="p-6 rounded-xl bg-brand-surface border border-brand-border overflow-x-auto text-sm font-mono text-brand-text-secondary"><code>{`# Clone o repo e instale localmente
-git clone https://github.com/lfelipef1dev-jpg/stackpost
-cd packages/cli
+          <pre className="p-6 rounded-xl bg-brand-surface border border-brand-border overflow-x-auto text-sm font-mono text-brand-text-secondary"><code>{`# Clone o repositório
+git clone https://github.com/lfelipef1dev-jpg/stackpost.git
+cd stackpost/packages/cli
+
+# Defina sua API key
+export STACKPOST_API_KEY=sk_live_...
+
+# Use diretamente
+node src/index.js help
+
+# Ou instale globalmente
 npm install -g .`}</code></pre>
         </ScrollReveal>
 

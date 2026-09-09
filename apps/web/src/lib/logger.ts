@@ -13,19 +13,16 @@ const LEVELS: Record<string, number> = {
 
 const currentLevel = LEVELS[LOG_LEVEL] ?? 1;
 
-// Contexto de log por requisição.
-// Nota: em Cloudflare Workers, isolates podem reutilizar entre requisições.
-// O middleware define no início e limpa no finally de cada requisição.
-// O risco de mistura entre requisições concorrentes no mesmo isolate é baixo
-// e limitado ao requestId/route no prefixo de log — não afeta dados de usuário.
-const GLOBAL = globalThis as any;
-const CONTEXT_KEY = '__stackpost_log_context__';
-
 export interface LogContext {
   route?: string;
   requestId?: string;
   version?: string;
 }
+
+// Contexto global legado — usado apenas pelo middleware.
+// API routes e handlers devem usar createLogger(ctx) para isolamento real.
+const GLOBAL = globalThis as any;
+const CONTEXT_KEY = '__stackpost_log_context__';
 
 export function setLogContext(ctx: LogContext) {
   GLOBAL[CONTEXT_KEY] = ctx;
@@ -91,18 +88,18 @@ function redactArgs(args: unknown[]): unknown[] {
   return args.map(redactArg);
 }
 
-function buildPrefix(level: LogLevel): string {
-  const ctx = getLogContext();
+function buildPrefix(level: LogLevel, ctx?: LogContext): string {
+  const c = ctx || getLogContext();
   const parts: string[] = [new Date().toISOString(), `[${level.toUpperCase()}]`];
-  if (ctx?.version) parts.push(`v:${ctx.version}`);
-  if (ctx?.requestId) parts.push(`rid:${ctx.requestId}`);
-  if (ctx?.route) parts.push(ctx.route);
+  if (c?.version) parts.push(`v:${c.version}`);
+  if (c?.requestId) parts.push(`rid:${c.requestId}`);
+  if (c?.route) parts.push(c.route);
   return parts.join(' ');
 }
 
-function log(level: LogLevel, ...args: unknown[]) {
+function log(level: LogLevel, ctx: LogContext | undefined, args: unknown[]) {
   if ((LEVELS[level] ?? 1) < currentLevel) return;
-  const prefix = buildPrefix(level);
+  const prefix = buildPrefix(level, ctx);
   const safeArgs = redactArgs(args);
   if (level === 'error') {
     console.error(prefix, ...safeArgs);
@@ -113,12 +110,24 @@ function log(level: LogLevel, ...args: unknown[]) {
   }
 }
 
+// Logger global legado — usa contexto do globalThis (middleware)
 export const logger = {
-  debug: (...args: unknown[]) => log('debug', ...args),
-  info: (...args: unknown[]) => log('info', ...args),
-  warn: (...args: unknown[]) => log('warn', ...args),
-  error: (...args: unknown[]) => log('error', ...args),
+  debug: (...args: unknown[]) => log('debug', undefined, args),
+  info: (...args: unknown[]) => log('info', undefined, args),
+  warn: (...args: unknown[]) => log('warn', undefined, args),
+  error: (...args: unknown[]) => log('error', undefined, args),
   setLogContext,
   getLogContext,
   clearLogContext,
 };
+
+// Cria um logger com contexto isolado por requisição.
+// Use em API routes: const log = createLogger({ route: 'POST /api/posts', requestId });
+export function createLogger(ctx: LogContext) {
+  return {
+    debug: (...args: unknown[]) => log('debug', ctx, args),
+    info: (...args: unknown[]) => log('info', ctx, args),
+    warn: (...args: unknown[]) => log('warn', ctx, args),
+    error: (...args: unknown[]) => log('error', ctx, args),
+  };
+}

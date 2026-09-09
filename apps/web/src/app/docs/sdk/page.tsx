@@ -8,12 +8,12 @@ import { JsonLd, serviceSchema } from '@/components/JsonLd';
 import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
-  title: 'SDK - TypeScript e Go',
-  description: 'SDKs oficiais do StackPost: TypeScript e Go. Disponíveis no repositório (publicação no npm/Go modules em breve). Python em desenvolvimento.',
+  title: 'SDK - TypeScript, Python e Go',
+  description: 'SDKs do StackPost em TypeScript, Python e Go. Disponíveis no repositório. Incluem tipagem, métodos para posts, contas, analytics, webhooks e IA.',
   alternates: { canonical: '/docs/sdk' },
 };
 
-const jsonLd = serviceSchema('StackPost SDK', 'SDKs em TypeScript e Go disponíveis no repositório.', '/docs/sdk');
+const jsonLd = serviceSchema('StackPost SDK', 'SDKs em TypeScript, Python e Go disponíveis no repositório.', '/docs/sdk');
 
 export default function DocsSdkPage() {
   return (
@@ -24,45 +24,62 @@ export default function DocsSdkPage() {
         icon={BookOpen}
         label="SDK"
         title="SDK"
-        description="SDKs oficiais disponíveis no repositório. TypeScript e Go com tipagem completa e suporte a todas as plataformas integradas. Python em desenvolvimento."
+        description="SDKs em TypeScript, Python e Go com métodos para posts, contas, uploads, analytics, comentários, webhooks e IA. Disponíveis no repositório."
         color="#E4405F"
       />
 
       <section className="max-w-3xl mx-auto px-4 pb-12 space-y-8">
         <ScrollReveal>
           <h2 className="text-2xl font-bold mb-4 text-brand-text">TypeScript</h2>
-          <p className="mb-4 text-brand-text-secondary">Disponível no repositório (publicação no npm em breve). Exemplo de criação de postagem multiplataforma.</p>
-          <pre className="p-6 rounded-xl bg-brand-surface border border-brand-border overflow-x-auto text-sm font-mono text-brand-text-secondary"><code>{`# Instale via git
-npm install github:lfelipef1dev-jpg/stackpost#main --workspace
+          <p className="mb-4 text-brand-text-secondary">O SDK TypeScript está em <code className="text-brand-accent">packages/sdk-typescript</code>. Use via clone do repositório.</p>
+          <pre className="p-6 rounded-xl bg-brand-surface border border-brand-border overflow-x-auto text-sm font-mono text-brand-text-secondary"><code>{`# Clone o repositório
+git clone https://github.com/lfelipef1dev-jpg/stackpost.git
+cd stackpost/packages/sdk-typescript
 
-import { StackPost } from '@stackpost/sdk';
+# Importe diretamente (Node 22+ suporta .ts)
+import { StackPost } from './src/index.ts';
 
-const client = new StackPost('sk_live_...');
+const client = new StackPost({ apiKey: 'sk_live_...' });
 
-const post = await client.posts.create({
+const post = await client.createPost({
   platforms: ['instagram', 'tiktok'],
   text: 'Hello world!',
 });`}</code></pre>
         </ScrollReveal>
 
         <ScrollReveal>
-          <h2 className="text-2xl font-bold mb-4 text-brand-text">Go</h2>
-          <p className="mb-4 text-brand-text-secondary">Disponível no repositório (publicação em Go modules em breve). Exemplo de criação de postagem multiplataforma.</p>
-          <pre className="p-6 rounded-xl bg-brand-surface border border-brand-border overflow-x-auto text-sm font-mono text-brand-text-secondary"><code>{`# Clone o repo
-git clone https://github.com/lfelipef1dev-jpg/stackpost
-cd packages/sdk-go
+          <h2 className="text-2xl font-bold mb-4 text-brand-text">Python</h2>
+          <p className="mb-4 text-brand-text-secondary">O SDK Python está em <code className="text-brand-accent">packages/sdk-python</code>. Usa apenas urllib da biblioteca padrão.</p>
+          <pre className="p-6 rounded-xl bg-brand-surface border border-brand-border overflow-x-auto text-sm font-mono text-brand-text-secondary"><code>{`# Clone o repositório
+git clone https://github.com/lfelipef1dev-jpg/stackpost.git
+cd stackpost/packages/sdk-python
 
-client := stackpost.New("sk_live_...")
+# Instale localmente
+pip install -e .
 
-post, err := client.Posts.Create(&stackpost.PostParams{
-  Platforms: []string{"instagram", "tiktok"},
-  Text:      "Hello world!",
-})`}</code></pre>
+from stackpost import StackPost
+
+client = StackPost(api_key='sk_live_...')
+
+post = client.create_post(
+    platforms=['instagram', 'tiktok'],
+    text='Hello world!',
+)`}</code></pre>
         </ScrollReveal>
 
         <ScrollReveal>
-          <h2 className="text-2xl font-bold mb-4 text-brand-text">Python</h2>
-          <p className="mb-4 text-brand-text-secondary">Em desenvolvimento. Acompanhe o roadmap para novidades.</p>
+          <h2 className="text-2xl font-bold mb-4 text-brand-text">Go</h2>
+          <p className="mb-4 text-brand-text-secondary">O SDK Go está em <code className="text-brand-accent">packages/sdk-go</code>. Use via clone do repositório.</p>
+          <pre className="p-6 rounded-xl bg-brand-surface border border-brand-border overflow-x-auto text-sm font-mono text-brand-text-secondary"><code>{`# Clone o repositório
+git clone https://github.com/lfelipef1dev-jpg/stackpost.git
+cd stackpost/packages/sdk-go
+
+client := stackpost.New("sk_live_...")
+
+post, err := client.CreatePost(&stackpost.PostParams{
+  Platforms: []string{"instagram", "tiktok"},
+  Text:      "Hello world!",
+})`}</code></pre>
         </ScrollReveal>
       </section>
 

@@ -270,7 +270,7 @@ export async function POST(request: Request) {
 
     const { data: order, error: errOrder } = await supabase
       .from('stackpost_orders')
-      .select('order_id, team_id, plano_escolhido, status, total')
+      .select('order_id, team_id, plano_escolhido, status, total, interval')
       .eq('order_id', externalReference)
       .maybeSingle();
 
@@ -294,6 +294,7 @@ export async function POST(request: Request) {
     }
 
     const planoEscolhido = (order.plano_escolhido || '').toLowerCase();
+    const isAnnual = (order.interval || 'monthly') === 'yearly';
 
     if (externalReference.startsWith('stackpost_creditos_') || planoEscolhido === 'creditos-x') {
       const valor = Math.max(0, Number(order.total || 0));
@@ -340,23 +341,77 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: true, mensagem: 'Créditos adicionados com sucesso.' }, { status: 200 });
     }
 
+    // Busca organization_id do time
+    const { data: teamData, error: errTeam } = await supabase
+      .from('teams')
+      .select('organization_id')
+      .eq('id', order.team_id)
+      .single();
+
+    if (errTeam || !teamData) {
+      return NextResponse.json({ ok: false, error: 'Time não encontrado.' }, { status: 404 });
+    }
+
+    const orgId = teamData.organization_id;
+    const now = new Date();
+    const periodStart = now.toISOString();
+    const periodEnd = new Date(now);
+    periodEnd.setMonth(periodEnd.getMonth() + (isAnnual ? 12 : 1));
+
     const { error: errUpdate } = await supabase
       .from('organizations')
       .update({ plan: planoEscolhido })
-      .eq(
-        'id',
-        (
-          await supabase
-            .from('teams')
-            .select('organization_id')
-            .eq('id', order.team_id)
-            .single()
-        ).data?.organization_id
-      );
+      .eq('id', orgId);
 
     if (errUpdate) {
       return NextResponse.json({ ok: false, error: 'Falha ao ativar plano.' }, { status: 500 });
     }
+
+    // Cria ou atualiza assinatura com o período correto (mensal ou anual)
+    const { data: existingSub } = await supabase
+      .from('subscriptions')
+      .select('id')
+      .eq('organization_id', orgId)
+      .maybeSingle();
+
+    if (existingSub) {
+      await supabase
+        .from('subscriptions')
+        .update({
+          status: 'active',
+          plan_slug: planoEscolhido,
+          interval: isAnnual ? 'yearly' : 'monthly',
+          current_period_start: periodStart,
+          current_period_end: periodEnd.toISOString(),
+          updated_at: now.toISOString(),
+        })
+        .eq('id', existingSub.id);
+    } else {
+      await supabase
+        .from('subscriptions')
+        .insert({
+          organization_id: orgId,
+          plan_slug: planoEscolhido,
+          interval: isAnnual ? 'yearly' : 'monthly',
+          status: 'active',
+          current_period_start: periodStart,
+          current_period_end: periodEnd.toISOString(),
+          created_at: now.toISOString(),
+          updated_at: now.toISOString(),
+        });
+    }
+
+    // Gera invoice do período
+    const amountCents = Math.round(Number(order.total || 0) * 100);
+    await gerarInvoice({
+      organizationId: orgId,
+      teamId: order.team_id,
+      subscriptionId: existingSub?.id || null,
+      periodStart,
+      periodEnd: periodEnd.toISOString(),
+      totalCents: amountCents,
+      description: `Assinatura StackPost - Plano ${planoEscolhido} (${isAnnual ? 'Anual' : 'Mensal'})`,
+    });
 
     await supabase
       .from('stackpost_orders')

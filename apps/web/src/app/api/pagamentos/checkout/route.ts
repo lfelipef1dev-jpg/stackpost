@@ -129,6 +129,7 @@ export async function POST(request: Request) {
     plano_escolhido: plano,
     total: valorCobrar,
     status: 'pending',
+    interval: interval,
     criado_em: new Date().toISOString(),
   });
 
