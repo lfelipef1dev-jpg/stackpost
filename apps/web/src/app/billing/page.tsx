@@ -609,12 +609,12 @@ export default function BillingPage() {
                       {plan.features.map((feature) => (
                         <div key={feature.label} className="flex items-center gap-2 text-xs">
                           {typeof feature.value === 'boolean' ? (
-                            feature.value ? <Check className="w-3.5 h-3.5 text-success" /> : <X className="w-3.5 h-3.5 text-brand-text-secondary" />
+                            feature.value ? <Check className="w-3.5 h-3.5 text-success" aria-label="Incluído" role="img" /> : <X className="w-3.5 h-3.5 text-brand-text-secondary" aria-label="Não incluído" role="img" />
                           ) : (
-                            <Check className="w-3.5 h-3.5 text-success" />
+                            <Check className="w-3.5 h-3.5 text-success" aria-label="Incluído" role="img" />
                           )}
                           <span className={typeof feature.value === 'boolean' && !feature.value ? 'text-brand-text-secondary' : 'text-brand-text'}>
-                            {feature.label}: <span className="font-semibold">{String(feature.value)}</span>
+                            {feature.label}: <span className="font-semibold">{feature.value === true ? 'Incluído' : feature.value === false ? 'Não incluído' : String(feature.value)}</span>
                           </span>
                         </div>
                       ))}
@@ -973,7 +973,7 @@ export default function BillingPage() {
                         >
                           <span className="text-brand-text-secondary">{f.label}</span>
                           {typeof f.value === 'boolean' ? (
-                            f.value ? <Check className="w-3.5 h-3.5 text-success" /> : <X className="w-3.5 h-3.5 text-error" />
+                            f.value ? <Check className="w-3.5 h-3.5 text-success" aria-label="Incluído" role="img" /> : <X className="w-3.5 h-3.5 text-error" aria-label="Não incluído" role="img" />
                           ) : (
                             <span className="font-semibold text-brand-text whitespace-nowrap text-xs" title={String(f.value)}>{f.value}</span>
                           )}

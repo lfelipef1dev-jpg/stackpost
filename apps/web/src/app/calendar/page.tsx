@@ -2,6 +2,7 @@
 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { logger } from '@/lib/logger';
 
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
@@ -140,7 +141,7 @@ export default function CalendarPage() {
         setPosts(enriched);
       })
       .catch((err) => {
-        console.error('[calendar] Falha ao carregar posts:', err);
+        logger.error('[calendar] Falha ao carregar posts:', err);
         if (!cancelled) setPosts([]);
       })
       .finally(() => {

@@ -312,7 +312,7 @@ export default function AnalyticsPage() {
     totals.impressions > 0 ? (totalEngagement / totals.impressions) * 100 : 0;
 
   const bestDay = useMemo(() => {
-    if (byDay.length === 0) return null;
+    if (byDay.length === 0 || byDay.every((d) => d.count === 0)) return null;
     return byDay.reduce((best, d) => (d.count > best.count ? d : best), byDay[0]);
   }, [byDay]);
 
@@ -334,7 +334,7 @@ export default function AnalyticsPage() {
       value: s.total,
       icon: BarChart3,
       color: '#8AB4F8',
-      delta: s.total > 0 ? '+100%' : '0%',
+      delta: s.total > 0 ? '+100%' : '—',
       deltaUp: s.total > 0,
     },
     {
@@ -342,15 +342,15 @@ export default function AnalyticsPage() {
       value: s.posted,
       icon: CheckCircle2,
       color: '#34D399',
-      delta: s.successRate > 50 ? `${s.successRate}%` : `${s.successRate}%`,
-      deltaUp: s.successRate >= 50,
+      delta: s.total === 0 ? '—' : `${s.successRate}%`,
+      deltaUp: s.total > 0 && s.successRate >= 50,
     },
     {
       label: 'Agendados',
       value: s.scheduled,
       icon: Clock,
       color: '#FBBF24',
-      delta: s.scheduled > 0 ? 'ativo' : '0',
+      delta: s.scheduled > 0 ? 'ativo' : '—',
       deltaUp: s.scheduled > 0,
     },
     {
@@ -358,7 +358,7 @@ export default function AnalyticsPage() {
       value: totals.impressions,
       icon: Eye,
       color: '#60A5FA',
-      delta: totals.impressions > 0 ? '+' : '0',
+      delta: totals.impressions > 0 ? '+' : '—',
       deltaUp: totals.impressions > 0,
     },
     {
@@ -366,16 +366,16 @@ export default function AnalyticsPage() {
       value: totalEngagement,
       icon: Heart,
       color: '#F472B6',
-      delta: totalEngagement > 0 ? '+' : '0',
+      delta: totalEngagement > 0 ? '+' : '—',
       deltaUp: totalEngagement > 0,
     },
     {
       label: 'Taxa de engajamento',
-      value: engagementRate.toFixed(1) + '%',
+      value: totals.impressions === 0 ? '—' : engagementRate.toFixed(1) + '%',
       icon: TrendingUp,
       color: '#A78BFA',
-      delta: engagementRate >= 3 ? 'acima' : 'abaixo',
-      deltaUp: engagementRate >= 3,
+      delta: totals.impressions === 0 ? '—' : engagementRate >= 3 ? 'acima' : 'abaixo',
+      deltaUp: totals.impressions > 0 && engagementRate >= 3,
     },
   ];
 
@@ -397,22 +397,24 @@ export default function AnalyticsPage() {
     },
     {
       label: 'Taxa de engajamento',
-      value: `${engagementRate.toFixed(1)}%`,
+      value: totals.impressions === 0 ? '—' : `${engagementRate.toFixed(1)}%`,
       detail:
-        engagementRate >= 3
-          ? 'Acima do benchmark de 3%. Seu conteúdo está engajando bem.'
-          : engagementRate >= 1
-            ? 'Próximo do benchmark. Teste títulos e horários diferentes.'
-            : 'Abaixo do benchmark de 3%. Foco em conteúdo que gera conversa.',
-      color: engagementRate >= 3 ? '#34D399' : engagementRate >= 1 ? '#FBBF24' : '#F87171',
-      icon: engagementRate >= 3 ? TrendingUp : TrendingDown,
+        totals.impressions === 0
+          ? 'Sem dados suficientes. O engajamento é calculado a partir das impressões dos posts publicados.'
+          : engagementRate >= 3
+            ? 'Acima do benchmark de 3%. Seu conteúdo está engajando bem.'
+            : engagementRate >= 1
+              ? 'Próximo do benchmark. Teste títulos e horários diferentes.'
+              : 'Abaixo do benchmark de 3%. Foco em conteúdo que gera conversa.',
+      color: totals.impressions === 0 ? '#8B949E' : engagementRate >= 3 ? '#34D399' : engagementRate >= 1 ? '#FBBF24' : '#F87171',
+      icon: totals.impressions === 0 ? TrendingUp : engagementRate >= 3 ? TrendingUp : TrendingDown,
     },
     {
       label: 'Plataforma com mais posts',
       value: topPlatform ? platformName(topPlatform[0]) : '—',
       detail: topPlatform
         ? `${topPlatform[1]} publicações nesta plataforma.`
-        : 'Nenhuma publicação ainda. Conecte uma conta para começar.',
+        : 'Nenhuma publicação ainda. Publique um post para ver a distribuição por plataforma.',
       color: topPlatform ? platformColor(topPlatform[0]) : '#8AB4F8',
       icon: Trophy,
     },

@@ -27,10 +27,25 @@ function cleanupBuckets() {
   }
 }
 
+function evictOldestBucket() {
+  let oldestKey: string | null = null;
+  let oldestReset = Infinity;
+  for (const [k, b] of buckets) {
+    if (b.s60.resetAt < oldestReset) {
+      oldestReset = b.s60.resetAt;
+      oldestKey = k;
+    }
+  }
+  if (oldestKey) buckets.delete(oldestKey);
+}
+
 function getBucket(key: string) {
   if (!buckets.has(key)) {
-    // evitar vazamento de memoria: limpa buckets mortos se passou do limite
-    if (buckets.size > MAX_BUCKETS) cleanupBuckets();
+    // evitar vazamento de memoria: limpa buckets mortos e, se necessario, o mais antigo
+    if (buckets.size >= MAX_BUCKETS) {
+      cleanupBuckets();
+      if (buckets.size >= MAX_BUCKETS) evictOldestBucket();
+    }
     buckets.set(key, {
       s1: { count: 0, resetAt: Date.now() + LIMITS.s1.window },
       s10: { count: 0, resetAt: Date.now() + LIMITS.s10.window },

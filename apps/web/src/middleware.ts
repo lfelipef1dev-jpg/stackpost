@@ -42,14 +42,13 @@ function corsHeaders(origin: string | null): Record<string, string> {
 
 const CSP = "default-src 'self'; " +
   "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com; " +
-  "connect-src 'self' https://cloudflareinsights.com; " +
   "style-src 'self' 'unsafe-inline'; " +
   "img-src 'self' https: data: blob:; " +
-  "connect-src 'self'; " +
+  "connect-src 'self' https://cloudflareinsights.com; " +
   "font-src 'self'; " +
   "frame-ancestors https://expostacker.com.br https://*.expostacker.com.br http://localhost:* http://127.0.0.1:*; " +
   "base-uri 'self'; " +
-  "form-action 'self';";
+  "form-action 'self';"
 
 async function isAdmin(userId: string): Promise<boolean> {
   const supabase = getSupabase();

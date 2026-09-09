@@ -1,10 +1,12 @@
-const LOG_LEVEL = (process.env.LOG_LEVEL || 'info').toLowerCase();
+const isProd = process.env.NODE_ENV === 'production';
+const LOG_LEVEL = (process.env.LOG_LEVEL || (isProd ? 'silent' : 'info')).toLowerCase();
 
 const LEVELS: Record<string, number> = {
   debug: 0,
   info: 1,
   warn: 2,
   error: 3,
+  silent: 4,
 };
 
 const currentLevel = LEVELS[LOG_LEVEL] ?? 1;

@@ -36,10 +36,11 @@ export default {
   async scheduled(event: any, env: any, ctx: any) {
     const cronKey: string = event.cron || "";
     const routes = CRON_ROUTES[cronKey] || [];
-    console.log(`[cron] scheduled fired: ${cronKey} -> ${routes.length} rotas`);
     if (routes.length === 0) return;
 
-    const cronSecret = env.CRON_SECRET || 'B9A54177BCB6F7215D4D4356E6F9D060';
+    const cronSecret = env.CRON_SECRET;
+    if (!cronSecret) return;
+
     ctx.waitUntil(
       (async () => {
         for (const route of routes) {
@@ -52,9 +53,8 @@ export default {
             // @ts-ignore - signature interna do OpenNext
             const resp = await handler.fetch(req, env, ctx);
             await resp.body?.cancel();
-            console.log(`[cron] ${route} -> ${resp.status}`);
-          } catch (e: any) {
-            console.error(`[cron] Erro em ${route}:`, e?.message ?? e);
+          } catch {
+            // Silencioso: falhas de cron nao devem travar o Worker
           }
         }
       })()

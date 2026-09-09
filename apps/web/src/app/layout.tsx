@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default: `${SITE_NAME} - API unificada de redes sociais`,
-    template: `%s | ${SITE_NAME}`,
+    template: '%s',
   },
   description: SITE_DESC,
   keywords: ['API redes sociais', 'publicação multi-rede', 'Instagram API', 'TikTok API', 'LinkedIn API', 'MCP server', 'social media API', 'cross-post', 'agendamento posts'],
