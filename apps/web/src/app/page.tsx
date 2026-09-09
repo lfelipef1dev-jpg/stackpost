@@ -12,13 +12,13 @@ import LandingHeader from '@/components/LandingHeader';
 
 export const metadata: Metadata = {
   title: 'StackPost - API unificada de redes sociais para SaaS, agências e AI agents',
-  description: 'StackPost é a API unificada de redes sociais: poste, agende, análise e modere em 15 plataformas por uma única integração. 114 endpoints, MCP server (em breve), AI caption, A/B testing, analytics histórico e escala por volume. Plano gratuito para sempre.',
+  description: 'StackPost é a API unificada de redes sociais: poste, agende, análise e modere em 15 plataformas por uma única integração. 114 endpoints, MCP server, AI caption, A/B testing, analytics histórico e escala por volume. Plano gratuito para sempre.',
   alternates: { canonical: '/' },
 };
 
 const homeJsonLd = softwareApplicationSchema(
   'StackPost',
-  'API unificada de redes sociais para SaaS, agências e AI agents. 15 plataformas, 114 endpoints, MCP server (em breve), publishing, scheduling, analytics, comments, webhooks e escala por volume.',
+  'API unificada de redes sociais para SaaS, agências e AI agents. 15 plataformas, 114 endpoints, MCP server, publishing, scheduling, analytics, comments, webhooks e escala por volume.',
   '/'
 );
 
@@ -176,7 +176,7 @@ export default function Home() {
               { icon: Layers, title: 'API unificada', desc: 'Um endpoint para 15 plataformas. Sem implementar 15 fluxos OAuth, retry e status individuais.' },
               { icon: Globe, title: 'Contas ilimitadas', desc: 'Conecte todos os perfis que quiser. Pague pelo uso, não por conta.' },
               { icon: TrendingUp, title: 'Analytics real', desc: 'Post e account analytics com refresh sob demanda e histórico infinito.' },
-              { icon: Bot, title: 'Pronto para IA', desc: 'MCP server (em breve), AI caption e A/B testing para agentes e produtos de conteúdo.' },
+              { icon: Bot, title: 'Pronto para IA', desc: 'MCP server, AI caption e A/B testing para agentes e produtos de conteúdo.' },
               { icon: Shield, title: 'Produção', desc: 'Idempotency, webhooks com replay e RBAC nativo para multi-tenant.' },
               { icon: Clock, title: 'Sem filas quebradas', desc: 'Scheduling, retry, best-time e aprovação em um só fluxo.' },
               { icon: Sparkles, title: 'PIX em reais', desc: 'Checkout com Mercado Pago. Sem taxa internacional escondida.' },

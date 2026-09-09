@@ -94,7 +94,7 @@ export default function ForSaasPage() {
               <div className="w-3 h-3 rounded-full bg-brand-text-secondary/30" />
               <span className="ml-2 text-xs font-mono text-brand-text-secondary">terminal</span>
             </div>
-            <pre className="p-4 overflow-x-auto text-sm font-mono text-brand-text-secondary"><code>{`npm install @stackpost/sdk`}</code></pre>
+            <pre className="p-4 overflow-x-auto text-sm font-mono text-brand-text-secondary"><code>{`npm install github:lfelipef1dev-jpg/stackpost#main`}</code></pre>
             <div className="border-t border-brand-border/50">
               <div className="flex items-center gap-2 px-4 py-3 border-b border-brand-border/50">
                 <span className="text-xs font-mono text-brand-text-secondary">app.ts</span>

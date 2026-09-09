@@ -99,7 +99,8 @@ export default function FacebookApiPage() {
               Instale o SDK e publique em Pages do Facebook em poucas linhas. OAuth via Facebook já incluido.
             </p>
             <pre className="p-6 rounded-xl bg-brand-surface border border-brand-border overflow-x-auto text-sm font-mono text-brand-text-secondary">
-              <code>{`npm install @stackpost/sdk
+              <code>{`# Instale via git (publicação no npm em breve)
+npm install github:lfelipef1dev-jpg/stackpost#main --workspace
 
 import { StackPost } from '@stackpost/sdk';
 

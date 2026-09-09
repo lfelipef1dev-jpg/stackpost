@@ -17,6 +17,9 @@ const PLANOS: Record<string, { valor: number; id_plano: number }> = {
   business: { valor: 497.0, id_plano: 4 },
 };
 
+// No anual, paga 10x o valor mensal (2 meses grátis = ~17% de desconto)
+const ANNUAL_MULTIPLIER = 10;
+
 const ORDEM_PLANOS: Record<string, number> = {
   free: 0,
   starter: 1,
@@ -117,11 +120,14 @@ export async function POST(request: Request) {
 
   const orderId = `stackpost_${Date.now()}_${Math.random().toString(16).slice(2, 10)}`;
 
+  // Calcula o valor real a cobrar: anual = 10x mensal (2 meses grátis)
+  const valorCobrar = interval === 'yearly' ? planoInfo.valor * ANNUAL_MULTIPLIER : planoInfo.valor;
+
   const { error: errOrder } = await supabase.from('stackpost_orders').insert({
     order_id: orderId,
     team_id: user.teamId,
     plano_escolhido: plano,
-    total: planoInfo.valor,
+    total: valorCobrar,
     status: 'pending',
     criado_em: new Date().toISOString(),
   });
@@ -138,7 +144,7 @@ export async function POST(request: Request) {
     const pref = await criarPreferencia({
       team_id: user.teamId,
       plano,
-      valor: planoInfo.valor,
+      valor: valorCobrar,
       email,
       external_reference: orderId,
     });
@@ -156,7 +162,7 @@ export async function POST(request: Request) {
       init_point: pref.init_point,
       qrcode: pref.qrcode,
       copia_cola: pref.copia_cola,
-      total: planoInfo.valor,
+      total: valorCobrar,
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);

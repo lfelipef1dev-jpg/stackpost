@@ -9,7 +9,7 @@ import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'CLI — Linha de comando do StackPost',
-  description: 'CLI do StackPost: publique posts, gerencie contas, visualize analytics e importe histórico direto do terminal. Instalação via npm ou pip.',
+  description: 'CLI do StackPost: publique posts, gerencie contas, visualize analytics e importe histórico direto do terminal. Disponível no repositório (publicação no npm em breve).',
   alternates: { canonical: '/docs/cli' },
 };
 
@@ -28,16 +28,17 @@ export default function DocsCliPage() {
         icon={Terminal}
         label="CLI"
         title="CLI"
-        description="Linha de comando do StackPost. Publique posts, gerencie contas, visualize analytics e importe histórico diretamente do terminal."
+        description="Linha de comando do StackPost. Publique posts, gerencie contas, visualize analytics e importe histórico diretamente do terminal. Disponível no repositório (publicação no npm em breve)."
         color="#FFFC00"
       />
 
       <section className="max-w-3xl mx-auto px-4 pb-12 space-y-8">
         <ScrollReveal>
           <h2 className="text-2xl font-bold mb-4">Instalação</h2>
-          <pre className="p-6 rounded-xl bg-brand-surface border border-brand-border overflow-x-auto text-sm font-mono text-brand-text-secondary"><code>{`npm install -g @stackpost/cli
-# ou
-pip install stackpost-cli`}</code></pre>
+          <pre className="p-6 rounded-xl bg-brand-surface border border-brand-border overflow-x-auto text-sm font-mono text-brand-text-secondary"><code>{`# Clone o repo e instale localmente
+git clone https://github.com/lfelipef1dev-jpg/stackpost
+cd packages/cli
+npm install -g .`}</code></pre>
         </ScrollReveal>
 
         <ScrollReveal>
@@ -50,13 +51,13 @@ stackpost post --text "Lançamento!" --platforms instagram \\
   --schedule "2026-09-01T10:00:00Z"
 
 # Listar contas
-stackpost accounts list
+stackpost accounts
 
 # Visualizar analytics
 stackpost analytics --period 30d
 
 # Importar histórico
-stackpost import history --account acc_123 --format csv`}</code></pre>
+stackpost import --account acc_123 --format csv`}</code></pre>
         </ScrollReveal>
       </section>
 

@@ -117,7 +117,7 @@ const allFeatures = [
   'Contas sociais',
   'Usuários',
   'Workspaces',
-  'API REST',
+  'API REST, SDK e CLI',
   'Calendário',
   'Link na bio',
   'Upload de mídia',
@@ -142,12 +142,12 @@ const billingPlans: BillingPlan[] = [
       { label: 'Contas sociais', value: '3' },
       { label: 'Usuários', value: '1' },
       { label: 'Workspaces', value: '1' },
-      { label: 'API REST', value: true },
+      { label: 'API REST, SDK e CLI', value: true },
       { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
       { label: 'Upload de mídia', value: '100 MB' },
       { label: 'AI caption', value: false },
-      { label: 'MCP server (em breve)', value: 'Em breve' },
+      { label: 'MCP server', value: true },
       { label: 'Suporte', value: 'Comunidade' },
     ],
     included: ['Acesso a API', 'Biblioteca de mídia', 'Analytics básico', 'Calendário', 'Postagem manual', 'Link na bio'],
@@ -158,7 +158,7 @@ const billingPlans: BillingPlan[] = [
     tagline: 'Para criadores e pequenos times',
     description: 'Conecte até 5 contas nas 15 plataformas e publique 2.000 posts por mês. Ideal para criadores de conteúdo e pequenos negócios que começam a automatizar publicação e engajamento.',
     monthlyPrice: 39,
-    annualPrice: 33,
+    annualPrice: 390,
     icon: Sparkles,
     accent: '#22D3EE',
     features: [
@@ -167,12 +167,12 @@ const billingPlans: BillingPlan[] = [
       { label: 'Contas sociais', value: '5' },
       { label: 'Usuários', value: '2' },
       { label: 'Workspaces', value: '1' },
-      { label: 'API REST', value: true },
+      { label: 'API REST, SDK e CLI', value: true },
       { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
       { label: 'Upload de mídia', value: '500 MB' },
       { label: 'AI caption', value: false },
-      { label: 'MCP server (em breve)', value: 'Em breve' },
+      { label: 'MCP server', value: true },
       { label: 'Suporte', value: 'Email' },
     ],
     included: ['Acesso a API', 'Biblioteca de mídia', 'Analytics', 'Calendário', 'Postagem em massa', 'Link na bio'],
@@ -183,7 +183,7 @@ const billingPlans: BillingPlan[] = [
     tagline: 'Para agências e SaaS iniciantes',
     description: 'Conecte até 20 contas nas 15 plataformas com 8.000 posts e 4.000 comentários mensais. Para times que precisam de calendário editorial, analytics avançado, AI caption e múltiplos workspaces.',
     monthlyPrice: 89,
-    annualPrice: 74,
+    annualPrice: 890,
     icon: Building2,
     popular: true,
     accent: '#A78BFA',
@@ -193,12 +193,12 @@ const billingPlans: BillingPlan[] = [
       { label: 'Contas sociais', value: '20' },
       { label: 'Usuários', value: '5' },
       { label: 'Workspaces', value: '3' },
-      { label: 'API REST', value: true },
+      { label: 'API REST, SDK e CLI', value: true },
       { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
       { label: 'Upload de mídia', value: '2 GB' },
       { label: 'AI caption', value: true },
-      { label: 'MCP server (em breve)', value: 'Em breve' },
+      { label: 'MCP server', value: true },
       { label: 'Suporte', value: 'Prioritário' },
     ],
     included: ['Acesso a API', 'Biblioteca de mídia', 'Analytics', 'Calendário', 'Postagem em massa', 'Link na bio'],
@@ -207,9 +207,9 @@ const billingPlans: BillingPlan[] = [
     id: 'scale',
     name: 'Escala',
     tagline: 'Para SaaS e agências em escala',
-    description: 'Contas ilimitadas nas 15 plataformas e 40.000 posts/mês. Para SaaS e agências que publicam em alto volume com API REST e MCP server (em breve). Suporte prioritário dedicado.',
+    description: 'Contas ilimitadas nas 15 plataformas e 40.000 posts/mês. Para SaaS e agências que publicam em alto volume com API REST, SDK, CLI e MCP server. Suporte prioritário dedicado.',
     monthlyPrice: 197,
-    annualPrice: 164,
+    annualPrice: 1970,
     icon: Crown,
     accent: '#60A5FA',
     features: [
@@ -218,12 +218,12 @@ const billingPlans: BillingPlan[] = [
       { label: 'Contas sociais', value: 'Ilimitadas' },
       { label: 'Usuários', value: '20' },
       { label: 'Workspaces', value: '10' },
-      { label: 'API REST', value: true },
+      { label: 'API REST, SDK e CLI', value: true },
       { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
       { label: 'Upload de mídia', value: '10 GB' },
       { label: 'AI caption', value: true },
-      { label: 'MCP server (em breve)', value: 'Em breve' },
+      { label: 'MCP server', value: true },
       { label: 'Suporte', value: 'Prioritário' },
     ],
     included: ['Acesso a API', 'Biblioteca de mídia', 'Analytics avançado', 'Calendário', 'Postagem em massa', 'Link na bio'],
@@ -232,9 +232,9 @@ const billingPlans: BillingPlan[] = [
     id: 'business',
     name: 'Empresarial',
     tagline: 'Para grandes operações',
-    description: 'Tudo ilimitado: contas nas 15 plataformas, usuários e workspaces. 150.000 posts/mês com suporte dedicado e MCP server (em breve). Para grandes operações que precisam de escala e confiabilidade.',
+    description: 'Tudo ilimitado: contas nas 15 plataformas, usuários e workspaces. 150.000 posts/mês com suporte dedicado e MCP server. Para grandes operações que precisam de escala e confiabilidade.',
     monthlyPrice: 497,
-    annualPrice: 414,
+    annualPrice: 4970,
     icon: Crown,
     accent: '#C084FC',
     features: [
@@ -243,12 +243,12 @@ const billingPlans: BillingPlan[] = [
       { label: 'Contas sociais', value: 'Ilimitadas' },
       { label: 'Usuários', value: 'Ilimitados' },
       { label: 'Workspaces', value: 'Ilimitados' },
-      { label: 'API REST', value: true },
+      { label: 'API REST, SDK e CLI', value: true },
       { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
       { label: 'Upload de mídia', value: '50 GB' },
       { label: 'AI caption', value: true },
-      { label: 'MCP server (em breve)', value: 'Em breve' },
+      { label: 'MCP server', value: true },
       { label: 'Suporte', value: 'Dedicado' },
     ],
     included: ['Acesso a API', 'Biblioteca de mídia', 'Analytics avançado', 'Calendário', 'Postagem em massa', 'Link na bio'],
@@ -581,7 +581,7 @@ export default function BillingPage() {
                 Anual <span className="text-[10px] bg-success/20 text-success px-1.5 py-0.5 rounded-full">-17%</span>
               </button>
             </div>
-            {isAnnual && <p className="text-xs text-brand-text-secondary mt-3">No anual você paga 12x o valor acima e economiza 2 meses (~17%).</p>}
+            {isAnnual && <p className="text-xs text-brand-text-secondary mt-3">No anual você paga o valor acima uma vez por ano e economiza 2 meses (~17%).</p>}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 items-stretch">
@@ -615,7 +615,7 @@ export default function BillingPage() {
                     <div className="mb-5">
                       <div className="text-3xl font-bold flex items-baseline gap-2">
                         {formatPlanPrice(price)}
-                        <span className="text-sm font-normal text-brand-text-secondary">/mês</span>
+                        <span className="text-sm font-normal text-brand-text-secondary">{isAnnual ? '/ano' : '/mês'}</span>
                       </div>
                       {isAnnual && oldPrice && (
                         <div className="text-xs text-brand-text-secondary line-through">R$ {oldPrice}/mês</div>

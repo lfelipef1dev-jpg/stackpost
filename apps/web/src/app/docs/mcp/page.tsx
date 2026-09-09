@@ -56,11 +56,19 @@ export default function DocsMcpPage() {
       <section className="max-w-3xl mx-auto px-4 pb-12">
         <ScrollReveal>
           <h2 className="text-2xl font-bold mb-4">Configuração no Claude Desktop</h2>
-          <pre className="p-6 rounded-xl bg-brand-surface border border-brand-border overflow-x-auto text-sm font-mono text-brand-text-secondary"><code>{`{
+          <p className="text-sm text-brand-text-secondary mb-4">O MCP server está disponível no repositório (publicação no npm em breve). Clone e execute localmente:</p>
+          <pre className="p-6 rounded-xl bg-brand-surface border border-brand-border overflow-x-auto text-sm font-mono text-brand-text-secondary"><code>{`# Clone o repo
+git clone https://github.com/lfelipef1dev-jpg/stackpost
+cd packages/mcp-server
+npm install
+npm start
+
+# Configure no Claude Desktop:
+{
   "mcpServers": {
     "stackpost": {
-      "command": "npx",
-      "args": ["-y", "@stackpost/mcp-server"],
+      "command": "node",
+      "args": ["<caminho>/packages/mcp-server/src/index.js"],
       "env": {
         "STACKPOST_API_KEY": "sk_live_..."
       }

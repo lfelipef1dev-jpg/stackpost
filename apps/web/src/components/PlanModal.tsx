@@ -28,13 +28,13 @@ const plans = [
     id: 'scale',
     name: 'Escala',
     price: 197,
-    features: ['Contas ilimitadas', '40.000 posts/mês', 'MCP server (em breve) + suporte'],
+    features: ['Contas ilimitadas', '40.000 posts/mês', 'MCP server + suporte'],
   },
   {
     id: 'business',
     name: 'Empresarial',
     price: 497,
-    features: ['Contas ilimitadas', '150.000 posts/mês', 'White label + suporte'],
+    features: ['Contas ilimitadas', '150.000 posts/mês', 'White label + MCP server'],
   },
 ];
 

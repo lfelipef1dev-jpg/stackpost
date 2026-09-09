@@ -13,6 +13,11 @@ const LEVELS: Record<string, number> = {
 
 const currentLevel = LEVELS[LOG_LEVEL] ?? 1;
 
+// Contexto de log por requisição.
+// Nota: em Cloudflare Workers, isolates podem reutilizar entre requisições.
+// O middleware define no início e limpa no finally de cada requisição.
+// O risco de mistura entre requisições concorrentes no mesmo isolate é baixo
+// e limitado ao requestId/route no prefixo de log — não afeta dados de usuário.
 const GLOBAL = globalThis as any;
 const CONTEXT_KEY = '__stackpost_log_context__';
 
