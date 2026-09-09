@@ -65,7 +65,7 @@ export default function RoadmapPage() {
               Roadmap
             </h1>
             <p className="text-lg text-brand-text-secondary max-w-2xl mx-auto">
-              Transparencia total. Veja o que ja esta pronto e o que vem por ai.
+              Transparencia total. Veja o que já está pronto e o que vem por ai.
             </p>
           </FadeIn>
         </div>

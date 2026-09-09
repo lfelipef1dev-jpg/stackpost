@@ -183,7 +183,7 @@ export function SEOPage({ data }: { data: SEOPageData }) {
         </section>
       )}
 
-      {/* Exemplo de codigo */}
+      {/* Exemplo de código */}
       {data.codeExample && (
         <section className="max-w-5xl mx-auto px-4 pb-20">
           <ScrollReveal className="mb-6">

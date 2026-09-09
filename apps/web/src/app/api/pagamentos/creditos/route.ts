@@ -95,7 +95,7 @@ export async function POST(request: Request) {
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
-    logger.error('[pagamentos/creditos] Erro:', msg);
+    logger.error('[pagamentos/créditos] Erro:', msg);
     return NextResponse.json(
       { error: 'Nao conseguimos comunicar com o gateway de pagamento.' },
       { status: 502 },

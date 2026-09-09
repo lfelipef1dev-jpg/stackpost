@@ -9,7 +9,7 @@ export class SlackAdapter extends PlatformAdapter {
     const webhookUrl = params.account?.access_token;
     const content = params.content;
 
-    if (!webhookUrl) return { success: false, error: normalizeError(new Error('Webhook URL obrigatorio'), this.platform) };
+    if (!webhookUrl) return { success: false, error: normalizeError(new Error('Webhook URL obrigatório'), this.platform) };
     if (!webhookUrl.startsWith('https://hooks.slack.com/services/')) {
       return { success: false, error: normalizeError(new Error('URL de webhook Slack invalido'), this.platform) };
     }

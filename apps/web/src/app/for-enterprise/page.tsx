@@ -18,22 +18,22 @@ const features = [
   {
     icon: Building2,
     title: 'Multi-tenant com isolamento',
-    desc: 'Workspaces separados com RBAC granular. Cada time ou cliente com dados isolados e permissoes proprias.',
+    desc: 'Workspaces separados com RBAC granular. Cada time ou cliente com dados isolados e permissões proprias.',
   },
   {
     icon: FileText,
     title: 'Audit logs',
-    desc: 'Todas as acoes rastreadas: quem fez, o que fez, quando e de onde. Exportavel para SIEM.',
+    desc: 'Todas as ações rastreadas: quem fez, o que fez, quando e de onde. Exportavel para SIEM.',
   },
   {
     icon: Zap,
     title: 'SLA e uptime',
-    desc: '99.9% de uptime garantido. Idempotencia e retry automatico em todas as publicacoes.',
+    desc: '99.9% de uptime garantido. Idempotencia e retry automático em todas as publicações.',
   },
   {
     icon: Shield,
     title: 'Compliance',
-    desc: 'LGPD, GDPR, DPA disponivel e data retention configuravel por workspace.',
+    desc: 'LGPD, GDPR, DPA disponível e data retention configuravel por workspace.',
   },
   {
     icon: Users,

@@ -106,7 +106,7 @@ export async function DELETE(req: NextRequest) {
   const idParsed1 = uuidSchema.safeParse(idRaw);
   if (!idParsed1.success) return NextResponse.json({ error: 'id inválido ou ausente' }, { status: 400 });
   const id = idParsed1.data;
-  if (!id) return NextResponse.json({ error: 'ID obrigatorio' }, { status: 400 });
+  if (!id) return NextResponse.json({ error: 'ID obrigatório' }, { status: 400 });
 
   try {
     const supabase = getSupabase();

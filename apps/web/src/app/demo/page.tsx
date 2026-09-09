@@ -128,7 +128,7 @@ export default function DemoPage() {
               {/* Media */}
               <div className="p-6 rounded-2xl bg-brand-surface/50 border border-brand-border">
                 <h3 className="font-bold mb-4 text-sm uppercase tracking-wider text-brand-text-secondary flex items-center gap-2">
-                  <ImageIcon className="w-4 h-4" /> Midia
+                  <ImageIcon className="w-4 h-4" /> Mídia
                 </h3>
                 <input
                   type="url"
@@ -172,7 +172,7 @@ export default function DemoPage() {
                   <code>{jsonPayload}</code>
                 </pre>
                 <p className="text-xs text-brand-text-secondary mt-3">
-                  Este e o payload que voce enviaria para <code className="text-brand-accent">POST /api/posts</code>
+                  Este e o payload que você enviaria para <code className="text-brand-accent">POST /api/posts</code>
                 </p>
               </div>
 
@@ -198,7 +198,7 @@ export default function DemoPage() {
                 {published ? (
                   <><Check className="w-5 h-5" /> Payload valido!</>
                 ) : (
-                  <><Send className="w-5 h-5" /> Simular publicacao</>
+                  <><Send className="w-5 h-5" /> Simular publicação</>
                 )}
               </button>
               <p className="text-xs text-brand-text-secondary text-center">

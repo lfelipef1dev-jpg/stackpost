@@ -108,7 +108,7 @@ export default function AdminPostDetailPage() {
   }
 
   async function handleDelete() {
-    if (!confirm('Confirmar exclusão desta publicação? Esta ação não pode ser desfeita.')) return;
+    if (!confirm('Confirmar exclusão desta publicação? Está ação não pode ser desfeita.')) return;
     setDeleting(true);
     setError('');
     try {

@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   const parsed1 = comments_publishBodySchema.safeParse(bodyRaw1);
   if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
   const { commentId } = bodyRaw1;
-  if (!commentId) return NextResponse.json({ error: 'commentId obrigatorio' }, { status: 400 });
+  if (!commentId) return NextResponse.json({ error: 'commentId obrigatório' }, { status: 400 });
 
   const supabase = getSupabase();
 

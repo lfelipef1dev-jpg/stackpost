@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   const parsedQuery = misc_linkedin_mentionsQuerySchema.safeParse(queryRaw);
   if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const query = searchParams.get('q');
-  if (!query) return NextResponse.json({ error: 'q (query) obrigatorio' }, { status: 400 });
+  if (!query) return NextResponse.json({ error: 'q (query) obrigatório' }, { status: 400 });
 
   const supabase = getSupabase();
   const { data: account } = await supabase

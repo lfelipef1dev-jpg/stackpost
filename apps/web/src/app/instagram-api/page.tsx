@@ -11,13 +11,13 @@ import LandingHeader from '@/components/LandingHeader';
 
 export const metadata: Metadata = {
   title: 'Instagram API - Publique feed, Reels, Stories e Carrossel via StackPost',
-  description: 'API de Instagram do StackPost: feed posts, Reels, Stories, Carrossel e primeiro comentario. OAuth via Meta Business, analytics de likes, comments, reach e impressions.',
+  description: 'API de Instagram do StackPost: feed posts, Reels, Stories, Carrossel e primeiro comentário. OAuth via Meta Business, analytics de likes, comments, reach e impressions.',
   alternates: { canonical: '/instagram-api' },
 };
 
 const jsonLd = serviceSchema(
   'Instagram API',
-  'API de Instagram para publicar feed posts, Reels, Stories, Carrossel e primeiro comentario. OAuth via Meta Business com analytics de likes, comments, reach e impressions.',
+  'API de Instagram para publicar feed posts, Reels, Stories, Carrossel e primeiro comentário. OAuth via Meta Business com analytics de likes, comments, reach e impressions.',
   '/instagram-api',
 );
 
@@ -28,19 +28,19 @@ const features = [
   },
   {
     title: 'Reels',
-    desc: 'Publique Reels com audio original, mix de midia e capa personalizada.',
+    desc: 'Publique Reels com audio original, mix de mídia e capa personalizada.',
   },
   {
     title: 'Stories',
-    desc: 'Stories com stickers, links e musica. Expiracao automatica em 24 horas.',
+    desc: 'Stories com stickers, links e musica. Expiracao automática em 24 horas.',
   },
   {
     title: 'Carrossel',
-    desc: 'Carrossel multi-midia com ate 10 itens misturando imagem e video.',
+    desc: 'Carrossel multi-mídia com até 10 itens misturando imagem e video.',
   },
   {
-    title: 'Primeiro comentario',
-    desc: 'Agende o primeiro comentario junto com a publicacao para hashtags e CTAs.',
+    title: 'Primeiro comentário',
+    desc: 'Agende o primeiro comentário junto com a publicação para hashtags e CTAs.',
   },
   {
     title: 'Analytics',
@@ -67,7 +67,7 @@ export default function InstagramApiPage() {
           icon={FaInstagram}
           label="API de Instagram"
           title="API de Instagram"
-          description="Publique feed posts, Reels, Stories e Carrossel via uma unica API. OAuth via Meta Business, primeiro comentario automatico e analytics completo de likes, comments, reach e impressions."
+          description="Publique feed posts, Reels, Stories e Carrossel via uma unica API. OAuth via Meta Business, primeiro comentário automático e analytics completo de likes, comments, reach e impressions."
           color="#E4405F"
           docsHref="/docs"
         />
@@ -96,7 +96,7 @@ export default function InstagramApiPage() {
           <ScrollReveal>
             <h2 className="text-3xl font-black text-brand-text mb-4">Quick start</h2>
             <p className="text-brand-text-secondary mb-6">
-              Instale o SDK e publique no Instagram em poucas linhas. OAuth via Meta Business ja incluido.
+              Instale o SDK e publique no Instagram em poucas linhas. OAuth via Meta Business já incluido.
             </p>
             <pre className="p-6 rounded-xl bg-brand-surface border border-brand-border overflow-x-auto text-sm font-mono text-brand-text-secondary">
               <code>{`npm install @stackpost/sdk

@@ -12,13 +12,13 @@ export class PinterestAdapter extends PlatformAdapter {
     const link = params.account?.platform_metadata?.link || '';
 
     if (!accessToken) return { success: false, error: normalizeError(new Error('No access token'), this.platform) };
-    if (!boardId) return { success: false, error: normalizeError(new Error('Board ID obrigatorio'), this.platform) };
+    if (!boardId) return { success: false, error: normalizeError(new Error('Board ID obrigatório'), this.platform) };
     if (content.length > 500) return { success: false, error: { code: 'VALIDATION', message: 'Pinterest: descricao maxima 500 caracteres.' } };
 
     const isVideo = params.videoUrl;
     const isImage = params.imageUrl;
     if (!isVideo && !isImage) {
-      return { success: false, error: { code: 'VALIDATION', message: 'Pinterest: video ou imagem obrigatoria.' } };
+      return { success: false, error: { code: 'VALIDATION', message: 'Pinterest: video ou imagem obrigatória.' } };
     }
 
     try {
@@ -28,7 +28,7 @@ export class PinterestAdapter extends PlatformAdapter {
         description: content,
       };
 
-      // link deve ser o site de destino (nao a URL da midia)
+      // link deve ser o site de destino (nao a URL da mídia)
       if (link) body.link = link;
 
       if (isVideo) {

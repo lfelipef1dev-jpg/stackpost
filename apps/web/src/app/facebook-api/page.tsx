@@ -28,11 +28,11 @@ const features = [
   },
   {
     title: 'Reels',
-    desc: 'Reels no Facebook com audio, mix de midia e capa personalizada.',
+    desc: 'Reels no Facebook com audio, mix de mídia e capa personalizada.',
   },
   {
     title: 'Stories',
-    desc: 'Stories em Pages com stickers e links. Expiracao automatica em 24 horas.',
+    desc: 'Stories em Pages com stickers e links. Expiracao automática em 24 horas.',
   },
   {
     title: 'Pages',
@@ -96,7 +96,7 @@ export default function FacebookApiPage() {
           <ScrollReveal>
             <h2 className="text-3xl font-black text-brand-text mb-4">Quick start</h2>
             <p className="text-brand-text-secondary mb-6">
-              Instale o SDK e publique em Pages do Facebook em poucas linhas. OAuth via Facebook ja incluido.
+              Instale o SDK e publique em Pages do Facebook em poucas linhas. OAuth via Facebook já incluido.
             </p>
             <pre className="p-6 rounded-xl bg-brand-surface border border-brand-border overflow-x-auto text-sm font-mono text-brand-text-secondary">
               <code>{`npm install @stackpost/sdk

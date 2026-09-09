@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
       .filter((e: any) => e.team?.name?.toLowerCase().includes(teamSearch.toLowerCase()));
   }
 
-  // Agregar por tipo para o grafico (ultimos 30 dias)
+  // Agregar por tipo para o gráfico (ultimos 30 dias)
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 

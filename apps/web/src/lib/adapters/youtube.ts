@@ -15,7 +15,7 @@ export class YouTubeAdapter extends PlatformAdapter {
     // YouTube exige video. Se videoUrl vazio, nao da pra publicar.
     const videoUrl = params.videoUrl;
     if (!videoUrl) {
-      return { success: false, error: { code: 'VALIDATION', message: 'YouTube: video obrigatorio (videoUrl).' } };
+      return { success: false, error: { code: 'VALIDATION', message: 'YouTube: video obrigatório (videoUrl).' } };
     }
 
     try {

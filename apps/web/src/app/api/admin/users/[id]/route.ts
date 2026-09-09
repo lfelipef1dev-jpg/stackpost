@@ -25,7 +25,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     .single();
 
   if (dbError || !data) {
-    return NextResponse.json({ error: 'Usuario nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Usuário nao encontrado' }, { status: 404 });
   }
 
   return NextResponse.json(data);
@@ -45,7 +45,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const supabase = getSupabase();
   const { data: before } = await supabase.from('users').select('id, name, email, status, is_superuser').eq('id', id).single();
   if (!before) {
-    return NextResponse.json({ error: 'Usuario nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Usuário nao encontrado' }, { status: 404 });
   }
 
   const { data, error: dbError } = await supabase
@@ -56,7 +56,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     .single();
 
   if (dbError) {
-    return NextResponse.json({ error: 'Erro ao atualizar usuario' }, { status: 500 });
+    return NextResponse.json({ error: 'Erro ao atualizar usuário' }, { status: 500 });
   }
 
   await logAudit({
@@ -81,7 +81,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
   const { data: before } = await supabase.from('users').select('id, name, email').eq('id', id).single();
   if (!before) {
-    return NextResponse.json({ error: 'Usuario nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Usuário nao encontrado' }, { status: 404 });
   }
 
   if (id === admin.id) {
@@ -90,7 +90,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
   const { error: dbError } = await supabase.from('users').delete().eq('id', id);
   if (dbError) {
-    return NextResponse.json({ error: 'Erro ao excluir usuario' }, { status: 500 });
+    return NextResponse.json({ error: 'Erro ao excluir usuário' }, { status: 500 });
   }
 
   await logAudit({

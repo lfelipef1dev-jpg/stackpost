@@ -133,7 +133,7 @@ export async function POST(req: NextRequest) {
   // change_plan com pró-rata
   const newPlanSlug = parsed.data.plan_id;
   if (!newPlanSlug) {
-    return NextResponse.json({ error: 'plan_id e obrigatorio para change_plan.' }, { status: 400 });
+    return NextResponse.json({ error: 'plan_id e obrigatório para change_plan.' }, { status: 400 });
   }
 
   const { data: newPlan } = await supabase

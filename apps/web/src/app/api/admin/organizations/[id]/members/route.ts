@@ -56,7 +56,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
   const { data: user } = await supabase.from('users').select('id').eq('email', parsed.data.email).single();
   if (!user) {
-    return NextResponse.json({ error: 'Usuario nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Usuário nao encontrado' }, { status: 404 });
   }
 
   const teamId = org.teams[0].id;

@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     const body = bodyRaw1;
     const { fileName, mimeType, fileSize } = body;
 
-    if (!fileName) return NextResponse.json({ error: 'fileName obrigatorio' }, { status: 400 });
+    if (!fileName) return NextResponse.json({ error: 'fileName obrigatório' }, { status: 400 });
     if (fileSize && fileSize > MAX_PARTS * PART_SIZE) {
       return NextResponse.json({ error: 'Arquivo muito grande' }, { status: 400 });
     }
@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true });
   }
 
-  return NextResponse.json({ error: 'Acao invalida' }, { status: 400 });
+  return NextResponse.json({ error: 'Ação invalida' }, { status: 400 });
 }
 
 export async function PUT(req: NextRequest) {

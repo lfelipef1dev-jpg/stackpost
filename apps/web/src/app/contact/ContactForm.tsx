@@ -122,7 +122,7 @@ export function ContactForm() {
               required
               disabled={disabled}
               className="w-full px-4 py-3 rounded-xl bg-brand-elevated border border-brand-border text-brand-text placeholder:text-brand-text-secondary/60 focus:outline-none focus:border-brand-accent transition-colors disabled:opacity-50"
-              placeholder="voce@email.com"
+              placeholder="você@email.com"
             />
           </div>
 

@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
   const { socialAccountId, platform } = body;
 
   if (!socialAccountId) {
-    return NextResponse.json({ error: 'socialAccountId obrigatorio' }, { status: 400 });
+    return NextResponse.json({ error: 'socialAccountId obrigatório' }, { status: 400 });
   }
 
   try {
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
       } catch {
         valid = false;
         needsReconnect = true;
-        detail = 'Erro de conexao';
+        detail = 'Erro de conexão';
       }
     } else if (account.platform === 'linkedin') {
       try {
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
       } catch {
         valid = false;
         needsReconnect = true;
-        detail = 'Erro de conexao';
+        detail = 'Erro de conexão';
       }
     }
 

@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
   const date = searchParams.get('date') || new Date().toISOString().split('T')[0];
 
   if (!socialAccountId) {
-    return NextResponse.json({ error: 'socialAccountId obrigatorio' }, { status: 400 });
+    return NextResponse.json({ error: 'socialAccountId obrigatório' }, { status: 400 });
   }
 
   const supabase = getSupabase();

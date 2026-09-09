@@ -36,7 +36,7 @@ export class TwitterAdapter extends PlatformAdapter {
           if (isHttpUrl) {
             const dlRes = await fetch(url);
             if (!dlRes.ok) {
-              logger.warn(`Twitter: falha ao baixar midia ${url}`);
+              logger.warn(`Twitter: falha ao baixar mídia ${url}`);
               continue;
             }
             mimeType = dlRes.headers.get('content-type') || (url.match(/\.(mp4|mov)$/i) ? 'video/mp4' : 'image/jpeg');
@@ -107,7 +107,7 @@ export class TwitterAdapter extends PlatformAdapter {
       return { valid: false, error: 'X aceita apenas JPEG, PNG, GIF, WebP ou MP4' };
     }
     if (file.size > 5 * 1024 * 1024) {
-      return { valid: false, error: 'X aceita arquivos ate 5MB' };
+      return { valid: false, error: 'X aceita arquivos até 5MB' };
     }
     return { valid: true };
   }

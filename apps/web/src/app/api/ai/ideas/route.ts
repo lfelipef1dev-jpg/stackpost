@@ -16,10 +16,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       ideas: [
         'Dica de produtividade para quem trabalha com redes sociais',
-        'Como usar IA para criar conteudo em escala',
+        'Como usar IA para criar conteúdo em escala',
         'Case de sucesso de um cliente que cresceu 3x',
         'Erros comuns em postagem multi-plataforma',
-        'Como montar um calendario de conteudo de 30 dias',
+        'Como montar um calendário de conteúdo de 30 dias',
       ].slice(0, count),
     });
   }
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
       model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: `Gere ${count} ideias de posts para redes sociais${niche ? ` no nicho: ${niche}` : ''}. Retorne apenas as ideias, uma por linha, sem numeracao.` },
-        { role: 'user', content: 'Sugestoes de conteudo' },
+        { role: 'user', content: 'Sugestoes de conteúdo' },
       ],
       max_tokens: 300,
       temperature: 0.8,

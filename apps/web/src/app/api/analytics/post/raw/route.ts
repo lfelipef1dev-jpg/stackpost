@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   const parsedQuery = analytics_post_rawQuerySchema.safeParse(queryRaw);
   if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const postId = searchParams.get('postId');
-  if (!postId) return NextResponse.json({ error: 'postId obrigatorio' }, { status: 400 });
+  if (!postId) return NextResponse.json({ error: 'postId obrigatório' }, { status: 400 });
 
   const supabase = getSupabase();
 

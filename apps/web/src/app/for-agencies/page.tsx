@@ -8,11 +8,11 @@ import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'StackPost for Agencies - Contas ilimitadas sem custo por perfil',
-  description: '50 clientes, 500 contas, sem pagar por perfil. Cobranca por post, RBAC por cliente, analytics unificado e preco em reais com PIX.',
+  description: '50 clientes, 500 contas, sem pagar por perfil. Cobrança por post, RBAC por cliente, analytics unificado e preço em reais com PIX.',
   alternates: { canonical: '/for-agencies' },
 };
 
-const jsonLd = serviceSchema('StackPost for Agencies', 'Contas ilimitadas para agencias.', '/for-agencies');
+const jsonLd = serviceSchema('StackPost for Agencies', 'Contas ilimitadas para agências.', '/for-agencies');
 
 const features = [
   {
@@ -23,17 +23,17 @@ const features = [
   {
     icon: Zap,
     title: 'Pague pelo uso',
-    desc: 'Cobranca por post, nao por conta. Voce so paga quando realmente publica.',
+    desc: 'Cobrança por post, nao por conta. Você só paga quando realmente publica.',
   },
   {
     icon: Eye,
     title: 'RBAC',
-    desc: 'Owner, Admin, Editor e Viewer por cliente. Cada membro da agencia com o nivel certo de acesso.',
+    desc: 'Owner, Admin, Editor e Viewer por cliente. Cada membro da agência com o nivel certo de acesso.',
   },
   {
     icon: Globe,
     title: 'Analytics unificado',
-    desc: 'Metricas de todas as plataformas em um lugar. Compare performance entre clientes e redes.',
+    desc: 'Métricas de todas as plataformas em um lugar. Compare performance entre clientes e redes.',
   },
 ];
 
@@ -83,13 +83,13 @@ export default function ForAgenciesPage() {
         </div>
       </section>
 
-      {/* Preco em reais + PIX */}
+      {/* Preço em reais + PIX */}
       <section className="max-w-5xl mx-auto px-4 md:px-6 pb-20">
         <ScrollReveal>
           <div className="p-8 rounded-2xl border text-center" style={{ borderColor: '#F59E0B40', backgroundColor: '#F59E0B08' }}>
-            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-brand-text">Preco em reais + PIX</h2>
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-brand-text">Preço em reais + PIX</h2>
             <p className="text-brand-text-secondary max-w-xl mx-auto">
-              Sem dolar, sem IOF, sem surpresa no fim do mes. Cobranca em reais com pagamento via PIX. Previsibilidade total para a sua agencia.
+              Sem dólar, sem IOF, sem surpresa no fim do mes. Cobrança em reais com pagamento via PIX. Previsibilidade total para a sua agência.
             </p>
           </div>
         </ScrollReveal>

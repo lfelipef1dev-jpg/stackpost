@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
   const body = bodyRaw1;
   const { orgName, teamName } = body;
 
-  if (!orgName) return NextResponse.json({ error: 'orgName obrigatorio' }, { status: 400 });
+  if (!orgName) return NextResponse.json({ error: 'orgName obrigatório' }, { status: 400 });
 
   const supabase = getSupabase();
 

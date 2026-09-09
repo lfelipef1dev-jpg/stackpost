@@ -5,7 +5,7 @@ import './globals.css';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://stackpost.com.br';
 const SITE_NAME = 'StackPost';
-const SITE_DESC = 'StackPost e a API unificada de redes sociais para SaaS, agencias e AI agents. Uma integracao, 15 plataformas, 114 endpoints, MCP server e analytics historico.';
+const SITE_DESC = 'StackPost e a API unificada de redes sociais para SaaS, agências e AI agents. Uma integração, 15 plataformas, 114 endpoints, MCP server e analytics histórico.';
 
 const fontDisplay = Space_Grotesk({
   subsets: ['latin'],
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESC,
-  keywords: ['API redes sociais', 'publicacao multi-rede', 'Instagram API', 'TikTok API', 'LinkedIn API', 'MCP server', 'social media API', 'cross-post', 'agendamento posts'],
+  keywords: ['API redes sociais', 'publicação multi-rede', 'Instagram API', 'TikTok API', 'LinkedIn API', 'MCP server', 'social media API', 'cross-post', 'agendamento posts'],
   authors: [{ name: 'StackPost', url: 'https://stackpost.com.br' }],
   creator: 'StackPost',
   publisher: 'StackPost',

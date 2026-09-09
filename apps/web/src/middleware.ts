@@ -11,11 +11,11 @@ function isPublic(path: string): boolean {
   if (PUBLIC_PATHS.some((p) => path === p || path.startsWith(`${p}/`))) return true;
   if (path.startsWith('/api/auth/')) return true;
   if (path.startsWith('/api/pagamentos/webhook')) return true;
-  // Paginas publicas de marketing/SEO (terminadas em -api ou -alternative)
+  // Páginas publicas de marketing/SEO (terminadas em -api ou -alternative)
   if (/-api$/.test(path) || /-alternative$/.test(path)) return true;
-  // Paginas de migracao
+  // Páginas de migracao
   if (path.startsWith('/migrate-from-')) return true;
-  // Paginas SEO com sufixo -for-*
+  // Páginas SEO com sufixo -for-*
   if (/-api-for-/.test(path)) return true;
   return false;
 }

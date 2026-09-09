@@ -11,14 +11,14 @@ export class MastodonAdapter extends PlatformAdapter {
     const content = params.content;
 
     if (!accessToken) return { success: false, error: normalizeError(new Error('No access token'), this.platform) };
-    if (!instance) return { success: false, error: normalizeError(new Error('Instance obrigatoria'), this.platform) };
+    if (!instance) return { success: false, error: normalizeError(new Error('Instance obrigatória'), this.platform) };
     if (content.length > 500) return { success: false, error: { code: 'VALIDATION', message: 'Mastodon: texto maximo 500 caracteres.' } };
 
     try {
       const baseUrl = instance.startsWith('http') ? instance : `https://${instance}`;
       const mediaIds: string[] = [];
 
-      // Passo 1: Upload de midia via /api/v2/media (retorna media_id real)
+      // Passo 1: Upload de mídia via /api/v2/media (retorna media_id real)
       const mediaUrl = params.imageUrl || params.videoUrl;
       if (mediaUrl) {
         const dlRes = await fetch(mediaUrl);

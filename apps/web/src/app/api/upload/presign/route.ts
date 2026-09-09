@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     const parsed1 = upload_presignBodySchema.safeParse(bodyRaw1);
     if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
     const { fileName, contentType, size } = bodyRaw1;
-    if (!fileName) return NextResponse.json({ error: 'fileName obrigatorio' }, { status: 400 });
+    if (!fileName) return NextResponse.json({ error: 'fileName obrigatório' }, { status: 400 });
 
     const MAX_SIZE = 100 * 1024 * 1024;
     if (size && size > MAX_SIZE) {

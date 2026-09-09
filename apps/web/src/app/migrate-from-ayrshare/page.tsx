@@ -100,7 +100,7 @@ export default function MigrateFromAyrsharePage() {
 
       <section className="max-w-3xl mx-auto px-4 py-8">
         <ScrollReveal>
-          <h2 className="text-xl font-bold mb-4">Exemplo de codigo</h2>
+          <h2 className="text-xl font-bold mb-4">Exemplo de código</h2>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <div className="text-xs font-mono text-red-400 mb-2">// Ayrshare</div>

@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
   const parsed1 = misc_youtube_playlistsBodySchema.safeParse(bodyRaw1);
   if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
   const { title, description, privacy } = bodyRaw1;
-  if (!title) return NextResponse.json({ error: 'title obrigatorio' }, { status: 400 });
+  if (!title) return NextResponse.json({ error: 'title obrigatório' }, { status: 400 });
 
   const supabase = getSupabase();
   const { data: account } = await supabase

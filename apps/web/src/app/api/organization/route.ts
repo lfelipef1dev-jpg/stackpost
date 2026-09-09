@@ -3,7 +3,7 @@ import { organizationBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 
-// GET /api/organization — info da organizacao do usuario
+// GET /api/organization — info da organizacao do usuário
 export async function GET(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
   const supabase = getSupabase();
 
   try {
-    // Buscar team do usuario
+    // Buscar team do usuário
     const { data: team, error: teamError } = await supabase
       .from('teams')
       .select('*, organizations(*)')
@@ -44,7 +44,7 @@ export async function PATCH(req: NextRequest) {
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
 
   if (user.role !== 'owner' && user.role !== 'admin') {
-    return NextResponse.json({ error: 'Sem permissao (requer owner/admin)' }, { status: 403 });
+    return NextResponse.json({ error: 'Sem permissão (requer owner/admin)' }, { status: 403 });
   }
 
   const bodyRaw1 = await req.json().catch(() => ({}));

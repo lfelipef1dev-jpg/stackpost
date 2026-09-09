@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
   const state = searchParams.get('state');
   const storedState = req.cookies.get('oauth_state_slack')?.value;
 
-  if (!code) return NextResponse.json({ error: 'Codigo nao informado' }, { status: 400 });
+  if (!code) return NextResponse.json({ error: 'Código nao informado' }, { status: 400 });
   if (state !== storedState) return NextResponse.json({ error: 'State invalido' }, { status: 400 });
 
   const clientId = process.env.SLACK_CLIENT_ID;

@@ -11,7 +11,7 @@ export class GoogleBusinessAdapter extends PlatformAdapter {
     const content = params.content;
 
     if (!accessToken) return { success: false, error: normalizeError(new Error('No access token'), this.platform) };
-    if (!locationId) return { success: false, error: normalizeError(new Error('Location ID obrigatorio'), this.platform) };
+    if (!locationId) return { success: false, error: normalizeError(new Error('Location ID obrigatório'), this.platform) };
     if (content.length > 1500) return { success: false, error: { code: 'VALIDATION', message: 'Google Business: texto maximo 1500 caracteres.' } };
 
     try {

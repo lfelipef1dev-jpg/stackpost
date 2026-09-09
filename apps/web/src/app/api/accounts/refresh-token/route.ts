@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
   const { socialAccountId } = body;
 
   if (!socialAccountId) {
-    return NextResponse.json({ error: 'socialAccountId obrigatorio' }, { status: 400 });
+    return NextResponse.json({ error: 'socialAccountId obrigatório' }, { status: 400 });
   }
 
   try {

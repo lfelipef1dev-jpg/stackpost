@@ -51,13 +51,13 @@ export default function ComparePage() {
           <FadeIn>
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border mb-6" style={{ borderColor: '#8AB4F840', backgroundColor: '#8AB4F810' }}>
               <Scale className="w-3.5 h-3.5" style={{ color: '#8AB4F8' }} />
-              <span className="text-xs font-mono" style={{ color: '#8AB4F8' }}>Comparacao</span>
+              <span className="text-xs font-mono" style={{ color: '#8AB4F8' }}>Comparação</span>
             </div>
             <h1 className="font-display text-4xl md:text-5xl font-black tracking-tight mb-4" style={{ color: 'color-mix(in srgb, #8AB4F8 25%, white)' }}>
               StackPost vs alternativas
             </h1>
             <p className="text-lg text-brand-text-secondary max-w-2xl mx-auto">
-              Compare recursos de infraestrutura social. Dados baseados em documentacao publica dos concorrentes.
+              Compare recursos de infraestrutura social. Dados baseados em documentação publica dos concorrentes.
             </p>
           </FadeIn>
         </div>

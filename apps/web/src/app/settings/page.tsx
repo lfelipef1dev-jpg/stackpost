@@ -417,7 +417,7 @@ export default function SettingsPage() {
 
   async function handleDeleteAccount() {
     if (deleteConfirm !== 'EXCLUIR MINHA CONTA') return;
-    if (!window.confirm('Tem certeza? Esta ação não pode ser desfeita.')) return;
+    if (!window.confirm('Tem certeza? Está ação não pode ser desfeita.')) return;
     setLoading(true);
     try {
       const res = await fetch('/api/me', { method: 'DELETE' });
@@ -443,7 +443,7 @@ export default function SettingsPage() {
     { done: !!org, label: 'Configure a organização' },
     { done: false, label: 'Conecte suas contas' },
     { done: members.length > 1, label: 'Convide o time' },
-    { done: false, label: 'Configure notificacoes' },
+    { done: false, label: 'Configure notificações' },
   ];
   const completedOnboarding = onboardingSteps.filter((s) => s.done).length;
 
@@ -474,7 +474,7 @@ export default function SettingsPage() {
               </div>
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium">Configuracao inicial</span>
+                  <span className="text-sm font-medium">Configuração inicial</span>
                   <span className="text-xs text-brand-text-secondary">
                     {completedOnboarding}/{onboardingSteps.length} concluídos
                   </span>
@@ -892,7 +892,7 @@ export default function SettingsPage() {
                             <div className="text-xs text-brand-text-secondary font-mono">{k.key_prefix}...</div>
                             <div className="text-[10px] text-brand-text-secondary mt-1">
                               Criada: {new Date(k.created_at).toLocaleDateString('pt-BR')}
-                              {k.last_used_at && ` · Ultimo uso: ${new Date(k.last_used_at).toLocaleDateString('pt-BR')}`}
+                              {k.last_used_at && ` · Último uso: ${new Date(k.last_used_at).toLocaleDateString('pt-BR')}`}
                             </div>
                           </div>
                           <button
@@ -1207,7 +1207,7 @@ export default function SettingsPage() {
                       <SettingRow title="Publicacoes publicadas" desc="Receba email quando um post for publicado">
                         <Toggle checked={notifPrefs.emailPosts} onChange={() => setNotifPrefs((p) => ({ ...p, emailPosts: !p.emailPosts }))} />
                       </SettingRow>
-                      <SettingRow title="Comentarios recebidos" desc="Alerta de novos comentarios nos seus posts">
+                      <SettingRow title="Comentarios recebidos" desc="Alerta de novos comentários nos seus posts">
                         <Toggle checked={notifPrefs.emailComments} onChange={() => setNotifPrefs((p) => ({ ...p, emailComments: !p.emailComments }))} />
                       </SettingRow>
                       <SettingRow title="Cobrança e faturas" desc="Recibos, renovações e alertas de pagamento">
@@ -1216,7 +1216,7 @@ export default function SettingsPage() {
                       <SettingRow title="Atualizações do produto" desc="Novidades e lançamentos do StackPost">
                         <Toggle checked={notifPrefs.emailProduct} onChange={() => setNotifPrefs((p) => ({ ...p, emailProduct: !p.emailProduct }))} />
                       </SettingRow>
-                      <SettingRow title="Resumo semanal" desc="Relatorio semanal com suas metricas">
+                      <SettingRow title="Resumo semanal" desc="Relatório semanal com suas métricas">
                         <Toggle checked={notifPrefs.emailWeekly} onChange={() => setNotifPrefs((p) => ({ ...p, emailWeekly: !p.emailWeekly }))} />
                       </SettingRow>
                     </div>

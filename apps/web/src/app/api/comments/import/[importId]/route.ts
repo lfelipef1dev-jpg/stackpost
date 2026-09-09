@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 
-// GET /api/comments/import/[importId] — status de um import de comentarios
+// GET /api/comments/import/[importId] — status de um import de comentários
 export async function GET(req: NextRequest, { params }: { params: Promise<{ importId: string }> }) {
   const { importId } = await params;
   const user = await getUserFromToken(req);
@@ -20,7 +20,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ impo
       .maybeSingle();
 
     if (error || !importRow) {
-      // Fallback: buscar comentarios importados com esse external_id pattern
+      // Fallback: buscar comentários importados com esse external_id pattern
       return NextResponse.json({ importId, status: 'not_found' });
     }
 

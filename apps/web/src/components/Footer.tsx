@@ -55,7 +55,7 @@ const columns = [
     links: [
       { label: 'Features', href: '/features' },
       { label: 'Planos', href: '/plans' },
-      { label: 'Documentacao', href: '/docs' },
+      { label: 'Documentação', href: '/docs' },
       { label: 'FAQ', href: '/plans#faq' },
       { label: 'Changelog', href: '/changelog' },
     ],
@@ -94,7 +94,7 @@ const columns = [
     ],
   },
   {
-    title: 'Comparacao',
+    title: 'Comparação',
     href: '/comparisons',
     links: [
       { label: 'Ayrshare', href: '/ayrshare-alternative' },

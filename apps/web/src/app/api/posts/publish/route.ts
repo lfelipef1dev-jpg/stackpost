@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   const parsed1 = publishSchema.safeParse(bodyRaw1);
   if (!parsed1.success) return NextResponse.json({ error: parsed1.error.issues }, { status: 400 });
   const { postId } = parsed1.data;
-  if (!postId) return NextResponse.json({ error: 'postId obrigatorio' }, { status: 400 });
+  if (!postId) return NextResponse.json({ error: 'postId obrigatório' }, { status: 400 });
 
   const supabase = getSupabase();
 
@@ -25,10 +25,10 @@ export async function POST(req: NextRequest) {
   if (postError || !post) return NextResponse.json({ error: 'Post nao encontrado' }, { status: 404 });
   if (post.team_id !== user.teamId) return NextResponse.json({ error: 'Nao autorizado' }, { status: 403 });
 
-  // Idempotency: se ja esta publicado ou em processamento, retorna estado atual
+  // Idempotency: se já está publicado ou em processamento, retorna estado atual
   const idempotencyKey = req.headers.get('x-idempotency-key');
   if (idempotencyKey) {
-    // Verifica se ja existe um resultado publicado com esta idempotency key
+    // Verifica se já existe um resultado publicado com esta idempotency key
     const { data: existing } = await supabase
       .from('posts')
       .select('id, status, external_data, published_at')
@@ -45,9 +45,9 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Nao permite republicar se ja foi publicado (sem idempotency key explicita)
+  // Nao permite republicar se já foi publicado (sem idempotency key explicita)
   if (post.status === 'posted') {
-    return NextResponse.json({ error: 'Post ja publicado. Use Idempotency-Key para forcar.' }, { status: 409 });
+    return NextResponse.json({ error: 'Post já publicado. Use Idempotency-Key para forcar.' }, { status: 409 });
   }
 
   const result = await publishPost(postId);

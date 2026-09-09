@@ -22,15 +22,15 @@ export async function POST(req: NextRequest) {
   };
 
   const platformGuides: Record<string, string> = {
-    instagram: 'Use ate 2200 caracteres com emojis e hashtags relevantes. Ideal: 150-300 caracteres.',
-    linkedin: 'Tom profissional. Use ate 3000 caracteres. Inclua call-to-action.',
+    instagram: 'Use até 2200 caracteres com emojis e hashtags relevantes. Ideal: 150-300 caracteres.',
+    linkedin: 'Tom profissional. Use até 3000 caracteres. Inclua call-to-action.',
     twitter: 'Max 280 caracteres. Direto e impactante.',
-    facebook: 'Conversacional. Ate 63206 caracteres, mas idealmente 100-300.',
+    facebook: 'Conversacional. Até 63206 caracteres, mas idealmente 100-300.',
     tiktok: 'Jovem e trending. Use hashtags do momento.',
-    threads: 'Conversacional, ate 500 caracteres.',
+    threads: 'Conversacional, até 500 caracteres.',
   };
 
-  const systemPrompt = `Voce e um especialista em social media. Gere uma legenda para ${platform || 'rede social'}.
+  const systemPrompt = `Você e um especialista em social media. Gere uma legenda para ${platform || 'rede social'}.
 Tom: ${tones[tone] || 'profissional'}.
 ${platformGuides[platform || 'instagram'] || ''}
 Retorne apenas a legenda, sem explicacao.`;

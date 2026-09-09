@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   const parsedQuery = analytics_accountQuerySchema.safeParse(queryRaw);
   if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const accountId = searchParams.get('accountId');
-  if (!accountId) return NextResponse.json({ error: 'accountId obrigatorio' }, { status: 400 });
+  if (!accountId) return NextResponse.json({ error: 'accountId obrigatório' }, { status: 400 });
 
   const supabase = getSupabase();
 

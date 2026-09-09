@@ -73,7 +73,7 @@ export default function StatusPage() {
             <CheckCircle2 className="w-6 h-6 text-success" />
             <div>
               <div className="font-semibold text-success">Todos os sistemas operacionais</div>
-              <div className="text-sm text-brand-text-secondary">Ultima verificacao: agora</div>
+              <div className="text-sm text-brand-text-secondary">Última verificacao: agora</div>
             </div>
           </div>
         </ScrollReveal>
@@ -101,7 +101,7 @@ export default function StatusPage() {
 
       <section className="max-w-4xl mx-auto px-4 md:px-6 pb-20">
         <ScrollReveal>
-          <h2 className="text-xl font-bold mb-4">Historico de incidentes</h2>
+          <h2 className="text-xl font-bold mb-4">Histórico de incidentes</h2>
           <div className="space-y-3">
             {incidents.map((inc) => (
               <div key={inc.date + inc.title} className="p-4 rounded-xl bg-brand-surface/30 border border-brand-border/50">
@@ -120,7 +120,7 @@ export default function StatusPage() {
 
         <ScrollReveal className="mt-8">
           <p className="text-xs text-brand-text-secondary">
-            Metricas baseadas em monitoramento interno. Atualizado em tempo real.
+            Métricas baseadas em monitoramento interno. Atualizado em tempo real.
           </p>
         </ScrollReveal>
       </section>

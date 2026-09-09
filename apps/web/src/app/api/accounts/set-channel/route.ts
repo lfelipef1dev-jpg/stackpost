@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   const { accountId, platformAccountId, platformMetadata } = body;
 
   if (!accountId) {
-    return NextResponse.json({ error: 'accountId obrigatorio' }, { status: 400 });
+    return NextResponse.json({ error: 'accountId obrigatório' }, { status: 400 });
   }
 
   const supabase = getSupabase();

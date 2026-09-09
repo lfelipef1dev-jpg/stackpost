@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   const parsedQuery = misc_instagram_audioQuerySchema.safeParse(queryRaw);
   if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const query = searchParams.get('q');
-  if (!query) return NextResponse.json({ error: 'q obrigatorio' }, { status: 400 });
+  if (!query) return NextResponse.json({ error: 'q obrigatório' }, { status: 400 });
 
   const supabase = getSupabase();
   const { data: account } = await supabase
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
       `https://graph.facebook.com/v26.0/${account.external_id}/music?fields=id,title,artist&access_token=${account.access_token}`
     );
     const data = await res.json();
-    if (!res.ok) return NextResponse.json({ error: data.error?.message || 'Audio search nao disponivel' }, { status: 400 });
+    if (!res.ok) return NextResponse.json({ error: data.error?.message || 'Audio search nao disponível' }, { status: 400 });
     return NextResponse.json({ audio: data.data || [] });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

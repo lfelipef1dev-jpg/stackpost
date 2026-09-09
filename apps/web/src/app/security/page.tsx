@@ -19,8 +19,8 @@ const securityItems = [
   { icon: KeyRound, title: 'OAuth 2.0', desc: 'Autenticacao via OAuth 2.0 para todas as plataformas conectadas.' },
   { icon: Shield, title: 'API keys com hash', desc: 'Chaves de API armazenadas com hash, nunca em texto plano.' },
   { icon: Webhook, title: 'HMAC webhooks', desc: 'Webhooks assinados com HMAC-SHA256 para verificacao de origem.' },
-  { icon: Eye, title: 'RBAC', desc: 'Owner, Admin, Editor e Viewer com permissoes granulares.' },
-  { icon: FileText, title: 'Audit logs', desc: 'Todas as acoes rastreadas com timestamp, usuario e contexto.' },
+  { icon: Eye, title: 'RBAC', desc: 'Owner, Admin, Editor e Viewer com permissões granulares.' },
+  { icon: FileText, title: 'Audit logs', desc: 'Todas as ações rastreadas com timestamp, usuário e contexto.' },
   { icon: Shield, title: 'Data isolation multi-tenant', desc: 'Cada workspace isolado, sem vazamento entre tenants.' },
   { icon: Zap, title: 'Rate limiting', desc: 'Limites por chave e por workspace para proteger a infraestrutura.' },
 ];
@@ -28,7 +28,7 @@ const securityItems = [
 const complianceItems = [
   { title: 'LGPD', desc: 'Conformidade com a Lei Geral de Protecao de Dados brasileira.' },
   { title: 'GDPR-ready', desc: 'Estrutura preparada para o regulamento europeu de protecao de dados.' },
-  { title: 'DPA disponivel', desc: 'Data Processing Agreement disponivel para clientes enterprise.' },
+  { title: 'DPA disponível', desc: 'Data Processing Agreement disponível para clientes enterprise.' },
   { title: 'Data retention configuravel', desc: 'Defina por quanto tempo os dados sao mantidos por workspace.' },
 ];
 
@@ -92,7 +92,7 @@ export default function SecurityPage() {
               <h2 className="text-2xl font-bold text-brand-text">Idempotencia e retry</h2>
             </div>
             <p className="text-brand-text-secondary mb-6">
-              Publicacoes sao resilientes por padrao. Nada de posts duplicados por erro de rede.
+              Publicacoes sao resilientes por padrão. Nada de posts duplicados por erro de rede.
             </p>
             <div className="grid md:grid-cols-3 gap-4">
               <div>
@@ -100,7 +100,7 @@ export default function SecurityPage() {
                 <p className="text-sm text-brand-text-secondary">Cada request recebe uma chave unica. Retries nao criam duplicatas.</p>
               </div>
               <div>
-                <h3 className="font-semibold text-brand-text mb-1">Retry automatico</h3>
+                <h3 className="font-semibold text-brand-text mb-1">Retry automático</h3>
                 <p className="text-sm text-brand-text-secondary">Falhas transientes sao retratadas com backoff exponencial.</p>
               </div>
               <div>
@@ -129,10 +129,10 @@ export default function SecurityPage() {
         </div>
       </section>
 
-      {/* Documentacao */}
+      {/* Documentação */}
       <section className="max-w-5xl mx-auto px-4 md:px-6 pb-20">
         <ScrollReveal>
-          <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">Documentacao</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">Documentação</h2>
           <div className="flex flex-wrap justify-center gap-4">
             <Link href="/privacy" className="px-6 py-3 rounded-xl border border-brand-border text-brand-text hover:bg-brand-elevated transition">
               Politica de privacidade
@@ -141,7 +141,7 @@ export default function SecurityPage() {
               Termos de uso
             </Link>
             <Link href="/status" className="px-6 py-3 rounded-xl border border-brand-border text-brand-text hover:bg-brand-elevated transition">
-              Status do servico
+              Status do serviço
             </Link>
           </div>
         </ScrollReveal>

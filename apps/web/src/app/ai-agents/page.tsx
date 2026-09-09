@@ -17,10 +17,10 @@ const jsonLd = serviceSchema('StackPost for AI Agents', 'MCP server para AI agen
 const mcpClients = ['Claude', 'Cursor', 'ChatGPT', 'Gemini'];
 
 const permissionFeatures = [
-  { title: 'Scopes granulares', desc: 'Defina exatamente quais plataformas e acoes cada agent pode acessar.' },
+  { title: 'Scopes granulares', desc: 'Defina exatamente quais plataformas e ações cada agent pode acessar.' },
   { title: 'Tokens com expiration', desc: 'Tokens expiram automaticamente. Renovacao sob demanda.' },
   { title: 'Approval workflow', desc: 'Acoes sensiveis exigem aprovacao humana antes de executar.' },
-  { title: 'Audit completo', desc: 'Cada acao do agent registrada com token, scope e timestamp.' },
+  { title: 'Audit completo', desc: 'Cada ação do agent registrada com token, scope e timestamp.' },
 ];
 
 const hitlSteps = ['Draft', 'Review', 'Approved', 'Scheduled'];
@@ -48,7 +48,7 @@ export default function AiAgentsPage() {
               StackPost for AI Agents
             </h1>
             <p className="text-lg text-brand-text-secondary max-w-2xl mx-auto">
-              MCP server nativo para Claude, Cursor, ChatGPT e Gemini. Seu AI agent publica em 15 plataformas com uma integracao.
+              MCP server nativo para Claude, Cursor, ChatGPT e Gemini. Seu AI agent publica em 15 plataformas com uma integração.
             </p>
           </FadeIn>
         </div>
@@ -59,7 +59,7 @@ export default function AiAgentsPage() {
         <ScrollReveal>
           <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">MCP Server</h2>
           <p className="text-brand-text-secondary text-center max-w-2xl mx-auto mb-8">
-            Model Context Protocol nativo. Conecte seu AI agent ao StackPost e publique em 15 plataformas sem escrever uma linha de integracao.
+            Model Context Protocol nativo. Conecte seu AI agent ao StackPost e publique em 15 plataformas sem escrever uma linha de integração.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             {mcpClients.map((client) => (
@@ -179,7 +179,7 @@ export default function AiAgentsPage() {
               href="/docs/mcp"
               className="px-6 py-3 rounded-xl border border-brand-border text-brand-text hover:bg-brand-elevated transition"
             >
-              Documentacao MCP
+              Documentação MCP
             </Link>
           </div>
         </ScrollReveal>

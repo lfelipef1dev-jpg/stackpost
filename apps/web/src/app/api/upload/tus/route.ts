@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   const tusResumable = req.headers.get('tus-resumable');
   if (!tusResumable) {
     return NextResponse.json(
-      { error: 'Tus-Resumable header obrigatorio' },
+      { error: 'Tus-Resumable header obrigatório' },
       { status: 400, headers: { 'Tus-Version': TUS_VERSION, 'Tus-Resumable': TUS_VERSION } }
     );
   }
@@ -74,7 +74,7 @@ export async function PATCH(req: NextRequest) {
   const uploadId = pathParts[pathParts.length - 1];
 
   if (!uploadId) {
-    return NextResponse.json({ error: 'Upload ID obrigatorio' }, { status: 400 });
+    return NextResponse.json({ error: 'Upload ID obrigatório' }, { status: 400 });
   }
 
   const uploadOffset = parseInt(req.headers.get('upload-offset') || '0');
@@ -154,7 +154,7 @@ export async function HEAD(req: NextRequest) {
   const uploadId = pathParts[pathParts.length - 1];
 
   if (!uploadId) {
-    return NextResponse.json({ error: 'Upload ID obrigatorio' }, { status: 400 });
+    return NextResponse.json({ error: 'Upload ID obrigatório' }, { status: 400 });
   }
 
   try {

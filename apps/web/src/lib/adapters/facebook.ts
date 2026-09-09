@@ -14,7 +14,7 @@ export class FacebookAdapter extends PlatformAdapter {
     const mediaType = params.mediaType || 'POST';
 
     if (!accessToken) return { success: false, error: normalizeError(new Error('No access token'), this.platform) };
-    if (!pageId) return { success: false, error: normalizeError(new Error('Page ID obrigatorio'), this.platform) };
+    if (!pageId) return { success: false, error: normalizeError(new Error('Page ID obrigatório'), this.platform) };
     if (content.length > 63206) return { success: false, error: { code: 'VALIDATION', message: 'Facebook: texto maximo 63206 caracteres.' } };
     if (firstComment && firstComment.length > 8000) return { success: false, error: { code: 'VALIDATION', message: 'Facebook: firstComment maximo 8000 caracteres.' } };
     if (params.uploadIds && params.uploadIds.length > 4) return { success: false, error: { code: 'VALIDATION', message: 'Facebook: maximo 4 imagens por post.' } };
@@ -111,7 +111,7 @@ export class FacebookAdapter extends PlatformAdapter {
 
     // IMAGE normal: upload via /photos
     if (imageUrl) {
-      // CAROUSEL: multiplas imagens (ate 4)
+      // CAROUSEL: multiplas imagens (até 4)
       if (mediaUrls && mediaUrls.length > 1) {
         const mediaIds: string[] = [];
         for (const url of mediaUrls.slice(0, 4)) {

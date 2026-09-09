@@ -84,7 +84,7 @@ export function PlatformHero({
                   href={docsHref}
                   className="px-6 py-3 rounded-xl border border-brand-border text-brand-text hover:bg-brand-elevated transition"
                 >
-                  Ver documentacao
+                  Ver documentação
                 </Link>
               </div>
             </div>

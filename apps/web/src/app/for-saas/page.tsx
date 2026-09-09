@@ -8,7 +8,7 @@ import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'StackPost for SaaS - Adicione social ao seu produto',
-  description: 'Uma integracao, 15 plataformas. Multi-tenant nativo, webhooks com replay e SDK pronto em TypeScript, Python e Go.',
+  description: 'Uma integração, 15 plataformas. Multi-tenant nativo, webhooks com replay e SDK pronto em TypeScript, Python e Go.',
   alternates: { canonical: '/for-saas' },
 };
 
@@ -18,7 +18,7 @@ const features = [
   {
     icon: Zap,
     title: 'Sem manter 15 OAuth',
-    desc: 'Uma integracao com o StackPost e voce publica em 15 plataformas. Esqueca renovar tokens de 15 provedores diferentes.',
+    desc: 'Uma integração com o StackPost e você publica em 15 plataformas. Esqueca renovar tokens de 15 provedores diferentes.',
   },
   {
     icon: Building2,
@@ -28,12 +28,12 @@ const features = [
   {
     icon: Webhook,
     title: 'Webhooks com replay',
-    desc: 'Eventos em tempo real para cada acao. Reenvie qualquer webhook que seu sistema perdeu.',
+    desc: 'Eventos em tempo real para cada ação. Reenvie qualquer webhook que seu sistema perdeu.',
   },
   {
     icon: Globe,
     title: 'SDK pronto',
-    desc: 'TypeScript, Python e Go. Tipagem completa, exemplos e documentacao atualizada.',
+    desc: 'TypeScript, Python e Go. Tipagem completa, exemplos e documentação atualizada.',
   },
 ];
 
@@ -60,7 +60,7 @@ export default function ForSaasPage() {
               StackPost for SaaS
             </h1>
             <p className="text-lg text-brand-text-secondary max-w-2xl mx-auto">
-              Adicione publicacao multi-rede ao seu produto sem manter 15 integracoes OAuth. Uma API, 15 plataformas, multi-tenant nativo.
+              Adicione publicação multi-rede ao seu produto sem manter 15 integrações OAuth. Uma API, 15 plataformas, multi-tenant nativo.
             </p>
           </FadeIn>
         </div>
@@ -83,7 +83,7 @@ export default function ForSaasPage() {
         </div>
       </section>
 
-      {/* Quick start com codigo */}
+      {/* Quick start com código */}
       <section className="max-w-3xl mx-auto px-4 md:px-6 pb-20">
         <ScrollReveal>
           <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">Quick start</h2>

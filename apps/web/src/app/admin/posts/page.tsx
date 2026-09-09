@@ -113,7 +113,7 @@ export default function AdminPostsPage() {
 
   async function batchDelete() {
     if (selected.length === 0) return;
-    if (!confirm(`Confirmar exclusão de ${selected.length} publicação(ões)? Esta ação não pode ser desfeita.`)) return;
+    if (!confirm(`Confirmar exclusão de ${selected.length} publicação(ões)? Está ação não pode ser desfeita.`)) return;
     setActionLoading(true);
     try {
       const res = await fetch('/api/admin/posts/batch', {

@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
   const body = bodyRaw1;
   const { eventId } = body;
 
-  if (!eventId) return NextResponse.json({ error: 'eventId obrigatorio' }, { status: 400 });
+  if (!eventId) return NextResponse.json({ error: 'eventId obrigatório' }, { status: 400 });
 
   try {
     const supabase = getSupabase();

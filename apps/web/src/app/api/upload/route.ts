@@ -31,7 +31,7 @@ async function processAndSave(file: File, teamId: string): Promise<{ id: string;
 
   const derivatives: Record<string, string> = {};
 
-  // Para imagens, usar a propria original como derivada (proporcao sera ajustada pelo Instagram)
+  // Para imagens, usar a propria original como derivada (proporcao será ajustada pelo Instagram)
   if (['jpg', 'jpeg', 'png', 'webp'].includes(ext)) {
     derivatives.instagram_1x1 = publicUrl;
     derivatives.instagram_4x5 = publicUrl;

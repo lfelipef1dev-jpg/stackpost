@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
       .select('id')
       .eq('email', email);
     if (existing && existing.length > 0) {
-      return NextResponse.json({ error: 'Usuario ja existe' }, { status: 409 });
+      return NextResponse.json({ error: 'Usuário já existe' }, { status: 409 });
     }
 
     const { data: orgRow, error: orgError } = await supabase

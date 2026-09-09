@@ -1,0 +1,155 @@
+﻿Ordem T├®cnica Obrigat├│ria SEO 2026
+ORDEM T├ëCNICA OBRIGAT├ôRIA ÔÇö SEO GOOGLE 2026
+Padr├úo absoluto de execu├º├úo para sites e projetos web
+**Documento:** Ordem T├®cnica Obrigat├│ria  
+**Vers├úo:** agosto de 2026  
+**Aplicabilidade:** todos os sites, sem exce├º├úo  
+**Formato de uso:** entregar este documento a qualquer IA, desenvolvedor ou equipe como ordem de servi├ºo.  
+**Objetivo:**  garantir  que  todo  projeto  web  atenda  aos  requisitos  m├¡nimos  para  ranquear  no  Google  de  forma  t├®cnica,
+organizada e mensur├ível.
+>  **N├úo  negoci├ível:**  esta  ordem  deve  ser  seguida  na  sequ├¬ncia  indicada.  Nenhuma  fase  posterior  compensa  uma  fase
+anterior mal executada.
+---
+RESUMO DAS 5 FASES
+1. **Fundamentos t├®cnicos** ÔÇö infraestrutura que viabiliza tudo o resto.
+2. **Crawl e indexa├º├úo** ÔÇö garantir que o Google acesse, entenda e indexe.
+3. **On-page e conte├║do** ÔÇö estruturar cada p├ígina para ranquear.
+4. **Schema e rich results** ÔÇö marcar entidades corretamente.
+5. **Autoridade, cadastro e monitoramento** ÔÇö validar, registrar e acompanhar.
+---
+FASE 1 ÔÇö FUNDAMENTOS T├ëCNICOS
+**Tudo aqui ├® pr├®-requisito. Sem isso, n├úo passe para a Fase 2.**
+# | Item | Obrigatoriedade | Padr├úo
+1.1 | Dom├¡nio HTTPS | OBRIGAT├ôRIO | Certificado v├ílido, sem erros
+1.2 | Redirect 301 HTTP ÔåÆ HTTPS | OBRIGAT├ôRIO | No n├¡vel do servidor, n├úo via JS
+1.3 | Zero mixed content | OBRIGAT├ôRIO | Todos os assets em HTTPS
+1.4 | HSTS | RECOMENDADO | Header ativo
+1.5 | Mobile-first | OBRIGAT├ôRIO | Viewport correto, conte├║do mobile = desktop
+1.6 | Performance m├¡nima | OBRIGAT├ôRIO | LCP Ôëñ 2,5 s, INP Ôëñ 200 ms, CLS Ôëñ 0,1 (mobile, p75)
+1.7 | HTML servido sem depender de JS | OBRIGAT├ôRIO | Conte├║do principal no HTML inicial
+1.8 | Servidor/CDN est├ível | OBRIGAT├ôRIO | TTFB < 800 ms, cache correto
+Regras adicionais da Fase 1
+  ÔÇó  O site deve carregar e exibir conte├║do com JavaScript desabilitado (para conte├║do index├ível).
+  ÔÇó  Nenhum popup ou interstitial deve cobrir a tela no carregamento mobile.
+  ÔÇó  Fontes cr├¡ticas devem usar `font-display: swap` ou `optional`.
+  ÔÇó  Imagens principais devem usar `fetchpriority="high"` e formatos AVIF/WebP com fallback.
+---
+FASE 2 ÔÇö CRAWL E INDEXA├ç├âO
+**Se o Google n├úo consegue acessar e indexar, o resto n├úo importa.**
+# | Item | Obrigatoriedade | Padr├úo
+2.1 | robots.txt | OBRIGAT├ôRIO | Na raiz, claro, sem conflitos, com `Sitemap:` absoluto
+2.2 | sitemap.xml | OBRIGAT├ôRIO | Can├┤nicos, 200, lastmod real, sem priority/changefreq
+2.3 | Canonical | OBRIGAT├ôRIO | Toda p├ígina index├ível tem `<link rel="canonical">` absoluta
+2.4 | noindex | OBRIGAT├ôRIO | Usado em p├íginas que n├úo devem aparecer no Google
+2.5 | URLs amig├íveis | OBRIGAT├ôRIO | Lowercase, h├¡fen, sem par├ómetros, < 75 chars
+2.6 | Links internos rastre├íveis | OBRIGAT├ôRIO | `<a href="...">` reais, sem links s├│ em JS
+P├ígina 1
+Ordem T├®cnica Obrigat├│ria SEO 2026
+2.7 | P├íginas ├│rf├ús | PROIBIDO | Toda p├ígina importante deve ser linkada internamente
+2.8 | Status 200 | OBRIGAT├ôRIO | P├íginas index├íveis retornam 200
+2.9 | Redirecionamentos | CONTROLADO | M├íximo 1 salto por redirect, 301 para mudan├ºas permanentes
+Regras adicionais da Fase 2
+  ÔÇó  `Disallow` no `robots.txt` controla apenas o rastreamento. Para impedir a indexa├º├úo, usar `noindex`.
+  ÔÇó  Nunca bloqueie CSS, JS ou imagens essenciais no `robots.txt`.
+  ÔÇó  Sitemap deve conter **apenas** URLs que voc├¬ quer que o Google indexe.
+  ÔÇó  `lastmod` deve refletir a ├║ltima altera├º├úo real do conte├║do, n├úo data de deploy.
+  ÔÇó  Limite do sitemap: 50.000 URLs ou 50 MB por arquivo. Acima disso, usar `sitemapindex`.
+---
+FASE 3 ÔÇö ON-PAGE E CONTE├ÜDO
+**Cada p├ígina deve ser constru├¡da como uma resposta completa a uma inten├º├úo de busca.**
+# | Item | Obrigatoriedade | Padr├úo
+3.1 | `<title>` | OBRIGAT├ôRIO | ├Ünico por p├ígina, 50ÔÇô60 chars, keyword nos primeiros 30
+3.2 | Meta description | OBRIGAT├ôRIO | ├Ünico por p├ígina, 150ÔÇô160 chars, gatilho de clique
+3.3 | H1 | OBRIGAT├ôRIO | Apenas 1 por p├ígina, reflete a keyword principal
+3.4 | H2ÔÇôH6 | OBRIGAT├ôRIO | Hierarquia sem pulos, H2 com resposta direta de 40ÔÇô60 palavras
+3.5 | Conte├║do original | OBRIGAT├ôRIO | Sem c├│pia, ├║til e profundo para a inten├º├úo
+3.6 | Resposta nos primeiros 100 caracteres | OBRIGAT├ôRIO | A p├ígina responde a query de cara
+3.7 | Imagens otimizadas | OBRIGAT├ôRIO | AVIF/WebP, width/height, alt descritivo
+3.8 | Open Graph e Twitter Cards | RECOMENDADO | title, description, image, url
+3.9 | Breadcrumbs vis├¡veis | OBRIGAT├ôRIO | Navega├º├úo hier├írquica com links reais
+3.10 | Freshness | OBRIGAT├ôRIO | `dateModified` atualizado em conte├║do revisado
+Regras adicionais da Fase 3
+  ÔÇó  N├úo existe densidade de palavra-chave ideal. Use palavras naturalmente + varia├º├Áes sem├ónticas.
+  ÔÇó  Cada H2 deve abrir com uma resposta direta, completa e c├¡vel (essencial para AI Overviews).
+  ÔÇó  N├úo use H1, H2, H3 para estiliza├º├úo ÔÇö use CSS.
+  ÔÇó  Conte├║do raso ou duplicado deve ser `noindex` ou removido.
+---
+FASE 4 ÔÇö SCHEMA.ORG / DATA SEO
+**Obrigat├│rio. Schema comunica entidades para o Google e modelos de IA.**
+# | Item | Obrigatoriedade | Padr├úo
+4.1 | JSON-LD | OBRIGAT├ôRIO | `<script type="application/ld+json">` no `<head>` ou `<body>`
+4.2 | `WebSite` | OBRIGAT├ôRIO | Somente na home
+4.3 | `Organization` | OBRIGAT├ôRIO | Nome, URL, logo, `sameAs` para perfis verific├íveis
+4.4 | `BreadcrumbList` | OBRIGAT├ôRIO | Toda subp├ígina
+4.5 | Tipo principal | OBRIGAT├ôRIO | `Article`/`Product`/`LocalBusiness`/`Service` por p├ígina
+4.6 | Correspond├¬ncia com conte├║do vis├¡vel | OBRIGAT├ôRIO | Nenhum dado invis├¡vel ou inventado no Schema
+4.7 | Valida├º├úo | OBRIGAT├ôRIO | Testado em Rich Results Test e Schema Markup Validator
+4.8 | `@graph` + `@id` | RECOMENDADO | Conectar entidades entre si
+Tipos permitidos e proibidos
+**Implementar quando aplic├ível:**
+`WebSite`, `Organization`, `Person`, `BreadcrumbList`, `Article`, `BlogPosting`, `Product`, `Offer`, `LocalBusiness`, `Recipe`,
+`Event`, `VideoObject`, `JobPosting`, `Course`, `SoftwareApplication`, `Review` (dentro de host), `Speakable`.
+**N├úo implementar esperando rich result:**
+`FAQPage`  (extinto  07/05/2026),  `HowTo`  (retirado  para  sites  gerais),  `Book  Actions`,  `Course  Info`,  `ClaimReview`,
+`Estimated Salary`, `Learning Video`, `Special Announcement`, `Vehicle Listing`, `Practice Problems`.
+---
+P├ígina 2
+Ordem T├®cnica Obrigat├│ria SEO 2026
+FASE 5 ÔÇö CADASTRO, AUTORIDADE E MONITORAMENTO
+**Obrigat├│rio para ativar e acompanhar o desempenho real.**
+# | Item | Obrigatoriedade | Padr├úo
+5.1 | Google Search Console | OBRIGAT├ôRIO | Propriedade verificada, sitemap submetido
+5.2 | Google Analytics 4 | OBRIGAT├ôRIO | Instalado e medindo
+5.3 | Google Business Profile | SE LOCAL | Verificado, NAP id├¬ntico ao site
+5.4 | Google Merchant Center | SE E-COMMERCE | Feed ativo e sincronizado
+5.5 | E-E-A-T vis├¡vel | OBRIGAT├ôRIO | Autor, bio, credenciais, fontes, transpar├¬ncia
+5.6 | Autoridade | M├ëDIO/PRAZO | Backlinks editoriais, men├º├Áes de marca, dados originais
+5.7 | Monitoramento | OBRIGAT├ôRIO | GSC + GA4 + CWV + rich results + rankings
+---
+ORDEM ABSOLUTA DE EXECU├ç├âO
+**N├úo mude a ordem sem justificativa t├®cnica.**
+1. **Fase 1: Fundamentos** (HTTPS, mobile, performance)
+2. **Fase 2: Crawl e indexa├º├úo** (robots, sitemap, canonical)
+3. **Fase 3: On-page** (t├¡tulos, headings, conte├║do)
+4. **Fase 4: Schema** (JSON-LD, entidades)
+5. **Fase 5: Cadastro e autoridade** (GSC, GA4, conte├║do, links)
+6. **Loop cont├¡nuo:** medir ÔåÆ corrigir ÔåÆ republicar ÔåÆ reindexar ÔåÆ medir.
+---
+CHECKLIST FINAL DE ENTREGA
+Entrega t├®cnica m├¡nima
+  [ ]  HTTPS + redirect 301
+  [ ]  Mobile-first validado
+  [ ]  CWV no verde (mobile)
+  [ ]  robots.txt e sitemap.xml
+  [ ]  Canonical em todas as p├íginas index├íveis
+  [ ]  `<title>` e meta description ├║nicos
+  [ ]  H1 ├║nico, H2ÔÇôH6 ordenados
+  [ ]  Schema JSON-LD validado
+  [ ]  Imagens otimizadas
+  [ ]  GSC e GA4 configurados
+Entrega de conte├║do e autoridade
+  [ ]  Conte├║do original e ├║til
+  [ ]  Autores identificados
+  [ ]  `dateModified` atualizado
+  [ ]  Backlinks/PR digital iniciado
+  [ ]  GBP configurado (se local)
+  [ ]  Feed Merchant (se e-commerce)
+---
+INSTRU├ç├âO DE USO PARA IAs
+**A IA que receber esta ordem deve:**
+1. Analisar o site fornecido contra cada item desta ordem.
+2. Responder no formato: `STATUS: OK / ATEN├ç├âO / CR├ìTICO / N/A` + `EVID├èNCIA` + `A├ç├âO`.
+P├ígina 3
+Ordem T├®cnica Obrigat├│ria SEO 2026
+3. N├úo pular fases: come├ºar sempre pela Fase 1 e s├│ avan├ºar quando estiver OK.
+4. Ao final, listar os 3 problemas cr├¡ticos, 5 corre├º├Áes r├ípidas e a ordem de execu├º├úo.
+5. N├úo inventar regras fora deste documento. N├úo recomendar keyword stuffing, backlinks comprados, t├®cnicas black-hat ou
+mitos SEO.
+---
+**Aprova├º├úo e controle de qualidade**
+  ÔÇó  Respons├ível pela execu├º├úo: _______________________________
+  ÔÇó  Data de in├¡cio: _______________________________
+  ÔÇó  Data de entrega prevista: _______________________________
+  ÔÇó  Revisado por: _______________________________
+**Aplicar a todos os sites, sem exce├º├úo.**
+P├ígina 4

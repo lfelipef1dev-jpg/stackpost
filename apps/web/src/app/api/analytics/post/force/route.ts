@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   const parsed1 = analytics_post_forceBodySchema.safeParse(bodyRaw1);
   if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
   const { postId } = bodyRaw1;
-  if (!postId) return NextResponse.json({ error: 'postId obrigatorio' }, { status: 400 });
+  if (!postId) return NextResponse.json({ error: 'postId obrigatório' }, { status: 400 });
 
   const supabase = getSupabase();
 

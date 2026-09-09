@@ -342,7 +342,7 @@ export default function BillingPage() {
   async function addCredits() {
     setLoading(true);
     try {
-      const res = await fetch('/api/pagamentos/creditos', {
+      const res = await fetch('/api/pagamentos/créditos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ valor: Number(creditAmount) }),
@@ -479,7 +479,7 @@ export default function BillingPage() {
             </SpotlightCard>
           </TiltCard>
 
-          {/* Card Proximo Pagamento */}
+          {/* Card Próximo Pagamento */}
           <TiltCard className="h-full">
             <SpotlightCard className="h-full p-7 flex flex-col shadow-2xl shadow-brand-accent/5" glow={currentPlan === 'free' ? '#22C55E' : '#EC4899'}>
               <div className="flex items-center justify-between mb-4">

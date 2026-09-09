@@ -11,13 +11,13 @@ export class SnapchatAdapter extends PlatformAdapter {
     const content = params.content;
 
     if (!accessToken) return { success: false, error: normalizeError(new Error('No access token'), this.platform) };
-    if (!adAccountId) return { success: false, error: normalizeError(new Error('Ad Account ID obrigatorio'), this.platform) };
+    if (!adAccountId) return { success: false, error: normalizeError(new Error('Ad Account ID obrigatório'), this.platform) };
     if (content.length > 1000) return { success: false, error: { code: 'VALIDATION', message: 'Snapchat: texto maximo 1000 caracteres.' } };
 
     const isVideo = params.videoUrl;
     const isImage = params.imageUrl;
     if (!isVideo && !isImage) {
-      return { success: false, error: { code: 'VALIDATION', message: 'Snapchat: video ou imagem obrigatoria.' } };
+      return { success: false, error: { code: 'VALIDATION', message: 'Snapchat: video ou imagem obrigatória.' } };
     }
 
     try {

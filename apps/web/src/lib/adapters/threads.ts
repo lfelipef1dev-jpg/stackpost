@@ -11,7 +11,7 @@ export class ThreadsAdapter extends PlatformAdapter {
     const content = params.content;
 
     if (!accessToken) return { success: false, error: normalizeError(new Error('No access token'), this.platform) };
-    if (!userId) return { success: false, error: normalizeError(new Error('User ID obrigatorio'), this.platform) };
+    if (!userId) return { success: false, error: normalizeError(new Error('User ID obrigatório'), this.platform) };
     if (content.length > 500) return { success: false, error: { code: 'VALIDATION', message: 'Threads: texto maximo 500 caracteres.' } };
 
     try {

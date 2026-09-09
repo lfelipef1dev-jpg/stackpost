@@ -3,6 +3,7 @@
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import PlanModal from '@/components/PlanModal';
+import { publishableAccounts } from '@/lib/accounts';
 
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
@@ -168,7 +169,7 @@ export default function DashboardPage() {
     ])
       .then(([postsData, accountsData, meData, usageData]) => {
         setPosts(Array.isArray(postsData) ? postsData : (postsData.items || []));
-        setAccounts(Array.isArray(accountsData) ? accountsData : (accountsData.items || accountsData.accounts || []));
+        setAccounts(publishableAccounts(Array.isArray(accountsData) ? accountsData : (accountsData.items || accountsData.accounts || [])));
         setUser(meData?.user || null);
         setCurrentPlan(meData?.organization?.plan || 'free');
         setUsage(usageData);

@@ -12,7 +12,7 @@ export class BlueskyAdapter extends PlatformAdapter {
     const content = params.content;
 
     if (!accessToken) return { success: false, error: normalizeError(new Error('No access token'), this.platform) };
-    if (!did) return { success: false, error: normalizeError(new Error('DID obrigatorio'), this.platform) };
+    if (!did) return { success: false, error: normalizeError(new Error('DID obrigatório'), this.platform) };
     if (content.length > 300) return { success: false, error: { code: 'VALIDATION', message: 'Bluesky: texto maximo 300 caracteres.' } };
 
     try {
@@ -23,7 +23,7 @@ export class BlueskyAdapter extends PlatformAdapter {
         langs: ['pt'],
       };
 
-      // Upload de midia via xrpc.atproto.repo.uploadBlob
+      // Upload de mídia via xrpc.atproto.repo.uploadBlob
       const embedMedia: any[] = [];
       const mediaUrl = params.imageUrl || params.videoUrl;
       if (mediaUrl) {

@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   const state = searchParams.get('state') || 'instagram';
 
   if (!code) {
-    return NextResponse.json({ error: 'Codigo nao informado' }, { status: 400 });
+    return NextResponse.json({ error: 'Código nao informado' }, { status: 400 });
   }
 
   // Extrair teamId do state (formato: teamId:instagram)

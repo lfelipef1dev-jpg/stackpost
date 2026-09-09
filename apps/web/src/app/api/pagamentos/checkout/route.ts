@@ -102,7 +102,7 @@ export async function POST(request: Request) {
   const planoAtual = (org.plan || 'free').toLowerCase();
   if ((ORDEM_PLANOS[planoAtual] ?? 0) >= (ORDEM_PLANOS[plano] ?? 0)) {
     return NextResponse.json(
-      { error: 'Voce ja possui este plano ou um superior.' },
+      { error: 'Você já possui este plano ou um superior.' },
       { status: 400 },
     );
   }
@@ -134,7 +134,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    // Fluxo PIX (mesmo dos creditos) — preference unica com QR code
+    // Fluxo PIX (mesmo dos créditos) — preference unica com QR code
     const pref = await criarPreferencia({
       team_id: user.teamId,
       plano,

@@ -10,14 +10,14 @@ import Footer from '@/components/Footer';
 import LandingHeader from '@/components/LandingHeader';
 
 export const metadata: Metadata = {
-  title: 'LinkedIn API - Publique posts, artigos e midia via StackPost',
-  description: 'API de LinkedIn do StackPost: posts, artigos e midia (imagem, video, PDF). OAuth 2.0 com organizationalEntityAcls, analytics de impressions, clicks e engagement.',
+  title: 'LinkedIn API - Publique posts, artigos e mídia via StackPost',
+  description: 'API de LinkedIn do StackPost: posts, artigos e mídia (imagem, video, PDF). OAuth 2.0 com organizationalEntityAcls, analytics de impressions, clicks e engagement.',
   alternates: { canonical: '/linkedin-api' },
 };
 
 const jsonLd = serviceSchema(
   'LinkedIn API',
-  'API de LinkedIn para publicar posts, artigos e midia (imagem, video, PDF). OAuth 2.0 com organizationalEntityAcls e analytics de impressions, clicks e engagement.',
+  'API de LinkedIn para publicar posts, artigos e mídia (imagem, video, PDF). OAuth 2.0 com organizationalEntityAcls e analytics de impressions, clicks e engagement.',
   '/linkedin-api',
 );
 
@@ -31,7 +31,7 @@ const features = [
     desc: 'Publique artigos longos com formatacao rica e capa personalizada.',
   },
   {
-    title: 'Midia (imagem, video, PDF)',
+    title: 'Mídia (imagem, video, PDF)',
     desc: 'Upload de imagem, video e PDF com suporte a documentos carrossel.',
   },
   {
@@ -67,7 +67,7 @@ export default function LinkedinApiPage() {
           icon={FaLinkedin}
           label="API de LinkedIn"
           title="API de LinkedIn"
-          description="Publique posts, artigos e midia (imagem, video, PDF) via uma unica API. OAuth 2.0 com organizationalEntityAcls para Company Pages e analytics de impressions, clicks e engagement."
+          description="Publique posts, artigos e mídia (imagem, video, PDF) via uma unica API. OAuth 2.0 com organizationalEntityAcls para Company Pages e analytics de impressions, clicks e engagement."
           color="#0A66C2"
           docsHref="/docs"
         />
@@ -96,7 +96,7 @@ export default function LinkedinApiPage() {
           <ScrollReveal>
             <h2 className="text-3xl font-black text-brand-text mb-4">Quick start</h2>
             <p className="text-brand-text-secondary mb-6">
-              Instale o SDK e publique no LinkedIn em poucas linhas. OAuth 2.0 com organizationalEntityAcls ja incluido.
+              Instale o SDK e publique no LinkedIn em poucas linhas. OAuth 2.0 com organizationalEntityAcls já incluido.
             </p>
             <pre className="p-6 rounded-xl bg-brand-surface border border-brand-border overflow-x-auto text-sm font-mono text-brand-text-secondary">
               <code>{`npm install @stackpost/sdk

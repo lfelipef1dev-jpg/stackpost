@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   const parsed1 = imports_facebook_recommendationsBodySchema.safeParse(bodyRaw1);
   if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
   const { socialAccountId, limit } = bodyRaw1;
-  if (!socialAccountId) return NextResponse.json({ error: 'socialAccountId obrigatorio' }, { status: 400 });
+  if (!socialAccountId) return NextResponse.json({ error: 'socialAccountId obrigatório' }, { status: 400 });
 
   const supabase = getSupabase();
 

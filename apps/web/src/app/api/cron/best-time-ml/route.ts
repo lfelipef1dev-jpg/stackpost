@@ -2,7 +2,7 @@ import { logger } from '@/lib/logger';
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 
-// Cron: Recalcular melhores horarios via ML
+// Cron: Recalcular melhores horários via ML
 // Trigger: Cloudflare Workers Cron Triggers (semanal)
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get('authorization');

@@ -119,7 +119,7 @@ export async function POST(req: NextRequest) {
 
         if (failUpdateErr) throw failUpdateErr;
 
-        // Auto-disable apos 7 dias sem sucesso (conforme plano)
+        // Auto-disable após 7 dias sem sucesso (conforme plano)
         const lastSuccess = failRow?.last_success_at ? new Date(failRow.last_success_at) : null;
         const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
         if (!lastSuccess || lastSuccess < sevenDaysAgo) {

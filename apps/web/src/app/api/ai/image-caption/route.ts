@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
   const parsed1 = ai_image_captionBodySchema.safeParse(bodyRaw1);
   if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
   const { imageUrl, platform, count = 3 } = bodyRaw1;
-  if (!imageUrl) return NextResponse.json({ error: 'imageUrl obrigatorio' }, { status: 400 });
+  if (!imageUrl) return NextResponse.json({ error: 'imageUrl obrigatório' }, { status: 400 });
 
   const apiKey = process.env.OPENAI_API_KEY || process.env.NEXUS_IA_API_KEY;
   if (!apiKey) {
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
     body: JSON.stringify({
       model: 'gpt-4o-mini',
       messages: [
-        { role: 'system', content: `Voce e um especialista em social media. Gere ${count} opcoes de legenda em portugues para a imagem fornecida, adequadas para ${platform || 'Instagram'}. Retorne apenas as opcoes, separadas por linha, sem numeracao.` },
+        { role: 'system', content: `Você e um especialista em social media. Gere ${count} opções de legenda em portugues para a imagem fornecida, adequadas para ${platform || 'Instagram'}. Retorne apenas as opções, separadas por linha, sem numeracao.` },
         {
           role: 'user',
           content: [

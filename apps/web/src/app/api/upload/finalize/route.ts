@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
   const { path: savedName, fileName, mimeType, size } = body;
 
   if (!savedName) {
-    return NextResponse.json({ error: 'path obrigatorio' }, { status: 400 });
+    return NextResponse.json({ error: 'path obrigatório' }, { status: 400 });
   }
 
   const filePath = path.join(PUBLIC_UPLOADS, savedName);

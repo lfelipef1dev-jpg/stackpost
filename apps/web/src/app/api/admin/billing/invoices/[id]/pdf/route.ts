@@ -55,9 +55,9 @@ function generateInvoicePDF(invoice: any): Buffer {
   const lines: string[] = [];
   lines.push('STACKPOST - FATURA');
   lines.push('');
-  lines.push(`Numero: ${invoice.invoice_number || invoice.id}`);
+  lines.push(`Número: ${invoice.invoice_number || invoice.id}`);
   lines.push(`Status: ${invoice.status || 'paid'}`);
-  lines.push(`Periodo: ${invoice.period_start || '-'} a ${invoice.period_end || '-'}`);
+  lines.push(`Período: ${invoice.period_start || '-'} a ${invoice.period_end || '-'}`);
   lines.push('');
   lines.push(`Subtotal: R$ ${((invoice.subtotal_cents || 0) / 100).toFixed(2)}`);
   lines.push(`Desconto: R$ ${((invoice.discount_cents || 0) / 100).toFixed(2)}`);

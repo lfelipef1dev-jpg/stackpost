@@ -26,7 +26,7 @@ export const platforms: PlatformCardData[] = [
     users: '3.0B',
     tagline: 'A maior rede social do mundo',
     shortDescription: 'Page posts, Reels, Stories, carrossel, live e reviews oficiais do Meta Graph.',
-    description: 'Conecte paginas, perfis e grupos. Publique texto, imagem, video, carrossel, reels e links. Suporte a live, reviews, comentarios e respostas automáticas.',
+    description: 'Conecte páginas, perfis e grupos. Publique texto, imagem, video, carrossel, reels e links. Suporte a live, reviews, comentários e respostas automáticas.',
     supports: ['Page posts', 'Reels', 'Stories', 'Carrossel', 'Live', 'Reviews', 'Comentarios'],
     details: [
       { label: 'Formatos', value: 'JPG, PNG, MP4' },
@@ -34,7 +34,7 @@ export const platforms: PlatformCardData[] = [
       { label: 'Texto', value: '63.206 caracteres' },
       { label: 'Aspecto', value: '1.91:1, 1:1, 4:5' },
     ],
-    metric: { value: '3B+', label: 'usuarios' },
+    metric: { value: '3B+', label: 'usuários' },
     color: '#1877F2',
     docsHref: '/facebook-api',
     domain: 'business.facebook.com',
@@ -53,7 +53,7 @@ export const platforms: PlatformCardData[] = [
       { label: 'Texto', value: '5.000 caracteres' },
       { label: 'Aspecto', value: '16:9, 9:16' },
     ],
-    metric: { value: '2.7B+', label: 'usuarios' },
+    metric: { value: '2.7B+', label: 'usuários' },
     color: '#FF0000',
     docsHref: '/youtube-api',
     domain: 'studio.youtube.com',
@@ -62,17 +62,17 @@ export const platforms: PlatformCardData[] = [
     id: 'instagram',
     name: 'Instagram',
     users: '2.0B',
-    tagline: 'A rede do conteudo visual',
+    tagline: 'A rede do conteúdo visual',
     shortDescription: 'Feed, Reels, Stories e carrossel com Meta Graph API oficial.',
-    description: 'Publique feed, Reels, Stories e carrossel. Suporte a alt text, tags, colaboradores, primeiro comentario e Instagram Music API para Reels.',
-    supports: ['Feed', 'Reels', 'Stories', 'Carrossel', 'Primeiro comentario', 'Music API'],
+    description: 'Publique feed, Reels, Stories e carrossel. Suporte a alt text, tags, colaboradores, primeiro comentário e Instagram Music API para Reels.',
+    supports: ['Feed', 'Reels', 'Stories', 'Carrossel', 'Primeiro comentário', 'Music API'],
     details: [
       { label: 'Formatos', value: 'JPG, PNG, MP4' },
       { label: 'Tamanho max', value: '8 MB / 1 GB' },
       { label: 'Texto', value: '2.200 caracteres' },
       { label: 'Aspecto', value: '4:5, 1:1, 9:16' },
     ],
-    metric: { value: '2B+', label: 'usuarios' },
+    metric: { value: '2B+', label: 'usuários' },
     color: '#E4405F',
     docsHref: '/instagram-api',
     domain: 'business.instagram.com',
@@ -81,9 +81,9 @@ export const platforms: PlatformCardData[] = [
     id: 'tiktok',
     name: 'TikTok',
     users: '1.5B',
-    tagline: 'Conteudo short-form em escala',
+    tagline: 'Conteúdo short-form em escala',
     shortDescription: 'Videos, Photo Mode e status de review pela Content API oficial.',
-    description: 'Publique videos e Photo Mode com status de review, privacy levels, commercial sound, hashtags e comentarios controlados.',
+    description: 'Publique videos e Photo Mode com status de review, privacy levels, commercial sound, hashtags e comentários controlados.',
     supports: ['Videos', 'Photo Mode', 'Privacy levels', 'Review status', 'Commercial sound', 'Hashtags'],
     details: [
       { label: 'Formatos', value: 'MP4, WebM' },
@@ -91,7 +91,7 @@ export const platforms: PlatformCardData[] = [
       { label: 'Texto', value: '2.200 caracteres' },
       { label: 'Aspecto', value: '9:16' },
     ],
-    metric: { value: '1.5B+', label: 'usuarios' },
+    metric: { value: '1.5B+', label: 'usuários' },
     color: '#25F4EE',
     docsHref: '/tiktok-api',
     domain: 'ads.tiktok.com',
@@ -110,7 +110,7 @@ export const platforms: PlatformCardData[] = [
       { label: 'Texto', value: '3.000 caracteres' },
       { label: 'Aspecto', value: '1.91:1, 1:1' },
     ],
-    metric: { value: '950M+', label: 'usuarios' },
+    metric: { value: '950M+', label: 'usuários' },
     color: '#0A66C2',
     docsHref: '/linkedin-api',
     domain: 'linkedin.com/company',
@@ -120,8 +120,8 @@ export const platforms: PlatformCardData[] = [
     name: 'Snapchat',
     users: '800M',
     tagline: 'Stories e Spotlight para Gen Z',
-    shortDescription: 'Stories e Spotlight com video vertical 9:16 e upload de ate 1 GB.',
-    description: 'Publique Stories e Spotlight com video vertical 9:16, sound info e upload de ate 1 GB para audiencia jovem e engajada.',
+    shortDescription: 'Stories e Spotlight com video vertical 9:16 e upload de até 1 GB.',
+    description: 'Publique Stories e Spotlight com video vertical 9:16, sound info e upload de até 1 GB para audiencia jovem e engajada.',
     supports: ['Stories', 'Spotlight', 'Video 9:16', 'Sound', 'Upload 1 GB', 'Lentes'],
     details: [
       { label: 'Formatos', value: 'MP4' },
@@ -129,7 +129,7 @@ export const platforms: PlatformCardData[] = [
       { label: 'Texto', value: '1.000 caracteres' },
       { label: 'Aspecto', value: '9:16' },
     ],
-    metric: { value: '800M+', label: 'usuarios' },
+    metric: { value: '800M+', label: 'usuários' },
     color: '#FFFC00',
     docsHref: '/snapchat-api',
     domain: 'ads.snapchat.com',
@@ -139,16 +139,16 @@ export const platforms: PlatformCardData[] = [
     name: 'Reddit',
     users: '850M',
     tagline: 'Comunidades organizadas por nicho',
-    shortDescription: 'Text post, link post, midia e gallery em subreddits.',
-    description: 'Publique em subreddits com text post, link post, midia e gallery. Suporte a flairs e regras especificas de cada comunidade.',
-    supports: ['Text post', 'Link post', 'Midia', 'Gallery', 'Subreddit', 'Flairs'],
+    shortDescription: 'Text post, link post, mídia e gallery em subreddits.',
+    description: 'Publique em subreddits com text post, link post, mídia e gallery. Suporte a flairs e regras especificas de cada comunidade.',
+    supports: ['Text post', 'Link post', 'Mídia', 'Gallery', 'Subreddit', 'Flairs'],
     details: [
       { label: 'Formatos', value: 'JPG, PNG, GIF, MP4' },
       { label: 'Tamanho max', value: '20 MB' },
       { label: 'Texto', value: '300 caracteres' },
       { label: 'Aspecto', value: 'variavel' },
     ],
-    metric: { value: '850M+', label: 'usuarios' },
+    metric: { value: '850M+', label: 'usuários' },
     color: '#FF4500',
     docsHref: '/reddit-api',
     domain: 'reddit.com/r/',
@@ -159,7 +159,7 @@ export const platforms: PlatformCardData[] = [
     users: '600M',
     tagline: 'Conversas em tempo real',
     shortDescription: 'Tweets com 4 imagens ou 1 video, quotes, links e threads.',
-    description: 'Publique tweets com ate 4 imagens ou 1 video, quotes, links e threads. Analytics e suporte a API oficial v2.',
+    description: 'Publique tweets com até 4 imagens ou 1 video, quotes, links e threads. Analytics e suporte a API oficial v2.',
     supports: ['Tweets', '4 imagens', '1 video', 'Quote', 'Threads', '280/25k chars'],
     details: [
       { label: 'Formatos', value: 'JPG, PNG, GIF, MP4' },
@@ -167,7 +167,7 @@ export const platforms: PlatformCardData[] = [
       { label: 'Texto', value: '280 caracteres' },
       { label: 'Aspecto', value: '16:9, 1:1, 4:5' },
     ],
-    metric: { value: '600M+', label: 'usuarios' },
+    metric: { value: '600M+', label: 'usuários' },
     color: '#FFFFFF',
     docsHref: '/x-api',
     domain: 'x.com/home',
@@ -178,7 +178,7 @@ export const platforms: PlatformCardData[] = [
     users: '500M',
     tagline: 'Descoberta visual por intenção',
     shortDescription: 'Pins em boards com imagem ou video e link de destino.',
-    description: 'Crie pins em boards com imagem ou video. Suporte a link de destino, alt text e integracao com catalogos de produto.',
+    description: 'Crie pins em boards com imagem ou video. Suporte a link de destino, alt text e integração com catalogos de produto.',
     supports: ['Pins', 'Boards', 'Imagem', 'Video', 'Link de destino', 'API v5'],
     details: [
       { label: 'Formatos', value: 'JPG, PNG' },
@@ -186,7 +186,7 @@ export const platforms: PlatformCardData[] = [
       { label: 'Texto', value: '500 caracteres' },
       { label: 'Aspecto', value: '2:3, 1:1' },
     ],
-    metric: { value: '500M+', label: 'usuarios' },
+    metric: { value: '500M+', label: 'usuários' },
     color: '#E60023',
     docsHref: '/pinterest-api',
     domain: 'pinterest.com',
@@ -196,8 +196,8 @@ export const platforms: PlatformCardData[] = [
     name: 'Threads',
     users: '200M',
     tagline: 'Conversas publicas da Meta',
-    shortDescription: 'Texto, midia, enquetes, GIFs e links com ate 10 imagens.',
-    description: 'Publique texto, midia, enquetes, GIFs e links com ate 10 imagens ou 1 video. Integracao direta com ecossistema Meta.',
+    shortDescription: 'Texto, mídia, enquetes, GIFs e links com até 10 imagens.',
+    description: 'Publique texto, mídia, enquetes, GIFs e links com até 10 imagens ou 1 video. Integração direta com ecossistema Meta.',
     supports: ['Texto', 'Imagem', 'Video', 'Poll', 'GIF', 'Link'],
     details: [
       { label: 'Formatos', value: 'JPG, PNG, MP4' },
@@ -205,7 +205,7 @@ export const platforms: PlatformCardData[] = [
       { label: 'Texto', value: '500 caracteres' },
       { label: 'Aspecto', value: 'IG rules' },
     ],
-    metric: { value: '200M+', label: 'usuarios' },
+    metric: { value: '200M+', label: 'usuários' },
     color: '#FFFFFF',
     docsHref: '/threads-api',
     domain: 'threads.net',
@@ -214,9 +214,9 @@ export const platforms: PlatformCardData[] = [
     id: 'discord',
     name: 'Discord',
     users: '200M',
-    tagline: 'Comunidades e notificacoes',
+    tagline: 'Comunidades e notificações',
     shortDescription: 'Mensagens por webhook para servidores e canais.',
-    description: 'Envie mensagens por webhook para servidores e canais. Suporte a ate 10 anexos, embeds e formatacao avancada.',
+    description: 'Envie mensagens por webhook para servidores e canais. Suporte a até 10 anexos, embeds e formatacao avançada.',
     supports: ['Webhook', 'Mensagens', '10 anexos', 'Embeds', 'Canais', 'Markdown'],
     details: [
       { label: 'Formatos', value: 'qualquer' },
@@ -224,7 +224,7 @@ export const platforms: PlatformCardData[] = [
       { label: 'Texto', value: '2.000 caracteres' },
       { label: 'Aspecto', value: 'variavel' },
     ],
-    metric: { value: '200M+', label: 'usuarios' },
+    metric: { value: '200M+', label: 'usuários' },
     color: '#5865F2',
     docsHref: '/discord-api',
     domain: 'discord.com/app',
@@ -253,16 +253,16 @@ export const platforms: PlatformCardData[] = [
     name: 'Bluesky',
     users: '30M',
     tagline: 'Rede social descentralizada',
-    shortDescription: 'Textos, 4 midias, link cards e quotes pelo AT Protocol.',
-    description: 'Publique textos, 4 midias, link cards e quotes pelo AT Protocol. Crescimento rapido e comunidade engajada.',
-    supports: ['Texto', '4 midias', 'Link card', 'Quote', 'AT Protocol', 'Descentralizado'],
+    shortDescription: 'Textos, 4 mídias, link cards e quotes pelo AT Protocol.',
+    description: 'Publique textos, 4 mídias, link cards e quotes pelo AT Protocol. Crescimento rápido e comunidade engajada.',
+    supports: ['Texto', '4 mídias', 'Link card', 'Quote', 'AT Protocol', 'Descentralizado'],
     details: [
       { label: 'Formatos', value: 'JPG, PNG, GIF, MP4, WEBM' },
       { label: 'Tamanho max', value: '1 MB / 50 MB' },
       { label: 'Texto', value: '300 caracteres' },
       { label: 'Aspecto', value: '1:1, 16:9' },
     ],
-    metric: { value: '30M+', label: 'usuarios' },
+    metric: { value: '30M+', label: 'usuários' },
     color: '#0085FF',
     docsHref: '/bluesky-api',
     domain: 'bsky.app',
@@ -273,7 +273,7 @@ export const platforms: PlatformCardData[] = [
     users: '20M',
     tagline: 'Comunicacao interna das empresas',
     shortDescription: 'Mensagens por webhook para workspaces e canais.',
-    description: 'Envie mensagens por webhook para workspaces e canais. Suporte a ate 4 anexos e integracao com produtos internos.',
+    description: 'Envie mensagens por webhook para workspaces e canais. Suporte a até 4 anexos e integração com produtos internos.',
     supports: ['Webhook', 'Mensagens', '4 anexos', 'Canais', 'Workspace', 'Notificacoes'],
     details: [
       { label: 'Formatos', value: 'qualquer' },
@@ -281,7 +281,7 @@ export const platforms: PlatformCardData[] = [
       { label: 'Texto', value: '30.000 caracteres' },
       { label: 'Aspecto', value: 'variavel' },
     ],
-    metric: { value: '20M+', label: 'usuarios' },
+    metric: { value: '20M+', label: 'usuários' },
     color: '#4A154B',
     docsHref: '/slack-api',
     domain: 'slack.com/app',
@@ -291,16 +291,16 @@ export const platforms: PlatformCardData[] = [
     name: 'Mastodon',
     users: '10M',
     tagline: 'Fediverso e instancias custom',
-    shortDescription: 'Status com 4 midias, privacidade, spoiler e instancia custom.',
-    description: 'Publique status com 4 midias, controles de privacidade, spoiler e suporte a instancias personalizadas.',
-    supports: ['Status', '4 midias', 'Privacidade', 'Spoiler', 'Instancia custom', 'Fediverso'],
+    shortDescription: 'Status com 4 mídias, privacidade, spoiler e instancia custom.',
+    description: 'Publique status com 4 mídias, controles de privacidade, spoiler e suporte a instancias personalizadas.',
+    supports: ['Status', '4 mídias', 'Privacidade', 'Spoiler', 'Instancia custom', 'Fediverso'],
     details: [
       { label: 'Formatos', value: 'JPG, PNG, GIF, WEBP, MP4' },
       { label: 'Tamanho max', value: '8 MB / 40 MB' },
       { label: 'Texto', value: '500 caracteres' },
       { label: 'Aspecto', value: 'variavel' },
     ],
-    metric: { value: '10M+', label: 'usuarios' },
+    metric: { value: '10M+', label: 'usuários' },
     color: '#6364FF',
     docsHref: '/mastodon-api',
     domain: 'mastodon.social',
@@ -320,7 +320,7 @@ export default function PlatformCards() {
           Uma API para cada rede
         </h2>
         <p className="text-brand-text-secondary max-w-2xl text-lg">
-          Clique no card para ver tudo que cada integracao entrega. 15 redes sociais em um so payload.
+          Clique no card para ver tudo que cada integração entrega. 15 redes sociais em um só payload.
         </p>
       </div>
 
@@ -352,7 +352,7 @@ export default function PlatformCards() {
               </div>
             </div>
 
-            {/* Conteudo embaixo */}
+            {/* Conteúdo embaixo */}
             <div className="relative p-5 md:p-6 flex-1 flex flex-col">
               <div className="mb-4">
                 <h3 className="font-display text-xl md:text-2xl font-black leading-[1.1] tracking-[-0.02em] mb-2 transition-colors duration-200" style={{ color: p.color }}>
@@ -380,7 +380,7 @@ export default function PlatformCards() {
 
               <div className="flex flex-col sm:flex-row gap-2.5 mt-auto">
                 <button className="inline-flex items-center justify-center min-h-[40px] px-4 py-2 font-bold text-xs rounded-lg hover:scale-105 transition-transform shadow-[0_0_20px_rgba(0,0,0,0.3)]" style={{ backgroundColor: p.color, color: '#0A0A0A' }}>
-                  Ver integracao <ArrowRight className="w-3 h-3 ml-1" />
+                  Ver integração <ArrowRight className="w-3 h-3 ml-1" />
                 </button>
                 <a
                   href={p.docsHref}
@@ -493,7 +493,7 @@ export default function PlatformCards() {
               href={selected.docsHref}
               className="inline-flex items-center justify-center w-full min-h-[48px] px-4 py-2 border border-brand-border text-brand-text font-semibold text-sm rounded-lg hover:border-brand-accent/60 hover:text-brand-accent transition-colors bg-brand-surface/40"
             >
-              Ver documentacao <ExternalLink className="w-4 h-4 ml-1" />
+              Ver documentação <ExternalLink className="w-4 h-4 ml-1" />
             </a>
           </div>
         </div>

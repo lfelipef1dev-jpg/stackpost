@@ -4,7 +4,7 @@ import { getInstagramAuthUrl } from '@/lib/adapters/instagram-api';
 import { getUserFromToken } from '@/lib/auth';
 
 export async function GET(req: NextRequest) {
-  // Identificar usuario logado via token no cookie ou query param
+  // Identificar usuário logado via token no cookie ou query param
   const authHeader = req.headers.get('authorization');
   const token = authHeader?.startsWith('Bearer ')
     ? authHeader.slice(7)

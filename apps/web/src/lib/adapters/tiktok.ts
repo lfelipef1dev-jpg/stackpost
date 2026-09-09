@@ -12,12 +12,12 @@ export class TikTokAdapter extends PlatformAdapter {
     if (!accessToken) return { success: false, error: normalizeError(new Error('No access token'), this.platform) };
     if (content.length > 2200) return { success: false, error: { code: 'VALIDATION', message: 'TikTok: texto maximo 2200 caracteres.' } };
 
-    // TikTok suporta VIDEO (Photo Mode tambem, mas usa endpoint diferente)
+    // TikTok suporta VIDEO (Photo Mode também, mas usa endpoint diferente)
     const videoUrl = params.videoUrl;
     const imageUrl = params.imageUrl;
 
     if (!videoUrl && !imageUrl) {
-      return { success: false, error: { code: 'VALIDATION', message: 'TikTok: video ou imagem obrigatoria.' } };
+      return { success: false, error: { code: 'VALIDATION', message: 'TikTok: video ou imagem obrigatória.' } };
     }
 
     try {
@@ -88,7 +88,7 @@ export class TikTokAdapter extends PlatformAdapter {
         };
       }
 
-      return { success: false, error: { code: 'VALIDATION', message: 'TikTok: midia obrigatoria.' } };
+      return { success: false, error: { code: 'VALIDATION', message: 'TikTok: mídia obrigatória.' } };
     } catch (error) {
       return { success: false, error: normalizeError(error, this.platform) };
     }

@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
   const body = bodyRaw1;
   const { csv, teamId } = body;
   if (!csv || typeof csv !== 'string') {
-    return NextResponse.json({ error: 'CSV obrigatorio (string)' }, { status: 400 });
+    return NextResponse.json({ error: 'CSV obrigatório (string)' }, { status: 400 });
   }
 
   const supabase = getSupabase();

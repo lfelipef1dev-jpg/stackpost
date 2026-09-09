@@ -4,7 +4,7 @@ import { imports_post_historyBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 
-// POST /api/imports/post-history — importar historico de posts de uma conta
+// POST /api/imports/post-history — importar histórico de posts de uma conta
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
         imported++;
       }
     } else {
-      return NextResponse.json({ error: `Import de historico de ${platform} nao suportado` }, { status: 400 });
+      return NextResponse.json({ error: `Import de histórico de ${platform} nao suportado` }, { status: 400 });
     }
 
     return NextResponse.json({ imported, platform });

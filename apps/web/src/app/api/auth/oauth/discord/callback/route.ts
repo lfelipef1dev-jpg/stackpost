@@ -71,7 +71,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.redirect(new URL(`/login?error=oauth_failed&reason=${encodeURIComponent(tokenData.error || 'token_exchange')}`, BASE_URL));
     }
 
-    // 2. Pegar dados do usuario
+    // 2. Pegar dados do usuário
     const userRes = await fetch('https://discord.com/api/users/@me', {
       headers: { Authorization: `Bearer ${tokenData.access_token}` },
     });
@@ -87,7 +87,7 @@ export async function GET(req: NextRequest) {
       ? `https://cdn.discordapp.com/avatars/${userInfo.id}/${userInfo.avatar}.png`
       : null;
 
-    // 3. Buscar ou criar usuario
+    // 3. Buscar ou criar usuário
     const supabase = getSupabase();
 
     let { data: user } = await supabase
@@ -131,7 +131,7 @@ export async function GET(req: NextRequest) {
         .select('id, team_id, email, name, role')
         .single();
       if (userError || !newUser) {
-        logger.error('Erro ao criar usuario:', userError?.message);
+        logger.error('Erro ao criar usuário:', userError?.message);
         return NextResponse.redirect(new URL('/login?error=oauth_failed&reason=user_create', BASE_URL));
       }
 

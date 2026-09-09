@@ -4,12 +4,12 @@ import { getUserFromToken } from '@/lib/auth';
 
 const platformTones: Record<string, string> = {
   instagram: 'Engajador, com emojis e hashtags. Ideal 150-300 caracteres.',
-  linkedin: 'Profissional, com call-to-action. Ate 3000 caracteres.',
+  linkedin: 'Profissional, com call-to-action. Até 3000 caracteres.',
   x: 'Direto e impactante. Max 280 caracteres.',
   facebook: 'Conversacional. 100-300 caracteres.',
   tiktok: 'Jovem, trending, com hashtags.',
-  threads: 'Conversacional, ate 500 caracteres.',
-  youtube: 'Descritivo e amigavel. Ate 5000 caracteres.',
+  threads: 'Conversacional, até 500 caracteres.',
+  youtube: 'Descritivo e amigavel. Até 5000 caracteres.',
   pinterest: 'Inspirador e com palavras-chave.',
 };
 
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
   const parsed1 = ai_rewriteBodySchema.safeParse(bodyRaw1);
   if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
   const { content, platform, tone } = bodyRaw1;
-  if (!content) return NextResponse.json({ error: 'Conteudo obrigatorio' }, { status: 400 });
+  if (!content) return NextResponse.json({ error: 'Conteúdo obrigatório' }, { status: 400 });
 
   const apiKey = process.env.OPENAI_API_KEY || process.env.NEXUS_IA_API_KEY;
   if (!apiKey) {

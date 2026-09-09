@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
         platform: tx.platform,
         amount: -Math.abs(tx.amount),
         type: 'expiration',
-        description: `Expiracao de creditos - tx ${tx.id}`,
+        description: `Expiracao de créditos - tx ${tx.id}`,
         reference_id: tx.id,
         created_at: now,
       });

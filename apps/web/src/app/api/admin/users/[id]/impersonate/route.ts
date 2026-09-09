@@ -19,7 +19,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     .single();
 
   if (!user) {
-    return NextResponse.json({ error: 'Usuario nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Usuário nao encontrado' }, { status: 404 });
   }
 
   const token = await createToken({

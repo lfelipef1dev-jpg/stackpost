@@ -8,11 +8,11 @@ import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Changelog - StackPost',
-  description: 'Historico de atualizacoes do StackPost. Novas funcionalidades, correcoes e melhorias.',
+  description: 'Histórico de atualizacoes do StackPost. Novas funcionalidades, correcoes e melhorias.',
   alternates: { canonical: '/changelog' },
 };
 
-const jsonLd = serviceSchema('StackPost Changelog', 'Historico de atualizacoes.', '/changelog');
+const jsonLd = serviceSchema('StackPost Changelog', 'Histórico de atualizacoes.', '/changelog');
 
 type Entry = {
   type: 'feature' | 'fix' | 'improvement';
@@ -32,7 +32,7 @@ const releases: Release[] = [
     entries: [
       { type: 'feature', text: 'Login OAuth com Google e Discord direto pelo StackPost' },
       { type: 'feature', text: 'Landing pages SEO por plataforma (Instagram, Facebook, LinkedIn, Discord)' },
-      { type: 'feature', text: 'Pagina de comparacao com concorrentes' },
+      { type: 'feature', text: 'Página de comparação com concorrentes' },
       { type: 'feature', text: 'Roadmap publico' },
       { type: 'feature', text: 'Status page e Changelog' },
       { type: 'fix', text: 'postType (POST/REEL/STORY) agora persistido no banco' },
@@ -53,7 +53,7 @@ const releases: Release[] = [
       { type: 'feature', text: 'SDK TypeScript, Python e Go gerados de OpenAPI 3.1' },
       { type: 'feature', text: 'Comment to DM no Instagram e Facebook' },
       { type: 'feature', text: 'A/B testing de postagens' },
-      { type: 'improvement', text: 'Analytics com comparacao de periodos' },
+      { type: 'improvement', text: 'Analytics com comparação de periodos' },
       { type: 'improvement', text: 'Upload TUS e URL import' },
     ],
   },
@@ -65,7 +65,7 @@ const releases: Release[] = [
       { type: 'feature', text: 'Webhooks com HMAC, retry e replay' },
       { type: 'feature', text: 'Approval workflow (Draft -> Review -> Approved -> Scheduled)' },
       { type: 'feature', text: 'Best-time ML para agendamento' },
-      { type: 'feature', text: 'Primeiro comentario automatico' },
+      { type: 'feature', text: 'Primeiro comentário automático' },
       { type: 'improvement', text: '15 plataformas suportadas' },
       { type: 'improvement', text: '114 endpoints REST' },
     ],

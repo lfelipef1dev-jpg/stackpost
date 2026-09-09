@@ -3,7 +3,7 @@ interface JsonLdProps {
 }
 
 /**
- * Injeta JSON-LD no <head> da pagina.
+ * Injeta JSON-LD no <head> da página.
  * Uso: <JsonLd data={breadcrumbSchema} />
  */
 export function JsonLd({ data }: JsonLdProps) {
@@ -56,7 +56,7 @@ export function softwareApplicationSchema(name: string, description: string, pat
 }
 
 /**
- * Schema Service para paginas de API especificas.
+ * Schema Service para páginas de API especificas.
  */
 export function serviceSchema(name: string, description: string, path: string) {
   return {

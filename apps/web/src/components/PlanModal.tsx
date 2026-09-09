@@ -15,7 +15,7 @@ const plans = [
     id: 'starter',
     name: 'Inicial',
     price: 39,
-    features: ['5 contas sociais', '2.000 posts/mes', '2 usuarios'],
+    features: ['5 contas sociais', '2.000 posts/mes', '2 usuários'],
     popular: true,
   },
   {
@@ -52,7 +52,7 @@ export default function PlanModal({ currentPlan, onClose }: { currentPlan: strin
         </button>
 
         <h2 className="text-2xl font-bold mb-2">Mudar de plano</h2>
-        <p className="text-brand-text-secondary mb-8">Escolha o plano que faz sentido para voce.</p>
+        <p className="text-brand-text-secondary mb-8">Escolha o plano que faz sentido para você.</p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
           {plans.map((plan) => (

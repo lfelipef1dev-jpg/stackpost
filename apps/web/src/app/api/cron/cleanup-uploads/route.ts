@@ -3,7 +3,7 @@ import { logger } from '@/lib/logger';
 import { getSupabase } from '@/lib/supabase';
 
 // Cron: Limpar uploads temporarios antigos (mais de 7 dias)
-// Trigger: Cloudflare Workers Cron Triggers (diario)
+// Trigger: Cloudflare Workers Cron Triggers (diário)
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get('authorization');
   const cronSecret = process.env.CRON_SECRET;

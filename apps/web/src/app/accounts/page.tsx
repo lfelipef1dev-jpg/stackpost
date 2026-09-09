@@ -5,6 +5,7 @@ import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { PlatformIcon } from '@/components/PlatformIcon';
 import { PLATFORMS } from '@/lib/platforms';
+import { publishableAccounts } from '@/lib/accounts';
 import { useEffect, useState, useRef } from 'react';
 import {
   RefreshCw, Trash2, AlertCircle, CheckCircle2, Clock, Loader2, Zap,
@@ -163,7 +164,7 @@ export default function AccountsPage() {
     try {
       const res = await fetch('/api/accounts');
       const data = await res.json();
-      const visible = (Array.isArray(data) ? data : []).filter((a: any) => a.platform !== 'meta_user');
+      const visible = publishableAccounts(Array.isArray(data) ? data : []);
       setAccounts(visible);
     } catch {}
     setLoading(false);
@@ -738,7 +739,7 @@ export default function AccountsPage() {
             </div>
             <p className="text-sm text-brand-text-secondary mb-5">
               {bulkConfirm === 'delete'
-                ? `Tem certeza que deseja excluir ${selectedIds.length} conta${selectedIds.length > 1 ? 's' : ''}? Esta ação não pode ser desfeita.`
+                ? `Tem certeza que deseja excluir ${selectedIds.length} conta${selectedIds.length > 1 ? 's' : ''}? Está ação não pode ser desfeita.`
                 : `Tem certeza que deseja renovar o token de ${selectedIds.length} conta${selectedIds.length > 1 ? 's' : ''}?`}
             </p>
             <div className="flex gap-2">

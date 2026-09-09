@@ -9,7 +9,7 @@ export class DiscordAdapter extends PlatformAdapter {
     const webhookUrl = params.account?.access_token || (params.account?.platform_metadata as any)?.webhook_url;
     const content = params.content;
 
-    if (!webhookUrl) return { success: false, error: normalizeError(new Error('Webhook URL obrigatorio'), this.platform) };
+    if (!webhookUrl) return { success: false, error: normalizeError(new Error('Webhook URL obrigatório'), this.platform) };
     if (!webhookUrl.startsWith('https://discord.com/api/webhooks/') && !webhookUrl.startsWith('https://discordapp.com/api/webhooks/')) {
       return { success: false, error: normalizeError(new Error('URL de webhook Discord invalido'), this.platform) };
     }

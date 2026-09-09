@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
   const state = searchParams.get('state') || 'facebook';
 
   if (!code) {
-    return NextResponse.json({ error: 'Codigo nao informado' }, { status: 400 });
+    return NextResponse.json({ error: 'Código nao informado' }, { status: 400 });
   }
 
   const teamId = state.includes(':') ? state.split(':')[0] : null;
@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
       ? new Date(Date.now() + longLivedData.expires_in * 1000).toISOString()
       : null;
 
-    // 3. Listar TODAS as Pages do usuario (com page_access_token, avatar, followers)
+    // 3. Listar TODAS as Pages do usuário (com page_access_token, avatar, followers)
     const pagesRes = await fetch(
       `https://graph.facebook.com/v26.0/me/accounts?fields=id,name,access_token,picture,followers_count,tasks&limit=100&access_token=${userAccessToken}`
     );
@@ -120,7 +120,7 @@ export async function GET(req: NextRequest) {
         status: 'active',
       };
 
-      // Verificar se ja existe uma conta para esta Page (mesmo external_id)
+      // Verificar se já existe uma conta para esta Page (mesmo external_id)
       const { data: existingPage } = await supabase
         .from('social_accounts')
         .select('id')

@@ -96,7 +96,7 @@ export default function DiscordApiPage() {
           <ScrollReveal>
             <h2 className="text-3xl font-black text-brand-text mb-4">Quick start</h2>
             <p className="text-brand-text-secondary mb-6">
-              Instale o SDK e envie mensagens via webhook no Discord em poucas linhas. OAuth2 com webhook.incoming ja incluido.
+              Instale o SDK e envie mensagens via webhook no Discord em poucas linhas. OAuth2 com webhook.incoming já incluido.
             </p>
             <pre className="p-6 rounded-xl bg-brand-surface border border-brand-border overflow-x-auto text-sm font-mono text-brand-text-secondary">
               <code>{`npm install @stackpost/sdk

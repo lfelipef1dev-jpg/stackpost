@@ -3,7 +3,7 @@ import { accounts_refresh_channelsBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 
-// POST /api/accounts/refresh-channels — buscar channels/pages disponiveis da plataforma
+// POST /api/accounts/refresh-channels — buscar channels/pages disponíveis da plataforma
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   const parsed1 = accounts_refresh_channelsBodySchema.safeParse(bodyRaw1);
   if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
   const { accountId } = bodyRaw1;
-  if (!accountId) return NextResponse.json({ error: 'accountId obrigatorio' }, { status: 400 });
+  if (!accountId) return NextResponse.json({ error: 'accountId obrigatório' }, { status: 400 });
 
   const supabase = getSupabase();
 
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     let channels: any[] = [];
 
     if (account.platform === 'facebook') {
-      // Buscar Pages do usuario
+      // Buscar Pages do usuário
       const res = await fetch(
         `https://graph.facebook.com/v26.0/me/accounts?fields=id,name,access_token,picture,followers_count&access_token=${account.access_token}`
       );

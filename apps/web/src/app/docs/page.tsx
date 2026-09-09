@@ -95,7 +95,7 @@ export default function DocsPage() {
         </div>
       </section>
 
-      {/* Conteudo com sidebar */}
+      {/* Conteúdo com sidebar */}
       <div className="max-w-6xl mx-auto px-4 pb-20">
         <div className="grid lg:grid-cols-[240px_1fr] gap-10">
           {/* Sidebar */}
@@ -103,9 +103,9 @@ export default function DocsPage() {
             <DocsSidebar />
           </aside>
 
-          {/* Conteudo principal */}
+          {/* Conteúdo principal */}
           <div className="min-w-0">
-            {/* Guia do usuario */}
+            {/* Guia do usuário */}
             <section className="pb-16">
               <ScrollReveal className="mb-8">
                 <h2 className="text-2xl font-bold mb-2">Guia do usuário</h2>

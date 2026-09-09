@@ -10,7 +10,7 @@ const IG_APP_ID = process.env.IG_APP_ID || META_APP_ID;
 const IG_APP_SECRET = process.env.IG_APP_SECRET || META_APP_SECRET;
 
 export function getInstagramAuthUrl(stateToken?: string): string {
-  // Business Login for Instagram - permissoes instagram_business_* ja ativadas
+  // Business Login for Instagram - permissões instagram_business_* já ativadas
   // https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/business-login/
   const scopes = [
     'instagram_business_basic',
@@ -56,7 +56,7 @@ export async function handleInstagramCallback(code: string) {
   const expiresIn = longLived.expires_in || 3600;
   const userId = data.user_id;
 
-  // Obter perfil do usuario
+  // Obter perfil do usuário
   const profileRes = await fetch(
     `https://graph.instagram.com/me?fields=id,username&access_token=${accessToken}`
   );
@@ -81,7 +81,7 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
 
   if (!igUserId) return { success: false, error: 'Instagram: external_id nao encontrado na conta.' };
 
-  // CAROUSEL: criar container para cada midia, depois container pai
+  // CAROUSEL: criar container para cada mídia, depois container pai
   if (mediaType === 'CAROUSEL' && carouselUrls && carouselUrls.length > 0) {
     const childrenIds: string[] = [];
     for (const url of carouselUrls.slice(0, 10)) {
@@ -114,7 +114,7 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
         const statusData = await statusRes.json();
         if (statusData.status_code === 'FINISHED') break;
         if (statusData.status_code === 'ERROR') {
-          return { success: false, error: `Erro ao processar midia do carrossel (child ${childId})` };
+          return { success: false, error: `Erro ao processar mídia do carrossel (child ${childId})` };
         }
         await new Promise((r) => setTimeout(r, 3000));
         retries++;
@@ -152,14 +152,14 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
     return { success: true, externalId: publish.id };
   }
 
-  // Criar container de midia - parametros diferentes pra video, imagem e story
+  // Criar container de mídia - parametros diferentes pra video, imagem e story
   const params: Record<string, string> = {
     access_token: token,
   };
 
   if (mediaType === 'STORY') {
     // Instagram Content Publishing API (graph.instagram.com) NAO suporta stories.
-    // Stories exigem o endpoint /stories dedicado que nao esta disponivel via Business Login.
+    // Stories exigem o endpoint /stories dedicado que nao está disponível via Business Login.
     // Retornar erro claro em vez de tentar e falhar silenciosamente.
     return {
       success: false,
@@ -210,7 +210,7 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
 
   if (publish.error) return { success: false, error: publish.error.error_user_msg || publish.error.message };
 
-  // First comment (regra do bundle: max 2.200, ja validado no adapter)
+  // First comment (regra do bundle: max 2.200, já validado no adapter)
   if (firstComment?.trim() && publish.id) {
     await fetch(`https://graph.instagram.com/v23.0/${publish.id}/comments`, {
       method: 'POST',

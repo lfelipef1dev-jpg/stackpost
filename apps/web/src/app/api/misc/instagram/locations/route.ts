@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   const parsedQuery = misc_instagram_locationsQuerySchema.safeParse(queryRaw);
   if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const query = searchParams.get('q');
-  if (!query) return NextResponse.json({ error: 'q obrigatorio' }, { status: 400 });
+  if (!query) return NextResponse.json({ error: 'q obrigatório' }, { status: 400 });
 
   const supabase = getSupabase();
   const { data: account } = await supabase

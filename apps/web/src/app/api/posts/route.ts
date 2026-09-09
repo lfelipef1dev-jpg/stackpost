@@ -107,7 +107,7 @@ export async function PUT(req: NextRequest) {
   const body = bodyRaw2;
   const { id, content, platforms, uploadIds, scheduledAt, status, firstComment, derivatives, postType } = body;
 
-  if (!id) return NextResponse.json({ error: 'ID obrigatorio' }, { status: 400 });
+  if (!id) return NextResponse.json({ error: 'ID obrigatório' }, { status: 400 });
 
   const allowedStatuses = ['draft', 'review', 'approved', 'scheduled', 'processing', 'posted', 'error'];
   const newStatus = status || (scheduledAt ? 'scheduled' : 'draft');
@@ -159,7 +159,7 @@ export async function DELETE(req: NextRequest) {
   const idParsed1 = uuidSchema.safeParse(idRaw);
   if (!idParsed1.success) return NextResponse.json({ error: 'id inválido ou ausente' }, { status: 400 });
   const id = idParsed1.data;
-  if (!id) return NextResponse.json({ error: 'ID obrigatorio' }, { status: 400 });
+  if (!id) return NextResponse.json({ error: 'ID obrigatório' }, { status: 400 });
 
   try {
     const supabase = getSupabase();

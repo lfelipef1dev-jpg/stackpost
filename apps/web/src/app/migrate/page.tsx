@@ -27,7 +27,7 @@ const mapping = [
   { ay: 'GET /api/posts', sp: 'GET /api/posts', note: 'Listagem com paginacao cursor' },
   { ay: 'DELETE /api/post/{id}', sp: 'DELETE /api/posts/{id}', note: 'Mesma assinatura' },
   { ay: 'GET /api/analytics', sp: 'GET /api/analytics/posts/{id}', note: 'Analytics por post' },
-  { ay: 'GET /api/user', sp: 'GET /api/me', note: 'Dados do usuario logado' },
+  { ay: 'GET /api/user', sp: 'GET /api/me', note: 'Dados do usuário logado' },
   { ay: 'API Key header', sp: 'Authorization: Bearer', note: 'Bearer token no header' },
   { ay: 'platforms: ["facebook"]', sp: 'platforms: ["facebook"]', note: 'Mesmo formato de array' },
   { ay: 'mediaUrls: ["..."]', sp: 'media: [{ type: "image", url: "..." }]', note: 'Formato estruturado' },
@@ -55,7 +55,7 @@ export default function MigratePage() {
               Migre para StackPost em horas
             </h1>
             <p className="text-lg text-brand-text-secondary max-w-2xl mx-auto">
-              Troque de provider sem reescrever seu produto. Mapeamento de endpoints, exemplos de codigo e zero downtime.
+              Troque de provider sem reescrever seu produto. Mapeamento de endpoints, exemplos de código e zero downtime.
             </p>
           </FadeIn>
         </div>

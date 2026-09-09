@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   const parsed1 = accounts_unset_channelBodySchema.safeParse(bodyRaw1);
   if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
   const { accountId } = bodyRaw1;
-  if (!accountId) return NextResponse.json({ error: 'accountId obrigatorio' }, { status: 400 });
+  if (!accountId) return NextResponse.json({ error: 'accountId obrigatório' }, { status: 400 });
 
   const supabase = getSupabase();
 

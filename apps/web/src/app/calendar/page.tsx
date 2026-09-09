@@ -119,10 +119,15 @@ export default function CalendarPage() {
   const router = useRouter();
 
   useEffect(() => {
+    let cancelled = false;
     setLoading(true);
     fetch('/api/posts')
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
       .then((data) => {
+        if (cancelled) return;
         const items = Array.isArray(data) ? data : (data.items || []);
         // Enriquecer dados mock para demonstração comercial
         const enriched = items.map((p: any, i: number) => ({
@@ -133,8 +138,15 @@ export default function CalendarPage() {
           workspace: p.workspace || 'stackpost',
         }));
         setPosts(enriched);
-        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('[calendar] Falha ao carregar posts:', err);
+        if (!cancelled) setPosts([]);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
       });
+    return () => { cancelled = true; };
   }, []);
 
   const year = currentDate.getFullYear();

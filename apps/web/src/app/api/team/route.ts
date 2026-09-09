@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     if (userError) throw userError;
 
     if (!userData) {
-      return NextResponse.json({ error: 'Usuario nao encontrado. Peça para se cadastrar primeiro.' }, { status: 404 });
+      return NextResponse.json({ error: 'Usuário nao encontrado. Peça para se cadastrar primeiro.' }, { status: 404 });
     }
 
     const userId = userData.id;
@@ -120,7 +120,7 @@ export async function DELETE(req: NextRequest) {
   const idParsed1 = uuidSchema.safeParse(idRaw);
   if (!idParsed1.success) return NextResponse.json({ error: 'id inválido ou ausente' }, { status: 400 });
   const id = idParsed1.data;
-  if (!id) return NextResponse.json({ error: 'ID obrigatorio' }, { status: 400 });
+  if (!id) return NextResponse.json({ error: 'ID obrigatório' }, { status: 400 });
 
   const supabase = getSupabase();
 

@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
   const supabase = getSupabase();
 
   try {
-    // Verificar que o usuario tem acesso ao targetTeamId
+    // Verificar que o usuário tem acesso ao targetTeamId
     const { data: teamMember } = await supabase
       .from('team_members')
       .select('team_id')

@@ -18,14 +18,14 @@ export async function POST(req: NextRequest) {
     const email = (body.email || '').trim().toLowerCase();
     const role = (body.role || 'editor').toLowerCase();
 
-    if (!email) return NextResponse.json({ error: 'Email obrigatorio' }, { status: 400 });
+    if (!email) return NextResponse.json({ error: 'Email obrigatório' }, { status: 400 });
     if (!VALID_ROLES.includes(role)) {
       return NextResponse.json({ error: 'Role invalido. Use: admin, editor ou viewer' }, { status: 400 });
     }
 
     const supabase = getSupabase();
 
-    // 1. Buscar usuario pelo email
+    // 1. Buscar usuário pelo email
     const { data: targetUser, error: userErr } = await supabase
       .from('users')
       .select('id, name, email')
@@ -34,10 +34,10 @@ export async function POST(req: NextRequest) {
 
     if (userErr) throw userErr;
     if (!targetUser) {
-      return NextResponse.json({ error: 'Usuario nao encontrado. Peça para ele se cadastrar primeiro.' }, { status: 404 });
+      return NextResponse.json({ error: 'Usuário nao encontrado. Peça para ele se cadastrar primeiro.' }, { status: 404 });
     }
 
-    // 2. Verificar se ja e membro
+    // 2. Verificar se já e membro
     const { data: existing } = await supabase
       .from('team_members')
       .select('id')
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
       .maybeSingle();
 
     if (existing) {
-      return NextResponse.json({ error: 'Usuario ja e membro do time' }, { status: 400 });
+      return NextResponse.json({ error: 'Usuário já e membro do time' }, { status: 400 });
     }
 
     // 3. Adicionar como membro

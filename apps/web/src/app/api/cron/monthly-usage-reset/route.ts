@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 
 // Cron: Resetar contadores de uso mensal (dia 1 de cada mes)
-// Trigger: Cloudflare Workers Cron Triggers (diario, verifica dia 1)
+// Trigger: Cloudflare Workers Cron Triggers (diário, verifica dia 1)
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get('authorization');
   const cronSecret = process.env.CRON_SECRET;

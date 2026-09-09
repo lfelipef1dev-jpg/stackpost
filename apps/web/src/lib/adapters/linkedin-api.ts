@@ -121,7 +121,7 @@ export async function publishToLinkedIn(account: any, content: string, imageUrl:
 
     if (!uploadRes.ok) return { success: false, error: 'Falha no upload do video' };
 
-    // Publicar com status READY - LinkedIn processa async apos publicacao
+    // Publicar com status READY - LinkedIn processa async após publicação
     // (Polling dentro do Worker estoura o CPU time limit do Cloudflare)
     const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
       method: 'POST',
@@ -211,7 +211,7 @@ export async function publishToLinkedIn(account: any, content: string, imageUrl:
     return { success: true, externalId: post.id };
   }
 
-  // MULTI-MIDIA (ate 10 imagens)
+  // MULTI-MIDIA (até 10 imagens)
   if (mediaUrls && mediaUrls.length > 1) {
     const mediaItems: any[] = [];
     for (const url of mediaUrls.slice(0, 10)) {
@@ -245,7 +245,7 @@ export async function publishToLinkedIn(account: any, content: string, imageUrl:
         body: imgBlob,
       });
       if (!uploadRes.ok) {
-        return { success: false, error: `Falha no upload de midia LinkedIn (HTTP ${uploadRes.status})` };
+        return { success: false, error: `Falha no upload de mídia LinkedIn (HTTP ${uploadRes.status})` };
       }
 
       mediaItems.push({ status: 'READY', description: { text: content.slice(0, 200) }, media: asset });

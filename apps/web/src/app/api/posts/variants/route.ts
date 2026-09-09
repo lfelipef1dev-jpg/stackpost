@@ -117,7 +117,7 @@ export async function PUT(req: NextRequest) {
   const body = bodyRaw2;
   const { id, weight, status, metrics } = body;
 
-  if (!id) return NextResponse.json({ error: 'id obrigatorio' }, { status: 400 });
+  if (!id) return NextResponse.json({ error: 'id obrigatório' }, { status: 400 });
 
   try {
     const supabase = getSupabase();

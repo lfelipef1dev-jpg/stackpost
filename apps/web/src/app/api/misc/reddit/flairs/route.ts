@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   const parsedQuery = misc_reddit_flairsQuerySchema.safeParse(queryRaw);
   if (!parsedQuery.success) return NextResponse.json({ error: parsedQuery.error.issues }, { status: 400 });
   const subreddit = searchParams.get('subreddit');
-  if (!subreddit) return NextResponse.json({ error: 'subreddit obrigatorio' }, { status: 400 });
+  if (!subreddit) return NextResponse.json({ error: 'subreddit obrigatório' }, { status: 400 });
 
   const supabase = getSupabase();
   const { data: account } = await supabase

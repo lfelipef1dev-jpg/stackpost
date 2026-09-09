@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
 
     const supabase = getSupabase();
 
-    // Upsert - se ja foi inserido pelo presign, atualizar; se nao, inserir
+    // Upsert - se já foi inserido pelo presign, atualizar; se nao, inserir
     const { data, error } = await supabase
       .from('uploads')
       .upsert({

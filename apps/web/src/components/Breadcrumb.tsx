@@ -8,7 +8,7 @@ interface BreadcrumbProps {
 
 /**
  * Breadcrumb visual + Schema BreadcrumbList.
- * O primeiro item deve ser a home, o ultimo e a pagina atual.
+ * O primeiro item deve ser a home, o último e a página atual.
  */
 export function Breadcrumb({ items }: BreadcrumbProps) {
   const schema = breadcrumbSchema(items);

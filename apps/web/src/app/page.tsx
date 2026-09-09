@@ -12,7 +12,7 @@ import LandingHeader from '@/components/LandingHeader';
 
 export const metadata: Metadata = {
   title: 'StackPost - API unificada de redes sociais para SaaS, agências e AI agents',
-  description: 'StackPost é a API unificada de redes sociais: poste, agende, analise e modere em 15 plataformas por uma única integração. 114 endpoints, MCP server, AI caption, A/B testing, analytics histórico e contas ilimitadas. Plano gratuito para sempre.',
+  description: 'StackPost é a API unificada de redes sociais: poste, agende, análise e modere em 15 plataformas por uma única integração. 114 endpoints, MCP server, AI caption, A/B testing, analytics histórico e contas ilimitadas. Plano gratuito para sempre.',
   alternates: { canonical: '/' },
 };
 

@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
   const { content, platform } = body;
 
   if (!content || content.length < 3) {
-    return NextResponse.json({ error: 'Conteudo muito curto' }, { status: 400 });
+    return NextResponse.json({ error: 'Conteúdo muito curto' }, { status: 400 });
   }
 
   // Platform-specific hashtag limits

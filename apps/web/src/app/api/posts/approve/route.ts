@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
 
   const newStatus = actions[action];
   if (!newStatus) {
-    return NextResponse.json({ error: 'Acao invalida' }, { status: 400 });
+    return NextResponse.json({ error: 'Ação invalida' }, { status: 400 });
   }
 
   try {

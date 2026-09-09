@@ -11,7 +11,7 @@ export class RedditAdapter extends PlatformAdapter {
     const content = params.content;
 
     if (!accessToken) return { success: false, error: normalizeError(new Error('No access token'), this.platform) };
-    if (!subreddit) return { success: false, error: normalizeError(new Error('Subreddit obrigatorio'), this.platform) };
+    if (!subreddit) return { success: false, error: normalizeError(new Error('Subreddit obrigatório'), this.platform) };
     if (content.length > 300) return { success: false, error: { code: 'VALIDATION', message: 'Reddit: titulo maximo 300 caracteres.' } };
 
     try {

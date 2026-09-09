@@ -2,8 +2,8 @@ import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 
-// Cron: Importar historico de posts das plataformas conectadas
-// Trigger: Cloudflare Workers Cron Triggers (diario)
+// Cron: Importar histórico de posts das plataformas conectadas
+// Trigger: Cloudflare Workers Cron Triggers (diário)
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get('authorization');
   const cronSecret = process.env.CRON_SECRET;

@@ -1,6 +1,6 @@
 /**
  * lib/mercadopago.ts
- * Integracao com Mercado Pago (Checkout Preferences + PIX + Webhook).
+ * Integração com Mercado Pago (Checkout Preferences + PIX + Webhook).
  * Compativel com Cloudflare Workers (fetch nativo).
  * Adaptado do NEXUS-IA para StackPost.
  */
@@ -119,7 +119,7 @@ export async function criarPreferencia(
   const preferenceId = prefData.id;
   const initPoint = prefData.init_point || prefData.sandbox_init_point || "";
 
-  // 2) Cria o pagamento PIX (QR Code) usando a mesma referencia
+  // 2) Cria o pagamento PIX (QR Code) usando a mesma referência
   const pixBody = {
     transaction_amount: payload.valor,
     description: `StackPost - Plano ${planoLabel}`,
@@ -178,7 +178,7 @@ export async function criarPreferencia(
 }
 
 /**
- * Cria uma preferencia de pagamento para creditos X (pay-as-you-go).
+ * Cria uma preferencia de pagamento para créditos X (pay-as-you-go).
  */
 export async function criarPreferenciaCreditos(
   payload: CriarPreferenciaCreditosPayload,
@@ -200,8 +200,8 @@ export async function criarPreferenciaCreditos(
     items: [
       {
         id: "creditos-x",
-        title: "StackPost - Creditos X",
-        description: `Creditos para publicacao na API do X/Twitter - R$ ${payload.valor.toFixed(2)}`,
+        title: "StackPost - Créditos X",
+        description: `Créditos para publicação na API do X/Twitter - R$ ${payload.valor.toFixed(2)}`,
         quantity: 1,
         unit_price: payload.valor,
         currency_id: "BRL",
@@ -257,10 +257,10 @@ export async function criarPreferenciaCreditos(
   const preferenceId = prefData.id;
   const initPoint = prefData.init_point || prefData.sandbox_init_point || "";
 
-  // 2) Cria o pagamento PIX (QR Code) usando a mesma referencia
+  // 2) Cria o pagamento PIX (QR Code) usando a mesma referência
   const pixBody = {
     transaction_amount: payload.valor,
-    description: "StackPost - Creditos X",
+    description: "StackPost - Créditos X",
     payment_method_id: "pix",
     payer: {
       email: payload.email,

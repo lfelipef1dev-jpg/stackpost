@@ -128,13 +128,13 @@ async function handleSubscriptionAuthorizedPayment(paymentId: string): Promise<R
       .eq('payment_id', paymentId)
       .maybeSingle();
     if (jaProcessado) {
-      return NextResponse.json({ ok: true, mensagem: 'Pagamento de assinatura ja processado.' });
+      return NextResponse.json({ ok: true, mensagem: 'Pagamento de assinatura já processado.' });
     }
 
     // Busca detalhes do pagamento no MP
     const resultado = await processarWebhook({ type: 'payment', data: { id: paymentId } });
     if (resultado.status !== 'approved') {
-      return NextResponse.json({ ok: true, mensagem: 'Cobranca de assinatura nao aprovada.' });
+      return NextResponse.json({ ok: true, mensagem: 'Cobrança de assinatura não aprovada.' });
     }
 
     const externalRef = resultado.external_reference || '';
@@ -145,7 +145,7 @@ async function handleSubscriptionAuthorizedPayment(paymentId: string): Promise<R
       .maybeSingle();
 
     if (!sub) {
-      return NextResponse.json({ ok: true, mensagem: 'Subscription nao encontrada para cobranca.' });
+      return NextResponse.json({ ok: true, mensagem: 'Subscription nao encontrada para cobrança.' });
     }
 
     // Avança o período da assinatura
@@ -196,11 +196,11 @@ async function handleSubscriptionAuthorizedPayment(paymentId: string): Promise<R
       description: `Assinatura StackPost - Plano ${sub.plan_slug}`,
     });
 
-    return NextResponse.json({ ok: true, mensagem: 'Cobranca de assinatura processada.' });
+    return NextResponse.json({ ok: true, mensagem: 'Cobrança de assinatura processada.' });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     logger.error('[webhook/subscription_authorized_payment] Erro:', msg);
-    return NextResponse.json({ ok: false, error: 'Erro ao processar cobranca de assinatura.' }, { status: 500 });
+    return NextResponse.json({ ok: false, error: 'Erro ao processar cobrança de assinatura.' }, { status: 500 });
   }
 }
 
@@ -246,14 +246,14 @@ export async function POST(request: Request) {
     const resultado = await processarWebhook(payload);
 
     if (resultado.status === 'ignored' || resultado.status === 'no_payment_id') {
-      return NextResponse.json({ ok: true, mensagem: 'Notificacao ignorada.' });
+      return NextResponse.json({ ok: true, mensagem: 'Notificação ignorada.' });
     }
 
     const externalReference = resultado.external_reference;
     const paymentId = resultado.payment_id;
 
     if (!externalReference) {
-      return NextResponse.json({ ok: true, mensagem: 'Sem referencia externa.' }, { status: 200 });
+      return NextResponse.json({ ok: true, mensagem: 'Sem referência externa.' }, { status: 200 });
     }
 
     if (paymentId) {
@@ -264,7 +264,7 @@ export async function POST(request: Request) {
         .maybeSingle();
 
       if (jaProcessado) {
-        return NextResponse.json({ ok: true, mensagem: 'Pagamento ja processado.' }, { status: 200 });
+        return NextResponse.json({ ok: true, mensagem: 'Pagamento já processado.' }, { status: 200 });
       }
     }
 
@@ -279,7 +279,7 @@ export async function POST(request: Request) {
     }
 
     if (order.status === 'paid') {
-      return NextResponse.json({ ok: true, mensagem: 'Pedido ja processado.' }, { status: 200 });
+      return NextResponse.json({ ok: true, mensagem: 'Pedido já processado.' }, { status: 200 });
     }
 
     if (resultado.status !== 'approved') {
@@ -315,7 +315,7 @@ export async function POST(request: Request) {
         }, { onConflict: 'team_id' });
 
       if (errUpsert) {
-        return NextResponse.json({ ok: false, error: 'Falha ao adicionar creditos.' }, { status: 500 });
+        return NextResponse.json({ ok: false, error: 'Falha ao adicionar créditos.' }, { status: 500 });
       }
 
       await supabase
@@ -337,7 +337,7 @@ export async function POST(request: Request) {
         });
       }
 
-      return NextResponse.json({ ok: true, mensagem: 'Creditos adicionados com sucesso.' }, { status: 200 });
+      return NextResponse.json({ ok: true, mensagem: 'Créditos adicionados com sucesso.' }, { status: 200 });
     }
 
     const { error: errUpdate } = await supabase

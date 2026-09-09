@@ -6,11 +6,11 @@ import { useRouter } from 'next/navigation';
 const nav = [
   { href: '/dashboard', label: 'Painel' },
   { href: '/composer', label: 'Criar post' },
-  { href: '/calendar', label: 'Calendario' },
+  { href: '/calendar', label: 'Calendário' },
   { href: '/accounts', label: 'Contas' },
-  { href: '/analytics', label: 'Metricas' },
-  { href: '/billing', label: 'Cobranca' },
-  { href: '/settings', label: 'Config' },
+  { href: '/analytics', label: 'Métricas' },
+  { href: '/billing', label: 'Cobrança' },
+  { href: '/settings', label: 'Configurações' },
 ];
 
 export default function Header({ activeHref }: { activeHref?: string }) {

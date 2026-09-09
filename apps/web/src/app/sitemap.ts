@@ -27,7 +27,7 @@ const staticPages = [
   '/comparisons',
   '/terms',
   '/privacy',
-  // Novas paginas comerciais
+  // Novas páginas comerciais
   '/compare',
   '/roadmap',
   '/demo',

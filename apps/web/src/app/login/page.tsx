@@ -171,7 +171,7 @@ function LoginForm() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 rounded-xl bg-brand-elevated border border-brand-border text-brand-text focus:outline-none focus:border-brand-accent transition-colors"
-                    placeholder="voce@stackpost.com.br"
+                    placeholder="você@stackpost.com.br"
                     autoComplete="email"
                     required
                   />

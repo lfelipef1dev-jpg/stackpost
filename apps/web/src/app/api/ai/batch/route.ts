@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
   const parsed1 = ai_batchBodySchema.safeParse(bodyRaw1);
   if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
   const { topic, days = 7, platform } = bodyRaw1;
-  if (!topic) return NextResponse.json({ error: 'Tema obrigatorio' }, { status: 400 });
+  if (!topic) return NextResponse.json({ error: 'Tema obrigatório' }, { status: 400 });
 
   const apiKey = process.env.OPENAI_API_KEY || process.env.NEXUS_IA_API_KEY;
   if (!apiKey) {
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     body: JSON.stringify({
       model: 'gpt-4o-mini',
       messages: [
-        { role: 'system', content: `Gere ${days} posts para ${platform || 'Instagram'} sobre "${topic}". Cada post deve ter conteudo unico e curto. Retorne apenas os posts, um por linha, sem numeracao.` },
+        { role: 'system', content: `Gere ${days} posts para ${platform || 'Instagram'} sobre "${topic}". Cada post deve ter conteúdo unico e curto. Retorne apenas os posts, um por linha, sem numeracao.` },
         { role: 'user', content: topic },
       ],
       max_tokens: 700,

@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
   const parsed1 = audit_logsBodySchema.safeParse(bodyRaw1);
   if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
   const { action, resource, resourceId, metadata } = bodyRaw1;
-  if (!action) return NextResponse.json({ error: 'action obrigatorio' }, { status: 400 });
+  if (!action) return NextResponse.json({ error: 'action obrigatório' }, { status: 400 });
 
   const supabase = getSupabase();
 

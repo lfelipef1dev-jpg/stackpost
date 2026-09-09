@@ -5,7 +5,7 @@ import { platformPages, apiPages, comparisonPages, specializedPages } from '@/li
 const all = { ...platformPages, ...apiPages, ...comparisonPages, ...specializedPages };
 
 /**
- * Gera uma pagina SEO com metadata + canonical automaticos.
+ * Gera uma página SEO com metadata + canonical automaticos.
  * Uso em app/<slug>/page.tsx:
  *
  *   import { generateSeoPage } from '@/components/generateSeoPage';
@@ -31,7 +31,7 @@ export function generateSeoPage(slug: string) {
   const data = all[slug];
   if (!data) {
     return function NotFound() {
-      return <div>Pagina nao encontrada</div>;
+      return <div>Página nao encontrada</div>;
     };
   }
   return function Page() {

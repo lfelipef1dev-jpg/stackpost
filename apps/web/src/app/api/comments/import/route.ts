@@ -4,7 +4,7 @@ import { comments_importBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
 import { getUserFromToken } from '@/lib/auth';
 
-// POST /api/comments/import — importar comentarios de um post publicado
+// POST /api/comments/import — importar comentários de um post publicado
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
@@ -122,7 +122,7 @@ export async function POST(req: NextRequest) {
         imported++;
       }
     } else {
-      return NextResponse.json({ error: `Import de comentarios de ${platform} nao suportado` }, { status: 400 });
+      return NextResponse.json({ error: `Import de comentários de ${platform} nao suportado` }, { status: 400 });
     }
 
     return NextResponse.json({ imported, platform, postId });
