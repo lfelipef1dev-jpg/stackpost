@@ -130,6 +130,14 @@ const platformIcons: Record<string, IconType> = {
   slack: FaXTwitter,
 };
 
+const accountStatus: Record<string, { label: string; className: string }> = {
+  active: { label: 'Ativa', className: 'bg-success/10 text-success border-success/20' },
+  expired: { label: 'Expirada', className: 'bg-error/10 text-error border-error/20' },
+  reconnect_required: { label: 'Reconectar', className: 'bg-warning/10 text-warning border-warning/20' },
+  needs_reconnect: { label: 'Reconectar', className: 'bg-warning/10 text-warning border-warning/20' },
+  pending: { label: 'Pendente', className: 'bg-brand-elevated text-brand-text-secondary border-brand-border' },
+};
+
 function AnimatedNumber({ value }: { value: number }) {
   const [display, setDisplay] = useState(0);
   const prev = useRef(0);
@@ -513,9 +521,14 @@ export default function DashboardPage() {
                           <div className="text-xs text-brand-text-secondary">{acc.username}</div>
                         </div>
                       </div>
-                      <span className="text-xs px-2 py-1 rounded-md bg-success/10 text-success border border-success/20">
-                        {acc.status}
-                      </span>
+                      {(() => {
+                        const s = accountStatus[acc.status] || { label: acc.status, className: 'bg-success/10 text-success border-success/20' };
+                        return (
+                          <span className={`text-xs px-2 py-1 rounded-md border ${s.className}`}>
+                            {s.label}
+                          </span>
+                        );
+                      })()}
                     </div>
                   );
                 })}

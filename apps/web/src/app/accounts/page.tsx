@@ -323,7 +323,7 @@ export default function AccountsPage() {
                   <Link2 className="w-6 h-6 text-brand-accent" />
                 </div>
                 <div>
-                  <div className="text-2xl font-bold">{stats.total}</div>
+                  {loading ? <div className="h-8 w-16 bg-brand-elevated rounded animate-pulse" /> : <div className="text-2xl font-bold">{stats.total}</div>}
                   <div className="text-xs text-brand-text-secondary">Total contas</div>
                 </div>
               </div>
@@ -336,7 +336,7 @@ export default function AccountsPage() {
                   <CheckCircle2 className="w-6 h-6 text-success" />
                 </div>
                 <div>
-                  <div className="text-2xl font-bold">{stats.active}</div>
+                  {loading ? <div className="h-8 w-16 bg-brand-elevated rounded animate-pulse" /> : <div className="text-2xl font-bold">{stats.active}</div>}
                   <div className="text-xs text-brand-text-secondary">Ativas</div>
                 </div>
               </div>
@@ -349,7 +349,7 @@ export default function AccountsPage() {
                   <AlertCircle className="w-6 h-6 text-error" />
                 </div>
                 <div>
-                  <div className="text-2xl font-bold">{stats.expired}</div>
+                  {loading ? <div className="h-8 w-16 bg-brand-elevated rounded animate-pulse" /> : <div className="text-2xl font-bold">{stats.expired}</div>}
                   <div className="text-xs text-brand-text-secondary">Expiradas / Atenção</div>
                 </div>
               </div>
@@ -362,7 +362,7 @@ export default function AccountsPage() {
                   <Users className="w-6 h-6 text-brand-accent" />
                 </div>
                 <div>
-                  <div className="text-2xl font-bold">{stats.platforms}</div>
+                  {loading ? <div className="h-8 w-16 bg-brand-elevated rounded animate-pulse" /> : <div className="text-2xl font-bold">{stats.platforms}</div>}
                   <div className="text-xs text-brand-text-secondary">Plataformas</div>
                 </div>
               </div>
@@ -636,39 +636,20 @@ export default function AccountsPage() {
             <SpotlightCard className="p-6 h-full" glow="#A78BFA">
               <div className="flex items-center gap-2 mb-4">
                 <TrendingUp className="w-5 h-5 text-brand-accent" />
-                <h3 className="text-lg font-semibold">StackPost vs concorrentes</h3>
+                <h3 className="text-lg font-semibold">Recursos</h3>
               </div>
               <div className="space-y-3 text-sm">
-                <div className="grid grid-cols-3 gap-2 items-center pb-2 border-b border-brand-border/50">
-                  <div className="text-xs text-brand-text-secondary">Recurso</div>
-                  <div className="text-xs font-semibold text-brand-accent text-center">StackPost</div>
-                  <div className="text-xs text-brand-text-secondary text-center">Outros</div>
-                </div>
-                <div className="grid grid-cols-3 gap-2 items-center">
-                  <div className="text-xs">Plataformas</div>
-                  <div className="text-xs font-semibold text-success text-center">15</div>
-                  <div className="text-xs text-center text-brand-text-secondary">5-8</div>
-                </div>
-                <div className="grid grid-cols-3 gap-2 items-center">
-                  <div className="text-xs">OAuth 2.0</div>
-                  <div className="text-xs font-semibold text-success text-center">Sim</div>
-                  <div className="text-xs text-center text-brand-text-secondary">Parcial</div>
-                </div>
-                <div className="grid grid-cols-3 gap-2 items-center">
-                  <div className="text-xs">Renovação auto</div>
-                  <div className="text-xs font-semibold text-success text-center">Sim</div>
-                  <div className="text-xs text-center text-brand-text-secondary">Não</div>
-                </div>
-                <div className="grid grid-cols-3 gap-2 items-center">
-                  <div className="text-xs">Dashboard único</div>
-                  <div className="text-xs font-semibold text-success text-center">Sim</div>
-                  <div className="text-xs text-center text-brand-text-secondary">Não</div>
-                </div>
-                <div className="grid grid-cols-3 gap-2 items-center">
-                  <div className="text-xs">Preço</div>
-                  <div className="text-xs font-semibold text-success text-center">Acessível</div>
-                  <div className="text-xs text-center text-brand-text-secondary">Alto</div>
-                </div>
+                {[
+                  { label: 'Plataformas', value: '15' },
+                  { label: 'OAuth 2.0', value: 'Sim' },
+                  { label: 'Renovação automática', value: 'Sim' },
+                  { label: 'Dashboard unificado', value: 'Sim' },
+                ].map((item) => (
+                  <div key={item.label} className="flex items-center justify-between">
+                    <span className="text-xs text-brand-text-secondary">{item.label}</span>
+                    <span className="text-xs font-semibold text-success">{item.value}</span>
+                  </div>
+                ))}
               </div>
             </SpotlightCard>
           </TiltCard>

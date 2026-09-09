@@ -64,11 +64,10 @@ async function isAdmin(userId: string): Promise<boolean> {
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const origin = req.headers.get('origin');
-  const requestId = crypto.randomUUID();
+  const requestId = req.headers.get('cf-ray') || '-';
   logger.setLogContext({
     route: `${req.method} ${pathname}`,
     requestId,
-    version: process.env.VERCEL_GIT_COMMIT_SHA || process.env.CF_VERSION_METADATA,
   });
 
   try {
