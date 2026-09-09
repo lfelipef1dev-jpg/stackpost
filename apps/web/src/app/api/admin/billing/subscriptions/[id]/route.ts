@@ -26,7 +26,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     .single();
 
   if (dbError || !data) {
-    return NextResponse.json({ error: 'Assinatura nao encontrada' }, { status: 404 });
+    return NextResponse.json({ error: 'Assinatura não encontrada' }, { status: 404 });
   }
 
   const [{ data: org }, { data: plan }] = await Promise.all([
@@ -76,7 +76,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     .eq('id', id)
     .single();
   if (!before) {
-    return NextResponse.json({ error: 'Assinatura nao encontrada' }, { status: 404 });
+    return NextResponse.json({ error: 'Assinatura não encontrada' }, { status: 404 });
   }
 
   const update = { ...parsed.data, updated_at: new Date().toISOString() };

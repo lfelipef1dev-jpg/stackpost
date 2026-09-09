@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
       .select('*, posts!inner(team_id, id, platforms)')
       .eq('id', commentId)
       .single();
-    if (cError || !comment) return NextResponse.json({ error: 'Comment nao encontrado' }, { status: 404 });
+    if (cError || !comment) return NextResponse.json({ error: 'Comment não encontrado' }, { status: 404 });
     if (comment.posts?.team_id !== user!.teamId) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
     const platform = comment.platform;
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       .eq('platform', platform)
       .eq('status', 'posted')
       .maybeSingle();
-    if (!pp?.external_id) return NextResponse.json({ error: 'Post nao publicado nesta plataforma' }, { status: 400 });
+    if (!pp?.external_id) return NextResponse.json({ error: 'Post não publicado nesta plataforma' }, { status: 400 });
 
     const { data: account } = await supabase
       .from('social_accounts')
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
       .eq('platform', platform)
       .eq('status', 'active')
       .maybeSingle();
-    if (!account) return NextResponse.json({ error: 'Conta nao conectada' }, { status: 400 });
+    if (!account) return NextResponse.json({ error: 'Conta não conectada' }, { status: 400 });
 
     let externalCommentId: string | null = null;
 
@@ -136,7 +136,7 @@ export async function POST(req: NextRequest) {
       if (!publishRes.ok) return NextResponse.json({ error: publishData.error?.message || 'Erro no Threads' }, { status: 400 });
       externalCommentId = publishData.id;
     } else {
-      return NextResponse.json({ error: `Comentar em ${platform} nao suportado ainda` }, { status: 400 });
+      return NextResponse.json({ error: `Comentar em ${platform} não suportado ainda` }, { status: 400 });
     }
 
     const { error: updateError } = await supabase

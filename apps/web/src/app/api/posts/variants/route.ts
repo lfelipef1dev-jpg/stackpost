@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
       .eq('id', postId)
       .single();
     if (postError || !postCheck || postCheck.team_id !== user!.teamId) {
-      return NextResponse.json({ error: 'Post nao encontrado' }, { status: 404 });
+      return NextResponse.json({ error: 'Post não encontrado' }, { status: 404 });
     }
 
     const variantId = uuid();
@@ -144,7 +144,7 @@ export async function PUT(req: NextRequest) {
     if (postsError) throw postsError;
     const ids = (postIds || []).map((p) => p.id);
     if (ids.length === 0) {
-      return NextResponse.json({ error: 'Variante nao encontrada' }, { status: 404 });
+      return NextResponse.json({ error: 'Variante não encontrada' }, { status: 404 });
     }
 
     const { data, error: updateError } = await supabase
@@ -156,7 +156,7 @@ export async function PUT(req: NextRequest) {
       .single();
     if (updateError) throw updateError;
     if (!data) {
-      return NextResponse.json({ error: 'Variante nao encontrada' }, { status: 404 });
+      return NextResponse.json({ error: 'Variante não encontrada' }, { status: 404 });
     }
 
     return NextResponse.json(data);

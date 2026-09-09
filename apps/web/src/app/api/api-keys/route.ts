@@ -7,7 +7,7 @@ import { createHmac, randomBytes } from 'crypto';
 
 export async function GET(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const supabase = getSupabase();
 
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json();
   const parsed1 = api_keysBodySchema.safeParse(bodyRaw1);
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
   const queryRaw = Object.fromEntries(searchParams);

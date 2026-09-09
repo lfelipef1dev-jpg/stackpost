@@ -363,7 +363,7 @@ export default function DashboardPage() {
             </SpotlightCard>
           </TiltCard>
 
-          {/* Acoes rapidas */}
+          {/* Ações rapidas */}
           <TiltCard>
             <SpotlightCard className="p-6 h-full" glow="#F59E0B">
               <h2 className="text-lg font-semibold mb-4 flex items-center gap-2"><Zap className="w-5 h-5 text-warning" /> Ações rápidas</h2>

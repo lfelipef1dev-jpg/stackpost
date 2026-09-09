@@ -64,7 +64,7 @@ export async function DELETE(req: NextRequest) {
       .eq('team_id', user.teamId)
       .single();
     if (member?.role === 'owner') {
-      return NextResponse.json({ error: 'Nao e possivel remover o owner' }, { status: 400 });
+      return NextResponse.json({ error: 'Não e possível remover o owner' }, { status: 400 });
     }
 
     const { error: dbError } = await supabase

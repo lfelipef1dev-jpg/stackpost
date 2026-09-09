@@ -873,7 +873,7 @@ export default function AccountsPage() {
                     </div>
                   )}
 
-                  {/* Info de seguranca */}
+                  {/* Info de segurança */}
                   <div className="space-y-3 mb-6">
                     <div className="text-xs font-semibold text-brand-text-secondary uppercase tracking-wide flex items-center gap-1.5">
                       <Lock className="w-3.5 h-3.5" />

@@ -5,7 +5,7 @@ import { getUserFromToken } from '@/lib/auth';
 // POST /api/comments/[id]/retry — retry publicar comment que falhou
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const { id } = await params;
   const supabase = getSupabase();
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       .select('*, posts!inner(team_id, id)')
       .eq('id', id)
       .single();
-    if (cError || !comment) return NextResponse.json({ error: 'Comment nao encontrado' }, { status: 404 });
+    if (cError || !comment) return NextResponse.json({ error: 'Comment não encontrado' }, { status: 404 });
     if (comment.posts?.team_id !== user.teamId) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
     // Reset status e chamar publish

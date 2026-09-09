@@ -6,7 +6,7 @@ import { getUserFromToken } from '@/lib/auth';
 // GET /api/misc/reddit/flairs?subreddit=xxx — listar flairs de um subreddit
 export async function GET(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
   const queryRaw = Object.fromEntries(searchParams);
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
     .eq('platform', 'reddit')
     .eq('status', 'active')
     .maybeSingle();
-  if (!account) return NextResponse.json({ error: 'Reddit nao conectado' }, { status: 400 });
+  if (!account) return NextResponse.json({ error: 'Reddit não conectado' }, { status: 400 });
 
   try {
     const res = await fetch(`https://oauth.reddit.com/r/${subreddit}/api/link_flair_v2`, {

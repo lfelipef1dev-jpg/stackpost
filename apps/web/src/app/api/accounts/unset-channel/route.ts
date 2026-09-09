@@ -6,7 +6,7 @@ import { getUserFromToken } from '@/lib/auth';
 // POST /api/accounts/unset-channel — desativar canal selecionado (volta para status inactive)
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json().catch(() => ({}));
   const parsed1 = accounts_unset_channelBodySchema.safeParse(bodyRaw1);
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
       .eq('id', accountId)
       .eq('team_id', user.teamId)
       .maybeSingle();
-    if (accError || !account) return NextResponse.json({ error: 'Conta nao encontrada' }, { status: 404 });
+    if (accError || !account) return NextResponse.json({ error: 'Conta não encontrada' }, { status: 404 });
 
     const { error } = await supabase
       .from('social_accounts')

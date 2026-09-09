@@ -23,7 +23,7 @@ const features = [
   {
     icon: Building2,
     title: 'Multi-tenant nativo',
-    desc: 'Cada cliente seu tem um workspace isolado. Dados separados, RBAC proprio, sem vazamento entre tenants.',
+    desc: 'Cada cliente seu tem um workspace isolado. Dados separados, RBAC próprio, sem vazamento entre tenants.',
   },
   {
     icon: Webhook,
@@ -117,7 +117,7 @@ await client.posts.create({
             href="/register"
             className="inline-flex items-center gap-2 px-6 py-3 bg-brand-accent text-brand-bg font-bold rounded-lg hover:scale-105 transition-transform"
           >
-            Comecar gratis <ArrowRight className="w-4 h-4" />
+            Comecar grátis <ArrowRight className="w-4 h-4" />
           </Link>
         </ScrollReveal>
       </section>

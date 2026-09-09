@@ -6,7 +6,7 @@ import { getUserFromToken } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json();
   const parsed1 = publishSchema.safeParse(bodyRaw1);
@@ -22,8 +22,8 @@ export async function POST(req: NextRequest) {
     .select('id, team_id, status')
     .eq('id', postId)
     .single();
-  if (postError || !post) return NextResponse.json({ error: 'Post nao encontrado' }, { status: 404 });
-  if (post.team_id !== user.teamId) return NextResponse.json({ error: 'Nao autorizado' }, { status: 403 });
+  if (postError || !post) return NextResponse.json({ error: 'Post não encontrado' }, { status: 404 });
+  if (post.team_id !== user.teamId) return NextResponse.json({ error: 'Não autorizado' }, { status: 403 });
 
   // Idempotency: se já está publicado ou em processamento, retorna estado atual
   const idempotencyKey = req.headers.get('x-idempotency-key');

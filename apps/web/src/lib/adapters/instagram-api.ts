@@ -79,7 +79,7 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
   const igUserId = account.external_id || account.instagram_id;
   const token = account.access_token;
 
-  if (!igUserId) return { success: false, error: 'Instagram: external_id nao encontrado na conta.' };
+  if (!igUserId) return { success: false, error: 'Instagram: external_id não encontrado na conta.' };
 
   // CAROUSEL: criar container para cada mídia, depois container pai
   if (mediaType === 'CAROUSEL' && carouselUrls && carouselUrls.length > 0) {
@@ -91,7 +91,7 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
         is_carousel_item: 'true',
       };
       if (isVideo) {
-        childParams.media_type = 'VIDEO';
+        childParams.media_type = 'Vídeo';
         childParams.video_url = url;
       } else {
         childParams.image_url = url;
@@ -163,7 +163,7 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
     // Retornar erro claro em vez de tentar e falhar silenciosamente.
     return {
       success: false,
-      error: 'Stories do Instagram nao sao suportados via Content Publishing API. Use o endpoint de Stories dedicado.',
+      error: 'Stories do Instagram não sao suportados via Content Publishing API. Use o endpoint de Stories dedicado.',
     };
   } else if (mediaType === 'VIDEO') {
     params.media_type = 'REELS';

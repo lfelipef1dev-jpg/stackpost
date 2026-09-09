@@ -31,7 +31,7 @@ export function generateSeoPage(slug: string) {
   const data = all[slug];
   if (!data) {
     return function NotFound() {
-      return <div>Página nao encontrada</div>;
+      return <div>Página não encontrada</div>;
     };
   }
   return function Page() {

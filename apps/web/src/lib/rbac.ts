@@ -22,7 +22,7 @@ export async function requireRole(req: NextRequest, requiredRole: Role) {
   if (!user) {
     return {
       user: null,
-      error: NextResponse.json({ error: 'Nao autorizado' }, { status: 401 }),
+      error: NextResponse.json({ error: 'Não autorizado' }, { status: 401 }),
     };
   }
 
@@ -41,7 +41,7 @@ export async function requireRole(req: NextRequest, requiredRole: Role) {
     return {
       user: null,
       error: NextResponse.json(
-        { error: 'Permissao insuficiente', required: requiredRole, current: userRole },
+        { error: 'Permissão insuficiente', required: requiredRole, current: userRole },
         { status: 403 }
       ),
     };
@@ -132,14 +132,14 @@ export async function requireAdmin(req: NextRequest, permission?: AdminPermissio
   if (!admin) {
     return {
       admin: null,
-      error: NextResponse.json({ error: 'Nao autorizado' }, { status: 401 }),
+      error: NextResponse.json({ error: 'Não autorizado' }, { status: 401 }),
     };
   }
 
   if (permission && !hasAdminPermission(admin, permission)) {
     return {
       admin: null,
-      error: NextResponse.json({ error: 'Permissao de admin insuficiente', required: permission }, { status: 403 }),
+      error: NextResponse.json({ error: 'Permissão de admin insuficiente', required: permission }, { status: 403 }),
     };
   }
 

@@ -7,7 +7,7 @@ import { getUserFromToken } from '@/lib/auth';
 // POST /api/imports/facebook-recommendations — importar recommendations/reviews de uma Page
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json().catch(() => ({}));
   const parsed1 = imports_facebook_recommendationsBodySchema.safeParse(bodyRaw1);
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
       .eq('team_id', user.teamId)
       .eq('platform', 'facebook')
       .maybeSingle();
-    if (!account) return NextResponse.json({ error: 'Conta Facebook nao encontrada' }, { status: 404 });
+    if (!account) return NextResponse.json({ error: 'Conta Facebook não encontrada' }, { status: 404 });
 
     const pageId = account.platform_account_id || account.external_id;
     const maxLimit = Math.min(limit || 50, 100);

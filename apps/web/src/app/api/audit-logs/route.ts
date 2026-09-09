@@ -7,7 +7,7 @@ import { getUserFromToken } from '@/lib/auth';
 // GET /api/audit-logs — listar audit logs do team
 export async function GET(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
   const queryRaw = Object.fromEntries(searchParams);
@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
 // POST /api/audit-logs — criar audit log (interno)
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json().catch(() => ({}));
   const parsed1 = audit_logsBodySchema.safeParse(bodyRaw1);

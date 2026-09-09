@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
 
     if (!email) return NextResponse.json({ error: 'Email obrigatório' }, { status: 400 });
     if (!VALID_ROLES.includes(role)) {
-      return NextResponse.json({ error: 'Role invalido. Use: admin, editor ou viewer' }, { status: 400 });
+      return NextResponse.json({ error: 'Role inválido. Use: admin, editor ou viewer' }, { status: 400 });
     }
 
     const supabase = getSupabase();
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
 
     if (userErr) throw userErr;
     if (!targetUser) {
-      return NextResponse.json({ error: 'Usuário nao encontrado. Peça para ele se cadastrar primeiro.' }, { status: 404 });
+      return NextResponse.json({ error: 'Usuário não encontrado. Peça para ele se cadastrar primeiro.' }, { status: 404 });
     }
 
     // 2. Verificar se já e membro

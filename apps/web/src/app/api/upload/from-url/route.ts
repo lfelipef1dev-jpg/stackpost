@@ -11,7 +11,7 @@ const PUBLIC_UPLOADS = 'C:/Users/lfeli/Desktop/StackPost/apps/web/public/uploads
 
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json();
   const parsed1 = upload_from_urlBodySchema.safeParse(bodyRaw1);
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
   const { url, fileName, mimeType } = body;
 
   if (!url || !url.startsWith('http')) {
-    return NextResponse.json({ error: 'URL invalida' }, { status: 400 });
+    return NextResponse.json({ error: 'URL inválida' }, { status: 400 });
   }
 
   try {

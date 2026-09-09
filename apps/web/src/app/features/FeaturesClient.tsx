@@ -122,7 +122,7 @@ const featureCategories = [
     icon: Globe,
     items: [
       { name: 'Instagram', desc: 'Post, Reel e Story. Carrossel até 10 itens. Meta Graph API oficial.' },
-      { name: 'TikTok', desc: 'Video e Photo Mode. Content API oficial com status REVIEW em tempo real.' },
+      { name: 'TikTok', desc: 'Vídeo e Photo Mode. Content API oficial com status REVIEW em tempo real.' },
       { name: 'YouTube', desc: 'Vídeo e Shorts. Campo madeForKids obrigatório. Data API v3.' },
       { name: 'Facebook', desc: 'Post em Page, Reel e Story. Meta Graph API com suporte completo.' },
       { name: 'LinkedIn', desc: 'Perfil e Company Page. Texto, mídia, link e documento com API oficial.' },

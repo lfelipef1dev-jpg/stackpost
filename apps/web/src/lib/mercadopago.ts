@@ -10,7 +10,7 @@ const MP_API_BASE = "https://api.mercadopago.com";
 function getAccessToken(): string {
   const token = process.env.MERCADOPAGO_ACCESS_TOKEN;
   if (!token) {
-    throw new Error("MERCADOPAGO_ACCESS_TOKEN nao configurado no ambiente.");
+    throw new Error("MERCADOPAGO_ACCESS_TOKEN não configurado no ambiente.");
   }
   return token;
 }

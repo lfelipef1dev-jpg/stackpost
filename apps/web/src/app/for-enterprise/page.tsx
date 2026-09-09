@@ -18,7 +18,7 @@ const features = [
   {
     icon: Building2,
     title: 'Multi-tenant com isolamento',
-    desc: 'Workspaces separados com RBAC granular. Cada time ou cliente com dados isolados e permissões proprias.',
+    desc: 'Workspaces separados com RBAC granular. Cada time ou cliente com dados isolados e permissões próprias.',
   },
   {
     icon: FileText,
@@ -97,7 +97,7 @@ export default function ForEnterprisePage() {
               className="inline-flex items-center gap-2 px-6 py-3 font-bold rounded-lg hover:scale-105 transition-transform"
               style={{ backgroundColor: '#22C55E', color: '#0A0A0A' }}
             >
-              Comecar gratis <ArrowRight className="w-4 h-4" />
+              Comecar grátis <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               href="/contact"

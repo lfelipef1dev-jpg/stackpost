@@ -4,7 +4,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_SITE
 
 export async function GET(req: NextRequest) {
   const clientId = process.env.DISCORD_CLIENT_ID;
-  if (!clientId) return NextResponse.json({ error: 'DISCORD_CLIENT_ID nao configurado' }, { status: 500 });
+  if (!clientId) return NextResponse.json({ error: 'DISCORD_CLIENT_ID não configurado' }, { status: 500 });
 
   const redirectUri = `${BASE_URL}/api/oauth/discord/callback`;
   const state = Buffer.from(Math.random().toString(36).slice(2)).toString('base64');

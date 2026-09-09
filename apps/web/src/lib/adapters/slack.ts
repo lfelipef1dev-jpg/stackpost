@@ -11,7 +11,7 @@ export class SlackAdapter extends PlatformAdapter {
 
     if (!webhookUrl) return { success: false, error: normalizeError(new Error('Webhook URL obrigatório'), this.platform) };
     if (!webhookUrl.startsWith('https://hooks.slack.com/services/')) {
-      return { success: false, error: normalizeError(new Error('URL de webhook Slack invalido'), this.platform) };
+      return { success: false, error: normalizeError(new Error('URL de webhook Slack inválido'), this.platform) };
     }
     if (content.length > 30000) return { success: false, error: { code: 'VALIDATION', message: 'Slack: texto maximo 30000 caracteres.' } };
 

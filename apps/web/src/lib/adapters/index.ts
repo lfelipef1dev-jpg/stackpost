@@ -30,7 +30,7 @@ export class InstagramAdapter extends PlatformAdapter {
     if (!mediaUrl) {
       return { success: false, error: { code: 'VALIDATION', message: 'Instagram: mídia obrigatória.' } };
     }
-    const mediaType = params.mediaType || (params.videoUrl ? 'VIDEO' : 'IMAGE');
+    const mediaType = params.mediaType || (params.videoUrl ? 'Video' : 'IMAGE');
     return publishToInstagram(params.account, params.content, mediaUrl, mediaType as any, params.firstComment, params.mediaUrls);
   }
 }
@@ -43,7 +43,7 @@ export class LinkedInAdapter extends PlatformAdapter {
       return { success: false, error: { code: 'VALIDATION', message: 'LinkedIn: texto maximo 3000 caracteres.' } };
     }
     if (params.firstComment) {
-      logger.warn('LinkedIn: firstComment nao suportado pela API oficial. Ignorando.');
+      logger.warn('LinkedIn: firstComment não suportado pela API oficial. Ignorando.');
     }
     return publishToLinkedIn(params.account, params.content, params.imageUrl || '', params.videoUrl || '', params.mediaUrls, params.pdfUrl);
   }

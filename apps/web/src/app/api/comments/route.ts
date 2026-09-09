@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
     if (postError) throw postError;
 
     if (!post || post.team_id !== user.teamId) {
-      return NextResponse.json({ error: 'Post nao encontrado' }, { status: 404 });
+      return NextResponse.json({ error: 'Post não encontrado' }, { status: 404 });
     }
 
     const { data, error: insertError } = await supabase

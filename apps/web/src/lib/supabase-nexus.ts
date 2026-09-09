@@ -8,7 +8,7 @@ export function getNexusSupabase(): SupabaseClient {
   const key = (process as any).env?.NEXT_PUBLIC_NEXUS_SUPABASE_ANON_KEY as string;
 
   if (!url || !key) {
-    throw new Error('Nexus Supabase env vars nao configuradas: NEXT_PUBLIC_NEXUS_SUPABASE_URL e NEXT_PUBLIC_NEXUS_SUPABASE_ANON_KEY');
+    throw new Error('Nexus Supabase env vars não configuradas: NEXT_PUBLIC_NEXUS_SUPABASE_URL e NEXT_PUBLIC_NEXUS_SUPABASE_ANON_KEY');
   }
 
   if (!GLOBAL.__nexus_supabase_client__) {

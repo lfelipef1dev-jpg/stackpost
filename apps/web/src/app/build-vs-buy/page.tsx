@@ -187,7 +187,7 @@ export default function BuildVsBuyPage() {
               <p>- Custo de desenvolvedor: R$ 12.000/mes (media mercado BR pleno/senior)</p>
               <p>- Manutencao anual estimada em 30% do custo de desenvolvimento</p>
               <p>- StackPost plano Scale: R$ 199/mes + uso por postagem</p>
-              <p>- Nao inclui: custos de infraestrutura (servidores, CDN), OAuth app review, monitoramento</p>
+              <p>- Não inclui: custos de infraestrutura (servidores, CDN), OAuth app review, monitoramento</p>
               <p>- Estimativas baseadas em projetos reais de integração social</p>
             </div>
           </details>

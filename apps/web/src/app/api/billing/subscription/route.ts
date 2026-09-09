@@ -17,7 +17,7 @@ const actionSchema = z.object({
 export async function GET(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) {
-    return NextResponse.json({ error: 'Nao autorizado.' }, { status: 401 });
+    return NextResponse.json({ error: 'Não autorizado.' }, { status: 401 });
   }
 
   const supabase = getSupabase();
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
     .single();
 
   if (teamError || !team) {
-    return NextResponse.json({ error: 'Time nao encontrado.' }, { status: 404 });
+    return NextResponse.json({ error: 'Time não encontrado.' }, { status: 404 });
   }
 
   const { data: org, error: orgError } = await supabase
@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
     .single();
 
   if (orgError || !org) {
-    return NextResponse.json({ error: 'Organizacao nao encontrada.' }, { status: 404 });
+    return NextResponse.json({ error: 'Organização não encontrada.' }, { status: 404 });
   }
 
   const { data: subscription } = await supabase
@@ -68,14 +68,14 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) {
-    return NextResponse.json({ error: 'Nao autorizado.' }, { status: 401 });
+    return NextResponse.json({ error: 'Não autorizado.' }, { status: 401 });
   }
 
   let body: unknown;
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ error: 'Corpo invalido.' }, { status: 400 });
+    return NextResponse.json({ error: 'Corpo inválido.' }, { status: 400 });
   }
 
   const parsed = actionSchema.safeParse(body);
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
     .eq('id', user.teamId)
     .single();
   if (!team) {
-    return NextResponse.json({ error: 'Time nao encontrado.' }, { status: 404 });
+    return NextResponse.json({ error: 'Time não encontrado.' }, { status: 404 });
   }
 
   const { data: subscription } = await supabase
@@ -143,7 +143,7 @@ export async function POST(req: NextRequest) {
     .maybeSingle();
 
   if (!newPlan) {
-    return NextResponse.json({ error: 'Plano invalido.' }, { status: 400 });
+    return NextResponse.json({ error: 'Plano inválido.' }, { status: 400 });
   }
 
   // Cálculo pró-rata simples: diferença de valor proporcional ao período restante

@@ -116,5 +116,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|icon.png|logo.png|og.png|manifest|uploads|brand|banner|cases|prints|videos|openapi.json|site.webmanifest|_headers).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|icon.png|logo.png|og.png|manifest|uploads|brand|banner|cases|prints|vídeos|openapi.json|site.webmanifest|_headers).*)'],
 };

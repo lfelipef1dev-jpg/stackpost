@@ -16,12 +16,12 @@ export async function GET(req: NextRequest) {
   const storedState = req.cookies.get('oauth_state_x')?.value;
   const codeVerifier = req.cookies.get('oauth_verifier_x')?.value;
 
-  if (!code) return NextResponse.json({ error: 'Código nao informado' }, { status: 400 });
-  if (state !== storedState) return NextResponse.json({ error: 'State invalido' }, { status: 400 });
+  if (!code) return NextResponse.json({ error: 'Código não informado' }, { status: 400 });
+  if (state !== storedState) return NextResponse.json({ error: 'State inválido' }, { status: 400 });
 
   const clientId = process.env.TWITTER_CLIENT_ID;
   const clientSecret = process.env.TWITTER_CLIENT_SECRET;
-  if (!clientId || !clientSecret) return NextResponse.json({ error: 'Twitter OAuth nao configurado' }, { status: 500 });
+  if (!clientId || !clientSecret) return NextResponse.json({ error: 'Twitter OAuth não configurado' }, { status: 500 });
 
   try {
     const redirectUri = `${BASE_URL}/api/oauth/x/callback`;
@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
     const twitterUser = userData.data;
 
     const user = await getUserFromToken(req);
-    if (!user) throw new Error('Nao autorizado');
+    if (!user) throw new Error('Não autorizado');
 
     const supabase = getSupabase();
     const expiresAt = tokenData.expires_in

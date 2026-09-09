@@ -3,7 +3,7 @@ import { buildAuthUrl, OAUTH_CONFIGS } from '@/lib/oauth';
 
 export async function GET(req: NextRequest) {
   const config = OAUTH_CONFIGS['tiktok'];
-  if (!config) return NextResponse.json({ error: 'Plataforma nao suportada' }, { status: 400 });
+  if (!config) return NextResponse.json({ error: 'Plataforma não suportada' }, { status: 400 });
   const state = Buffer.from(Math.random().toString(36).slice(2)).toString('base64');
   try {
     const url = buildAuthUrl(config, state);

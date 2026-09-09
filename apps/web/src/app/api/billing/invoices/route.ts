@@ -10,7 +10,7 @@ import { getUserFromToken } from '@/lib/auth';
 export async function GET(req: NextRequest) {
   const user = await getUserFromToken(req);
   if (!user) {
-    return NextResponse.json({ error: 'Nao autorizado.' }, { status: 401 });
+    return NextResponse.json({ error: 'Não autorizado.' }, { status: 401 });
   }
 
   const supabase = getSupabase();
@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
     .single();
 
   if (teamError || !team) {
-    return NextResponse.json({ error: 'Time nao encontrado.' }, { status: 404 });
+    return NextResponse.json({ error: 'Time não encontrado.' }, { status: 404 });
   }
 
   try {

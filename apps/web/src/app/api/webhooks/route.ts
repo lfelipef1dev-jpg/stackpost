@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
   const { url, events } = body;
 
   if (!url || !url.startsWith('http')) {
-    return NextResponse.json({ error: 'URL invalida' }, { status: 400 });
+    return NextResponse.json({ error: 'URL inválida' }, { status: 400 });
   }
 
   const secret = randomBytes(32).toString('hex');

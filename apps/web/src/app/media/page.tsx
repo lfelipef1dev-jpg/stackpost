@@ -188,7 +188,7 @@ export default function MediaLibraryPage() {
                 <div className="aspect-square rounded-lg overflow-hidden bg-brand-elevated mb-2 flex items-center justify-center">
                   {u.mime_type?.startsWith('image/') ? (
                     <img src={u.url} alt={u.file_name} className="w-full h-full object-cover" />
-                  ) : u.mime_type?.startsWith('video/') ? (
+                  ) : u.mime_type?.startsWith('vídeo/') ? (
                     <FileVideo className="w-8 h-8 text-brand-text-secondary" />
                   ) : (
                     <FileImage className="w-8 h-8 text-brand-text-secondary" />

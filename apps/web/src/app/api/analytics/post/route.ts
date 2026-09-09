@@ -7,7 +7,7 @@ import { getUserFromToken } from '@/lib/auth';
 // GET /api/analytics/post?postId=xxx — analytics normalizado por post
 export async function GET(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
   const queryRaw = Object.fromEntries(searchParams);
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
       .eq('team_id', user.teamId)
       .maybeSingle();
     if (postError) throw postError;
-    if (!post) return NextResponse.json({ error: 'Post nao encontrado' }, { status: 404 });
+    if (!post) return NextResponse.json({ error: 'Post não encontrado' }, { status: 404 });
 
     const { data: snapshots, error: snapError } = await supabase
       .from('analytics_snapshots')

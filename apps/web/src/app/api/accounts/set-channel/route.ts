@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
       .maybeSingle();
 
     if (findError || !existing) {
-      return NextResponse.json({ error: 'Conta nao encontrada' }, { status: 404 });
+      return NextResponse.json({ error: 'Conta não encontrada' }, { status: 404 });
     }
 
     const updates: Record<string, any> = { status: 'active' };

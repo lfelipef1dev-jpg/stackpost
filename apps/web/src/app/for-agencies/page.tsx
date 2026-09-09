@@ -23,12 +23,12 @@ const features = [
   {
     icon: Zap,
     title: 'Pague pelo uso',
-    desc: 'Cobrança por post, nao por conta. Você só paga quando realmente publica.',
+    desc: 'Cobrança por post, não por conta. Você só paga quando realmente publica.',
   },
   {
     icon: Eye,
     title: 'RBAC',
-    desc: 'Owner, Admin, Editor e Viewer por cliente. Cada membro da agência com o nivel certo de acesso.',
+    desc: 'Owner, Admin, Editor e Viewer por cliente. Cada membro da agência com o nível certo de acesso.',
   },
   {
     icon: Globe,
@@ -103,7 +103,7 @@ export default function ForAgenciesPage() {
             className="inline-flex items-center gap-2 px-6 py-3 font-bold rounded-lg hover:scale-105 transition-transform"
             style={{ backgroundColor: '#F59E0B', color: '#0A0A0A' }}
           >
-            Comecar gratis <ArrowRight className="w-4 h-4" />
+            Comecar grátis <ArrowRight className="w-4 h-4" />
           </Link>
         </ScrollReveal>
       </section>

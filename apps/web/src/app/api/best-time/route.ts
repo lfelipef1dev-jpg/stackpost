@@ -111,7 +111,7 @@ export async function GET(req: NextRequest) {
       confidence: hs.postsCount > 10 ? 'high' : hs.postsCount > 3 ? 'medium' : 'low',
       recommendation: hs.postsCount > 3
         ? `Baseado em ${hs.postsCount} posts com engajamento medio de ${Math.round(hs.avgEngagement)}`
-        : `Recomendacao baseada em padrão da industria para ${platform || 'todas as plataformas'}`,
+        : `Recomendação baseada em padrão da industria para ${platform || 'todas as plataformas'}`,
     }));
 
     return NextResponse.json({

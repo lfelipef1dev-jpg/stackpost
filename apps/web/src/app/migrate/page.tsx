@@ -8,7 +8,7 @@ import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Migrar para StackPost - Ayrshare, Buffer, Publer e custom',
-  description: 'Guia de migracao de Ayrshare, Buffer, Publer, Nuelink e API custom para StackPost. Troque de provider em horas, nao semanas.',
+  description: 'Guia de migracao de Ayrshare, Buffer, Publer, Nuelink e API custom para StackPost. Troque de provider em horas, não semanas.',
   alternates: { canonical: '/migrate' },
 };
 
@@ -161,7 +161,7 @@ export default function MigratePage() {
           <h2 className="text-xl font-bold mb-6">Como migrar em 4 passos</h2>
           <div className="space-y-4">
             {[
-              { n: 1, t: 'Crie sua conta StackPost', d: 'Gratis, sem cartao. Conecte suas redes.' },
+              { n: 1, t: 'Crie sua conta StackPost', d: 'Grátis, sem cartão. Conecte suas redes.' },
               { n: 2, t: 'Mapeie seus endpoints', d: 'Use a tabela acima. A maioria e direta.' },
               { n: 3, t: 'Troque a API key', d: 'Substitua o header de auth e a URL base.' },
               { n: 4, t: 'Teste e publique', d: 'Valide com alguns posts antes do switch completo.' },

@@ -19,7 +19,7 @@ const mcpClients = ['Claude', 'Cursor', 'ChatGPT', 'Gemini'];
 const permissionFeatures = [
   { title: 'Scopes granulares', desc: 'Defina exatamente quais plataformas e ações cada agent pode acessar.' },
   { title: 'Tokens com expiration', desc: 'Tokens expiram automaticamente. Renovacao sob demanda.' },
-  { title: 'Approval workflow', desc: 'Acoes sensiveis exigem aprovacao humana antes de executar.' },
+  { title: 'Approval workflow', desc: 'Ações sensíveis exigem aprovacao humana antes de executar.' },
   { title: 'Audit completo', desc: 'Cada ação do agent registrada com token, scope e timestamp.' },
 ];
 
@@ -173,7 +173,7 @@ export default function AiAgentsPage() {
               className="inline-flex items-center gap-2 px-6 py-3 font-bold rounded-lg hover:scale-105 transition-transform"
               style={{ backgroundColor: '#A855F7', color: '#0A0A0A' }}
             >
-              Comecar gratis <ArrowRight className="w-4 h-4" />
+              Comecar grátis <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               href="/docs/mcp"

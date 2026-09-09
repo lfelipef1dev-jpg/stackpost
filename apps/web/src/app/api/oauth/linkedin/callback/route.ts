@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://stackpost.expostacker.com.br';
 
   if (!code) {
-    return NextResponse.json({ error: 'Código nao informado' }, { status: 400 });
+    return NextResponse.json({ error: 'Código não informado' }, { status: 400 });
   }
 
   const teamId = state.includes(':') ? state.split(':')[0] : null;

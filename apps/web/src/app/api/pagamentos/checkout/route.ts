@@ -28,7 +28,7 @@ const ORDEM_PLANOS: Record<string, number> = {
 export async function POST(request: Request) {
   const user = await getUserFromToken(request as any);
   if (!user) {
-    return NextResponse.json({ error: 'Nao autorizado.' }, { status: 401 });
+    return NextResponse.json({ error: 'Não autorizado.' }, { status: 401 });
   }
 
   let body: { plano?: string; interval?: string };
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     body = await request.json();
   } catch {
     return NextResponse.json(
-      { error: 'Corpo da requisicao invalido.' },
+      { error: 'Corpo da requisicao inválido.' },
       { status: 400 },
     );
   }
@@ -44,21 +44,21 @@ export async function POST(request: Request) {
   const parsed = checkoutSchema.safeParse(body);
   if (!parsed.success) {
     const msg = parsed.error.issues.map(i => i.message).join(', ');
-    return NextResponse.json({ error: `Dados invalidos: ${msg}` }, { status: 400 });
+    return NextResponse.json({ error: `Dados inválidos: ${msg}` }, { status: 400 });
   }
 
   const plano = (parsed.data.plano || '').toLowerCase().trim();
   const interval = (parsed.data.interval || 'monthly').toLowerCase();
   if (!plano) {
     return NextResponse.json(
-      { error: 'Plano nao informado.' },
+      { error: 'Plano não informado.' },
       { status: 400 },
     );
   }
 
   if (plano === 'free') {
     return NextResponse.json(
-      { error: 'O plano Free nao precisa de pagamento.' },
+      { error: 'O plano Free não precisa de pagamento.' },
       { status: 400 },
     );
   }
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
   const planoInfo = PLANOS[plano];
   if (!planoInfo) {
     return NextResponse.json(
-      { error: 'Plano invalido. Escolha entre starter, growth, scale ou business.' },
+      { error: 'Plano inválido. Escolha entre starter, growth, scale ou business.' },
       { status: 400 },
     );
   }
@@ -81,7 +81,7 @@ export async function POST(request: Request) {
 
   if (errTeam || !team) {
     return NextResponse.json(
-      { error: 'Time nao encontrado.' },
+      { error: 'Time não encontrado.' },
       { status: 404 },
     );
   }
@@ -94,7 +94,7 @@ export async function POST(request: Request) {
 
   if (errOrg || !org) {
     return NextResponse.json(
-      { error: 'Organizacao nao encontrada.' },
+      { error: 'Organização não encontrada.' },
       { status: 404 },
     );
   }
@@ -128,7 +128,7 @@ export async function POST(request: Request) {
 
   if (errOrder) {
     return NextResponse.json(
-      { error: 'Nao conseguimos iniciar o pedido.' },
+      { error: 'Não conseguimos iniciar o pedido.' },
       { status: 500 },
     );
   }
@@ -162,7 +162,7 @@ export async function POST(request: Request) {
     const msg = e instanceof Error ? e.message : String(e);
     logger.error('[pagamentos/checkout] Erro:', msg);
     return NextResponse.json(
-      { error: 'Nao conseguimos comunicar com o gateway de pagamento.' },
+      { error: 'Não conseguimos comunicar com o gateway de pagamento.' },
       { status: 502 },
     );
   }

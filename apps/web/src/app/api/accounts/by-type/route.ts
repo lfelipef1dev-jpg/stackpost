@@ -6,7 +6,7 @@ import { getUserFromToken } from '@/lib/auth';
 // GET /api/accounts/by-type — listar contas agrupadas por plataforma
 export async function GET(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
   const queryRaw = Object.fromEntries(searchParams);

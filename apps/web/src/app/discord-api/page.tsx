@@ -11,13 +11,13 @@ import LandingHeader from '@/components/LandingHeader';
 
 export const metadata: Metadata = {
   title: 'Discord API - Envie mensagens via webhook e embeds via StackPost',
-  description: 'API de Discord do StackPost: mensagens via webhook, OAuth2 com webhook.incoming scope e embeds com imagem. Automacao de canais sem bot.',
+  description: 'API de Discord do StackPost: mensagens via webhook, OAuth2 com webhook.incoming scope e embeds com imagem. Automação de canais sem bot.',
   alternates: { canonical: '/discord-api' },
 };
 
 const jsonLd = serviceSchema(
   'Discord API',
-  'API de Discord para enviar mensagens via webhook, OAuth2 com webhook.incoming scope e embeds com imagem. Automacao de canais sem necessidade de bot.',
+  'API de Discord para enviar mensagens via webhook, OAuth2 com webhook.incoming scope e embeds com imagem. Automação de canais sem necessidade de bot.',
   '/discord-api',
 );
 
@@ -28,7 +28,7 @@ const features = [
   },
   {
     title: 'OAuth2 com webhook.incoming',
-    desc: 'Autenticacao OAuth2 com escopo webhook.incoming para criar webhooks dinamicamente.',
+    desc: 'Autenticação OAuth2 com escopo webhook.incoming para criar webhooks dinamicamente.',
   },
   {
     title: 'Embeds com imagem',
@@ -36,7 +36,7 @@ const features = [
   },
   {
     title: 'Multi-canal',
-    desc: 'Gerencie webhooks de multiplas guildas e canais por workspace.',
+    desc: 'Gerencie webhooks de múltiplas guildas e canais por workspace.',
   },
   {
     title: 'Agendamento',
@@ -67,7 +67,7 @@ export default function DiscordApiPage() {
           icon={FaDiscord}
           label="API de Discord"
           title="API de Discord"
-          description="Envie mensagens via webhook e embeds com imagem via uma unica API. OAuth2 com webhook.incoming scope, multi-canal e agendamento sem necessidade de bot."
+          description="Envie mensagens via webhook e embeds com imagem via uma única API. OAuth2 com webhook.incoming scope, multi-canal e agendamento sem necessidade de bot."
           color="#5865F2"
           docsHref="/docs"
         />

@@ -33,7 +33,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     .single();
 
   if (dbError || !data) {
-    return NextResponse.json({ error: 'Plano nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Plano não encontrado' }, { status: 404 });
   }
 
   const { count } = await supabase.from('subscriptions').select('*', { count: 'exact', head: true }).eq('plan_id', id);
@@ -55,7 +55,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const supabase = getSupabase();
   const { data: before } = await supabase.from('plans').select('*').eq('id', id).single();
   if (!before) {
-    return NextResponse.json({ error: 'Plano nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Plano não encontrado' }, { status: 404 });
   }
 
   const update = { ...parsed.data, updated_at: new Date().toISOString() };
@@ -92,7 +92,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
   const { data: before } = await supabase.from('plans').select('id, name, is_active').eq('id', id).single();
   if (!before) {
-    return NextResponse.json({ error: 'Plano nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Plano não encontrado' }, { status: 404 });
   }
 
   const { data, error: dbError } = await supabase

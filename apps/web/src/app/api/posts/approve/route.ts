@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
 
   const newStatus = actions[action];
   if (!newStatus) {
-    return NextResponse.json({ error: 'Ação invalida' }, { status: 400 });
+    return NextResponse.json({ error: 'Ação inválida' }, { status: 400 });
   }
 
   try {
@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
       .eq('team_id', user!.teamId)
       .single();
     if (postError || !post) {
-      return NextResponse.json({ error: 'Post nao encontrado' }, { status: 404 });
+      return NextResponse.json({ error: 'Post não encontrado' }, { status: 404 });
     }
 
     const currentStatus = post.status;
@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
     const allowed = VALID_TRANSITIONS[currentStatus] || [];
     if (!allowed.includes(newStatus)) {
       return NextResponse.json({
-        error: `Transicao invalida: ${currentStatus} -> ${newStatus}`,
+        error: `Transicao inválida: ${currentStatus} -> ${newStatus}`,
         allowedTransitions: allowed,
       }, { status: 400 });
     }

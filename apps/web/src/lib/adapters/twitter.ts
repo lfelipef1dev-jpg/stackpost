@@ -44,7 +44,7 @@ export class TwitterAdapter extends PlatformAdapter {
             mediaBuffer = Buffer.from(arrayBuf);
           } else {
             // Se nao for URL, nao temos binario - pular
-            logger.warn(`Twitter: uploadId sem URL http nao suportado (${url})`);
+            logger.warn(`Twitter: uploadId sem URL http não suportado (${url})`);
             continue;
           }
 

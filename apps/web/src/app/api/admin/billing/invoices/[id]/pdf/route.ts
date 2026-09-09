@@ -74,7 +74,7 @@ function generateInvoicePDF(invoice: any): Buffer {
     }
   }
   lines.push('');
-  lines.push(`Organizacao: ${invoice.organization_id || '-'}`);
+  lines.push(`Organização: ${invoice.organization_id || '-'}`);
   lines.push(`Team: ${invoice.team_id || '-'}`);
   lines.push(`Criada em: ${invoice.created_at || '-'}`);
 

@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     if (userError) throw userError;
 
     if (!userData) {
-      return NextResponse.json({ error: 'Usuário nao encontrado. Peça para se cadastrar primeiro.' }, { status: 404 });
+      return NextResponse.json({ error: 'Usuário não encontrado. Peça para se cadastrar primeiro.' }, { status: 404 });
     }
 
     const userId = userData.id;

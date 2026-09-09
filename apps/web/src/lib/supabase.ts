@@ -8,7 +8,7 @@ export function getSupabase(): SupabaseClient {
   const key = (process as any).env?.SUPABASE_SERVICE_ROLE_KEY as string;
 
   if (!url || !key) {
-    throw new Error('Supabase env vars nao configuradas: NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY');
+    throw new Error('Supabase env vars não configuradas: NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY');
   }
 
   if (!GLOBAL.__stackpost_supabase_client__) {

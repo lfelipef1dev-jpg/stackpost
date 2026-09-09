@@ -28,7 +28,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     .single();
 
   if (dbError || !org) {
-    return NextResponse.json({ error: 'Organizacao nao encontrada' }, { status: 404 });
+    return NextResponse.json({ error: 'Organização não encontrada' }, { status: 404 });
   }
 
   const [{ data: owner }, { data: teams }, { data: subscriptions }] = await Promise.all([
@@ -69,7 +69,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     .eq('id', id)
     .single();
   if (!before) {
-    return NextResponse.json({ error: 'Organizacao nao encontrada' }, { status: 404 });
+    return NextResponse.json({ error: 'Organização não encontrada' }, { status: 404 });
   }
 
   const update = { ...parsed.data, updated_at: new Date().toISOString() };
@@ -106,7 +106,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
   const { data: before } = await supabase.from('organizations').select('id, name, status').eq('id', id).single();
   if (!before) {
-    return NextResponse.json({ error: 'Organizacao nao encontrada' }, { status: 404 });
+    return NextResponse.json({ error: 'Organização não encontrada' }, { status: 404 });
   }
 
   const { data, error: dbError } = await supabase

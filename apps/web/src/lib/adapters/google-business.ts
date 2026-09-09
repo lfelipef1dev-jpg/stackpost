@@ -31,7 +31,7 @@ export class GoogleBusinessAdapter extends PlatformAdapter {
         // googleUrl deve ser uma URL publicamente acessivel; idealmente do proprio dominio verificado
         body.media = [{ mediaFormat: 'PHOTO', googleUrl: params.imageUrl }];
       } else if (params.videoUrl) {
-        body.media = [{ mediaFormat: 'VIDEO', googleUrl: params.videoUrl }];
+        body.media = [{ mediaFormat: 'Video', googleUrl: params.videoUrl }];
       }
 
       const res = await fetch(

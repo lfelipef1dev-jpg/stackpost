@@ -4,7 +4,7 @@ import { getUserFromToken } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json().catch(() => ({}));
   const parsed1 = ai_batchBodySchema.safeParse(bodyRaw1);
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     body: JSON.stringify({
       model: 'gpt-4o-mini',
       messages: [
-        { role: 'system', content: `Gere ${days} posts para ${platform || 'Instagram'} sobre "${topic}". Cada post deve ter conteúdo unico e curto. Retorne apenas os posts, um por linha, sem numeracao.` },
+        { role: 'system', content: `Gere ${days} posts para ${platform || 'Instagram'} sobre "${topic}". Cada post deve ter conteúdo único e curto. Retorne apenas os posts, um por linha, sem numeracao.` },
         { role: 'user', content: topic },
       ],
       max_tokens: 700,

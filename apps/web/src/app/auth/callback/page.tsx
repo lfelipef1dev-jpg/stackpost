@@ -15,7 +15,7 @@ function CallbackContent() {
     const refreshToken = params.get('refresh_token');
 
     if (!accessToken || !refreshToken) {
-      setStatus('Tokens nao encontrados. Redirecionando...');
+      setStatus('Tokens não encontrados. Redirecionando...');
       window.location.href = '/login?error=tokens_missing';
       return;
     }

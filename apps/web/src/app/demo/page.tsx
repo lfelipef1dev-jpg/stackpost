@@ -72,7 +72,7 @@ export default function DemoPage() {
               Teste sem cadastro
             </h1>
             <p className="text-lg text-brand-text-secondary max-w-2xl mx-auto">
-              Monte um post, escolha plataformas e veja o payload JSON que a API recebe. Sem login, sem cartao.
+              Monte um post, escolha plataformas e veja o payload JSON que a API recebe. Sem login, sem cartão.
             </p>
           </FadeIn>
         </div>
@@ -202,7 +202,7 @@ export default function DemoPage() {
                 )}
               </button>
               <p className="text-xs text-brand-text-secondary text-center">
-                Demo nao publica de verdade. Crie uma conta para publicar.
+                Demo não publica de verdade. Crie uma conta para publicar.
               </p>
             </div>
           </div>
@@ -217,7 +217,7 @@ export default function DemoPage() {
               href="/register"
               className="inline-flex items-center gap-2 px-8 py-4 bg-brand-accent text-brand-bg font-bold rounded-lg hover:scale-105 transition-transform"
             >
-              Criar conta gratis <ArrowRight className="w-5 h-5" />
+              Criar conta grátis <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
         </ScrollReveal>

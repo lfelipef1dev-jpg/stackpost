@@ -63,7 +63,7 @@ export async function publishPost(postId: string) {
     .select('*')
     .eq('id', postId)
     .single();
-  if (postError || !post) return { error: 'Post nao encontrado' };
+  if (postError || !post) return { error: 'Post não encontrado' };
 
   const { error: statusError } = await supabase
     .from('posts')
@@ -108,8 +108,8 @@ export async function publishPost(postId: string) {
       const adapter = adapters[platform];
       const account = accountsList.find((a) => a.platform === platform);
 
-      if (!adapter) return { platform, success: false, error: 'Plataforma nao suportada' };
-      if (!account) return { platform, success: false, error: 'Conta nao conectada' };
+      if (!adapter) return { platform, success: false, error: 'Plataforma não suportada' };
+      if (!account) return { platform, success: false, error: 'Conta não conectada' };
 
       let imageUrl: string | undefined;
       let videoUrl: string | undefined;

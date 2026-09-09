@@ -24,7 +24,7 @@ const jsonLd = serviceSchema(
 const features = [
   {
     title: 'Feed posts',
-    desc: 'Publique fotos e videos no feed do Instagram com legenda, localizacao e alt text.',
+    desc: 'Publique fotos e vídeos no feed do Instagram com legenda, localizacao e alt text.',
   },
   {
     title: 'Reels',
@@ -36,7 +36,7 @@ const features = [
   },
   {
     title: 'Carrossel',
-    desc: 'Carrossel multi-mídia com até 10 itens misturando imagem e video.',
+    desc: 'Carrossel multi-mídia com até 10 itens misturando imagem e vídeo.',
   },
   {
     title: 'Primeiro comentário',
@@ -67,7 +67,7 @@ export default function InstagramApiPage() {
           icon={FaInstagram}
           label="API de Instagram"
           title="API de Instagram"
-          description="Publique feed posts, Reels, Stories e Carrossel via uma unica API. OAuth via Meta Business, primeiro comentário automático e analytics completo de likes, comments, reach e impressions."
+          description="Publique feed posts, Reels, Stories e Carrossel via uma única API. OAuth via Meta Business, primeiro comentário automático e analytics completo de likes, comments, reach e impressions."
           color="#E4405F"
           docsHref="/docs"
         />

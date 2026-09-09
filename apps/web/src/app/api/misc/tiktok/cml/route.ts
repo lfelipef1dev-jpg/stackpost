@@ -5,7 +5,7 @@ import { getUserFromToken } from '@/lib/auth';
 // GET /api/misc/tiktok/cml — TikTok Content Marketing Library / trending
 export async function GET(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const supabase = getSupabase();
   const { data: account } = await supabase
@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     .eq('platform', 'tiktok')
     .eq('status', 'active')
     .maybeSingle();
-  if (!account) return NextResponse.json({ error: 'TikTok nao conectado' }, { status: 400 });
+  if (!account) return NextResponse.json({ error: 'TikTok não conectado' }, { status: 400 });
 
   try {
     const res = await fetch('https://open.tiktokapis.com/v2/research/trending_content/', {

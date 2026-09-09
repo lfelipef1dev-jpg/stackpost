@@ -15,12 +15,12 @@ export async function GET(req: NextRequest) {
   const state = searchParams.get('state');
   const storedState = req.cookies.get('oauth_state_discord')?.value;
 
-  if (!code) return NextResponse.json({ error: 'Código nao informado' }, { status: 400 });
-  if (state !== storedState) return NextResponse.json({ error: 'State invalido' }, { status: 400 });
+  if (!code) return NextResponse.json({ error: 'Código não informado' }, { status: 400 });
+  if (state !== storedState) return NextResponse.json({ error: 'State inválido' }, { status: 400 });
 
   const clientId = process.env.DISCORD_CLIENT_ID;
   const clientSecret = process.env.DISCORD_CLIENT_SECRET;
-  if (!clientId || !clientSecret) return NextResponse.json({ error: 'Discord OAuth nao configurado' }, { status: 500 });
+  if (!clientId || !clientSecret) return NextResponse.json({ error: 'Discord OAuth não configurado' }, { status: 500 });
 
   try {
     const redirectUri = `${BASE_URL}/api/oauth/discord/callback`;
@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
     if (!tokenRes.ok) throw new Error(tokenData.error_description || 'Discord token exchange failed');
 
     const user = await getUserFromToken(req);
-    if (!user) throw new Error('Nao autorizado');
+    if (!user) throw new Error('Não autorizado');
 
     const supabase = getSupabase();
 

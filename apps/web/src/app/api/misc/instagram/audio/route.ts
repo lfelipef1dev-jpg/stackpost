@@ -6,7 +6,7 @@ import { getUserFromToken } from '@/lib/auth';
 // GET /api/misc/instagram/audio?q=texto — buscar audio no Instagram
 export async function GET(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
   const queryRaw = Object.fromEntries(searchParams);
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
     .eq('platform', 'instagram')
     .eq('status', 'active')
     .maybeSingle();
-  if (!account) return NextResponse.json({ error: 'Instagram nao conectado' }, { status: 400 });
+  if (!account) return NextResponse.json({ error: 'Instagram não conectado' }, { status: 400 });
 
   try {
     // Instagram Music Search (requere instagram_business_manage_messages)
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
       `https://graph.facebook.com/v26.0/${account.external_id}/music?fields=id,title,artist&access_token=${account.access_token}`
     );
     const data = await res.json();
-    if (!res.ok) return NextResponse.json({ error: data.error?.message || 'Audio search nao disponível' }, { status: 400 });
+    if (!res.ok) return NextResponse.json({ error: data.error?.message || 'Audio search não disponível' }, { status: 400 });
     return NextResponse.json({ audio: data.data || [] });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

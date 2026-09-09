@@ -6,7 +6,7 @@ import { getUserFromToken } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json();
   const parsed1 = accounts_refresh_tokenBodySchema.safeParse(bodyRaw1);
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (accountError || !account) {
-      return NextResponse.json({ error: 'Conta nao encontrada' }, { status: 404 });
+      return NextResponse.json({ error: 'Conta não encontrada' }, { status: 404 });
     }
 
     if (!account.refresh_token) {

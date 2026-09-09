@@ -5,7 +5,7 @@ import { getUserFromToken } from '@/lib/auth';
 
 export async function GET(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const now = new Date();
   const firstOfMonth = now.toISOString().slice(0, 7) + '-01T00:00:00.000Z';

@@ -6,7 +6,7 @@ import { getUserFromToken } from '@/lib/auth';
 // GET /api/analytics/account?accountId=xxx — analytics agregado por conta
 export async function GET(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
   const queryRaw = Object.fromEntries(searchParams);
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
       .eq('id', accountId)
       .eq('team_id', user.teamId)
       .maybeSingle();
-    if (!account) return NextResponse.json({ error: 'Conta nao encontrada' }, { status: 404 });
+    if (!account) return NextResponse.json({ error: 'Conta não encontrada' }, { status: 404 });
 
     const { data: posts } = await supabase
       .from('posts')

@@ -8,7 +8,7 @@ import { getUserFromToken } from '@/lib/auth';
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const supabase = getSupabase();
   const { data: post, error } = await supabase
@@ -17,7 +17,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     .eq('id', id)
     .eq('team_id', user.teamId)
     .maybeSingle();
-  if (error || !post) return NextResponse.json({ error: 'Post nao encontrado' }, { status: 404 });
+  if (error || !post) return NextResponse.json({ error: 'Post não encontrado' }, { status: 404 });
   return NextResponse.json(post);
 }
 
@@ -25,7 +25,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json().catch(() => ({}));
   const parsed1 = posts_idBodySchema.safeParse(bodyRaw1);
@@ -49,7 +49,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     .eq('team_id', user.teamId)
     .select()
     .maybeSingle();
-  if (error || !data) return NextResponse.json({ error: 'Post nao encontrado ou erro ao atualizar' }, { status: 404 });
+  if (error || !data) return NextResponse.json({ error: 'Post não encontrado ou erro ao atualizar' }, { status: 404 });
   return NextResponse.json(data);
 }
 
@@ -57,7 +57,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const supabase = getSupabase();
 

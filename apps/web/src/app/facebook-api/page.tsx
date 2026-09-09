@@ -11,13 +11,13 @@ import LandingHeader from '@/components/LandingHeader';
 
 export const metadata: Metadata = {
   title: 'Facebook API - Publique posts, Reels, Stories e Pages via StackPost',
-  description: 'API de Facebook do StackPost: posts, Reels, Stories e Pages. OAuth via Facebook, analytics de reach, engagement e video views.',
+  description: 'API de Facebook do StackPost: posts, Reels, Stories e Pages. OAuth via Facebook, analytics de reach, engagement e vídeo views.',
   alternates: { canonical: '/facebook-api' },
 };
 
 const jsonLd = serviceSchema(
   'Facebook API',
-  'API de Facebook para publicar posts, Reels, Stories e gerenciar Pages. OAuth via Facebook com analytics de reach, engagement e video views.',
+  'API de Facebook para publicar posts, Reels, Stories e gerenciar Pages. OAuth via Facebook com analytics de reach, engagement e vídeo views.',
   '/facebook-api',
 );
 
@@ -36,7 +36,7 @@ const features = [
   },
   {
     title: 'Pages',
-    desc: 'Gerencie multiplas Pages por workspace com tokens renovados automaticamente.',
+    desc: 'Gerencie múltiplas Pages por workspace com tokens renovados automaticamente.',
   },
   {
     title: 'OAuth via Facebook',
@@ -44,7 +44,7 @@ const features = [
   },
   {
     title: 'Analytics',
-    desc: 'Reach, engagement e video views sincronizados em snapshots diarios.',
+    desc: 'Reach, engagement e vídeo views sincronizados em snapshots diarios.',
   },
 ];
 
@@ -67,7 +67,7 @@ export default function FacebookApiPage() {
           icon={FaFacebook}
           label="API de Facebook"
           title="API de Facebook"
-          description="Publique posts, Reels e Stories em Pages via uma unica API. OAuth via Facebook, gerenciamento de multiplas Pages e analytics de reach, engagement e video views."
+          description="Publique posts, Reels e Stories em Pages via uma única API. OAuth via Facebook, gerenciamento de múltiplas Pages e analytics de reach, engagement e vídeo views."
           color="#1877F2"
           docsHref="/docs"
         />

@@ -90,7 +90,7 @@ async function handlePreapproval(preapprovalId: string): Promise<Response> {
       .maybeSingle();
 
     if (!sub) {
-      return NextResponse.json({ ok: true, mensagem: 'Subscription nao encontrada para preapproval.' });
+      return NextResponse.json({ ok: true, mensagem: 'Subscription não encontrada para preapproval.' });
     }
 
     const statusMap: Record<string, string> = {
@@ -145,7 +145,7 @@ async function handleSubscriptionAuthorizedPayment(paymentId: string): Promise<R
       .maybeSingle();
 
     if (!sub) {
-      return NextResponse.json({ ok: true, mensagem: 'Subscription nao encontrada para cobrança.' });
+      return NextResponse.json({ ok: true, mensagem: 'Subscription não encontrada para cobrança.' });
     }
 
     // Avança o período da assinatura
@@ -206,7 +206,7 @@ async function handleSubscriptionAuthorizedPayment(paymentId: string): Promise<R
 
 export async function POST(request: Request) {
   if (!await validarAssinatura(request)) {
-    return NextResponse.json({ error: 'Assinatura do webhook invalida.' }, { status: 401 });
+    return NextResponse.json({ error: 'Assinatura do webhook inválida.' }, { status: 401 });
   }
 
   const url = new URL(request.url);
@@ -215,7 +215,7 @@ export async function POST(request: Request) {
   const isDev = process.env.NODE_ENV !== 'production';
 
   if (!isDev && expectedParam && secretParam !== expectedParam) {
-    return NextResponse.json({ error: 'Segredo de query invalido.' }, { status: 401 });
+    return NextResponse.json({ error: 'Segredo de query inválido.' }, { status: 401 });
   }
 
   let payload: any;
@@ -227,7 +227,7 @@ export async function POST(request: Request) {
     if (dataId) {
       payload = { type: type || 'payment', data: { id: dataId } };
     } else {
-      return NextResponse.json({ error: 'Payload do webhook invalido.' }, { status: 400 });
+      return NextResponse.json({ error: 'Payload do webhook inválido.' }, { status: 400 });
     }
   }
 
@@ -275,7 +275,7 @@ export async function POST(request: Request) {
       .maybeSingle();
 
     if (errOrder || !order) {
-      return NextResponse.json({ ok: true, mensagem: 'Pedido nao encontrado, ignorado.' }, { status: 200 });
+      return NextResponse.json({ ok: true, mensagem: 'Pedido não encontrado, ignorado.' }, { status: 200 });
     }
 
     if (order.status === 'paid') {
@@ -290,7 +290,7 @@ export async function POST(request: Request) {
           atualizado_em: new Date().toISOString(),
         })
         .eq('order_id', externalReference);
-      return NextResponse.json({ ok: true, mensagem: 'Status nao aprovado, ignorado.' }, { status: 200 });
+      return NextResponse.json({ ok: true, mensagem: 'Status não aprovado, ignorado.' }, { status: 200 });
     }
 
     const planoEscolhido = (order.plano_escolhido || '').toLowerCase();

@@ -22,12 +22,12 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const supabase = getSupabase();
   const { data: org } = await supabase.from('organizations').select('id, name, owner_id').eq('id', id).single();
   if (!org) {
-    return NextResponse.json({ error: 'Organizacao nao encontrada' }, { status: 404 });
+    return NextResponse.json({ error: 'Organização não encontrada' }, { status: 404 });
   }
 
   const { data: newOwner } = await supabase.from('users').select('id, name, email').eq('id', parsed.data.new_owner_id).single();
   if (!newOwner) {
-    return NextResponse.json({ error: 'Novo dono nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Novo dono não encontrado' }, { status: 404 });
   }
 
   await supabase.from('organizations').update({ owner_id: parsed.data.new_owner_id, updated_at: new Date().toISOString() }).eq('id', id);

@@ -31,7 +31,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     .single();
 
   if (paymentError || !payment) {
-    return NextResponse.json({ error: 'Pagamento nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Pagamento não encontrado' }, { status: 404 });
   }
 
   if (!payment.team_id) {

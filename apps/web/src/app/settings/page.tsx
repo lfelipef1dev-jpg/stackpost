@@ -577,7 +577,7 @@ export default function SettingsPage() {
                           onChange={(e) => setProfile((p) => ({ ...p, timezone: e.target.value }))}
                           className="w-full px-4 py-2.5 rounded-xl bg-brand-elevated border border-brand-border text-sm focus:outline-none focus:border-brand-accent transition"
                         >
-                          <option value="America/Sao_Paulo">(UTC-3) Sao Paulo</option>
+                          <option value="America/Sao_Paulo">(UTC-3) São Paulo</option>
                           <option value="America/New_York">(UTC-5) New York</option>
                           <option value="Europe/London">(UTC+0) London</option>
                           <option value="Europe/Lisbon">(UTC+0) Lisboa</option>
@@ -788,7 +788,7 @@ export default function SettingsPage() {
                       <table className="w-full text-xs">
                         <thead>
                           <tr className="border-b border-brand-border">
-                            <th className="text-left py-2 px-2 text-brand-text-secondary font-medium">Permissao</th>
+                            <th className="text-left py-2 px-2 text-brand-text-secondary font-medium">Permissão</th>
                             <th className="text-center py-2 px-2 text-warning font-medium">Owner</th>
                             <th className="text-center py-2 px-2 text-brand-accent font-medium">Admin</th>
                             <th className="text-center py-2 px-2 text-success font-medium">Editor</th>
@@ -1159,7 +1159,7 @@ export default function SettingsPage() {
                       </span>
                     </div>
                     <p className="text-[11px] text-brand-text-secondary mb-3">
-                      Centralize o acesso da equipe com login unico via SAML/OIDC.
+                      Centralize o acesso da equipe com login único via SAML/OIDC.
                     </p>
                     <button
                       onClick={handleUpgradePlan}
@@ -1204,10 +1204,10 @@ export default function SettingsPage() {
                       <h3 className="font-semibold text-sm">Notificações por email</h3>
                     </div>
                     <div className="divide-y divide-brand-border/30">
-                      <SettingRow title="Publicacoes publicadas" desc="Receba email quando um post for publicado">
+                      <SettingRow title="Publicações publicadas" desc="Receba email quando um post for publicado">
                         <Toggle checked={notifPrefs.emailPosts} onChange={() => setNotifPrefs((p) => ({ ...p, emailPosts: !p.emailPosts }))} />
                       </SettingRow>
-                      <SettingRow title="Comentarios recebidos" desc="Alerta de novos comentários nos seus posts">
+                      <SettingRow title="Comentários recebidos" desc="Alerta de novos comentários nos seus posts">
                         <Toggle checked={notifPrefs.emailComments} onChange={() => setNotifPrefs((p) => ({ ...p, emailComments: !p.emailComments }))} />
                       </SettingRow>
                       <SettingRow title="Cobrança e faturas" desc="Recibos, renovações e alertas de pagamento">

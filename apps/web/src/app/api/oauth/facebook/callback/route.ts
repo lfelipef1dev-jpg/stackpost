@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
   const state = searchParams.get('state') || 'facebook';
 
   if (!code) {
-    return NextResponse.json({ error: 'Código nao informado' }, { status: 400 });
+    return NextResponse.json({ error: 'Código não informado' }, { status: 400 });
   }
 
   const teamId = state.includes(':') ? state.split(':')[0] : null;

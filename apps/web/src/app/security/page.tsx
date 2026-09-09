@@ -8,17 +8,17 @@ import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Security - StackPost | Infraestrutura social segura',
-  description: 'Seguranca por design: encryption at rest, OAuth 2.0, API keys com hash, HMAC webhooks, RBAC, audit logs, data isolation multi-tenant e rate limiting.',
+  description: 'Segurança por design: encryption at rest, OAuth 2.0, API keys com hash, HMAC webhooks, RBAC, audit logs, data isolation multi-tenant e rate limiting.',
   alternates: { canonical: '/security' },
 };
 
 const jsonLd = serviceSchema('Security Center', 'Infraestrutura social segura por design.', '/security');
 
 const securityItems = [
-  { icon: Lock, title: 'Encryption at rest', desc: 'Todos os dados sensiveis criptografados em repouso no banco.' },
-  { icon: KeyRound, title: 'OAuth 2.0', desc: 'Autenticacao via OAuth 2.0 para todas as plataformas conectadas.' },
+  { icon: Lock, title: 'Encryption at rest', desc: 'Todos os dados sensíveis criptografados em repouso no banco.' },
+  { icon: KeyRound, title: 'OAuth 2.0', desc: 'Autenticação via OAuth 2.0 para todas as plataformas conectadas.' },
   { icon: Shield, title: 'API keys com hash', desc: 'Chaves de API armazenadas com hash, nunca em texto plano.' },
-  { icon: Webhook, title: 'HMAC webhooks', desc: 'Webhooks assinados com HMAC-SHA256 para verificacao de origem.' },
+  { icon: Webhook, title: 'HMAC webhooks', desc: 'Webhooks assinados com HMAC-SHA256 para verificação de origem.' },
   { icon: Eye, title: 'RBAC', desc: 'Owner, Admin, Editor e Viewer com permissões granulares.' },
   { icon: FileText, title: 'Audit logs', desc: 'Todas as ações rastreadas com timestamp, usuário e contexto.' },
   { icon: Shield, title: 'Data isolation multi-tenant', desc: 'Cada workspace isolado, sem vazamento entre tenants.' },
@@ -52,7 +52,7 @@ export default function SecurityPage() {
               <span className="text-xs font-mono" style={{ color: '#8AB4F8' }}>Security</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight" style={{ color: 'color-mix(in srgb, #8AB4F8 25%, white)' }}>
-              Seguranca por design
+              Segurança por design
             </h1>
             <p className="text-lg text-brand-text-secondary max-w-2xl mx-auto">
               Infraestrutura social segura desde o primeiro commit. Encryption, RBAC, audit logs e isolamento multi-tenant em todas as camadas.
@@ -61,10 +61,10 @@ export default function SecurityPage() {
         </div>
       </section>
 
-      {/* Seguranca por design - grid de 8 itens */}
+      {/* Segurança por design - grid de 8 itens */}
       <section className="max-w-5xl mx-auto px-4 md:px-6 pb-20">
         <ScrollReveal>
-          <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">Seguranca por design</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">Segurança por design</h2>
         </ScrollReveal>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {securityItems.map((item) => (
@@ -92,12 +92,12 @@ export default function SecurityPage() {
               <h2 className="text-2xl font-bold text-brand-text">Idempotencia e retry</h2>
             </div>
             <p className="text-brand-text-secondary mb-6">
-              Publicacoes sao resilientes por padrão. Nada de posts duplicados por erro de rede.
+              Publicações sao resilientes por padrão. Nada de posts duplicados por erro de rede.
             </p>
             <div className="grid md:grid-cols-3 gap-4">
               <div>
                 <h3 className="font-semibold text-brand-text mb-1">Chaves de idempotencia</h3>
-                <p className="text-sm text-brand-text-secondary">Cada request recebe uma chave unica. Retries nao criam duplicatas.</p>
+                <p className="text-sm text-brand-text-secondary">Cada request recebe uma chave única. Retries não criam duplicatas.</p>
               </div>
               <div>
                 <h3 className="font-semibold text-brand-text mb-1">Retry automático</h3>
@@ -154,7 +154,7 @@ export default function SecurityPage() {
             href="/register"
             className="inline-flex items-center gap-2 px-6 py-3 bg-brand-accent text-brand-bg font-bold rounded-lg hover:scale-105 transition-transform"
           >
-            Comecar gratis <ArrowRight className="w-4 h-4" />
+            Comecar grátis <ArrowRight className="w-4 h-4" />
           </Link>
         </ScrollReveal>
       </section>

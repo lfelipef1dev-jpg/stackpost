@@ -7,7 +7,7 @@ import { getUserFromToken } from '@/lib/auth';
 // Uses Nexus IA if configured, otherwise falls back to keyword extraction
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json();
   const parsed1 = ai_hashtagsBodySchema.safeParse(bodyRaw1);
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
     linkedin: ['#linkedin', '#networking', '#professional', '#career', '#business', '#innovation', '#tech', '#leadership'],
     x: ['#trending', '#viral', '#news'],
     tiktok: ['#tiktok', '#fyp', '#foryou', '#viral', '#trending', '#tiktokbrasil'],
-    youtube: ['#youtube', '#shorts', '#video', '#content', '#creator'],
+    youtube: ['#youtube', '#shorts', '#vídeo', '#content', '#creator'],
     facebook: ['#facebook', '#socialmedia', '#marketing'],
     threads: ['#threads', '#meta', '#conversation'],
     pinterest: ['#pinterest', '#inspiration', '#ideas', '#diy'],

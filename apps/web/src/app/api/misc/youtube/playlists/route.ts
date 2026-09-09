@@ -6,7 +6,7 @@ import { getUserFromToken } from '@/lib/auth';
 // GET /api/misc/youtube/playlists — listar playlists do canal
 export async function GET(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const supabase = getSupabase();
   const { data: account } = await supabase
@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     .eq('platform', 'youtube')
     .eq('status', 'active')
     .maybeSingle();
-  if (!account) return NextResponse.json({ error: 'YouTube nao conectado' }, { status: 400 });
+  if (!account) return NextResponse.json({ error: 'YouTube não conectado' }, { status: 400 });
 
   const channelId = account.platform_account_id;
   try {
@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
 // POST /api/misc/youtube/playlists — criar playlist
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json().catch(() => ({}));
   const parsed1 = misc_youtube_playlistsBodySchema.safeParse(bodyRaw1);
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
     .eq('platform', 'youtube')
     .eq('status', 'active')
     .maybeSingle();
-  if (!account) return NextResponse.json({ error: 'YouTube nao conectado' }, { status: 400 });
+  if (!account) return NextResponse.json({ error: 'YouTube não conectado' }, { status: 400 });
 
   try {
     const res = await fetch('https://www.googleapis.com/youtube/v3/playlists?part=snippet,status', {

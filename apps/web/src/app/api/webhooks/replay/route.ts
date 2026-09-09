@@ -7,7 +7,7 @@ import { createHmac } from 'crypto';
 
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json();
   const parsed1 = webhooks_replayBodySchema.safeParse(bodyRaw1);
@@ -26,12 +26,12 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (eventErr || !eventData) {
-      return NextResponse.json({ error: 'Evento nao encontrado' }, { status: 404 });
+      return NextResponse.json({ error: 'Evento não encontrado' }, { status: 404 });
     }
 
     const event: any = eventData;
     if (event.webhooks.team_id !== user.teamId) {
-      return NextResponse.json({ error: 'Evento nao encontrado' }, { status: 404 });
+      return NextResponse.json({ error: 'Evento não encontrado' }, { status: 404 });
     }
 
     const payload = { type: event.event_type, data: event.payload };

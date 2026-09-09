@@ -53,19 +53,19 @@ async function processAndSave(file: File, teamId: string): Promise<{ id: string;
 export async function POST(req: NextRequest) {
   try {
     const user = await getUserFromToken(req);
-    if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+    if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
     const contentType = req.headers.get('content-type') || '';
 
     if (contentType.includes('multipart/form-data')) {
       const formData = await req.formData();
       const file = formData.get('file') as File;
-      if (!file) return NextResponse.json({ error: 'Arquivo nao enviado' }, { status: 400 });
+      if (!file) return NextResponse.json({ error: 'Arquivo não enviado' }, { status: 400 });
       const result = await processAndSave(file, user.teamId);
       return NextResponse.json(result);
     }
 
-    return NextResponse.json({ error: 'Content-type nao suportado' }, { status: 400 });
+    return NextResponse.json({ error: 'Content-type não suportado' }, { status: 400 });
   } catch (err: any) {
     logger.error('Upload error:', err);
     return NextResponse.json({ error: err.message || 'Erro no upload' }, { status: 500 });
@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   try {
     const supabase = getSupabase();

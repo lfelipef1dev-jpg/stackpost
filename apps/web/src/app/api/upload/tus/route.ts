@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
   if (!uploadLength || uploadLength > TUS_MAX_SIZE) {
     return NextResponse.json(
-      { error: 'Upload-Length invalido ou muito grande' },
+      { error: 'Upload-Length inválido ou muito grande' },
       { status: 413, headers: { 'Tus-Version': TUS_VERSION, 'Tus-Max-Size': String(TUS_MAX_SIZE) } }
     );
   }

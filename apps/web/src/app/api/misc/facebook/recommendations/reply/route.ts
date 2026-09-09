@@ -6,7 +6,7 @@ import { getUserFromToken } from '@/lib/auth';
 // POST /api/misc/facebook/recommendations/reply — responder recommendation/review
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json().catch(() => ({}));
   const parsed1 = misc_facebook_recommendations_replyBodySchema.safeParse(bodyRaw1);
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
       .eq('team_id', user.teamId)
       .eq('platform', 'facebook')
       .maybeSingle();
-    if (!account) return NextResponse.json({ error: 'Conta Facebook nao encontrada' }, { status: 404 });
+    if (!account) return NextResponse.json({ error: 'Conta Facebook não encontrada' }, { status: 404 });
 
     // Responder via comment na open_graph_story
     const res = await fetch(`https://graph.facebook.com/v26.0/${recommendationId}/comments`, {

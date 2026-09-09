@@ -7,7 +7,7 @@ import { getUserFromToken } from '@/lib/auth';
 // POST /api/comments/import — importar comentários de um post publicado
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json().catch(() => ({}));
   const parsed1 = comments_importBodySchema.safeParse(bodyRaw1);
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       .eq('id', postId)
       .eq('team_id', user.teamId)
       .maybeSingle();
-    if (!post) return NextResponse.json({ error: 'Post nao encontrado' }, { status: 404 });
+    if (!post) return NextResponse.json({ error: 'Post não encontrado' }, { status: 404 });
 
     const { data: pp } = await supabase
       .from('post_platforms')
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
       .eq('platform', platform)
       .eq('status', 'posted')
       .maybeSingle();
-    if (!pp?.external_id) return NextResponse.json({ error: 'Post nao publicado nesta plataforma' }, { status: 400 });
+    if (!pp?.external_id) return NextResponse.json({ error: 'Post não publicado nesta plataforma' }, { status: 400 });
 
     const { data: account } = await supabase
       .from('social_accounts')
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
       .eq('platform', platform)
       .eq('status', 'active')
       .maybeSingle();
-    if (!account) return NextResponse.json({ error: 'Conta nao conectada' }, { status: 400 });
+    if (!account) return NextResponse.json({ error: 'Conta não conectada' }, { status: 400 });
 
     const maxLimit = Math.min(limit || 50, 100);
     let imported = 0;
@@ -122,7 +122,7 @@ export async function POST(req: NextRequest) {
         imported++;
       }
     } else {
-      return NextResponse.json({ error: `Import de comentários de ${platform} nao suportado` }, { status: 400 });
+      return NextResponse.json({ error: `Import de comentários de ${platform} não suportado` }, { status: 400 });
     }
 
     return NextResponse.json({ imported, platform, postId });

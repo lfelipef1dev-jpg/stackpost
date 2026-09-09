@@ -8,7 +8,7 @@ import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Migrar de Ayrshare para StackPost - Guia completo',
-  description: 'Guia de migracao de Ayrshare Social API para StackPost. Mapeamento de endpoints, payload e autenticacao.',
+  description: 'Guia de migracao de Ayrshare Social API para StackPost. Mapeamento de endpoints, payload e autenticação.',
   alternates: { canonical: '/migrate-from-ayrshare' },
 };
 
@@ -27,7 +27,7 @@ const mapping = [
 
 const advantages = [
   'Sem custo por perfil conectado (Ayrshare cobra por perfil)',
-  'Pague pelo uso, nao por assento',
+  'Pague pelo uso, não por assento',
   '15 plataformas incluidas em todos os planos',
   'MCP server nativo para AI agents',
   'Suporte em portugues (PT-BR)',
@@ -54,7 +54,7 @@ export default function MigrateFromAyrsharePage() {
               Migrar de Ayrshare
             </h1>
             <p className="text-lg text-brand-text-secondary max-w-2xl mx-auto">
-              Mapeamento direto de endpoints. Troque em horas, nao semanas.
+              Mapeamento direto de endpoints. Troque em horas, não semanas.
             </p>
           </FadeIn>
         </div>

@@ -6,7 +6,7 @@ import { getUserFromToken } from '@/lib/auth';
 // GET /api/organization — info da organizacao do usuário
 export async function GET(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const supabase = getSupabase();
 
@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
       .select('*, organizations(*)')
       .eq('id', user.teamId)
       .maybeSingle();
-    if (teamError || !team) return NextResponse.json({ error: 'Team nao encontrado' }, { status: 404 });
+    if (teamError || !team) return NextResponse.json({ error: 'Team não encontrado' }, { status: 404 });
 
     // Buscar membros
     const { data: members } = await supabase
@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
 // PATCH /api/organization — atualizar organizacao
 export async function PATCH(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   if (user.role !== 'owner' && user.role !== 'admin') {
     return NextResponse.json({ error: 'Sem permissão (requer owner/admin)' }, { status: 403 });
@@ -59,7 +59,7 @@ export async function PATCH(req: NextRequest) {
       .select('organization_id')
       .eq('id', user.teamId)
       .maybeSingle();
-    if (!team?.organization_id) return NextResponse.json({ error: 'Organizacao nao encontrada' }, { status: 404 });
+    if (!team?.organization_id) return NextResponse.json({ error: 'Organização não encontrada' }, { status: 404 });
 
     const updates: any = {};
     if (body.name !== undefined) updates.name = body.name;

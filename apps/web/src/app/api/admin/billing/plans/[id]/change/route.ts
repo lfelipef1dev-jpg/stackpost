@@ -29,7 +29,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
   const { data: newPlan } = await supabase.from('plans').select('id, slug, name, price_cents, currency, interval').eq('id', id).single();
   if (!newPlan) {
-    return NextResponse.json({ error: 'Plano nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Plano não encontrado' }, { status: 404 });
   }
 
   const { data: subscription } = await supabase
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     .eq('id', parsed.data.subscription_id)
     .single();
   if (!subscription) {
-    return NextResponse.json({ error: 'Assinatura nao encontrada' }, { status: 404 });
+    return NextResponse.json({ error: 'Assinatura não encontrada' }, { status: 404 });
   }
 
   const { data: oldPlan } = subscription.plan_id
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
         platform: 'mercadopago',
         amount: proratedCents,
         type: 'manual_adjustment',
-        description: `Ajuste pro-rata na mudanca de plano: ${oldPlan?.name || '-'} -> ${newPlan.name}`,
+        description: `Ajuste pro-rata na mudança de plano: ${oldPlan?.name || '-'} -> ${newPlan.name}`,
         reference_id: subscription.id,
         created_by: admin.id,
         created_at: now,

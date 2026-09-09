@@ -9,7 +9,7 @@ const VALORES_PRE_APROVADOS = [50, 100, 200, 500];
 export async function POST(request: Request) {
   const user = await getUserFromToken(request as any);
   if (!user) {
-    return NextResponse.json({ error: 'Nao autorizado.' }, { status: 401 });
+    return NextResponse.json({ error: 'Não autorizado.' }, { status: 401 });
   }
 
   let body: { valor?: number };
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     body = await request.json();
   } catch {
     return NextResponse.json(
-      { error: 'Corpo da requisicao invalido.' },
+      { error: 'Corpo da requisicao inválido.' },
       { status: 400 },
     );
   }
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
   const valor = Number(body.valor);
   if (!valor || valor <= 0) {
     return NextResponse.json(
-      { error: 'Valor invalido. Escolha um valor positivo.' },
+      { error: 'Valor inválido. Escolha um valor positivo.' },
       { status: 400 },
     );
   }
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
 
   if (errTeam || !team) {
     return NextResponse.json(
-      { error: 'Time nao encontrado.' },
+      { error: 'Time não encontrado.' },
       { status: 404 },
     );
   }
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
 
   if (errOrder) {
     return NextResponse.json(
-      { error: 'Nao conseguimos iniciar o pedido.' },
+      { error: 'Não conseguimos iniciar o pedido.' },
       { status: 500 },
     );
   }
@@ -97,7 +97,7 @@ export async function POST(request: Request) {
     const msg = e instanceof Error ? e.message : String(e);
     logger.error('[pagamentos/créditos] Erro:', msg);
     return NextResponse.json(
-      { error: 'Nao conseguimos comunicar com o gateway de pagamento.' },
+      { error: 'Não conseguimos comunicar com o gateway de pagamento.' },
       { status: 502 },
     );
   }

@@ -6,7 +6,7 @@ import { getUserFromToken } from '@/lib/auth';
 // GET /api/analytics/post/raw?postId=xxx — raw payload por plataforma
 export async function GET(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
   const queryRaw = Object.fromEntries(searchParams);
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
       .eq('id', postId)
       .eq('team_id', user.teamId)
       .maybeSingle();
-    if (!post) return NextResponse.json({ error: 'Post nao encontrado' }, { status: 404 });
+    if (!post) return NextResponse.json({ error: 'Post não encontrado' }, { status: 404 });
 
     const { data: snapshots } = await supabase
       .from('analytics_snapshots')

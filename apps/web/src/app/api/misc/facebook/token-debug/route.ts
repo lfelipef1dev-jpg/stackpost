@@ -6,7 +6,7 @@ import { getUserFromToken } from '@/lib/auth';
 // GET /api/misc/facebook/token-debug — debugar token do Facebook
 export async function GET(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
   const queryRaw = Object.fromEntries(searchParams);
@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
       .eq('team_id', user.teamId)
       .eq('platform', 'facebook')
       .maybeSingle();
-    if (!account) return NextResponse.json({ error: 'Conta nao encontrada' }, { status: 404 });
+    if (!account) return NextResponse.json({ error: 'Conta não encontrada' }, { status: 404 });
 
     const res = await fetch(
       `https://graph.facebook.com/debug_token?input_token=${account.access_token}&access_token=${process.env.META_APP_ID}|${process.env.META_APP_SECRET}`

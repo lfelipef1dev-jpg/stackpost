@@ -26,8 +26,8 @@ export const platforms: PlatformCardData[] = [
     users: '3.0B',
     tagline: 'A maior rede social do mundo',
     shortDescription: 'Page posts, Reels, Stories, carrossel, live e reviews oficiais do Meta Graph.',
-    description: 'Conecte páginas, perfis e grupos. Publique texto, imagem, video, carrossel, reels e links. Suporte a live, reviews, comentários e respostas automáticas.',
-    supports: ['Page posts', 'Reels', 'Stories', 'Carrossel', 'Live', 'Reviews', 'Comentarios'],
+    description: 'Conecte páginas, perfis e grupos. Publique texto, imagem, vídeo, carrossel, reels e links. Suporte a live, reviews, comentários e respostas automáticas.',
+    supports: ['Page posts', 'Reels', 'Stories', 'Carrossel', 'Live', 'Reviews', 'Comentários'],
     details: [
       { label: 'Formatos', value: 'JPG, PNG, MP4' },
       { label: 'Tamanho max', value: '8 MB / 1 GB' },
@@ -44,9 +44,9 @@ export const platforms: PlatformCardData[] = [
     name: 'YouTube',
     users: '2.7B',
     tagline: 'O segundo maior buscador do planeta',
-    shortDescription: 'Videos longos, Shorts, playlists e upload resumavel via Data API v3.',
-    description: 'Envie videos longos e Shorts com upload resumavel. Controle titulos, descricoes, tags, categorias, madeForKids, thumbnails e legendas.',
-    supports: ['Videos', 'Shorts', 'Playlists', 'Upload resumavel', 'Thumbnails', 'Legendas'],
+    shortDescription: 'Vídeos longos, Shorts, playlists e upload resumível via Data API v3.',
+    description: 'Envie vídeos longos e Shorts com upload resumível. Controle titulos, descricoes, tags, categorias, madeForKids, thumbnails e legendas.',
+    supports: ['Vídeos', 'Shorts', 'Playlists', 'Upload resumível', 'Thumbnails', 'Legendas'],
     details: [
       { label: 'Formatos', value: 'MP4' },
       { label: 'Tamanho max', value: '128 GB' },
@@ -82,9 +82,9 @@ export const platforms: PlatformCardData[] = [
     name: 'TikTok',
     users: '1.5B',
     tagline: 'Conteúdo short-form em escala',
-    shortDescription: 'Videos, Photo Mode e status de review pela Content API oficial.',
-    description: 'Publique videos e Photo Mode com status de review, privacy levels, commercial sound, hashtags e comentários controlados.',
-    supports: ['Videos', 'Photo Mode', 'Privacy levels', 'Review status', 'Commercial sound', 'Hashtags'],
+    shortDescription: 'Vídeos, Photo Mode e status de review pela Content API oficial.',
+    description: 'Publique vídeos e Photo Mode com status de review, privacy levels, commercial sound, hashtags e comentários controlados.',
+    supports: ['Vídeos', 'Photo Mode', 'Privacy levels', 'Review status', 'Commercial sound', 'Hashtags'],
     details: [
       { label: 'Formatos', value: 'MP4, WebM' },
       { label: 'Tamanho max', value: '1 GB' },
@@ -120,9 +120,9 @@ export const platforms: PlatformCardData[] = [
     name: 'Snapchat',
     users: '800M',
     tagline: 'Stories e Spotlight para Gen Z',
-    shortDescription: 'Stories e Spotlight com video vertical 9:16 e upload de até 1 GB.',
-    description: 'Publique Stories e Spotlight com video vertical 9:16, sound info e upload de até 1 GB para audiencia jovem e engajada.',
-    supports: ['Stories', 'Spotlight', 'Video 9:16', 'Sound', 'Upload 1 GB', 'Lentes'],
+    shortDescription: 'Stories e Spotlight com vídeo vertical 9:16 e upload de até 1 GB.',
+    description: 'Publique Stories e Spotlight com vídeo vertical 9:16, sound info e upload de até 1 GB para audiencia jovem e engajada.',
+    supports: ['Stories', 'Spotlight', 'Vídeo 9:16', 'Sound', 'Upload 1 GB', 'Lentes'],
     details: [
       { label: 'Formatos', value: 'MP4' },
       { label: 'Tamanho max', value: '1 GB' },
@@ -158,9 +158,9 @@ export const platforms: PlatformCardData[] = [
     name: 'X / Twitter',
     users: '600M',
     tagline: 'Conversas em tempo real',
-    shortDescription: 'Tweets com 4 imagens ou 1 video, quotes, links e threads.',
-    description: 'Publique tweets com até 4 imagens ou 1 video, quotes, links e threads. Analytics e suporte a API oficial v2.',
-    supports: ['Tweets', '4 imagens', '1 video', 'Quote', 'Threads', '280/25k chars'],
+    shortDescription: 'Tweets com 4 imagens ou 1 vídeo, quotes, links e threads.',
+    description: 'Publique tweets com até 4 imagens ou 1 vídeo, quotes, links e threads. Analytics e suporte a API oficial v2.',
+    supports: ['Tweets', '4 imagens', '1 vídeo', 'Quote', 'Threads', '280/25k chars'],
     details: [
       { label: 'Formatos', value: 'JPG, PNG, GIF, MP4' },
       { label: 'Tamanho max', value: '5 MB / 512 MB' },
@@ -177,9 +177,9 @@ export const platforms: PlatformCardData[] = [
     name: 'Pinterest',
     users: '500M',
     tagline: 'Descoberta visual por intenção',
-    shortDescription: 'Pins em boards com imagem ou video e link de destino.',
-    description: 'Crie pins em boards com imagem ou video. Suporte a link de destino, alt text e integração com catalogos de produto.',
-    supports: ['Pins', 'Boards', 'Imagem', 'Video', 'Link de destino', 'API v5'],
+    shortDescription: 'Pins em boards com imagem ou vídeo e link de destino.',
+    description: 'Crie pins em boards com imagem ou vídeo. Suporte a link de destino, alt text e integração com catalogos de produto.',
+    supports: ['Pins', 'Boards', 'Imagem', 'Vídeo', 'Link de destino', 'API v5'],
     details: [
       { label: 'Formatos', value: 'JPG, PNG' },
       { label: 'Tamanho max', value: '20 MB' },
@@ -195,10 +195,10 @@ export const platforms: PlatformCardData[] = [
     id: 'threads',
     name: 'Threads',
     users: '200M',
-    tagline: 'Conversas publicas da Meta',
+    tagline: 'Conversas públicas da Meta',
     shortDescription: 'Texto, mídia, enquetes, GIFs e links com até 10 imagens.',
-    description: 'Publique texto, mídia, enquetes, GIFs e links com até 10 imagens ou 1 video. Integração direta com ecossistema Meta.',
-    supports: ['Texto', 'Imagem', 'Video', 'Poll', 'GIF', 'Link'],
+    description: 'Publique texto, mídia, enquetes, GIFs e links com até 10 imagens ou 1 vídeo. Integração direta com ecossistema Meta.',
+    supports: ['Texto', 'Imagem', 'Vídeo', 'Poll', 'GIF', 'Link'],
     details: [
       { label: 'Formatos', value: 'JPG, PNG, MP4' },
       { label: 'Tamanho max', value: '8 MB' },
@@ -235,7 +235,7 @@ export const platforms: PlatformCardData[] = [
     users: 'MILHOES',
     tagline: 'Visibilidade local no Google',
     shortDescription: 'Posts, eventos, ofertas e alertas no perfil da empresa.',
-    description: 'Publique atualizacoes, eventos, ofertas e alertas no perfil da empresa. Ideal para franquias e negocios locais com multi-location.',
+    description: 'Publique atualizações, eventos, ofertas e alertas no perfil da empresa. Ideal para franquias e negócios locais com multi-location.',
     supports: ['Posts locais', 'Eventos', 'Ofertas', 'Alertas', 'Reviews', 'Multi-location'],
     details: [
       { label: 'Formatos', value: 'JPG, PNG' },
@@ -274,7 +274,7 @@ export const platforms: PlatformCardData[] = [
     tagline: 'Comunicacao interna das empresas',
     shortDescription: 'Mensagens por webhook para workspaces e canais.',
     description: 'Envie mensagens por webhook para workspaces e canais. Suporte a até 4 anexos e integração com produtos internos.',
-    supports: ['Webhook', 'Mensagens', '4 anexos', 'Canais', 'Workspace', 'Notificacoes'],
+    supports: ['Webhook', 'Mensagens', '4 anexos', 'Canais', 'Workspace', 'Notificações'],
     details: [
       { label: 'Formatos', value: 'qualquer' },
       { label: 'Tamanho max', value: '8 MB' },
@@ -290,10 +290,10 @@ export const platforms: PlatformCardData[] = [
     id: 'mastodon',
     name: 'Mastodon',
     users: '10M',
-    tagline: 'Fediverso e instancias custom',
-    shortDescription: 'Status com 4 mídias, privacidade, spoiler e instancia custom.',
-    description: 'Publique status com 4 mídias, controles de privacidade, spoiler e suporte a instancias personalizadas.',
-    supports: ['Status', '4 mídias', 'Privacidade', 'Spoiler', 'Instancia custom', 'Fediverso'],
+    tagline: 'Fediverso e instâncias custom',
+    shortDescription: 'Status com 4 mídias, privacidade, spoiler e instância custom.',
+    description: 'Publique status com 4 mídias, controles de privacidade, spoiler e suporte a instâncias personalizadas.',
+    supports: ['Status', '4 mídias', 'Privacidade', 'Spoiler', 'Instância custom', 'Fediverso'],
     details: [
       { label: 'Formatos', value: 'JPG, PNG, GIF, WEBP, MP4' },
       { label: 'Tamanho max', value: '8 MB / 40 MB' },
@@ -450,7 +450,7 @@ export default function PlatformCards() {
             <p className="text-brand-text-secondary leading-relaxed mb-6">{selected.description}</p>
 
             <div className="mb-6">
-              <h4 className="text-xs font-mono font-bold text-brand-accent uppercase tracking-[0.2em] mb-3">O que e possivel publicar</h4>
+              <h4 className="text-xs font-mono font-bold text-brand-accent uppercase tracking-[0.2em] mb-3">O que e possível publicar</h4>
               <div className="flex flex-wrap gap-2">
                 {selected.supports.map((s) => (
                   <span key={s} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-brand-border bg-brand-elevated/60 text-xs text-brand-text">

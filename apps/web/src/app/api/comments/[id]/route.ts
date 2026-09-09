@@ -7,7 +7,7 @@ import { getUserFromToken } from '@/lib/auth';
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const supabase = getSupabase();
   const { data, error } = await supabase
@@ -15,7 +15,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     .select('*, posts!inner(team_id)')
     .eq('id', id)
     .single();
-  if (error || !data) return NextResponse.json({ error: 'Comment nao encontrado' }, { status: 404 });
+  if (error || !data) return NextResponse.json({ error: 'Comment não encontrado' }, { status: 404 });
   if (data.posts?.team_id !== user.teamId) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   return NextResponse.json(data);
 }
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const supabase = getSupabase();
   const { data: comment, error: cError } = await supabase
@@ -32,7 +32,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     .select('*, posts!inner(team_id, platforms)')
     .eq('id', id)
     .single();
-  if (cError || !comment) return NextResponse.json({ error: 'Comment nao encontrado' }, { status: 404 });
+  if (cError || !comment) return NextResponse.json({ error: 'Comment não encontrado' }, { status: 404 });
   if (comment.posts?.team_id !== user.teamId) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   // Se tem external_id, tentar deletar na plataforma

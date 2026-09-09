@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
     .order('created_at', { ascending: false });
 
   if (dbError) {
-    return NextResponse.json({ error: 'Erro ao listar organizacoes' }, { status: 500 });
+    return NextResponse.json({ error: 'Erro ao listar organizações' }, { status: 500 });
   }
 
   const orgs = data || [];

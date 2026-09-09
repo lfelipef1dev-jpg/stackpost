@@ -19,7 +19,7 @@ export interface OAuthConfig {
 
 export function buildAuthUrl(config: OAuthConfig, state: string): string {
   const clientId = process.env[config.clientIdEnv];
-  if (!clientId) throw new Error(`${config.clientIdEnv} nao configurado`);
+  if (!clientId) throw new Error(`${config.clientIdEnv} não configurado`);
   const redirectUri = `${BASE_URL}${config.redirectPath}`;
   const params = new URLSearchParams({
     client_id: clientId,
@@ -38,7 +38,7 @@ export async function exchangeCodeForToken(
 ): Promise<{ accessToken: string; refreshToken?: string; expiresIn?: number; raw?: any }> {
   const clientId = process.env[config.clientIdEnv];
   const clientSecret = process.env[config.clientSecretEnv];
-  if (!clientId || !clientSecret) throw new Error(`${config.clientIdEnv} ou ${config.clientSecretEnv} nao configurado`);
+  if (!clientId || !clientSecret) throw new Error(`${config.clientIdEnv} ou ${config.clientSecretEnv} não configurado`);
 
   const redirectUri = `${BASE_URL}${config.redirectPath}`;
   const body = new URLSearchParams({
@@ -73,7 +73,7 @@ export async function saveAccount(
   profile: { username?: string; externalId?: string; platformAccountId?: string; metadata?: any }
 ) {
   const user = await getUserFromToken(req);
-  if (!user) throw new Error('Nao autorizado');
+  if (!user) throw new Error('Não autorizado');
 
   const supabase = getSupabase();
   const expiresAt = tokenData.expiresIn
@@ -122,7 +122,7 @@ export const OAUTH_CONFIGS: Record<string, OAuthConfig> = {
     platform: 'tiktok',
     authUrl: 'https://www.tiktok.com/v2/auth/authorize/',
     tokenUrl: 'https://open.tiktokapis.com/v2/oauth/token/',
-    scope: 'user.info.basic,video.publish,video.upload',
+    scope: 'user.info.basic,vídeo.publish,vídeo.upload',
     clientIdEnv: 'TIKTOK_CLIENT_ID',
     clientSecretEnv: 'TIKTOK_CLIENT_SECRET',
     redirectPath: '/api/oauth/tiktok/callback',

@@ -16,7 +16,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     .eq('id', id)
     .single();
   if (!before) {
-    return NextResponse.json({ error: 'Assinatura nao encontrada' }, { status: 404 });
+    return NextResponse.json({ error: 'Assinatura não encontrada' }, { status: 404 });
   }
 
   const { data, error: dbError } = await supabase

@@ -18,7 +18,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
   const { data: org } = await supabase.from('organizations').select('id').eq('id', id).single();
   if (!org) {
-    return NextResponse.json({ error: 'Organizacao nao encontrada' }, { status: 404 });
+    return NextResponse.json({ error: 'Organização não encontrada' }, { status: 404 });
   }
 
   const { data: teams } = await supabase.from('teams').select('id').eq('organization_id', id);
@@ -51,12 +51,12 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const supabase = getSupabase();
   const { data: org } = await supabase.from('organizations').select('id, teams:teams(id)').eq('id', id).single();
   if (!org || !org.teams?.[0]) {
-    return NextResponse.json({ error: 'Organizacao nao encontrada' }, { status: 404 });
+    return NextResponse.json({ error: 'Organização não encontrada' }, { status: 404 });
   }
 
   const { data: user } = await supabase.from('users').select('id').eq('email', parsed.data.email).single();
   if (!user) {
-    return NextResponse.json({ error: 'Usuário nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
   }
 
   const teamId = org.teams[0].id;

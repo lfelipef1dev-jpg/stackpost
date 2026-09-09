@@ -8,11 +8,11 @@ import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Changelog - StackPost',
-  description: 'Histórico de atualizacoes do StackPost. Novas funcionalidades, correcoes e melhorias.',
+  description: 'Histórico de atualizações do StackPost. Novas funcionalidades, correcoes e melhorias.',
   alternates: { canonical: '/changelog' },
 };
 
-const jsonLd = serviceSchema('StackPost Changelog', 'Histórico de atualizacoes.', '/changelog');
+const jsonLd = serviceSchema('StackPost Changelog', 'Histórico de atualizações.', '/changelog');
 
 type Entry = {
   type: 'feature' | 'fix' | 'improvement';
@@ -33,7 +33,7 @@ const releases: Release[] = [
       { type: 'feature', text: 'Login OAuth com Google e Discord direto pelo StackPost' },
       { type: 'feature', text: 'Landing pages SEO por plataforma (Instagram, Facebook, LinkedIn, Discord)' },
       { type: 'feature', text: 'Página de comparação com concorrentes' },
-      { type: 'feature', text: 'Roadmap publico' },
+      { type: 'feature', text: 'Roadmap público' },
       { type: 'feature', text: 'Status page e Changelog' },
       { type: 'fix', text: 'postType (POST/REEL/STORY) agora persistido no banco' },
       { type: 'fix', text: 'Discord webhook adapter corrigido (le platform_metadata)' },

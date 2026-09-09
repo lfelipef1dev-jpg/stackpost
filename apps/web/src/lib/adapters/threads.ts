@@ -33,7 +33,7 @@ export class ThreadsAdapter extends PlatformAdapter {
             is_carousel_item: true,
           };
           if (isVid) {
-            childBody.media_type = 'VIDEO';
+            childBody.media_type = 'Vídeo';
             childBody.video_url = url;
           } else {
             childBody.media_type = 'IMAGE';
@@ -57,8 +57,8 @@ export class ThreadsAdapter extends PlatformAdapter {
           access_token: accessToken,
         };
       } else if (isVideo) {
-        mediaType = 'VIDEO';
-        mediaBody = { media_type: 'VIDEO', video_url: params.videoUrl, caption: content, access_token: accessToken };
+        mediaType = 'Video';
+        mediaBody = { media_type: 'Video', video_url: params.videoUrl, caption: content, access_token: accessToken };
       } else if (isImage) {
         mediaType = 'IMAGE';
         mediaBody = { media_type: 'IMAGE', image_url: params.imageUrl, caption: content, access_token: accessToken };

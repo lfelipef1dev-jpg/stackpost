@@ -6,7 +6,7 @@ import { getUserFromToken } from '@/lib/auth';
 // POST /api/accounts/copy — copiar conta para outro team (mesmo token, novo team_id)
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json().catch(() => ({}));
   const parsed1 = accounts_copyBodySchema.safeParse(bodyRaw1);
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       .eq('id', accountId)
       .eq('team_id', user.teamId)
       .maybeSingle();
-    if (error || !account) return NextResponse.json({ error: 'Conta nao encontrada' }, { status: 404 });
+    if (error || !account) return NextResponse.json({ error: 'Conta não encontrada' }, { status: 404 });
 
     // Inserir copia no targetTeamId
     const { data: copy, error: insertError } = await supabase

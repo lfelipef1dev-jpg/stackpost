@@ -31,7 +31,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     .single();
 
   if (!before) {
-    return NextResponse.json({ error: 'Membro nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Membro não encontrado' }, { status: 404 });
   }
 
   const { data, error: dbError } = await supabase
@@ -76,11 +76,11 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     .single();
 
   if (!before) {
-    return NextResponse.json({ error: 'Membro nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Membro não encontrado' }, { status: 404 });
   }
 
   if (before.role === 'owner') {
-    return NextResponse.json({ error: 'Nao e possivel remover o dono. Transfira primeiro.' }, { status: 400 });
+    return NextResponse.json({ error: 'Não e possível remover o dono. Transfira primeiro.' }, { status: 400 });
   }
 
   const { error: dbError } = await supabase

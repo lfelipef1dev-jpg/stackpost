@@ -6,7 +6,7 @@ import { getUserFromToken } from '@/lib/auth';
 // POST /api/accounts/connect — conectar conta manualmente (OAuth e feito nas rotas /api/oauth/*)
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json().catch(() => ({}));
   const parsed1 = accounts_connectBodySchema.safeParse(bodyRaw1);

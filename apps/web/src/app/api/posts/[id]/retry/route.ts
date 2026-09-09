@@ -6,7 +6,7 @@ import { publishPost } from '@/lib/publisher';
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const { id: postId } = await params;
   const supabase = getSupabase();
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       .eq('id', postId)
       .eq('team_id', user.teamId)
       .maybeSingle();
-    if (postError || !post) return NextResponse.json({ error: 'Post nao encontrado' }, { status: 404 });
+    if (postError || !post) return NextResponse.json({ error: 'Post não encontrado' }, { status: 404 });
 
     const { data: ppError } = await supabase
       .from('post_platforms')

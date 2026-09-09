@@ -5,7 +5,7 @@ import { getUserFromToken } from '@/lib/auth';
 // GET /api/usage/comments — contagem de comentários do mês atual
 export async function GET(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const supabase = getSupabase();
   const now = new Date();

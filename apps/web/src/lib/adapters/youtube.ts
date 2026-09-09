@@ -30,7 +30,7 @@ export class YouTubeAdapter extends PlatformAdapter {
             'X-Upload-Content-Type': 'video/*',
           },
           body: JSON.stringify({
-            snippet: { title: content.slice(0, 100) || 'StackPost Video', description: content },
+            snippet: { title: content.slice(0, 100) || 'StackPost Vídeo', description: content },
             status: { privacyStatus: 'public', selfDeclaredMadeForKids: false },
           }),
         }
@@ -44,7 +44,7 @@ export class YouTubeAdapter extends PlatformAdapter {
       // Location header contem a URL de upload resumable
       const uploadUrl = initRes.headers.get('Location') || initRes.headers.get('location');
       if (!uploadUrl) {
-        return { success: false, error: normalizeError(new Error('YouTube: nao recebeu Location header do resumable upload'), this.platform) };
+        return { success: false, error: normalizeError(new Error('YouTube: não recebeu Location header do resumable upload'), this.platform) };
       }
 
       // Passo 2: Fazer download do video

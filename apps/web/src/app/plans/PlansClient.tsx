@@ -158,13 +158,13 @@ const plans: Plan[] = [
 ];
 
 const faqs = [
-  { q: 'O StackPost cobra por conta social conectada?', a: 'Nao. Você escala por volume de posts, nao por número de perfis. Os planos Scale e Business tem contas ilimitadas.' },
-  { q: 'Posso testar antes de pagar?', a: 'Sim. O plano Free e para sempre com 50 posts/mes. Starter, Growth e Scale oferecem 14 dias de teste gratis.' },
+  { q: 'O StackPost cobra por conta social conectada?', a: 'Não. Você escala por volume de posts, não por número de perfis. Os planos Scale e Business tem contas ilimitadas.' },
+  { q: 'Posso testar antes de pagar?', a: 'Sim. O plano Free e para sempre com 50 posts/mes. Starter, Growth e Scale oferecem 14 dias de teste grátis.' },
   { q: 'Como funciona a cobrança do X?', a: 'O X cobra por post da API oficial. Esse custo e pago com créditos X pré-pagos no painel de billing.' },
-  { q: 'Os preços sao em reais?', a: 'Sim. Cobrança via Mercado Pago com PIX e cartao. Sem surpresa de câmbio.' },
+  { q: 'Os preços sao em reais?', a: 'Sim. Cobrança via Mercado Pago com PIX e cartão. Sem surpresa de câmbio.' },
   { q: 'Preciso contrato ou posso cancelar?', a: 'Cancele quando quiser. Sem contrato, sem multa.' },
-  { q: 'Qual a diferenca entre Growth e Scale?', a: 'O Scale entrega 5x mais volume: 40.000 posts vs 8.000 do Growth, alem de MCP server, A/B testing e contas ilimitadas.' },
-  { q: 'Tem garantia?', a: 'Sim. 7 dias de garantia em todos os planos pagos. Se nao gostar, devolvemos 100%.' },
+  { q: 'Qual a diferença entre Growth e Scale?', a: 'O Scale entrega 5x mais volume: 40.000 posts vs 8.000 do Growth, alem de MCP server, A/B testing e contas ilimitadas.' },
+  { q: 'Tem garantia?', a: 'Sim. 7 dias de garantia em todos os planos pagos. Se não gostar, devolvemos 100%.' },
   { q: 'Posso migrar de plano a qualquer momento?', a: 'Sim. Mude de plano quando quiser. A cobrança e proporcional até o fim do ciclo atual.' },
 ];
 
@@ -266,12 +266,12 @@ export default function PlansPage() {
           </FadeIn>
           <FadeIn delay={0.12}>
             <p className="text-brand-text-secondary text-lg md:text-xl max-w-2xl mx-auto mb-6">
-              Planos a partir de R$39. Nao cobramos por conta social. Cancele quando quiser.
+              Planos a partir de R$39. Não cobramos por conta social. Cancele quando quiser.
             </p>
           </FadeIn>
           <FadeIn delay={0.16}>
             <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-brand-text-secondary/80 mb-8">
-              <div className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-success" /> 14 dias gratis nos planos pagos</div>
+              <div className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-success" /> 14 dias grátis nos planos pagos</div>
               <div className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-success" /> Cancele a qualquer momento</div>
               <div className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-success" /> Sem taxa por conta social</div>
               <div className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-success" /> 7 dias de garantia</div>
@@ -335,7 +335,7 @@ export default function PlansPage() {
                   )}
                   {plan.trial && !plan.popular && !isCurrent && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10 px-4 py-1 rounded-full bg-brand-elevated border border-brand-border text-brand-text text-[10px] font-semibold tracking-wide shadow-lg">
-                      14 dias gratis
+                      14 dias grátis
                     </div>
                   )}
                   <div
@@ -361,7 +361,7 @@ export default function PlansPage() {
                       <span className="text-4xl font-bold tracking-tight">{formatPrice(plan)}</span>
                       <span className="text-brand-text-secondary text-sm font-medium">{formatPeriod(plan)}</span>
                     </div>
-                    <p className="text-xs text-brand-text-secondary mt-1">por organizacao</p>
+                    <p className="text-xs text-brand-text-secondary mt-1">por organização</p>
                   </div>
 
                   <div className="space-y-2.5 flex-1 mb-5">
@@ -424,8 +424,8 @@ export default function PlansPage() {
         </ScrollReveal>
         <StaggerGroup className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4" stagger={0.05}>
           {[
-            { title: 'Unifique 15 redes', desc: 'Publique uma unica vez para Instagram, TikTok, LinkedIn, YouTube, X e mais.' },
-            { title: 'Sem cobrança por conta', desc: 'Conecte quantas contas quiser. Você paga pelo uso, nao pelo tamanho do time.' },
+            { title: 'Unifique 15 redes', desc: 'Publique uma única vez para Instagram, TikTok, LinkedIn, YouTube, X e mais.' },
+            { title: 'Sem cobrança por conta', desc: 'Conecte quantas contas quiser. Você paga pelo uso, não pelo tamanho do time.' },
             { title: 'API e SDK prontos', desc: 'Integre em minutos com REST, SDKs e MCP server para seus agents de IA.' },
             { title: 'Agendamento em massa', desc: 'Programe semanas de conteúdo em poucos cliques com calendário visual.' },
             { title: 'Primeiro comentário', desc: 'Adicione CTA automático no primeiro comentário de cada post.' },
@@ -446,7 +446,7 @@ export default function PlansPage() {
       <section className="max-w-5xl mx-auto px-4 md:px-6 pb-20">
         <ScrollReveal>
           <div className="text-center mb-8">
-            <h2 className="font-display text-2xl md:text-3xl font-bold mb-3">A diferenca para outras ferramentas</h2>
+            <h2 className="font-display text-2xl md:text-3xl font-bold mb-3">A diferença para outras ferramentas</h2>
             <p className="text-brand-text-secondary">Pare de pagar por canal e de depender de planilhas.</p>
           </div>
         </ScrollReveal>
@@ -467,7 +467,7 @@ export default function PlansPage() {
                     { feature: 'API unificada nativa', stackpost: 'Sim, em todos os planos', other: 'Paga ou indisponivel' },
                     { feature: 'MCP server e CLI', stackpost: 'Incluido', other: 'Raro' },
                     { feature: 'Suporte em portugues', stackpost: 'Sim', other: 'Apenas em ingles' },
-                    { feature: 'Cobrança em reais', stackpost: 'PIX e cartao', other: 'Dólar' },
+                    { feature: 'Cobrança em reais', stackpost: 'PIX e cartão', other: 'Dólar' },
                     { feature: 'Contas ilimitadas', stackpost: 'Sim, sem pagar por canal', other: 'Cobrança por canal' },
                   ].map((row) => (
                     <tr key={row.feature} className="border-b border-brand-border/50 last:border-0 hover:bg-brand-elevated/30 transition">
@@ -489,7 +489,7 @@ export default function PlansPage() {
       <section className="max-w-5xl mx-auto px-4 md:px-6 pb-20">
         <ScrollReveal>
           <div className="text-center mb-8">
-            <h2 className="font-display text-2xl md:text-3xl font-bold mb-3">Seguranca e conformidade</h2>
+            <h2 className="font-display text-2xl md:text-3xl font-bold mb-3">Segurança e conformidade</h2>
             <p className="text-brand-text-secondary">Infraestrutura preparada para empresas.</p>
           </div>
         </ScrollReveal>
@@ -534,7 +534,7 @@ export default function PlansPage() {
                         <div className="flex flex-col items-center gap-1">
                           <span className={p.popular ? 'text-brand-accent' : 'text-brand-text'}>{p.name}</span>
                           {p.popular && <span className="text-[10px] uppercase tracking-wider text-brand-accent bg-brand-accent/10 px-2 py-0.5 rounded-full">Recomendado</span>}
-                          {p.trial && !p.popular && <span className="text-[10px] text-brand-text-secondary">14 dias gratis</span>}
+                          {p.trial && !p.popular && <span className="text-[10px] text-brand-text-secondary">14 dias grátis</span>}
                         </div>
                       </th>
                     ))}
@@ -561,7 +561,7 @@ export default function PlansPage() {
                                 ) : (
                                   <div className="flex items-center justify-center gap-1.5 text-brand-text-secondary/40">
                                     <X className="w-4 h-4" />
-                                    <span className="hidden md:inline text-xs">Nao</span>
+                                    <span className="hidden md:inline text-xs">Não</span>
                                   </div>
                                 )
                               ) : (
@@ -584,7 +584,7 @@ export default function PlansPage() {
       <section className="max-w-3xl mx-auto px-4 md:px-6 pb-24">
         <ScrollReveal>
           <h2 className="font-display text-2xl md:text-3xl font-bold mb-3 text-center">Perguntas frequentes</h2>
-          <p className="text-brand-text-secondary text-center mb-8">Tudo que você precisa saber para decidir com seguranca.</p>
+          <p className="text-brand-text-secondary text-center mb-8">Tudo que você precisa saber para decidir com segurança.</p>
         </ScrollReveal>
         <StaggerGroup className="space-y-3" stagger={0.05}>
           {faqs.map((faq, i) => (
@@ -614,7 +614,7 @@ export default function PlansPage() {
             <div className="relative grid md:grid-cols-2 gap-10 items-center">
               <div>
                 <h2 className="font-display text-2xl md:text-4xl font-bold mb-4">Feito para quem vende na internet</h2>
-                <p className="text-brand-text-secondary mb-6">Nao importa se você gerencia uma marca, uma agência ou um SaaS. O StackPost foi pensado para escalar sem que você precise contratar um time de integração.</p>
+                <p className="text-brand-text-secondary mb-6">Não importa se você gerencia uma marca, uma agência ou um SaaS. O StackPost foi pensado para escalar sem que você precise contratar um time de integração.</p>
                 <div className="flex flex-col gap-3">
                   {[
                     'Conecte quantas contas quiser sem pagar por cada uma',
@@ -646,7 +646,7 @@ export default function PlansPage() {
         <ScrollReveal>
           <div className="max-w-3xl mx-auto px-4">
             <h2 className="font-display text-3xl md:text-4xl font-black tracking-tight text-brand-text mb-4">
-              Comece gratis. Escalone quando precisar.
+              Comece grátis. Escalone quando precisar.
             </h2>
             <p className="text-brand-text-secondary mb-8">Teste por 14 dias. Cancele com um clique. Sem ligacao.</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -654,7 +654,7 @@ export default function PlansPage() {
                 href="/register"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-brand-accent text-brand-bg font-bold hover:scale-105 transition-transform duration-200 shadow-[0_0_32px_rgba(138,180,248,0.35)]"
               >
-                Criar conta gratis <ArrowRight className="w-4 h-4" />
+                Criar conta grátis <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/contact"

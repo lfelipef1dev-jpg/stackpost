@@ -17,7 +17,7 @@ export interface PublishParams {
   videoUrl?: string;
   mediaUrls?: string[];
   pdfUrl?: string;
-  mediaType?: 'IMAGE' | 'VIDEO' | 'CAROUSEL' | 'STORY';
+  mediaType?: 'IMAGE' | 'Video' | 'CAROUSEL' | 'STORY';
 }
 
 export abstract class PlatformAdapter {

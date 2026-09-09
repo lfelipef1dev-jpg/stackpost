@@ -6,7 +6,7 @@ import { getUserFromToken } from '@/lib/auth';
 // POST /api/accounts/disconnect — desconectar conta (marcar inativa + limpar token)
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json().catch(() => ({}));
   const parsed1 = accounts_disconnectBodySchema.safeParse(bodyRaw1);
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
       .maybeSingle();
 
     if (error) throw error;
-    if (!data) return NextResponse.json({ error: 'Conta nao encontrada' }, { status: 404 });
+    if (!data) return NextResponse.json({ error: 'Conta não encontrada' }, { status: 404 });
 
     return NextResponse.json({ success: true, accountId });
   } catch (error: any) {

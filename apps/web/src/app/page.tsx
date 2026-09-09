@@ -72,23 +72,19 @@ export default function Home() {
             </FadeIn>
 
             <FadeIn delay={0.06}>
-              <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-black leading-[1.05] tracking-[-0.04em] text-brand-text mt-8 mb-8 text-center md:whitespace-nowrap -translate-x-[2.5cm]">
+              <h1 className="font-display font-black leading-[1.05] tracking-[-0.04em] text-brand-text mt-8 mb-6 text-center text-balance mx-auto max-w-5xl px-4 text-[clamp(2.25rem,6vw,4.25rem)]">
                 A infraestrutura social <span className="text-brand-accent">do seu produto.</span>
               </h1>
             </FadeIn>
-          </div>
 
-          <HeroBanner />
-
-          <div className="max-w-3xl mx-auto">
             <FadeIn delay={0.12}>
-              <p className="text-base md:text-lg text-brand-text-secondary max-w-2xl mx-auto mb-6 leading-relaxed mt-6">
-                Elimine meses de engenharia integrando redes sociais no seu produto. Uma API, 15 plataformas, sem manter OAuth, retry nem rate limits. Pague pelo uso, nao por conta.
+              <p className="text-base md:text-lg text-brand-text-secondary max-w-2xl mx-auto mb-6 leading-relaxed">
+                Elimine meses de engenharia integrando redes sociais no seu produto. Uma API, 15 plataformas, sem manter OAuth, retry nem rate limits. Pague pelo uso, não por conta.
               </p>
             </FadeIn>
 
             <FadeIn delay={0.18}>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-3">
                 <Link
                   href="/register"
                   className="inline-flex items-center justify-center px-8 py-4 bg-brand-accent text-brand-bg font-bold rounded-xl hover:opacity-90 transition-opacity duration-200 shadow-[0_0_32px_rgba(138,180,248,0.35)] min-w-[220px]"
@@ -102,10 +98,14 @@ export default function Home() {
                     Ver documentação &rarr;
                   </Link>
                 </div>
-                <p className="text-brand-text-secondary/60 text-sm mt-4">Plano gratuito para sempre. Não precisa de cartão.</p>
+                <p className="text-brand-text-secondary/60 text-sm">Plano gratuito para sempre. Não precisa de cartão.</p>
               </FadeIn>
-            </div>
           </div>
+
+          <FadeIn delay={0.24}>
+            <HeroBanner />
+          </FadeIn>
+        </div>
 
         </section>
 

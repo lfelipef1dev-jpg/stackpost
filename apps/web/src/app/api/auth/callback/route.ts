@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
   const { data, error } = await nexus.auth.getUser();
 
   if (error || !data.user) {
-    return NextResponse.json({ error: 'Token invalido' }, { status: 401 });
+    return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
   }
 
   const nexusUser = data.user;

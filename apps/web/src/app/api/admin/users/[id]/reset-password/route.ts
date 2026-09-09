@@ -18,7 +18,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
   const { data: user } = await supabase.from('users').select('id, name, email').eq('id', id).single();
   if (!user) {
-    return NextResponse.json({ error: 'Usuário nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
   }
 
   const temp = generateTempPassword();

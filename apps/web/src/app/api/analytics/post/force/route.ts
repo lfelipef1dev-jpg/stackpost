@@ -7,7 +7,7 @@ import { getUserFromToken } from '@/lib/auth';
 // POST /api/analytics/post/force — forca refresh de analytics de um post
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json().catch(() => ({}));
   const parsed1 = analytics_post_forceBodySchema.safeParse(bodyRaw1);
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
       .eq('team_id', user.teamId)
       .maybeSingle();
     if (postError) throw postError;
-    if (!post) return NextResponse.json({ error: 'Post nao encontrado' }, { status: 404 });
+    if (!post) return NextResponse.json({ error: 'Post não encontrado' }, { status: 404 });
 
     const { data: ppRows } = await supabase
       .from('post_platforms')

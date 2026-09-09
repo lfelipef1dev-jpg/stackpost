@@ -25,7 +25,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     .single();
 
   if (dbError || !data) {
-    return NextResponse.json({ error: 'Usuário nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
   }
 
   return NextResponse.json(data);
@@ -45,7 +45,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const supabase = getSupabase();
   const { data: before } = await supabase.from('users').select('id, name, email, status, is_superuser').eq('id', id).single();
   if (!before) {
-    return NextResponse.json({ error: 'Usuário nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
   }
 
   const { data, error: dbError } = await supabase
@@ -81,11 +81,11 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
   const { data: before } = await supabase.from('users').select('id, name, email').eq('id', id).single();
   if (!before) {
-    return NextResponse.json({ error: 'Usuário nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
   }
 
   if (id === admin.id) {
-    return NextResponse.json({ error: 'Nao pode excluir a si mesmo' }, { status: 400 });
+    return NextResponse.json({ error: 'Não pode excluir a si mesmo' }, { status: 400 });
   }
 
   const { error: dbError } = await supabase.from('users').delete().eq('id', id);

@@ -11,32 +11,32 @@ import LandingHeader from '@/components/LandingHeader';
 
 export const metadata: Metadata = {
   title: 'LinkedIn API - Publique posts, artigos e mídia via StackPost',
-  description: 'API de LinkedIn do StackPost: posts, artigos e mídia (imagem, video, PDF). OAuth 2.0 com organizationalEntityAcls, analytics de impressions, clicks e engagement.',
+  description: 'API de LinkedIn do StackPost: posts, artigos e mídia (imagem, vídeo, PDF). OAuth 2.0 com organizationalEntityAcls, analytics de impressions, clicks e engagement.',
   alternates: { canonical: '/linkedin-api' },
 };
 
 const jsonLd = serviceSchema(
   'LinkedIn API',
-  'API de LinkedIn para publicar posts, artigos e mídia (imagem, video, PDF). OAuth 2.0 com organizationalEntityAcls e analytics de impressions, clicks e engagement.',
+  'API de LinkedIn para publicar posts, artigos e mídia (imagem, vídeo, PDF). OAuth 2.0 com organizationalEntityAcls e analytics de impressions, clicks e engagement.',
   '/linkedin-api',
 );
 
 const features = [
   {
     title: 'Posts',
-    desc: 'Publique texto, imagem e video no feed pessoal ou de Company Pages.',
+    desc: 'Publique texto, imagem e vídeo no feed pessoal ou de Company Pages.',
   },
   {
     title: 'Artigos',
     desc: 'Publique artigos longos com formatacao rica e capa personalizada.',
   },
   {
-    title: 'Mídia (imagem, video, PDF)',
-    desc: 'Upload de imagem, video e PDF com suporte a documentos carrossel.',
+    title: 'Mídia (imagem, vídeo, PDF)',
+    desc: 'Upload de imagem, vídeo e PDF com suporte a documentos carrossel.',
   },
   {
     title: 'OAuth 2.0 com organizationalEntityAcls',
-    desc: 'Autenticacao com escopo organizacional para postar em Company Pages.',
+    desc: 'Autenticação com escopo organizacional para postar em Company Pages.',
   },
   {
     title: 'Analytics de impressions',
@@ -44,7 +44,7 @@ const features = [
   },
   {
     title: 'Multi-empresa',
-    desc: 'Gerencie multiplas Company Pages por workspace com tokens renovados.',
+    desc: 'Gerencie múltiplas Company Pages por workspace com tokens renovados.',
   },
 ];
 
@@ -67,7 +67,7 @@ export default function LinkedinApiPage() {
           icon={FaLinkedin}
           label="API de LinkedIn"
           title="API de LinkedIn"
-          description="Publique posts, artigos e mídia (imagem, video, PDF) via uma unica API. OAuth 2.0 com organizationalEntityAcls para Company Pages e analytics de impressions, clicks e engagement."
+          description="Publique posts, artigos e mídia (imagem, vídeo, PDF) via uma única API. OAuth 2.0 com organizationalEntityAcls para Company Pages e analytics de impressions, clicks e engagement."
           color="#0A66C2"
           docsHref="/docs"
         />

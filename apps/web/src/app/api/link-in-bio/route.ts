@@ -6,7 +6,7 @@ import { getUserFromToken } from '@/lib/auth';
 
 export async function GET(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const supabase = getSupabase();
 
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json();
   const parsed1 = link_in_bioBodySchema.safeParse(bodyRaw1);
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw2 = await req.json();
   const parsed2 = link_in_bioBodySchema.safeParse(bodyRaw2);
@@ -84,10 +84,10 @@ export async function PUT(req: NextRequest) {
     if (linksError) throw linksError;
     const links = allLinks || [];
     const idx = links.findIndex((l) => l.id === id);
-    if (idx === -1) return NextResponse.json({ error: 'Link nao encontrado' }, { status: 404 });
+    if (idx === -1) return NextResponse.json({ error: 'Link não encontrado' }, { status: 404 });
 
     const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
-    if (swapIdx < 0 || swapIdx >= links.length) return NextResponse.json({ error: 'Movimento invalido' }, { status: 400 });
+    if (swapIdx < 0 || swapIdx >= links.length) return NextResponse.json({ error: 'Movimento inválido' }, { status: 400 });
 
     const a = links[idx];
     const b = links[swapIdx];
@@ -113,7 +113,7 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
   const queryRaw = Object.fromEntries(searchParams);

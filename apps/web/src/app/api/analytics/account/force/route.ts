@@ -7,7 +7,7 @@ import { getUserFromToken } from '@/lib/auth';
 // POST /api/analytics/account/force — forca refresh de analytics de todos os posts de uma conta
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json().catch(() => ({}));
   const parsed1 = analytics_account_forceBodySchema.safeParse(bodyRaw1);
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       .eq('id', accountId)
       .eq('team_id', user.teamId)
       .maybeSingle();
-    if (!account) return NextResponse.json({ error: 'Conta nao encontrada' }, { status: 404 });
+    if (!account) return NextResponse.json({ error: 'Conta não encontrada' }, { status: 404 });
 
     // Buscar todos os posts publicados desta plataforma
     const { data: posts } = await supabase

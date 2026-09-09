@@ -15,12 +15,12 @@ export async function GET(req: NextRequest) {
   const state = searchParams.get('state');
   const storedState = req.cookies.get('oauth_state_slack')?.value;
 
-  if (!code) return NextResponse.json({ error: 'Código nao informado' }, { status: 400 });
-  if (state !== storedState) return NextResponse.json({ error: 'State invalido' }, { status: 400 });
+  if (!code) return NextResponse.json({ error: 'Código não informado' }, { status: 400 });
+  if (state !== storedState) return NextResponse.json({ error: 'State inválido' }, { status: 400 });
 
   const clientId = process.env.SLACK_CLIENT_ID;
   const clientSecret = process.env.SLACK_CLIENT_SECRET;
-  if (!clientId || !clientSecret) return NextResponse.json({ error: 'Slack OAuth nao configurado' }, { status: 500 });
+  if (!clientId || !clientSecret) return NextResponse.json({ error: 'Slack OAuth não configurado' }, { status: 500 });
 
   try {
     const redirectUri = `${BASE_URL}/api/oauth/slack/callback`;
@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
     if (!tokenData.ok) throw new Error(tokenData.error || 'Slack token exchange failed');
 
     const user = await getUserFromToken(req);
-    if (!user) throw new Error('Nao autorizado');
+    if (!user) throw new Error('Não autorizado');
 
     const supabase = getSupabase();
     const webhookUrl = tokenData.incoming_webhook?.url;

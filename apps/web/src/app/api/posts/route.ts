@@ -113,7 +113,7 @@ export async function PUT(req: NextRequest) {
   const newStatus = status || (scheduledAt ? 'scheduled' : 'draft');
 
   if (!allowedStatuses.includes(newStatus)) {
-    return NextResponse.json({ error: 'Status invalido' }, { status: 400 });
+    return NextResponse.json({ error: 'Status inválido' }, { status: 400 });
   }
 
   try {
@@ -138,7 +138,7 @@ export async function PUT(req: NextRequest) {
       .single();
     if (updateError) throw updateError;
     if (!data) {
-      return NextResponse.json({ error: 'Post nao encontrado' }, { status: 404 });
+      return NextResponse.json({ error: 'Post não encontrado' }, { status: 404 });
     }
     return NextResponse.json(data);
   } catch (error) {

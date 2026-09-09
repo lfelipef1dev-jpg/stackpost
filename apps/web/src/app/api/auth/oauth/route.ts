@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
   const redirect = searchParams.get('redirect') || '/dashboard';
 
   if (!PROVIDERS.includes(provider)) {
-    return NextResponse.json({ error: 'Provider invalido' }, { status: 400 });
+    return NextResponse.json({ error: 'Provider inválido' }, { status: 400 });
   }
 
   // State: base64 do JSON {redirect, nonce} — nao depende de cookie cross-site
@@ -26,8 +26,8 @@ export async function GET(req: NextRequest) {
   if (provider === 'google') {
     const clientId = process.env.GOOGLE_CLIENT_ID;
     if (!clientId) {
-      logger.error('GOOGLE_CLIENT_ID nao configurado');
-      return NextResponse.json({ error: 'Google OAuth nao configurado' }, { status: 500 });
+      logger.error('GOOGLE_CLIENT_ID não configurado');
+      return NextResponse.json({ error: 'Google OAuth não configurado' }, { status: 500 });
     }
     const params = new URLSearchParams({
       client_id: clientId,
@@ -42,8 +42,8 @@ export async function GET(req: NextRequest) {
     // discord
     const clientId = process.env.DISCORD_CLIENT_ID;
     if (!clientId) {
-      logger.error('DISCORD_CLIENT_ID nao configurado');
-      return NextResponse.json({ error: 'Discord OAuth nao configurado' }, { status: 500 });
+      logger.error('DISCORD_CLIENT_ID não configurado');
+      return NextResponse.json({ error: 'Discord OAuth não configurado' }, { status: 500 });
     }
     const params = new URLSearchParams({
       client_id: clientId,

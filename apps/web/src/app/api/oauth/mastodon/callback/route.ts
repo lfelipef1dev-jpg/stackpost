@@ -18,8 +18,8 @@ export async function GET(req: NextRequest) {
   const clientId = req.cookies.get('oauth_mastodon_client_id')?.value;
   const clientSecret = req.cookies.get('oauth_mastodon_client_secret')?.value;
 
-  if (!code) return NextResponse.json({ error: 'Código nao informado' }, { status: 400 });
-  if (state !== storedState) return NextResponse.json({ error: 'State invalido' }, { status: 400 });
+  if (!code) return NextResponse.json({ error: 'Código não informado' }, { status: 400 });
+  if (state !== storedState) return NextResponse.json({ error: 'State inválido' }, { status: 400 });
   if (!clientId || !clientSecret) return NextResponse.json({ error: 'Client credentials perdidos' }, { status: 400 });
 
   try {
@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
     const userData = await userRes.json();
 
     const user = await getUserFromToken(req);
-    if (!user) throw new Error('Nao autorizado');
+    if (!user) throw new Error('Não autorizado');
 
     const supabase = getSupabase();
     const { data: existing } = await supabase

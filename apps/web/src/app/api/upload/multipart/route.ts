@@ -13,7 +13,7 @@ const MAX_PARTS = 10000;
 
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const url = new URL(req.url);
   const action = url.searchParams.get('action') || 'init';
@@ -89,12 +89,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true });
   }
 
-  return NextResponse.json({ error: 'Ação invalida' }, { status: 400 });
+  return NextResponse.json({ error: 'Ação inválida' }, { status: 400 });
 }
 
 export async function PUT(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const url = new URL(req.url);
   const partNumber = parseInt(url.searchParams.get('partNumber') || '0');

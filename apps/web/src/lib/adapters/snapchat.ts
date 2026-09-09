@@ -29,7 +29,7 @@ export class SnapchatAdapter extends PlatformAdapter {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          type: isVideo ? 'VIDEO' : 'IMAGE',
+          type: isVideo ? 'Vídeo' : 'IMAGE',
           url: isVideo || isImage,
           name: content.slice(0, 100),
         }),

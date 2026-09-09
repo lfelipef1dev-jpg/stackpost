@@ -42,11 +42,11 @@ export async function GET(req: NextRequest) {
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
   const jwtSecret = process.env.JWT_SECRET;
   if (!clientId || !clientSecret) {
-    logger.error('Google OAuth: credenciais nao configuradas');
+    logger.error('Google OAuth: credenciais não configuradas');
     return NextResponse.redirect(new URL('/login?error=oauth_config', BASE_URL));
   }
   if (!jwtSecret) {
-    logger.error('Google OAuth: JWT_SECRET nao configurado');
+    logger.error('Google OAuth: JWT_SECRET não configurado');
     return NextResponse.redirect(new URL('/login?error=oauth_config', BASE_URL));
   }
 
@@ -101,7 +101,7 @@ export async function GET(req: NextRequest) {
         .select('id')
         .single();
       if (orgError || !orgRow) {
-        logger.error('Erro ao criar organizacao:', orgError?.message);
+        logger.error('Erro ao criar organização:', orgError?.message);
         return NextResponse.redirect(new URL('/login?error=oauth_failed&reason=org_create', BASE_URL));
       }
 

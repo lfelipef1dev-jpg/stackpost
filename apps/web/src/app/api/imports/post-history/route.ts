@@ -7,7 +7,7 @@ import { getUserFromToken } from '@/lib/auth';
 // POST /api/imports/post-history — importar histórico de posts de uma conta
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
-  if (!user) return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
 
   const bodyRaw1 = await req.json().catch(() => ({}));
   const parsed1 = imports_post_historyBodySchema.safeParse(bodyRaw1);
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
       .eq('id', socialAccountId)
       .eq('team_id', user.teamId)
       .maybeSingle();
-    if (!account) return NextResponse.json({ error: 'Conta nao encontrada' }, { status: 404 });
+    if (!account) return NextResponse.json({ error: 'Conta não encontrada' }, { status: 404 });
 
     const maxLimit = Math.min(limit || 100, 200);
     let imported = 0;
@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
         imported++;
       }
     } else {
-      return NextResponse.json({ error: `Import de histórico de ${platform} nao suportado` }, { status: 400 });
+      return NextResponse.json({ error: `Import de histórico de ${platform} não suportado` }, { status: 400 });
     }
 
     return NextResponse.json({ imported, platform });

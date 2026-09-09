@@ -71,5 +71,5 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ success: true, rescheduled: data?.length || 0 });
   }
 
-  return NextResponse.json({ error: 'Ação invalida' }, { status: 400 });
+  return NextResponse.json({ error: 'Ação inválida' }, { status: 400 });
 }

@@ -24,7 +24,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     .single();
 
   if (dbError || !data) {
-    return NextResponse.json({ error: 'Post nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Post não encontrado' }, { status: 404 });
   }
 
   const { data: user } = data.user_id
@@ -48,7 +48,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const supabase = getSupabase();
   const { data: before } = await supabase.from('posts').select('id, content, status, scheduled_at').eq('id', id).single();
   if (!before) {
-    return NextResponse.json({ error: 'Post nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Post não encontrado' }, { status: 404 });
   }
 
   const { data, error: dbError } = await supabase
@@ -84,7 +84,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
   const { data: before } = await supabase.from('posts').select('id, content, status, user_id').eq('id', id).single();
   if (!before) {
-    return NextResponse.json({ error: 'Post nao encontrado' }, { status: 404 });
+    return NextResponse.json({ error: 'Post não encontrado' }, { status: 404 });
   }
 
   const { error: dbError } = await supabase.from('posts').delete().eq('id', id);
