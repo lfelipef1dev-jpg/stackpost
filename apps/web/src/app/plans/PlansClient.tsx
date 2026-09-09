@@ -41,7 +41,8 @@ const plans: Plan[] = [
     icon: Zap,
     cta: 'Criar conta grátis',
     features: [
-      { label: 'Volume/mês', value: '50 + 100', full: '50 posts e 100 comentários por mês' },
+      { label: 'Posts / mês', value: '50', full: '50 posts por mês' },
+      { label: 'Comentários / mês', value: '100', full: '100 comentários por mês' },
       { label: 'Contas sociais', value: '3' },
       { label: 'Usuários', value: '1' },
       { label: 'Workspaces', value: '1' },
@@ -66,7 +67,8 @@ const plans: Plan[] = [
     trial: true,
     cta: 'Testar 14 dias grátis',
     features: [
-      { label: 'Volume/mês', value: '2k + 1k', full: '2.000 posts e 1.000 comentários por mês' },
+      { label: 'Posts / mês', value: '2.000', full: '2.000 posts por mês' },
+      { label: 'Comentários / mês', value: '1.000', full: '1.000 comentários por mês' },
       { label: 'Contas sociais', value: '5' },
       { label: 'Usuários', value: '2' },
       { label: 'Workspaces', value: '1' },
@@ -92,7 +94,8 @@ const plans: Plan[] = [
     trial: true,
     cta: 'Testar 14 dias grátis',
     features: [
-      { label: 'Volume/mês', value: '8k + 4k', full: '8.000 posts e 4.000 comentários por mês' },
+      { label: 'Posts / mês', value: '8.000', full: '8.000 posts por mês' },
+      { label: 'Comentários / mês', value: '4.000', full: '4.000 comentários por mês' },
       { label: 'Contas sociais', value: '20' },
       { label: 'Usuários', value: '5' },
       { label: 'Workspaces', value: '3' },
@@ -117,7 +120,8 @@ const plans: Plan[] = [
     trial: true,
     cta: 'Escolher Scale',
     features: [
-      { label: 'Volume/mês', value: '40k + 20k', full: '40.000 posts e 20.000 comentários por mês' },
+      { label: 'Posts / mês', value: '40.000', full: '40.000 posts por mês' },
+      { label: 'Comentários / mês', value: '20.000', full: '20.000 comentários por mês' },
       { label: 'Contas sociais', value: 'Ilimitadas' },
       { label: 'Usuários', value: '20' },
       { label: 'Workspaces', value: '10' },
@@ -141,7 +145,8 @@ const plans: Plan[] = [
     icon: Crown,
     cta: 'Solicitar proposta',
     features: [
-      { label: 'Volume/mes', value: '150k + 75k', full: '150.000 posts e 75.000 comentários por mes' },
+      { label: 'Posts / mês', value: '150.000', full: '150.000 posts por mês' },
+      { label: 'Comentários / mês', value: '75.000', full: '75.000 comentários por mês' },
       { label: 'Contas sociais', value: 'Ilimitadas' },
       { label: 'Usuários', value: 'Ilimitados' },
       { label: 'Workspaces', value: 'Ilimitados' },
@@ -158,7 +163,7 @@ const plans: Plan[] = [
 ];
 
 const faqs = [
-  { q: 'O StackPost cobra por conta social conectada?', a: 'Não. Você escala por volume de posts, não por número de perfis. Os planos Scale e Business tem contas ilimitadas.' },
+  { q: 'O StackPost cobra por conta social conectada?', a: 'Não cobramos por cada perfil. Você paga pelo volume de posts. Os planos Free, Inicial e Crescimento têm limites de contas; Scale e Business têm contas ilimitadas.' },
   { q: 'Posso testar antes de pagar?', a: 'Sim. O plano Free e para sempre com 50 posts/mes. Starter, Growth e Scale oferecem 14 dias de teste grátis.' },
   { q: 'Como funciona a cobrança do X?', a: 'O X cobra por post da API oficial. Esse custo e pago com créditos X pré-pagos no painel de billing.' },
   { q: 'Os preços sao em reais?', a: 'Sim. Cobrança via Mercado Pago com PIX e cartão. Sem surpresa de câmbio.' },
@@ -425,7 +430,7 @@ export default function PlansPage() {
         <StaggerGroup className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4" stagger={0.05}>
           {[
             { title: 'Unifique 15 redes', desc: 'Publique uma única vez para Instagram, TikTok, LinkedIn, YouTube, X e mais.' },
-            { title: 'Sem cobrança por conta', desc: 'Conecte quantas contas quiser. Você paga pelo uso, não pelo tamanho do time.' },
+            { title: 'Sem cobrança por conta', desc: 'Você paga pelo volume de posts, não por cada perfil. Limites de contas variam por plano.' },
             { title: 'API e SDK prontos', desc: 'Integre em minutos com REST, SDKs e MCP server para seus agents de IA.' },
             { title: 'Agendamento em massa', desc: 'Programe semanas de conteúdo em poucos cliques com calendário visual.' },
             { title: 'Primeiro comentário', desc: 'Adicione CTA automático no primeiro comentário de cada post.' },
@@ -617,7 +622,7 @@ export default function PlansPage() {
                 <p className="text-brand-text-secondary mb-6">Não importa se você gerencia uma marca, uma agência ou um SaaS. O StackPost foi pensado para escalar sem que você precise contratar um time de integração.</p>
                 <div className="flex flex-col gap-3">
                   {[
-                    'Conecte quantas contas quiser sem pagar por cada uma',
+                    'Sem cobrança por conta social: limites claros por plano',
                     'Publique uma vez e chegue a 15 plataformas simultaneamente',
                     'Automatize com API, SDK, CLI e MCP server',
                     'Suporte humano e documentação clara em portugues',

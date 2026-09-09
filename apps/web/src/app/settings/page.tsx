@@ -91,10 +91,10 @@ const PLAN_LIMITS: Record<string, { seats: number; apiKeys: number; webhooks: nu
 
 const planLabels: Record<string, string> = {
   free: 'Free',
-  starter: 'Starter',
-  growth: 'Growth',
-  scale: 'Scale',
-  business: 'Business',
+  starter: 'Inicial',
+  growth: 'Crescimento',
+  scale: 'Escala',
+  business: 'Empresarial',
 };
 
 function SpotlightCard({

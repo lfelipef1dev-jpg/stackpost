@@ -183,7 +183,7 @@ const billingPlans: BillingPlan[] = [
     tagline: 'Para agências e SaaS iniciantes',
     description: 'Conecte até 20 contas nas 15 plataformas com 8.000 posts e 4.000 comentários mensais. Para times que precisam de calendário editorial, analytics avançado, AI caption e múltiplos workspaces.',
     monthlyPrice: 89,
-    annualPrice: 75,
+    annualPrice: 74,
     icon: Building2,
     popular: true,
     accent: '#A78BFA',
@@ -209,7 +209,7 @@ const billingPlans: BillingPlan[] = [
     tagline: 'Para SaaS e agências em escala',
     description: 'Contas ilimitadas nas 15 plataformas e 40.000 posts/mês. Para SaaS e agências que publicam em alto volume com API, SDK, CLI e MCP server completos. Suporte prioritário dedicado.',
     monthlyPrice: 197,
-    annualPrice: 167,
+    annualPrice: 164,
     icon: Crown,
     accent: '#60A5FA',
     features: [
@@ -234,7 +234,7 @@ const billingPlans: BillingPlan[] = [
     tagline: 'Para grandes operações',
     description: 'Tudo ilimitado: contas nas 15 plataformas, usuários e workspaces. 150.000 posts/mês com SLA dedicado, MCP server e suporte prioritário. Para grandes operações que precisam de escala e confiabilidade.',
     monthlyPrice: 497,
-    annualPrice: 422,
+    annualPrice: 414,
     icon: Crown,
     accent: '#C084FC',
     features: [
@@ -287,6 +287,7 @@ export default function BillingPage() {
   const router = useRouter();
   const [credits, setCredits] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [planLoading, setPlanLoading] = useState(true);
   const [currentPlan, setCurrentPlan] = useState('free');
   const [organizationCreatedAt, setOrganizationCreatedAt] = useState<string | null>(null);
   const [usage, setUsage] = useState({ posts: { used: 0, limit: 50, remaining: 50 }, comments: { used: 0, limit: 100, remaining: 100 }, uploads: { used: 0, limit: 100 * 1024 * 1024, remaining: 100 * 1024 * 1024 } });
@@ -309,6 +310,9 @@ export default function BillingPage() {
       })
       .catch(() => {
         setCurrentPlan('free');
+      })
+      .finally(() => {
+        setPlanLoading(false);
       });
   }, []);
 
@@ -364,11 +368,24 @@ export default function BillingPage() {
     <div className="min-h-screen bg-brand-bg">
       <Header activeHref="/billing" />
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-2">Cobrança</h1>
-        <p className="text-brand-text-secondary mb-8">Escolha o plano ideal para escalar suas publicações.</p>
+      {planLoading ? (
+        <main className="max-w-7xl mx-auto px-4 py-8">
+          <div className="animate-pulse space-y-6">
+            <div className="h-10 bg-brand-elevated rounded-xl w-56" />
+            <div className="h-5 bg-brand-elevated rounded-lg w-96" />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="h-64 bg-brand-elevated/60 rounded-2xl" />
+              <div className="h-64 bg-brand-elevated/60 rounded-2xl" />
+              <div className="h-64 bg-brand-elevated/60 rounded-2xl" />
+            </div>
+          </div>
+        </main>
+      ) : (
+        <main className="max-w-7xl mx-auto px-4 py-8">
+          <h1 className="text-3xl font-bold mb-2">Cobrança</h1>
+          <p className="text-brand-text-secondary mb-8">Escolha o plano ideal para escalar suas publicações.</p>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
           {/* Card Plano Atual */}
           <TiltCard className="h-full">
             <SpotlightCard className="h-full p-7 flex flex-col shadow-2xl shadow-brand-accent/5" glow={currentPlan === 'free' ? '#22C55E' : '#6366F1'}>
@@ -561,10 +578,10 @@ export default function BillingPage() {
                 onClick={() => setIsAnnual(true)}
                 className={`px-5 py-2 rounded-xl text-sm font-semibold transition flex items-center gap-2 ${isAnnual ? 'bg-brand-accent text-brand-bg' : 'text-brand-text-secondary hover:text-brand-text'}`}
               >
-                Anual <span className="text-[10px] bg-success/20 text-success px-1.5 py-0.5 rounded-full">-15%</span>
+                Anual <span className="text-[10px] bg-success/20 text-success px-1.5 py-0.5 rounded-full">-17%</span>
               </button>
             </div>
-            {isAnnual && <p className="text-xs text-brand-text-secondary mt-3">No anual você paga 12x o valor acima e economiza 2 meses.</p>}
+            {isAnnual && <p className="text-xs text-brand-text-secondary mt-3">No anual você paga 12x o valor acima e economiza 2 meses (~17%).</p>}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 items-stretch">
@@ -775,6 +792,7 @@ export default function BillingPage() {
           </div>
         </section>
       </main>
+      )}
 
       <Footer />
 
