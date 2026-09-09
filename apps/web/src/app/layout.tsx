@@ -1,27 +1,10 @@
 import type { Metadata, Viewport } from 'next';
-import { Space_Grotesk, Inter, JetBrains_Mono } from 'next/font/google';
 import { GoogleAnalytics } from 'nextjs-google-analytics';
 import './globals.css';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://stackpost.com.br';
 const SITE_NAME = 'StackPost';
 const SITE_DESC = 'StackPost e a API unificada de redes sociais para SaaS, agências e AI agents. Uma integração, 15 plataformas, 114 endpoints, MCP server e analytics histórico.';
-
-const fontDisplay = Space_Grotesk({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-display',
-});
-const fontSans = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-sans',
-});
-const fontMono = JetBrains_Mono({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-mono',
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -122,7 +105,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className={`${fontDisplay.variable} ${fontSans.variable} ${fontMono.variable}`}>
+    <html lang="pt-BR">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className="min-h-screen bg-brand-bg text-brand-text">
         {process.env.NEXT_PUBLIC_GA4_ID && (
           <GoogleAnalytics gaMeasurementId={process.env.NEXT_PUBLIC_GA4_ID} trackPageViews />

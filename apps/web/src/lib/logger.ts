@@ -19,33 +19,12 @@ export interface LogContext {
   version?: string;
 }
 
-// Contexto global legado — usado apenas pelo middleware.
-// API routes e handlers devem usar createLogger(ctx) para isolamento real.
-const GLOBAL = globalThis as any;
-const CONTEXT_KEY = '__stackpost_log_context__';
-
-export function setLogContext(ctx: LogContext) {
-  GLOBAL[CONTEXT_KEY] = ctx;
-}
-
-export function getLogContext(): LogContext | undefined {
-  return GLOBAL[CONTEXT_KEY] as LogContext | undefined;
-}
-
-export function clearLogContext() {
-  GLOBAL[CONTEXT_KEY] = undefined;
-}
-
 const SENSITIVE_KEYS = /(password|secret|token|access_token|refresh_token|id_token|client_secret|api_key|apikey|authorization|cookie|private_key|jwt)/i;
 
 const TOKEN_PATTERNS = [
-  // URL query parameters and form values
   /((?:token|access_token|refresh_token|code|client_secret|api_key|apikey|secret|password|id_token)[=:]\s*)[^\s&"'<>]+/gi,
-  // Authorization header
   /(Authorization\s*[:=]\s*(?:Bearer|Basic|Token)\s+)[A-Za-z0-9_\-./+]{8,}/gi,
-  // JWT
   /([A-Za-z0-9_\-]+\.){2}[A-Za-z0-9_\-]+/g,
-  // Long hex strings (likely API keys/secrets)
   /\b[0-9a-f]{32,}\b/gi,
 ];
 
@@ -89,11 +68,10 @@ function redactArgs(args: unknown[]): unknown[] {
 }
 
 function buildPrefix(level: LogLevel, ctx?: LogContext): string {
-  const c = ctx || getLogContext();
   const parts: string[] = [new Date().toISOString(), `[${level.toUpperCase()}]`];
-  if (c?.version) parts.push(`v:${c.version}`);
-  if (c?.requestId) parts.push(`rid:${c.requestId}`);
-  if (c?.route) parts.push(c.route);
+  if (ctx?.version) parts.push(`v:${ctx.version}`);
+  if (ctx?.requestId) parts.push(`rid:${ctx.requestId}`);
+  if (ctx?.route) parts.push(ctx.route);
   return parts.join(' ');
 }
 
@@ -110,19 +88,8 @@ function log(level: LogLevel, ctx: LogContext | undefined, args: unknown[]) {
   }
 }
 
-// Logger global legado — usa contexto do globalThis (middleware)
-export const logger = {
-  debug: (...args: unknown[]) => log('debug', undefined, args),
-  info: (...args: unknown[]) => log('info', undefined, args),
-  warn: (...args: unknown[]) => log('warn', undefined, args),
-  error: (...args: unknown[]) => log('error', undefined, args),
-  setLogContext,
-  getLogContext,
-  clearLogContext,
-};
-
-// Cria um logger com contexto isolado por requisição.
-// Use em API routes: const log = createLogger({ route: 'POST /api/posts', requestId });
+// Logger com contexto explicito por requisicao.
+// Use em API routes e middleware: const log = createLogger({ route, requestId });
 export function createLogger(ctx: LogContext) {
   return {
     debug: (...args: unknown[]) => log('debug', ctx, args),
@@ -131,3 +98,12 @@ export function createLogger(ctx: LogContext) {
     error: (...args: unknown[]) => log('error', ctx, args),
   };
 }
+
+// Logger global sem contexto — usar apenas em modulos que nao tem request context
+// (ex: cron handlers, inicializacao). Para requests, use createLogger(ctx).
+export const logger = {
+  debug: (...args: unknown[]) => log('debug', undefined, args),
+  info: (...args: unknown[]) => log('info', undefined, args),
+  warn: (...args: unknown[]) => log('warn', undefined, args),
+  error: (...args: unknown[]) => log('error', undefined, args),
+};

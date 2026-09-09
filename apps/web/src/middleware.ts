@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { rateLimit } from '@/lib/rate-limit';
 import { getUserFromToken } from '@/lib/auth';
 import { getSupabase } from '@/lib/supabase';
-import { logger } from '@/lib/logger';
+import { createLogger } from '@/lib/logger';
 
 const PUBLIC_PATHS = ['/', '/login', '/register', '/plans', '/about', '/features', '/pricing', '/contact', '/blog', '/docs', '/privacy', '/terms', '/status', '/changelog', '/partners', '/comparisons', '/glossary', '/brand-kit', '/platforms', '/onboarding', '/compare', '/roadmap', '/demo', '/build-vs-buy', '/migrate', '/security', '/ai-agents', '/for-saas', '/for-agencies', '/for-enterprise'];
 const STATIC_PATHS = ['/_next', '/static', '/favicon.ico', '/robots.txt', '/sitemap.xml', '/icon.png', '/logo.png', '/og.png', '/manifest', '/uploads', '/brand', '/banner', '/cases', '/prints', '/videos', '/openapi.json', '/site.webmanifest', '/_headers'];
@@ -65,10 +65,7 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const origin = req.headers.get('origin');
   const requestId = req.headers.get('cf-ray') || '-';
-  logger.setLogContext({
-    route: `${req.method} ${pathname}`,
-    requestId,
-  });
+  const log = createLogger({ route: `${req.method} ${pathname}`, requestId });
 
   try {
     if (pathname.startsWith('/api/')) {
@@ -119,8 +116,9 @@ export async function middleware(req: NextRequest) {
     }
 
     return res;
-  } finally {
-    logger.clearLogContext();
+  } catch (e) {
+    log.error('Middleware error:', e);
+    throw e;
   }
 }
 

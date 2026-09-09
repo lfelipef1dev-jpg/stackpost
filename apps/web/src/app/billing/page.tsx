@@ -122,7 +122,7 @@ const allFeatures = [
   'Link na bio',
   'Upload de mídia',
   'AI caption',
-  'MCP server (em breve)',
+  'MCP server',
   'Suporte',
 ];
 

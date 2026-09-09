@@ -2,7 +2,7 @@
 // Segue padrao oficial: https://opennext.js.org/cloudflare/howtos/custom-worker
 // @ts-ignore `.open-next/worker.js` is generated at build time
 import { default as handler } from "./.open-next/worker.js";
-import { logger } from "./src/lib/logger";
+import { createLogger } from "./src/lib/logger";
 
 // Mapeia cada expressao de cron para as rotas que ela deve executar.
 // Antes: TODOS os triggers executavam as mesmas 2 rotas via HTTP publico,
@@ -41,11 +41,12 @@ export default {
 
     const cronSecret = env.CRON_SECRET;
     if (!cronSecret) {
-      logger.error('CRON_SECRET ausente; cron abortado', { cron: cronKey });
+      const log = createLogger({ route: `cron:${cronKey}` });
+      log.error('CRON_SECRET ausente; cron abortado');
       return;
     }
 
-    logger.setLogContext({ route: `cron:${cronKey}` });
+    const log = createLogger({ route: `cron:${cronKey}` });
 
     ctx.waitUntil(
       (async () => {
@@ -61,16 +62,16 @@ export default {
               const resp = await handler.fetch(req, env, ctx);
               await resp.body?.cancel();
               if (resp.status >= 400) {
-                logger.warn(`Cron ${route} retornou ${resp.status}`, { cron: cronKey });
+                log.warn(`Cron ${route} retornou ${resp.status}`);
               } else {
-                logger.info(`Cron ${route} -> ${resp.status}`, { cron: cronKey });
+                log.info(`Cron ${route} -> ${resp.status}`);
               }
             } catch (err) {
-              logger.error(`Erro no cron ${route}`, err);
+              log.error(`Erro no cron ${route}`, err);
             }
           }
-        } finally {
-          logger.clearLogContext();
+        } catch (e) {
+          log.error('Erro geral no cron', e);
         }
       })()
     );
