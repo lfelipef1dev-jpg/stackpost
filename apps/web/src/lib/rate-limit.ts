@@ -10,6 +10,7 @@ interface RateBucket {
 }
 
 const buckets = new Map<string, { s1: RateBucket; s10: RateBucket; s60: RateBucket }>();
+const MAX_BUCKETS = 1000; // evitar vazamento de memoria no Worker
 
 const LIMITS = {
   s1: { max: 100, window: 1000 },
@@ -17,8 +18,19 @@ const LIMITS = {
   s60: { max: 2000, window: 60000 },
 };
 
+function cleanupBuckets() {
+  const now = Date.now();
+  for (const [key, b] of buckets) {
+    if (now > b.s60.resetAt && now > b.s10.resetAt && now > b.s1.resetAt) {
+      buckets.delete(key);
+    }
+  }
+}
+
 function getBucket(key: string) {
   if (!buckets.has(key)) {
+    // evitar vazamento de memoria: limpa buckets mortos se passou do limite
+    if (buckets.size > MAX_BUCKETS) cleanupBuckets();
     buckets.set(key, {
       s1: { count: 0, resetAt: Date.now() + LIMITS.s1.window },
       s10: { count: 0, resetAt: Date.now() + LIMITS.s10.window },
