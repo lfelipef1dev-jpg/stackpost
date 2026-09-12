@@ -146,7 +146,7 @@ export default function BuildVsBuyPage() {
                 </div>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-brand-text-secondary">Plano Scale (R$ 199/mes)</span>
+                    <span className="text-brand-text-secondary">Plano Scale (R$ 199/mês)</span>
                     <span className="font-mono">R$ {stackpostYear1.toLocaleString('pt-BR')}</span>
                   </div>
                   <div className="flex justify-between">
@@ -167,7 +167,7 @@ export default function BuildVsBuyPage() {
                   R$ {savings.toLocaleString('pt-BR')}
                 </div>
                 <div className="text-sm text-success font-medium">
-                  {savingsPercent}% de reducao de custo
+                  {savingsPercent}% de redução de custo
                 </div>
                 <div className="text-xs text-brand-text-secondary mt-2">
                   Tempo economizado: ~{timeSaved} dias
@@ -181,12 +181,12 @@ export default function BuildVsBuyPage() {
         <ScrollReveal className="mt-8">
           <details className="p-4 rounded-xl bg-brand-surface/30 border border-brand-border/50">
             <summary className="text-sm font-medium cursor-pointer text-brand-text-secondary">
-              Metodologia do calculo
+              Metodologia do cálculo
             </summary>
             <div className="mt-4 text-xs text-brand-text-secondary space-y-2">
-              <p>- Custo de desenvolvedor: R$ 12.000/mes (media mercado BR pleno/senior)</p>
-              <p>- Manutencao anual estimada em 30% do custo de desenvolvimento</p>
-              <p>- StackPost plano Scale: R$ 199/mes + uso por postagem</p>
+              <p>- Custo de desenvolvedor: R$ 12.000/mês (média mercado BR pleno/sênior)</p>
+              <p>- Manutenção anual estimada em 30% do custo de desenvolvimento</p>
+              <p>- StackPost plano Scale: R$ 199/mês + uso por postagem</p>
               <p>- Não inclui: custos de infraestrutura (servidores, CDN), OAuth app review, monitoramento</p>
               <p>- Estimativas baseadas em projetos reais de integração social</p>
             </div>

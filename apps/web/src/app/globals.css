@@ -12,9 +12,9 @@
     --brand-text-secondary: rgba(230, 230, 230, 0.70);
     --brand-accent: #8AB4F8;
     --brand-accent-hover: #AECBFA;
-    --font-sans: 'Inter', system-ui, sans-serif;
-    --font-display: 'Space Grotesk', system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    --font-sans: system-ui, sans-serif;
+    --font-display: system-ui, sans-serif;
+    --font-mono: ui-monospace, monospace;
   }
 
   html {

@@ -117,7 +117,7 @@ export default function StatusPage() {
 
         <ScrollReveal className="mt-8">
           <p className="text-xs text-brand-text-secondary">
-            Esta pagina exibe referencias de status. Dados reais serão integrados ao monitoramento de producão.
+            Esta página exibe referências de status. Dados reais serão integrados ao monitoramento de produção.
           </p>
         </ScrollReveal>
       </section>

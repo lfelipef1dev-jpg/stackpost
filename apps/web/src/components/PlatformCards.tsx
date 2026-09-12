@@ -45,7 +45,7 @@ export const platforms: PlatformCardData[] = [
     users: '2.7B',
     tagline: 'O segundo maior buscador do planeta',
     shortDescription: 'Vídeos longos, Shorts, playlists e upload resumível via Data API v3.',
-    description: 'Envie vídeos longos e Shorts com upload resumível. Controle titulos, descricoes, tags, categorias, madeForKids, thumbnails e legendas.',
+    description: 'Envie vídeos longos e Shorts com upload resumível. Controle títulos, descrições, tags, categorias, madeForKids, thumbnails e legendas.',
     supports: ['Vídeos', 'Shorts', 'Playlists', 'Upload resumível', 'Thumbnails', 'Legendas'],
     details: [
       { label: 'Formatos', value: 'MP4' },
@@ -101,9 +101,9 @@ export const platforms: PlatformCardData[] = [
     name: 'LinkedIn',
     users: '950M',
     tagline: 'B2B e employee advocacy',
-    shortDescription: 'Perfil e Company Page com texto, imagem, PDF, video e link preview.',
-    description: 'Publique em perfis e company pages. Suporte a texto, imagem, documento PDF, video, link previews, menções e controles de privacidade.',
-    supports: ['Perfil', 'Company Page', 'PDF', 'Video', 'Link preview', 'Menções'],
+    shortDescription: 'Perfil e Company Page com texto, imagem, PDF, vídeo e link preview.',
+    description: 'Publique em perfis e company pages. Suporte a texto, imagem, documento PDF, vídeo, link previews, menções e controles de privacidade.',
+    supports: ['Perfil', 'Company Page', 'PDF', 'Vídeo', 'Link preview', 'Menções'],
     details: [
       { label: 'Formatos', value: 'JPG, PNG, GIF, PDF' },
       { label: 'Tamanho max', value: '8 MB' },
@@ -178,7 +178,7 @@ export const platforms: PlatformCardData[] = [
     users: '500M',
     tagline: 'Descoberta visual por intenção',
     shortDescription: 'Pins em boards com imagem ou vídeo e link de destino.',
-    description: 'Crie pins em boards com imagem ou vídeo. Suporte a link de destino, alt text e integração com catalogos de produto.',
+    description: 'Crie pins em boards com imagem ou vídeo. Suporte a link de destino, alt text e integração com catálogos de produto.',
     supports: ['Pins', 'Boards', 'Imagem', 'Vídeo', 'Link de destino', 'API v5'],
     details: [
       { label: 'Formatos', value: 'JPG, PNG' },

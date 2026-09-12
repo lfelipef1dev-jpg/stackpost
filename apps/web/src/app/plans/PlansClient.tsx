@@ -164,9 +164,9 @@ const plans: Plan[] = [
 
 const faqs = [
   { q: 'O StackPost cobra por conta social conectada?', a: 'Não cobramos por cada perfil. Você paga pelo volume de posts. Os planos Free, Inicial e Crescimento têm limites de contas; Scale e Business têm contas ilimitadas.' },
-  { q: 'Posso testar antes de pagar?', a: 'Sim. O plano Free e para sempre com 50 posts/mes. Starter, Growth e Scale oferecem 14 dias de teste grátis.' },
+  { q: 'Posso testar antes de pagar?', a: 'Sim. O plano Free é para sempre com 50 posts/mês. Starter, Growth e Scale oferecem 14 dias de teste grátis.' },
   { q: 'Como funciona a cobrança do X?', a: 'O X cobra por post da API oficial. Esse custo e pago com créditos X pré-pagos no painel de billing.' },
-  { q: 'Os preços sao em reais?', a: 'Sim. Cobrança via Mercado Pago com PIX e cartão. Sem surpresa de câmbio.' },
+  { q: 'Os preços são em reais?', a: 'Sim. Cobrança via Mercado Pago com PIX e cartão. Sem surpresa de câmbio.' },
   { q: 'Preciso contrato ou posso cancelar?', a: 'Cancele quando quiser. Sem contrato, sem multa.' },
   { q: 'Qual a diferença entre Growth e Scale?', a: 'O Scale entrega 5x mais volume: 40.000 posts vs 8.000 do Growth, alem de MCP server, A/B testing e contas ilimitadas.' },
   { q: 'Tem garantia?', a: 'Sim. 7 dias de garantia em todos os planos pagos. Se não gostar, devolvemos 100%.' },
@@ -243,8 +243,8 @@ export default function PlansPage() {
 
   function formatPeriod(plan: Plan) {
     if (plan.monthlyPrice === null) return '';
-    if (plan.monthlyPrice === 0) return '/mes';
-    return yearly ? '/ano' : '/mes';
+    if (plan.monthlyPrice === 0) return '/mês';
+    return yearly ? '/ano' : '/mês';
   }
 
   const savings = yearly ? 'Economize 17% no anual' : 'Mude para anual e economize 17%';
@@ -469,9 +469,9 @@ export default function PlansPage() {
                 <tbody>
                   {[
                     { feature: 'Cobrança por conta social', stackpost: 'Nunca', other: 'Comum' },
-                    { feature: 'API unificada nativa', stackpost: 'Sim, em todos os planos', other: 'Paga ou indisponivel' },
-                    { feature: 'MCP server e CLI', stackpost: 'Incluido', other: 'Raro' },
-                    { feature: 'Suporte em portugues', stackpost: 'Sim', other: 'Apenas em ingles' },
+                    { feature: 'API unificada nativa', stackpost: 'Sim, em todos os planos', other: 'Paga ou indisponível' },
+                    { feature: 'MCP server e CLI', stackpost: 'Incluído', other: 'Raro' },
+                    { feature: 'Suporte em português', stackpost: 'Sim', other: 'Apenas em inglês' },
                     { feature: 'Cobrança em reais', stackpost: 'PIX e cartão', other: 'Dólar' },
                     { feature: 'Contas ilimitadas', stackpost: 'Sim, sem pagar por canal', other: 'Cobrança por canal' },
                   ].map((row) => (
@@ -667,7 +667,7 @@ export default function PlansPage() {
                 Falar com vendas
               </Link>
             </div>
-            <p className="text-xs text-brand-text-secondary/60 mt-4 font-mono">Garantia de 7 dias · Sem contrato · Suporte em portugues</p>
+            <p className="text-xs text-brand-text-secondary/60 mt-4 font-mono">Garantia de 7 dias · Sem contrato · Suporte em português</p>
           </div>
         </ScrollReveal>
       </section>

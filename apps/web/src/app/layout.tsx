@@ -1,6 +1,26 @@
 import type { Metadata, Viewport } from 'next';
 import { GoogleAnalytics } from 'nextjs-google-analytics';
+import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
+
+const fontSans = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-sans',
+  display: 'swap',
+});
+const fontDisplay = Space_Grotesk({
+  subsets: ['latin'],
+  weight: ['500', '700'],
+  variable: '--font-display',
+  display: 'swap',
+});
+const fontMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+  variable: '--font-mono',
+  display: 'swap',
+});
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://stackpost.com.br';
 const SITE_NAME = 'StackPost';
@@ -106,18 +126,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="min-h-screen bg-brand-bg text-brand-text">
-        {process.env.NEXT_PUBLIC_GA4_ID && (
+      <body className={`min-h-screen bg-brand-bg text-brand-text ${fontSans.variable} ${fontDisplay.variable} ${fontMono.variable}`}>
+        {process.env.NEXT_PUBLIC_GA4_ID ? (
           <GoogleAnalytics gaMeasurementId={process.env.NEXT_PUBLIC_GA4_ID} trackPageViews />
-        )}
+        ) : null}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}

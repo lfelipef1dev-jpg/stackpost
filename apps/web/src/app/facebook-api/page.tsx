@@ -24,7 +24,7 @@ const jsonLd = serviceSchema(
 const features = [
   {
     title: 'Posts',
-    desc: 'Publique texto, foto e video no feed de Pages com legenda e link preview.',
+    desc: 'Publique texto, foto e vídeo no feed de Pages com legenda e link preview.',
   },
   {
     title: 'Reels',

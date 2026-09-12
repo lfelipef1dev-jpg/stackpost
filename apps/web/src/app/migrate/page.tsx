@@ -24,7 +24,7 @@ const providers = [
 
 const mapping = [
   { ay: 'POST /api/post', sp: 'POST /api/posts', note: 'Mesma estrutura, payload unificado' },
-  { ay: 'GET /api/posts', sp: 'GET /api/posts', note: 'Listagem com paginacao cursor' },
+  { ay: 'GET /api/posts', sp: 'GET /api/posts', note: 'Listagem com paginação por cursor' },
   { ay: 'DELETE /api/post/{id}', sp: 'DELETE /api/posts/{id}', note: 'Mesma assinatura' },
   { ay: 'GET /api/analytics', sp: 'GET /api/analytics/posts/{id}', note: 'Analytics por post' },
   { ay: 'GET /api/user', sp: 'GET /api/me', note: 'Dados do usuário logado' },

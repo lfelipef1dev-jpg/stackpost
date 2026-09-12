@@ -124,7 +124,7 @@ export default function AdminSubscriptionDetailPage() {
 
   async function handleCancel() {
     if (!sub) return;
-    if (!confirm('Tem certeza que deseja cancelar esta assinatura? Está ação não pode ser desfeita.')) return;
+    if (!confirm('Tem certeza que deseja cancelar esta assinatura? Esta ação não pode ser desfeita.')) return;
     setCancelling(true);
     setMessage('');
 

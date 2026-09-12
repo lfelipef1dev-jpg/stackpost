@@ -161,13 +161,7 @@ export default function Home() {
               O que torna o StackPost diferente
             </h2>
             <p className="text-brand-text-secondary max-w-2xl mx-auto">
-              Infraestrutura social completa com custo por uso, sem taxas por conta.
-            </p>
-            <h2 className="font-display text-3xl md:text-4xl font-black tracking-tight text-brand-text mb-4">
-              Por que escolher o StackPost
-            </h2>
-            <p className="text-brand-text-secondary max-w-2xl mx-auto">
-              Recursos de infraestrutura pensados para producao.
+              Infraestrutura social completa com custo por uso, sem taxas por conta. Recursos pensados para produção.
             </p>
           </ScrollReveal>
 

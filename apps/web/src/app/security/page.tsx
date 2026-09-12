@@ -29,7 +29,7 @@ const complianceItems = [
   { title: 'LGPD', desc: 'Conformidade com a Lei Geral de Protecao de Dados brasileira.' },
   { title: 'GDPR-ready', desc: 'Estrutura preparada para o regulamento europeu de protecao de dados.' },
   { title: 'DPA disponível', desc: 'Data Processing Agreement disponível para clientes enterprise.' },
-  { title: 'Data retention configuravel', desc: 'Defina por quanto tempo os dados sao mantidos por workspace.' },
+  { title: 'Data retention configurável', desc: 'Defina por quanto tempo os dados são mantidos por workspace.' },
 ];
 
 export default function SecurityPage() {
@@ -92,7 +92,7 @@ export default function SecurityPage() {
               <h2 className="text-2xl font-bold text-brand-text">Idempotencia e retry</h2>
             </div>
             <p className="text-brand-text-secondary mb-6">
-              Publicações sao resilientes por padrão. Nada de posts duplicados por erro de rede.
+              Publicações são resilientes por padrão. Nada de posts duplicados por erro de rede.
             </p>
             <div className="grid md:grid-cols-3 gap-4">
               <div>
@@ -101,7 +101,7 @@ export default function SecurityPage() {
               </div>
               <div>
                 <h3 className="font-semibold text-brand-text mb-1">Retry automático</h3>
-                <p className="text-sm text-brand-text-secondary">Falhas transientes sao retratadas com backoff exponencial.</p>
+                <p className="text-sm text-brand-text-secondary">Falhas transientes são retratadas com backoff exponencial.</p>
               </div>
               <div>
                 <h3 className="font-semibold text-brand-text mb-1">Replay de webhooks</h3>

@@ -32,7 +32,7 @@ const features = [
   },
   {
     title: 'Embeds com imagem',
-    desc: 'Embeds ricos com titulo, descricao, cor, thumbnail e imagem de capa.',
+    desc: 'Embeds ricos com título, descrição, cor, thumbnail e imagem de capa.',
   },
   {
     title: 'Multi-canal',

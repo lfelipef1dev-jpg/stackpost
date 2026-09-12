@@ -119,7 +119,7 @@ export async function GET(req: NextRequest) {
       topTimes,
       allHours: hourScores.sort((a, b) => a.hour - b.hour),
       timezone: 'America/Sao_Paulo',
-      basedOn: rows.length > 0 ? `${rows.length} horas com dados historicos` : 'Padroes da industria',
+      basedOn: rows.length > 0 ? `${rows.length} horas com dados históricos` : 'Padrões da indústria',
     });
   } catch (error) {
     logger.error((error as string));

@@ -72,7 +72,7 @@ export default function Header({ activeHref }: { activeHref?: string }) {
           <Image src="/brand/logo.png" alt="StackPost" width={56} height={56} className="h-14 w-auto" priority />
         </a>
 
-        <nav className="hidden md:flex gap-6 text-sm text-brand-text-secondary items-center" aria-label="Navegacao principal">
+        <nav className="hidden md:flex gap-6 text-sm text-brand-text-secondary items-center" aria-label="Navegação principal">
           {nav.map((item) => (
             <a
               key={item.href}
@@ -104,7 +104,7 @@ export default function Header({ activeHref }: { activeHref?: string }) {
       </div>
 
       {mobileOpen && (
-        <div className="fixed inset-0 z-40" role="dialog" aria-modal="true" aria-label="Menu de navegacao" id="mobile-menu">
+        <div className="fixed inset-0 z-40" role="dialog" aria-modal="true" aria-label="Menu de navegação" id="mobile-menu">
           <div
             className="absolute inset-0 bg-black/60"
             onClick={() => setMobileOpen(false)}
@@ -123,7 +123,7 @@ export default function Header({ activeHref }: { activeHref?: string }) {
               </button>
             </div>
 
-            <nav className="flex-1 flex flex-col gap-1" aria-label="Navegacao mobile">
+            <nav className="flex-1 flex flex-col gap-1" aria-label="Navegação mobile">
               {nav.map((item) => {
                 const isActive = item.href === activeHref;
                 return (

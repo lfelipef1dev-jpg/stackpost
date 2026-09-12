@@ -135,7 +135,7 @@ export default function AiAgentsPage() {
             ))}
           </div>
           <p className="text-center text-sm text-brand-text-secondary mt-6 max-w-xl mx-auto">
-            O agent cria o draft, um humano revisa, aprova e o post e agendado. Controle total sobre o que publica.
+            O agente cria o rascunho, um humano revisa, aprova e o post é agendado. Controle total sobre o que publica.
           </p>
         </ScrollReveal>
       </section>

@@ -70,7 +70,7 @@ export function DocsSidebar() {
 
   return (
     <nav className="pt-6 pb-8">
-      {/* Seção Documentação - sempre visivel */}
+      {/* Seção Documentação - sempre visível */}
       <div className="mb-2">
         <h3 className="text-xs font-mono font-bold uppercase tracking-[0.15em] text-brand-text-secondary/60 mb-3 px-1">
           Documentação

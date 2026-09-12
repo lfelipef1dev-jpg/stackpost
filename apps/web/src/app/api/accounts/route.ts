@@ -12,9 +12,10 @@ export async function GET(req: NextRequest) {
     const supabase = getSupabase();
     const { data, error: dbError } = await supabase
       .from('social_accounts')
-      .select('*')
+      .select('id, platform, username, external_id, platform_account_id, status, expires_at, last_checked_at, platform_metadata, created_at')
       .eq('team_id', user.teamId)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .limit(200);
     if (dbError) throw dbError;
     return NextResponse.json(data);
   } catch (error) {

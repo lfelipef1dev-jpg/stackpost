@@ -119,7 +119,7 @@ export default function AdminUserDetailPage() {
 
   async function handleDelete() {
     if (!user) return;
-    if (!window.confirm('Tem certeza que deseja excluir este usuário? Está ação não pode ser desfeita.')) return;
+    if (!window.confirm('Tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita.')) return;
     setDeleting(true);
     setMessage(null);
     try {

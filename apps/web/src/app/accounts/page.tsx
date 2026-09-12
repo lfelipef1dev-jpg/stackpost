@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import Image from 'next/image';
 import Footer from '@/components/Footer';
@@ -264,10 +264,10 @@ export default function AccountsPage() {
     })
     .sort((a, b) => {
       if (sort === 'last_used') {
-        return (new Date(b.last_sync_at || 0).getTime()) - (new Date(a.last_sync_at || 0).getTime());
+        return (new Date(b.last_checked_at || 0).getTime()) - (new Date(a.last_checked_at || 0).getTime());
       }
       if (sort === 'token_expiry') {
-        return (new Date(a.token_expires_at || 0).getTime()) - (new Date(b.token_expires_at || 0).getTime());
+        return (new Date(a.expires_at || 0).getTime()) - (new Date(b.expires_at || 0).getTime());
       }
       if (sort === 'connection_date') {
         return (new Date(b.created_at || 0).getTime()) - (new Date(a.created_at || 0).getTime());
@@ -499,7 +499,7 @@ export default function AccountsPage() {
               const avatar = typeof meta === 'object' && meta.avatar ? meta.avatar : null;
               const followers = typeof meta === 'object' && meta.followers ? meta.followers : null;
               const platformColor = PLATFORMS.find((p) => p.id === acc.platform)?.color || '#888';
-              const expiry = expiryCountdown(acc.token_expires_at);
+              const expiry = expiryCountdown(acc.expires_at);
               const rateLimit = typeof meta === 'object' && meta.rate_limit ? meta.rate_limit : null;
               const ratePct = rateLimit ? (rateLimit.used / rateLimit.total) * 100 : null;
               const isSelected = selectedIds.includes(acc.id);
@@ -553,7 +553,7 @@ export default function AccountsPage() {
 
                       <div className="flex items-center gap-2 mb-2">
                         <span className={`w-2 h-2 rounded-full ${config.dot}`} />
-                        <span className="text-[11px] text-brand-text-secondary">{timeAgo(acc.last_sync_at)}</span>
+                        <span className="text-[11px] text-brand-text-secondary">{timeAgo(acc.last_checked_at)}</span>
                       </div>
 
                       <div className="flex items-center justify-between text-[11px] mb-3">
@@ -721,7 +721,7 @@ export default function AccountsPage() {
             </div>
             <p className="text-sm text-brand-text-secondary mb-5">
               {bulkConfirm === 'delete'
-                ? `Tem certeza que deseja excluir ${selectedIds.length} conta${selectedIds.length > 1 ? 's' : ''}? Está ação não pode ser desfeita.`
+                ? `Tem certeza que deseja excluir ${selectedIds.length} conta${selectedIds.length > 1 ? 's' : ''}? Esta ação não pode ser desfeita.`
                 : `Tem certeza que deseja renovar o token de ${selectedIds.length} conta${selectedIds.length > 1 ? 's' : ''}?`}
             </p>
             <div className="flex gap-2">
@@ -767,7 +767,7 @@ export default function AccountsPage() {
               const avatar = typeof meta === 'object' && meta.avatar ? meta.avatar : null;
               const followers = typeof meta === 'object' && meta.followers ? meta.followers : null;
               const platformColor = PLATFORMS.find((p) => p.id === acc.platform)?.color || '#888';
-              const expiry = expiryCountdown(acc.token_expires_at);
+              const expiry = expiryCountdown(acc.expires_at);
               const scopes = typeof meta === 'object' && Array.isArray(meta.scopes) ? meta.scopes : [];
               return (
                 <div className="p-6">
@@ -823,7 +823,7 @@ export default function AccountsPage() {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-brand-text-secondary">Último sync</span>
-                        <span>{timeAgo(acc.last_sync_at)}</span>
+                        <span>{timeAgo(acc.last_checked_at)}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-brand-text-secondary">Token expira</span>
