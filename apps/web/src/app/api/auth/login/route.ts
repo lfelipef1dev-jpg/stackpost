@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { loginSchema } from '@/lib/schemas';
 import { SignJWT } from 'jose';
-import { compare } from 'bcryptjs';
+import { compare, hash } from 'bcryptjs';
 import { requireEnv } from '@/lib/env';
 import { setTokenCookie } from '@/lib/cookies';
 
@@ -29,6 +29,14 @@ export async function POST(req: NextRequest) {
 
     if (error || !user || !(await compare(password, user.password_hash))) {
       return NextResponse.json({ error: 'Credenciais invalidas' }, { status: 401 });
+    }
+
+    // Migra hashes custo-12 para custo-10: bcryptjs em JS puro no workerd custa
+    // ~400ms de CPU por compare no custo 12 e era gatilho de Error 1102 em cold start.
+    const bcryptCost = Number(user.password_hash.split('$')[2]);
+    if (bcryptCost > 10) {
+      const passwordHash = await hash(password, 10);
+      await supabase.from('users').update({ password_hash: passwordHash }).eq('id', user.id);
     }
 
     const { password_hash, ...safeUser } = user;

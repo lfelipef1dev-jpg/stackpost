@@ -37,7 +37,19 @@ export default {
   async scheduled(event: any, env: any, ctx: any) {
     const cronKey: string = event.cron || "";
     const routes = CRON_ROUTES[cronKey] || [];
-    if (routes.length === 0) return;
+    if (routes.length === 0) {
+      // Trigger "* * * * *": keep-alive. Um fetch interno leve mantem o isolate
+      // (e o handler OpenNext) aquecido, evitando cold-start em requests reais —
+      // o cold start + CPU de request era o gatilho residual do Error 1102.
+      ctx.waitUntil(
+        handler
+          // @ts-ignore - signature interna do OpenNext
+          .fetch(new Request("https://worker.internal/robots.txt"), env, ctx)
+          .then((r: any) => r.body?.cancel())
+          .catch(() => {})
+      );
+      return;
+    }
 
     // Secret de cron: CRON_SECRET > SUPABASE_SERVICE_ROLE_KEY (fail-closed nas rotas)
     const cronSecret = env.CRON_SECRET || env.SUPABASE_SERVICE_ROLE_KEY;

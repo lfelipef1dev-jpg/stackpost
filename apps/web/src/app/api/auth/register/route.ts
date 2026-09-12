@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
     }
     const teamId = teamRow.id;
 
-    const passwordHash = await hash(password, 12);
+    const passwordHash = await hash(password, 10);
 
     const { data: user, error: userError } = await supabase
       .from('users')
