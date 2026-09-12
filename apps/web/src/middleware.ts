@@ -3,6 +3,7 @@ import { rateLimit } from '@/lib/rate-limit';
 import { getUserFromToken } from '@/lib/auth';
 import { getSupabase } from '@/lib/supabase';
 import { createLogger } from '@/lib/logger';
+import { SEO_SLUG_SET } from '@/lib/seo-slugs';
 
 const PUBLIC_PATHS = ['/', '/login', '/register', '/plans', '/about', '/features', '/pricing', '/contact', '/blog', '/docs', '/privacy', '/terms', '/status', '/changelog', '/partners', '/comparisons', '/glossary', '/brand-kit', '/platforms', '/onboarding', '/compare', '/roadmap', '/demo', '/build-vs-buy', '/migrate', '/security', '/ai-agents', '/for-saas', '/for-agencies', '/for-enterprise'];
 const STATIC_PATHS = ['/_next', '/static', '/favicon.ico', '/robots.txt', '/sitemap.xml', '/icon.png', '/logo.png', '/og.png', '/manifest', '/uploads', '/brand', '/banner', '/cases', '/prints', '/videos', '/openapi.json', '/site.webmanifest', '/_headers'];
@@ -18,6 +19,8 @@ function isPublic(path: string): boolean {
   if (path.startsWith('/migrate-from-')) return true;
   // Páginas SEO com sufixo -for-*
   if (/-api-for-/.test(path)) return true;
+  // Slugs servidos pela rota dinâmica /[seo] (ex: /bulk-posting, /social-media-cli)
+  if (SEO_SLUG_SET.has(path.slice(1))) return true;
   return false;
 }
 
