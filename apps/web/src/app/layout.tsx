@@ -50,8 +50,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: '/brand/og.png',
-        width: 1200,
-        height: 630,
+        width: 1254,
+        height: 1254,
         alt: 'StackPost - API unificada de redes sociais',
       },
     ],
@@ -74,9 +74,9 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: '/brand/icon.png',
-    apple: '/brand/icon.png',
-    shortcut: '/brand/icon.png',
+    icon: '/brand/icon-sm.png',
+    apple: '/brand/icon-sm.png',
+    shortcut: '/brand/icon-sm.png',
   },
   manifest: '/site.webmanifest',
 };

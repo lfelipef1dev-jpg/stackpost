@@ -69,7 +69,7 @@ export default function Header({ activeHref }: { activeHref?: string }) {
     <header className="h-16 border-b border-brand-border bg-brand-surface/50 backdrop-blur sticky top-0 z-30">
       <div className="max-w-7xl mx-auto h-full px-4 flex items-center justify-between">
         <a href="/dashboard" className="flex items-center gap-2">
-          <Image src="/brand/logo.png" alt="StackPost" width={56} height={56} className="h-14 w-auto" priority />
+          <Image src="/brand/logo-header.png" alt="StackPost" width={56} height={56} className="h-14 w-auto" priority />
         </a>
 
         <nav className="hidden md:flex gap-6 text-sm text-brand-text-secondary items-center" aria-label="Navegação principal">
