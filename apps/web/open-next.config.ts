@@ -1,3 +1,5 @@
+import staticAssetsIncrementalCache from "@opennextjs/cloudflare/overrides/incremental-cache/static-assets-incremental-cache";
+
 /**
  * @type {import('@opennextjs/cloudflare').OpenNextConfig}
  */
@@ -7,7 +9,10 @@ const config = {
       wrapper: "cloudflare-node",
       converter: "edge",
       proxyExternalRequest: "fetch",
-      incrementalCache: "dummy",
+      // Prerendered pages/rotas estaticas sao servidas do ASSETS binding.
+      // Com "dummy", TODO request de pagina fazia SSR completo (re-render React),
+      // alocando ~1MB por request e estourando a memoria do isolate (Error 1102).
+      incrementalCache: () => staticAssetsIncrementalCache,
       tagCache: "dummy",
       queue: "dummy",
     },
