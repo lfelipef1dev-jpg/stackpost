@@ -2,22 +2,20 @@ import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { recordBillingEvent } from '@/lib/billing-metering';
+import { requireCronAuth } from '@/lib/cron-auth';
 
 /**
  * Cron: Dunning de assinaturas em past_due.
  * Tenta nova cobrança via MP (até 3 tentativas com backoff de 1, 3, 7 dias).
  * Após 3 falhas: downgrade para plano free e subscription canceled.
- * Valida CRON_SECRET.
+ * Valida secret de cron (fail-closed).
  */
 const DUNNING_SCHEDULE_DAYS = [1, 3, 7];
 const MAX_ATTEMPTS = 3;
 
 export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get('authorization');
-  const cronSecret = process.env.CRON_SECRET;
-  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
-    return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
-  }
+  const denied = requireCronAuth(req);
+  if (denied) return denied;
 
   const supabase = getSupabase();
   const now = new Date();
@@ -26,7 +24,8 @@ export async function GET(req: NextRequest) {
     const { data: subs, error } = await supabase
       .from('subscriptions')
       .select('id, organization_id, team_id, plan_slug, provider_subscription_id, current_period_end, updated_at')
-      .eq('status', 'past_due');
+      .eq('status', 'past_due')
+      .limit(100);
 
     if (error) throw error;
 

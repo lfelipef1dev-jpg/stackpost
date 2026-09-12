@@ -100,7 +100,8 @@ export async function aggregateUsage(
     .select('event_type, units, total_cost_cents')
     .eq('team_id', teamId)
     .gte('created_at', periodStart)
-    .lt('created_at', periodEnd);
+    .lt('created_at', periodEnd)
+    .limit(5000);
 
   if (error) {
     logger.error('[billing-metering] Erro ao agregar uso:', error.message);

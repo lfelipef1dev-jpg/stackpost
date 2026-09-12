@@ -2,15 +2,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { publishPost } from '@/lib/publisher';
+import { requireCronAuth } from '@/lib/cron-auth';
 
 // Cron: Publicar posts agendados cuja scheduled_at chegou
 // Trigger: Cloudflare Workers Cron Triggers (a cada 1 minuto)
 export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get('authorization');
-  const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
-  }
+  const denied = requireCronAuth(req);
+  if (denied) return denied;
 
   try {
     const supabase = getSupabase();

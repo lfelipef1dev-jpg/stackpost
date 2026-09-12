@@ -39,10 +39,11 @@ export default {
     const routes = CRON_ROUTES[cronKey] || [];
     if (routes.length === 0) return;
 
-    const cronSecret = env.CRON_SECRET;
+    // Secret de cron: CRON_SECRET > SUPABASE_SERVICE_ROLE_KEY (fail-closed nas rotas)
+    const cronSecret = env.CRON_SECRET || env.SUPABASE_SERVICE_ROLE_KEY;
     if (!cronSecret) {
       const log = createLogger({ route: `cron:${cronKey}` });
-      log.error('CRON_SECRET ausente; cron abortado');
+      log.error('Nenhum secret de cron disponivel; cron abortado');
       return;
     }
 

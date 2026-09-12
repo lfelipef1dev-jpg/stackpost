@@ -1,15 +1,13 @@
 import { logger } from '@/lib/logger';
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
+import { requireCronAuth } from '@/lib/cron-auth';
 
 // Cron: Recalcular melhores horários via ML
 // Trigger: Cloudflare Workers Cron Triggers (semanal)
 export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get('authorization');
-  const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
-  }
+  const denied = requireCronAuth(req);
+  if (denied) return denied;
 
   try {
     const supabase = getSupabase();
@@ -37,7 +35,8 @@ export async function GET(req: NextRequest) {
           .eq('team_id', account.team_id)
           .contains('platforms', [account.platform])
           .eq('status', 'posted')
-          .gte('published_at', ninetyDaysAgo);
+          .gte('published_at', ninetyDaysAgo)
+          .limit(500);
 
         if (!posts || posts.length < 5) continue; // precisa de pelo menos 5 posts
 

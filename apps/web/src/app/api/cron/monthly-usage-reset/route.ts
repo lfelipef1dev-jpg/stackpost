@@ -1,15 +1,13 @@
 ﻿import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
+import { requireCronAuth } from '@/lib/cron-auth';
 
 // Cron: Resetar contadores de uso mensal (dia 1 de cada mes)
 // Trigger: Cloudflare Workers Cron Triggers (diário, verifica dia 1)
 export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get('authorization');
-  const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
-  }
+  const denied = requireCronAuth(req);
+  if (denied) return denied;
 
   try {
     const supabase = getSupabase();
@@ -22,7 +20,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Resetar contadores mensais de todas as equipes
-    const { data: teams, error } = await supabase.from('teams').select('id');
+    const { data: teams, error } = await supabase.from('teams').select('id').limit(500);
     if (error) throw error;
 
     let reset = 0;

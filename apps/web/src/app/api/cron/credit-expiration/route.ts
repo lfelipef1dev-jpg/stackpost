@@ -1,19 +1,17 @@
 import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
+import { requireCronAuth } from '@/lib/cron-auth';
 
 /**
  * Cron: Expiração de créditos.
  * Marca credit_transactions expiradas (expires_at < now() e expired_at IS NULL)
  * e subtrai o valor expirado de x_credit_balances.
- * Valida CRON_SECRET.
+ * Valida secret de cron (fail-closed).
  */
 export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get('authorization');
-  const cronSecret = process.env.CRON_SECRET;
-  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
-    return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
-  }
+  const denied = requireCronAuth(req);
+  if (denied) return denied;
 
   const supabase = getSupabase();
   const now = new Date().toISOString();
@@ -25,7 +23,8 @@ export async function GET(req: NextRequest) {
       .select('id, team_id, amount, platform')
       .lt('expires_at', now)
       .is('expired_at', null)
-      .gt('amount', 0);
+      .gt('amount', 0)
+      .limit(200);
 
     if (error) throw error;
 

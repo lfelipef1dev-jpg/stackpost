@@ -30,7 +30,8 @@ export async function GET(req: NextRequest) {
       .from('invoices')
       .select('id, invoice_number, status, period_start, period_end, subtotal_cents, discount_cents, tax_cents, total_cents, amount_due_cents, paid_at, due_date, pdf_url, line_items, created_at')
       .eq('organization_id', team.organization_id)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .limit(100);
 
     if (error) throw error;
 

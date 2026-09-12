@@ -1,14 +1,12 @@
 import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
+import { requireCronAuth } from '@/lib/cron-auth';
 
 // Cron: Sincronizar analytics de posts publicados (a cada 6 horas)
 export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get('authorization');
-  const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
-  }
+  const denied = requireCronAuth(req);
+  if (denied) return denied;
 
   try {
     const supabase = getSupabase();
@@ -17,7 +15,7 @@ export async function GET(req: NextRequest) {
 
     const { data: posts, error } = await supabase
       .from('post_platforms')
-      .select('id, post_id, platform, external_id')
+      .select('id, post_id, platform, external_id, posts!inner(team_id)')
       .eq('status', 'posted')
       .gte('created_at', twoDaysAgo)
       .limit(100);
@@ -29,13 +27,17 @@ export async function GET(req: NextRequest) {
 
     for (const pp of posts || []) {
       try {
-        // Buscar account da plataforma
+        // Buscar account da plataforma do MESMO time do post (evita token cross-tenant)
+        const teamId = (pp as any).posts?.team_id;
+        if (!teamId) { failed++; continue; }
         const { data: account } = await supabase
           .from('social_accounts')
           .select('access_token, platform_metadata')
           .eq('platform', pp.platform)
+          .eq('team_id', teamId)
+          .eq('status', 'active')
           .limit(1)
-          .single();
+          .maybeSingle();
 
         if (!account) { failed++; continue; }
 

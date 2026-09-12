@@ -1,22 +1,22 @@
 import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
+import { requireCronAuth } from '@/lib/cron-auth';
 
-export async function POST(req: NextRequest) {
-  const authHeader = req.headers.get('authorization');
-  const cronSecret = process.env.CRON_SECRET;
-
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
-  }
+// Cron: Verificar/reconectar contas sociais (a cada hora via Cron Trigger, GET interno)
+export async function GET(req: NextRequest) {
+  const denied = requireCronAuth(req);
+  if (denied) return denied;
 
   const supabase = getSupabase();
 
   try {
     const { data: accountsData, error: accountsError } = await supabase
       .from('social_accounts')
-      .select('*')
-      .eq('status', 'active');
+      .select('id, platform, access_token, refresh_token, last_checked_at')
+      .eq('status', 'active')
+      .order('last_checked_at', { ascending: true, nullsFirst: true })
+      .limit(100);
     if (accountsError) throw accountsError;
 
     const sixHoursAgo = new Date(Date.now() - 6 * 60 * 60 * 1000);
@@ -120,4 +120,8 @@ export async function POST(req: NextRequest) {
     logger.error((error as string));
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
+}
+
+export async function POST(req: NextRequest) {
+  return GET(req);
 }

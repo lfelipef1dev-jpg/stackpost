@@ -2,18 +2,16 @@ import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { consultarPreapproval } from '@/lib/mercadopago';
+import { requireCronAuth } from '@/lib/cron-auth';
 
 /**
  * Cron: Renovação de assinaturas.
  * Busca subscriptions ativas com current_period_end < now() e verifica cobrança no MP.
- * Valida CRON_SECRET no header Authorization.
+ * Valida secret de cron no header Authorization (fail-closed).
  */
 export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get('authorization');
-  const cronSecret = process.env.CRON_SECRET;
-  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
-    return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
-  }
+  const denied = requireCronAuth(req);
+  if (denied) return denied;
 
   const supabase = getSupabase();
   const now = new Date().toISOString();
@@ -24,7 +22,8 @@ export async function GET(req: NextRequest) {
       .select('id, organization_id, plan_slug, provider_subscription_id, current_period_start, current_period_end')
       .eq('status', 'active')
       .lt('current_period_end', now)
-      .not('provider_subscription_id', 'is', null);
+      .not('provider_subscription_id', 'is', null)
+      .limit(50);
 
     if (error) throw error;
 
