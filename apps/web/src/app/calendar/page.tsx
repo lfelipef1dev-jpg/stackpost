@@ -496,7 +496,7 @@ export default function CalendarPage() {
               <select
                 value={workspace}
                 onChange={(e) => setWorkspace(e.target.value)}
-                className="px-4 py-2.5 rounded-2xl bg-brand-elevated/50 border border-brand-border text-sm focus:outline-none focus:border-brand-accent"
+                className="px-4 py-2.5 rounded-2xl bg-brand-elevated/50 border border-brand-border text-sm focus:outline-none focus:border-brand-accent max-w-[calc(100vw-3rem)]"
               >
                 {WORKSPACES.map((w) => (
                   <option key={w.id} value={w.id}>{w.name} {w.client && `• ${w.client}`}</option>

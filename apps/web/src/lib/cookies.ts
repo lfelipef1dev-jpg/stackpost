@@ -15,10 +15,15 @@ function cookieOptions(req: NextRequest) {
 
 export function setTokenCookie(req: NextRequest, res: NextResponse, token: string) {
   res.headers.append('Set-Cookie', `${TOKEN_NAME}=${token}; ${cookieOptions(req)}; Max-Age=604800`);
+  // Marcador legivel pelo cliente (nao-HttpOnly): indica sessao ativa para
+  // componentes publicos evitarem fetch autenticado desnecessario (ex: /plans).
+  const secure = isSecureHost(req) ? 'Secure; ' : '';
+  res.headers.append('Set-Cookie', `logged_in=1; ${secure}SameSite=Lax; Path=/; Max-Age=604800`);
 }
 
 export function deleteTokenCookie(req: NextRequest, res: NextResponse) {
   res.headers.append('Set-Cookie', `${TOKEN_NAME}=; ${cookieOptions(req)}; Max-Age=0`);
+  res.headers.append('Set-Cookie', `logged_in=; SameSite=Lax; Path=/; Max-Age=0`);
 }
 
 export function getTokenFromCookie(req: NextRequest): string | null {

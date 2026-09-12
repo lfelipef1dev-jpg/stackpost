@@ -551,12 +551,12 @@ export default function SettingsPage() {
                   <SpotlightCard className="p-6" glow="#8AB4F8">
                     {/* Avatar */}
                     <div className="flex items-center gap-4 mb-6">
-                      <div className="w-16 h-16 rounded-2xl bg-brand-accent/20 flex items-center justify-center text-brand-accent text-2xl font-bold">
+                      <div className="w-16 h-16 rounded-2xl bg-brand-accent/20 flex items-center justify-center text-brand-accent text-2xl font-bold shrink-0">
                         {(profile.name || profile.email || '?').charAt(0).toUpperCase()}
                       </div>
-                      <div>
-                        <div className="font-semibold">{profile.name || 'Usuário'}</div>
-                        <div className="text-xs text-brand-text-secondary">{profile.email}</div>
+                      <div className="min-w-0">
+                        <div className="font-semibold truncate">{profile.name || 'Usuário'}</div>
+                        <div className="text-xs text-brand-text-secondary truncate">{profile.email}</div>
                         <span className={`inline-flex items-center gap-1 text-[10px] mt-1 ${ROLE_COLORS[myRole]}`}>
                           {(() => {
                             const Icon = ROLE_ICONS[myRole] || Eye;

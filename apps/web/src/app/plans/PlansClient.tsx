@@ -183,9 +183,11 @@ export default function PlansPage() {
   const [currentPlan, setCurrentPlan] = useState<string | null>(null);
 
   useEffect(() => {
+    // Sem sessao, evita o fetch autenticado (401 no console para visitantes)
+    if (!document.cookie.includes('logged_in=1')) return;
     fetch('/api/usage/monthly')
-      .then((res) => res.json())
-      .then((data) => setCurrentPlan(data.plan || null))
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => setCurrentPlan(data?.plan || null))
       .catch(() => setCurrentPlan(null));
   }, []);
 
