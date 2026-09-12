@@ -55,6 +55,12 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      // /pricing consta em PUBLIC_PATHS mas nao existe como pagina — redireciona para /plans
+      { source: '/pricing', destination: '/plans', permanent: true },
+    ];
+  },
 };
 
 // initOpenNextCloudflareForDev();
