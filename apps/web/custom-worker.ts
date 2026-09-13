@@ -38,13 +38,14 @@ export default {
     const cronKey: string = event.cron || "";
     const routes = CRON_ROUTES[cronKey] || [];
     if (routes.length === 0) {
-      // Trigger "* * * * *": keep-alive. Um fetch interno leve mantem o isolate
-      // (e o handler OpenNext) aquecido, evitando cold-start em requests reais —
-      // o cold start + CPU de request era o gatilho residual do Error 1102.
+      // Trigger "* * * * *": keep-alive. Antes batia em /robots.txt (asset
+      // estatico) — com cache interception isso nem chega no bundle do
+      // servidor (~15MB). /api/ping e rota dinamica: forca a avaliacao do
+      // handler.mjs e mantem o isolate quente de verdade.
       ctx.waitUntil(
         handler
           // @ts-ignore - signature interna do OpenNext
-          .fetch(new Request("https://worker.internal/robots.txt"), env, ctx)
+          .fetch(new Request("https://worker.internal/api/ping"), env, ctx)
           .then((r: any) => r.body?.cancel())
           .catch(() => {})
       );
