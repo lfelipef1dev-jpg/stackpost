@@ -544,7 +544,7 @@ export default function AccountsPage() {
                             </div>
                           )}
                           <div>
-                            <div className="font-semibold capitalize text-sm">{acc.platform.replace('_', ' ')}</div>
+                            <div className="font-semibold text-sm">{PLATFORMS.find((p) => p.id === acc.platform)?.name || acc.platform.replace('_', ' ')}</div>
                             <div className="text-xs text-brand-text-secondary">@{acc.username}</div>
                             {followers !== null && (
                               <div className="text-[10px] text-brand-text-secondary">{followers.toLocaleString('pt-BR')} seguidores</div>
@@ -807,7 +807,7 @@ export default function AccountsPage() {
                         <PlatformIcon id={acc.platform} size={44} color={platformColor} />
                       </div>
                     )}
-                    <div className="mt-3 font-semibold capitalize text-lg">{acc.platform.replace('_', ' ')}</div>
+                    <div className="mt-3 font-semibold text-lg">{PLATFORMS.find((p) => p.id === acc.platform)?.name || acc.platform.replace('_', ' ')}</div>
                     <div className="text-sm text-brand-text-secondary">@{acc.username}</div>
                     <span className={`mt-2 flex items-center gap-1.5 text-xs px-3 py-1 rounded-full ${config.bg} ${config.color} font-medium`}>
                       <Icon className="w-3 h-3" />

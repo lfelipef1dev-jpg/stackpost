@@ -4,6 +4,7 @@ import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import PlanModal from '@/components/PlanModal';
 import { publishableAccounts, effectiveStatus, isActiveAccount } from '@/lib/accounts';
+import { PLATFORMS } from '@/lib/platforms';
 
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
@@ -161,7 +162,6 @@ function AnimatedNumber({ value }: { value: number }) {
 export default function DashboardPage() {
   const [posts, setPosts] = useState<any[]>([]);
   const [accounts, setAccounts] = useState<any[]>([]);
-  const [allAccounts, setAllAccounts] = useState<any[]>([]);
   const [user, setUser] = useState<any>(null);
   const [showPlanModal, setShowPlanModal] = useState(false);
   const [currentPlan, setCurrentPlan] = useState('free');
@@ -170,16 +170,27 @@ export default function DashboardPage() {
   const router = useRouter();
 
   useEffect(() => {
+    // Uma API lenta (ex.: Supabase frio) nao pode deixar a pagina inteira
+    // em branco — cada fetch tem timeout proprio e resolve com dados parciais.
+    const get = (url: string) => {
+      const ctl = new AbortController();
+      const t = setTimeout(() => ctl.abort(), 8000);
+      return fetch(url, { signal: ctl.signal })
+        .then((r) => r.json())
+        .catch(() => null)
+        .finally(() => clearTimeout(t));
+    };
     Promise.all([
-      fetch('/api/posts').then((r) => r.json()),
-      fetch('/api/accounts').then((r) => r.json()),
-      fetch('/api/me').then((r) => r.json()),
-      fetch('/api/usage/monthly').then((r) => r.json()),
+      get('/api/posts'),
+      get('/api/accounts'),
+      get('/api/me'),
+      get('/api/usage/monthly'),
     ])
       .then(([postsData, accountsData, meData, usageData]) => {
         setPosts(Array.isArray(postsData) ? postsData : (postsData.items || []));
         const rawAccounts = Array.isArray(accountsData) ? accountsData : (accountsData.items || accountsData.accounts || []);
-        setAllAccounts(rawAccounts);
+        // Card e lista contam apenas contas publicaveis — credenciais tecnicas
+        // (meta_user) nao sao contas sociais visiveis.
         setAccounts(publishableAccounts(rawAccounts));
         setUser(meData?.user || null);
         setCurrentPlan(meData?.organization?.plan || 'free');
@@ -196,7 +207,7 @@ export default function DashboardPage() {
   const metrics: { label: string; value: number; sub?: string; change: string; icon: any; color: string; glow: string }[] = [
     { label: 'Posts Publicados', value: posted, change: '+0%', icon: FileText, color: '#22C55E', glow: '#22C55E' },
     { label: 'Agendados', value: scheduled, change: '+0', icon: Calendar, color: '#F59E0B', glow: '#F59E0B' },
-    { label: 'Contas conectadas', value: allAccounts.length, sub: `${allAccounts.filter(isActiveAccount).length} ativas`, change: '+0', icon: Users, color: '#3B82F6', glow: '#3B82F6' },
+    { label: 'Contas conectadas', value: accounts.length, sub: `${accounts.filter(isActiveAccount).length} ativas`, change: '+0', icon: Users, color: '#3B82F6', glow: '#3B82F6' },
     { label: 'Rascunhos', value: drafts, change: '+0', icon: FileText, color: '#A78BFA', glow: '#A78BFA' },
   ];
 
@@ -521,7 +532,7 @@ export default function DashboardPage() {
                           <Icon className="w-5 h-5" color={platformColors[acc.platform] || '#6366F1'} />
                         </div>
                         <div>
-                          <div className="font-medium capitalize">{acc.platform}</div>
+                          <div className="font-medium">{PLATFORMS.find((p) => p.id === acc.platform)?.name || acc.platform}</div>
                           <div className="text-xs text-brand-text-secondary">{acc.username}</div>
                         </div>
                       </div>

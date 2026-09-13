@@ -29,7 +29,7 @@ const complianceItems = [
   { title: 'LGPD', desc: 'Conformidade com a Lei Geral de Proteção de Dados brasileira.' },
   { title: 'GDPR-ready', desc: 'Estrutura preparada para o regulamento europeu de proteção de dados.' },
   { title: 'DPA disponível', desc: 'Data Processing Agreement disponível para clientes enterprise.' },
-  { title: 'Data retention configurável', desc: 'Defina por quanto tempo os dados são mantidos por workspace.' },
+  { title: 'Retenção de dados configurável', desc: 'Defina por quanto tempo os dados são mantidos por workspace.' },
 ];
 
 export default function SecurityPage() {

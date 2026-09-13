@@ -23,7 +23,7 @@ const features = [
   {
     icon: FileText,
     title: 'Logs de auditoria',
-    desc: 'Todas as ações rastreadas: quem fez, o que fez, quando e de onde. Exportavel para SIEM.',
+    desc: 'Todas as ações rastreadas: quem fez, o que fez, quando e de onde. Exportável para SIEM.',
   },
   {
     icon: Zap,
@@ -33,7 +33,7 @@ const features = [
   {
     icon: Shield,
     title: 'Compliance',
-    desc: 'LGPD, GDPR, DPA disponível e data retention configuravel por workspace.',
+    desc: 'LGPD, GDPR, DPA disponível e retenção de dados configurável por workspace.',
   },
   {
     icon: Users,
