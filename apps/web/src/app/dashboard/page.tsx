@@ -20,7 +20,7 @@ import {
   Zap,
   Crown,
   ArrowRight,
-  Loader2,
+
   CheckCircle2,
   AlertCircle,
   X,
@@ -139,24 +139,8 @@ const accountStatus: Record<string, { label: string; className: string }> = {
   pending: { label: 'Pendente', className: 'bg-brand-elevated text-brand-text-secondary border-brand-border' },
 };
 
-function AnimatedNumber({ value }: { value: number }) {
-  const [display, setDisplay] = useState(0);
-  const prev = useRef(0);
-  useEffect(() => {
-    const start = prev.current;
-    const end = value;
-    const duration = 700;
-    const startTime = performance.now();
-    function tick(now: number) {
-      const p = Math.min(1, (now - startTime) / duration);
-      const ease = 1 - Math.pow(1 - p, 3);
-      setDisplay(Math.round(start + (end - start) * ease));
-      if (p < 1) requestAnimationFrame(tick);
-      else prev.current = end;
-    }
-    requestAnimationFrame(tick);
-  }, [value]);
-  return <span>{display.toLocaleString('pt-BR')}</span>;
+function Sk({ className = '' }: { className?: string }) {
+  return <div className={`bg-brand-elevated rounded animate-pulse ${className}`} />;
 }
 
 export default function DashboardPage() {
@@ -166,12 +150,13 @@ export default function DashboardPage() {
   const [showPlanModal, setShowPlanModal] = useState(false);
   const [currentPlan, setCurrentPlan] = useState('free');
   const [usage, setUsage] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [ready, setReady] = useState({ posts: false, accounts: false, me: false, usage: false });
+  const [accountsError, setAccountsError] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    // Uma API lenta (ex.: Supabase frio) nao pode deixar a pagina inteira
-    // em branco — cada fetch tem timeout proprio e resolve com dados parciais.
+    // Cada bloco atualiza independentemente — uma API lenta (Supabase frio)
+    // nao pode travar a pagina. Timeout de 8s resolve com dados parciais.
     const get = (url: string) => {
       const ctl = new AbortController();
       const t = setTimeout(() => ctl.abort(), 8000);
@@ -180,35 +165,41 @@ export default function DashboardPage() {
         .catch(() => null)
         .finally(() => clearTimeout(t));
     };
-    Promise.all([
-      get('/api/posts'),
-      get('/api/accounts'),
-      get('/api/me'),
-      get('/api/usage/monthly'),
-    ])
-      .then(([postsData, accountsData, meData, usageData]) => {
-        setPosts(Array.isArray(postsData) ? postsData : (postsData.items || []));
-        const rawAccounts = Array.isArray(accountsData) ? accountsData : (accountsData.items || accountsData.accounts || []);
+    get('/api/posts').then((postsData) => {
+      setPosts(Array.isArray(postsData) ? postsData : (postsData?.items || []));
+      setReady((r) => ({ ...r, posts: true }));
+    });
+    get('/api/accounts').then((accountsData) => {
+      if (accountsData === null) {
+        setAccountsError(true);
+      } else {
+        const raw = Array.isArray(accountsData) ? accountsData : (accountsData.items || accountsData.accounts || []);
         // Card e lista contam apenas contas publicaveis — credenciais tecnicas
         // (meta_user) nao sao contas sociais visiveis.
-        setAccounts(publishableAccounts(rawAccounts));
-        setUser(meData?.user || null);
-        setCurrentPlan(meData?.organization?.plan || 'free');
-        setUsage(usageData);
-      })
-      .catch(() => setCurrentPlan('free'))
-      .finally(() => setLoading(false));
+        setAccounts(publishableAccounts(raw));
+      }
+      setReady((r) => ({ ...r, accounts: true }));
+    });
+    get('/api/me').then((meData) => {
+      setUser(meData?.user || null);
+      setCurrentPlan(meData?.organization?.plan || 'free');
+      setReady((r) => ({ ...r, me: true }));
+    });
+    get('/api/usage/monthly').then((usageData) => {
+      setUsage(usageData);
+      setReady((r) => ({ ...r, usage: true }));
+    });
   }, [router]);
 
   const posted = posts.filter((p) => p.status === 'posted').length;
   const scheduled = posts.filter((p) => p.status === 'scheduled').length;
   const drafts = posts.filter((p) => p.status === 'draft').length;
 
-  const metrics: { label: string; value: number; sub?: string; change: string; icon: any; color: string; glow: string }[] = [
-    { label: 'Posts Publicados', value: posted, change: '+0%', icon: FileText, color: '#22C55E', glow: '#22C55E' },
-    { label: 'Agendados', value: scheduled, change: '+0', icon: Calendar, color: '#F59E0B', glow: '#F59E0B' },
-    { label: 'Contas conectadas', value: accounts.length, sub: `${accounts.filter(isActiveAccount).length} ativas`, change: '+0', icon: Users, color: '#3B82F6', glow: '#3B82F6' },
-    { label: 'Rascunhos', value: drafts, change: '+0', icon: FileText, color: '#A78BFA', glow: '#A78BFA' },
+  const metrics: { label: string; value: number; sub?: string; change: string; icon: any; color: string; glow: string; ready: boolean; unavailable?: boolean }[] = [
+    { label: 'Posts Publicados', value: posted, change: '+0%', icon: FileText, color: '#22C55E', glow: '#22C55E', ready: ready.posts },
+    { label: 'Agendados', value: scheduled, change: '+0', icon: Calendar, color: '#F59E0B', glow: '#F59E0B', ready: ready.posts },
+    { label: 'Contas conectadas', value: accounts.length, sub: `${accounts.filter(isActiveAccount).length} ativas`, change: '+0', icon: Users, color: '#3B82F6', glow: '#3B82F6', ready: ready.accounts, unavailable: accountsError },
+    { label: 'Rascunhos', value: drafts, change: '+0', icon: FileText, color: '#A78BFA', glow: '#A78BFA', ready: ready.posts },
   ];
 
   const planLimit = usage?.posts?.limit || 50;
@@ -237,16 +228,7 @@ export default function DashboardPage() {
   ] as { type: string; text: string; cta: string; href: string }[];
   const activeBanner = bannerMessages[0];
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-brand-bg">
-        <Header activeHref="/dashboard" />
-        <main className="max-w-7xl mx-auto px-4 py-8 flex items-center justify-center min-h-[60vh]">
-          <Loader2 className="w-10 h-10 animate-spin text-brand-accent" />
-        </main>
-      </div>
-    );
-  }
+  const coreReady = ready.posts && ready.accounts;
 
   return (
     <div className="min-h-screen bg-brand-bg">
@@ -254,7 +236,7 @@ export default function DashboardPage() {
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         {/* Banner contextual */}
-        {activeBanner && (
+        {coreReady && ready.usage && activeBanner && (
           <div className="mb-6">
             <div className={`rounded-2xl p-4 border flex items-start sm:items-center justify-between gap-4 ${
               activeBanner.type === 'warning' ? 'bg-warning/10 border-warning/30 text-warning' :
@@ -292,15 +274,16 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <Zap className="w-5 h-5 text-brand-accent" />
-              {completedSteps === activationSteps.length ? 'Configuração concluída' : 'Ative seu StackPost'}
+              {coreReady && completedSteps === activationSteps.length ? 'Configuração concluída' : 'Ative seu StackPost'}
             </h2>
-            <span className="text-sm text-brand-text-secondary">{completedSteps} de {activationSteps.length} passos</span>
+            {coreReady ? <span className="text-sm text-brand-text-secondary">{completedSteps} de {activationSteps.length} passos</span> : <Sk className="h-4 w-24" />}
           </div>
           <div className="h-2 w-full rounded-full bg-brand-elevated overflow-hidden mb-5">
-            <div className="h-full rounded-full bg-gradient-to-r from-brand-accent to-success transition-all duration-500" style={{ width: `${(completedSteps / activationSteps.length) * 100}%` }} />
+            <div className="h-full rounded-full bg-gradient-to-r from-brand-accent to-success transition-all duration-500" style={{ width: `${coreReady ? (completedSteps / activationSteps.length) * 100 : 0}%` }} />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {activationSteps.map((s) => (
+            {!coreReady && [1, 2, 3, 4].map((i) => <Sk key={i} className="h-14" />)}
+            {coreReady && activationSteps.map((s) => (
               <Link
                 key={s.label}
                 href={s.href}
@@ -328,9 +311,9 @@ export default function DashboardPage() {
                 </div>
                 <div className="text-brand-text-secondary text-sm mb-1">{m.label}</div>
                 <div className="text-3xl font-bold">
-                  <AnimatedNumber value={m.value} />
+                  {!m.ready ? <Sk className="h-9 w-14" /> : m.unavailable ? <span className="text-brand-text-secondary">—</span> : m.value.toLocaleString('pt-BR')}
                 </div>
-                {m.sub && <div className="text-xs text-brand-text-secondary mt-1">{m.sub}</div>}
+                {m.ready && !m.unavailable && m.sub && <div className="text-xs text-brand-text-secondary mt-1">{m.sub}</div>}
               </SpotlightCard>
             </TiltCard>
           ))}
@@ -356,8 +339,14 @@ export default function DashboardPage() {
               </div>
 
               <div className="mb-2 flex items-center justify-between text-sm">
-                <span className="text-brand-text-secondary">{used.toLocaleString('pt-BR')} de {planLimit.toLocaleString('pt-BR')} posts</span>
-                <span className="font-semibold" style={{ color: percent >= 90 ? '#EF4444' : percent >= 70 ? '#F59E0B' : '#22C55E' }}>{percent}%</span>
+                {ready.usage ? (
+                  <>
+                    <span className="text-brand-text-secondary">{used.toLocaleString('pt-BR')} de {planLimit.toLocaleString('pt-BR')} posts</span>
+                    <span className="font-semibold" style={{ color: percent >= 90 ? '#EF4444' : percent >= 70 ? '#F59E0B' : '#22C55E' }}>{percent}%</span>
+                  </>
+                ) : (
+                  <Sk className="h-4 w-full" />
+                )}
               </div>
               <div className="h-3 w-full rounded-full bg-brand-elevated overflow-hidden mb-4">
                 <div
@@ -372,15 +361,15 @@ export default function DashboardPage() {
               <div className="grid grid-cols-3 gap-4">
                 <div className="rounded-2xl bg-brand-elevated/50 border border-brand-border/50 p-3 text-center">
                   <div className="text-[10px] uppercase tracking-wide text-brand-text-secondary mb-1">Posts</div>
-                  <div className="font-semibold">{usage?.posts?.used ?? 0}</div>
+                  {ready.usage ? <div className="font-semibold">{usage?.posts?.used ?? 0}</div> : <Sk className="h-5 w-10 mx-auto" />}
                 </div>
                 <div className="rounded-2xl bg-brand-elevated/50 border border-brand-border/50 p-3 text-center">
                   <div className="text-[10px] uppercase tracking-wide text-brand-text-secondary mb-1">Comentários</div>
-                  <div className="font-semibold">{usage?.comments?.used ?? 0}</div>
+                  {ready.usage ? <div className="font-semibold">{usage?.comments?.used ?? 0}</div> : <Sk className="h-5 w-10 mx-auto" />}
                 </div>
                 <div className="rounded-2xl bg-brand-elevated/50 border border-brand-border/50 p-3 text-center">
                   <div className="text-[10px] uppercase tracking-wide text-brand-text-secondary mb-1">Upload</div>
-                  <div className="font-semibold">{(usage?.uploads?.used ?? 0) > 0 ? `${(usage.uploads.used / 1024 / 1024).toFixed(0)} MB` : '0 MB'}</div>
+                  {ready.usage ? <div className="font-semibold">{(usage?.uploads?.used ?? 0) > 0 ? `${(usage.uploads.used / 1024 / 1024).toFixed(0)} MB` : '0 MB'}</div> : <Sk className="h-5 w-10 mx-auto" />}
                 </div>
               </div>
             </SpotlightCard>
@@ -417,7 +406,16 @@ export default function DashboardPage() {
                 <Link href="/composer" className="text-sm font-semibold text-brand-accent hover:text-brand-accent-hover transition">Criar</Link>
               </div>
 
-              {posts.length === 0 ? (
+              {!ready.posts ? (
+                <div className="flex gap-4 overflow-hidden pb-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex-shrink-0 w-64 rounded-2xl bg-brand-elevated/50 border border-brand-border/50 overflow-hidden">
+                      <Sk className="h-32 rounded-none" />
+                      <div className="p-4"><Sk className="h-4 w-3/4 mb-2" /><Sk className="h-3 w-1/2" /></div>
+                    </div>
+                  ))}
+                </div>
+              ) : posts.length === 0 ? (
                 <div className="text-center py-10 px-4">
                   <div className="w-16 h-16 rounded-2xl bg-brand-accent/10 flex items-center justify-center mx-auto mb-4">
                     <Sparkles className="w-8 h-8 text-brand-accent" />
@@ -503,7 +501,18 @@ export default function DashboardPage() {
                 <Link href="/accounts" className="text-sm font-semibold text-brand-accent hover:text-brand-accent-hover transition">Gerenciar</Link>
               </div>
               <div className="space-y-3">
-                {accounts.length === 0 && (
+                {!ready.accounts && [1, 2, 3].map((i) => (
+                  <div key={i} className="p-4 rounded-2xl bg-brand-elevated/50 border border-brand-border/50 flex items-center gap-3">
+                    <Sk className="w-10 h-10 rounded-xl" />
+                    <div className="flex-1"><Sk className="h-4 w-24 mb-2" /><Sk className="h-3 w-32" /></div>
+                  </div>
+                ))}
+                {ready.accounts && accountsError && (
+                  <div className="text-center py-10 px-4 text-brand-text-secondary text-sm">
+                    Não foi possível carregar as contas. <Link href="/accounts" className="text-brand-accent hover:underline">Ver página de contas</Link>
+                  </div>
+                )}
+                {ready.accounts && !accountsError && accounts.length === 0 && (
                   <div className="text-center py-10 px-4">
                     <div className="w-16 h-16 rounded-2xl bg-info/10 flex items-center justify-center mx-auto mb-4">
                       <Link2 className="w-8 h-8 text-info" />
