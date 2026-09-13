@@ -138,7 +138,15 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
-        {children}
+        <a
+          href="#conteudo-principal"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[9999] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-brand-accent focus:text-brand-bg focus:font-semibold focus:text-sm"
+        >
+          Pular para o conteúdo
+        </a>
+        <div id="conteudo-principal" tabIndex={-1} className="outline-none">
+          {children}
+        </div>
       </body>
     </html>
   );

@@ -571,6 +571,7 @@ export default function SettingsPage() {
                       <div>
                         <label className="block text-xs text-brand-text-secondary mb-1.5">Nome</label>
                         <input
+                          aria-label="Nome"
                           value={profile.name}
                           onChange={(e) => setProfile((p) => ({ ...p, name: e.target.value }))}
                           className="w-full px-4 py-2.5 rounded-xl bg-brand-elevated border border-brand-border text-sm focus:outline-none focus:border-brand-accent transition"
@@ -579,6 +580,7 @@ export default function SettingsPage() {
                       <div>
                         <label className="block text-xs text-brand-text-secondary mb-1.5">Email</label>
                         <input
+                          aria-label="Email"
                           value={profile.email}
                           disabled
                           className="w-full px-4 py-2.5 rounded-xl bg-brand-elevated/50 border border-brand-border text-sm text-brand-text-secondary cursor-not-allowed"
@@ -590,6 +592,7 @@ export default function SettingsPage() {
                       <div>
                         <label className="block text-xs text-brand-text-secondary mb-1.5">Fuso horário</label>
                         <select
+                          aria-label="Fuso horário"
                           value={profile.timezone}
                           onChange={(e) => setProfile((p) => ({ ...p, timezone: e.target.value }))}
                           className="w-full px-4 py-2.5 rounded-xl bg-brand-elevated border border-brand-border text-sm focus:outline-none focus:border-brand-accent transition"
@@ -625,6 +628,7 @@ export default function SettingsPage() {
                         <label className="block text-xs text-brand-text-secondary mb-1.5">Nome da organização</label>
                         <div className="flex gap-2">
                           <input
+                            aria-label="Nome da organização"
                             value={org}
                             onChange={(e) => setOrg(e.target.value)}
                             className="flex-1 px-4 py-2.5 rounded-xl bg-brand-elevated border border-brand-border text-sm focus:outline-none focus:border-brand-accent transition"
@@ -763,6 +767,7 @@ export default function SettingsPage() {
                         <div className="text-xs text-brand-text-secondary mb-2">Convidar novo membro</div>
                         <div className="flex flex-col sm:flex-row gap-2">
                           <input
+                            aria-label="Email do convite"
                             type="email"
                             value={inviteEmail}
                             onChange={(e) => setInviteEmail(e.target.value)}
@@ -770,6 +775,7 @@ export default function SettingsPage() {
                             className="flex-1 px-4 py-2 rounded-xl bg-brand-elevated border border-brand-border text-sm focus:outline-none focus:border-brand-accent transition"
                           />
                           <select
+                            aria-label="Função do membro"
                             value={inviteRole}
                             onChange={(e) => setInviteRole(e.target.value)}
                             className="px-3 py-2 rounded-xl bg-brand-elevated border border-brand-border text-sm"
@@ -1009,6 +1015,7 @@ export default function SettingsPage() {
                       <div>
                         <label className="block text-xs text-brand-text-secondary mb-1.5">URL do webhook</label>
                         <input
+                          aria-label="URL do webhook"
                           value={webhookUrl}
                           onChange={(e) => setWebhookUrl(e.target.value)}
                           placeholder="https://seu-servidor.com/webhook"
@@ -1311,6 +1318,7 @@ export default function SettingsPage() {
                       </div>
                       <div className="flex gap-2 mb-3">
                         <input
+                          aria-label="Confirmação de exclusão da conta"
                           value={deleteConfirm}
                           onChange={(e) => setDeleteConfirm(e.target.value)}
                           placeholder="Digite EXCLUIR MINHA CONTA"

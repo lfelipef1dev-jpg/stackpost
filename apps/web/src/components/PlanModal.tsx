@@ -43,9 +43,15 @@ export default function PlanModal({ currentPlan, onClose }: { currentPlan: strin
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-      <div className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-2xl bg-brand-surface border border-brand-border p-6 md:p-8">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Mudar de plano"
+        className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-2xl bg-brand-surface border border-brand-border p-6 md:p-8"
+      >
         <button
           onClick={onClose}
+          aria-label="Fechar"
           className="absolute top-4 right-4 p-2 rounded-full hover:bg-brand-elevated text-brand-text-secondary"
         >
           <X className="w-5 h-5" />
