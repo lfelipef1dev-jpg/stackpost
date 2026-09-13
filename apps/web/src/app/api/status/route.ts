@@ -1,37 +1,62 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getSupabase } from '@/lib/supabase';
+import { NextResponse } from 'next/server';
+import { requireEnv } from '@/lib/env';
 
-// Status endpoint - returns real system health
-export async function GET(req: NextRequest) {
-  const checks: { service: string; status: string; latency?: number }[] = [];
+export const dynamic = 'force-dynamic';
 
-  // Check Supabase
+type CheckResult = { name: string; ok: boolean; ms: number };
+
+// Check externo: qualquer resposta HTTP (mesmo 4xx) prova alcance/TLS.
+async function probe(url: string, timeoutMs = 3500): Promise<{ ok: boolean; ms: number }> {
+  const start = Date.now();
   try {
-    const start = Date.now();
-    const supabase = getSupabase();
-    const { error } = await supabase.from('teams').select('id').limit(1);
-    const latency = Date.now() - start;
-    checks.push({ service: 'Supabase', status: error ? 'degraded' : 'operational', latency });
+    const ctl = new AbortController();
+    const t = setTimeout(() => ctl.abort(), timeoutMs);
+    await fetch(url, { method: 'HEAD', signal: ctl.signal, redirect: 'follow' });
+    clearTimeout(t);
+    return { ok: true, ms: Date.now() - start };
   } catch {
-    checks.push({ service: 'Supabase', status: 'down' });
+    return { ok: false, ms: Date.now() - start };
   }
+}
 
-  // Check Cloudflare R2 (if configured)
-  const r2Configured = !!process.env.R2_ACCESS_KEY_ID;
-  checks.push({ service: 'Cloudflare R2', status: r2Configured ? 'operational' : 'not_configured' });
-
-  // Check OAuth providers
-  const oauthProviders = ['META_APP_ID', 'LINKEDIN_CLIENT_ID', 'TWITTER_CLIENT_ID', 'TIKTOK_CLIENT_KEY', 'GOOGLE_CLIENT_ID'];
-  for (const p of oauthProviders) {
-    checks.push({ service: `OAuth ${p.replace('_ID', '').replace('_KEY', '')}`, status: process.env[p] ? 'configured' : 'not_configured' });
+async function probeDb(timeoutMs = 4000): Promise<{ ok: boolean; ms: number }> {
+  const start = Date.now();
+  try {
+    const ctl = new AbortController();
+    const t = setTimeout(() => ctl.abort(), timeoutMs);
+    const res = await fetch(`${requireEnv('NEXT_PUBLIC_SUPABASE_URL')}/rest/v1/plans?select=id&limit=1`, {
+      headers: { apikey: requireEnv('SUPABASE_SERVICE_ROLE_KEY'), Authorization: `Bearer ${requireEnv('SUPABASE_SERVICE_ROLE_KEY')}` },
+      signal: ctl.signal,
+    });
+    clearTimeout(t);
+    return { ok: res.ok, ms: Date.now() - start };
+  } catch {
+    return { ok: false, ms: Date.now() - start };
   }
+}
 
-  const allOperational = checks.every(c => c.status === 'operational' || c.status === 'configured' || c.status === 'not_configured');
-  
-  return NextResponse.json({
-    status: allOperational ? 'operational' : 'degraded',
-    timestamp: new Date().toISOString(),
-    services: checks,
-    version: '1.0.0',
-  });
+export async function GET() {
+  const [db, instagram, linkedin, mercadopago, tiktok] = await Promise.all([
+    probeDb(),
+    probe('https://graph.facebook.com'),
+    probe('https://api.linkedin.com'),
+    probe('https://api.mercadopago.com'),
+    probe('https://open.tiktokapis.com'),
+  ]);
+
+  const checks: CheckResult[] = [
+    { name: 'api', ok: true, ms: 0 },
+    { name: 'database', ok: db.ok, ms: db.ms },
+    { name: 'instagram', ok: instagram.ok, ms: instagram.ms },
+    { name: 'linkedin', ok: linkedin.ok, ms: linkedin.ms },
+    { name: 'tiktok', ok: tiktok.ok, ms: tiktok.ms },
+    { name: 'pagamentos', ok: mercadopago.ok, ms: mercadopago.ms },
+  ];
+
+  const allOk = checks.every((c) => c.ok);
+
+  return NextResponse.json(
+    { status: allOk ? 'operational' : 'degraded', checked_at: new Date().toISOString(), checks },
+    { headers: { 'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60' } }
+  );
 }

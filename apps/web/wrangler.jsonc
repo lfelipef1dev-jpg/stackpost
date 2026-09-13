@@ -5,6 +5,11 @@
   "compatibility_date": "2026-08-25",
   "compatibility_flags": ["nodejs_compat"],
   "minify": true,
+  // Workers Logs: requests, erros 5xx/1102 e console.* visiveis no dashboard
+  // Cloudflare > Workers > Observability. Sem custo extra no plano pago.
+  "observability": {
+    "enabled": true
+  },
   "observability": {
     "enabled": true
   },

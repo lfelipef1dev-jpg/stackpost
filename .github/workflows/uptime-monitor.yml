@@ -1,0 +1,31 @@
+name: Uptime Monitor
+
+# Probe externo a cada 5 min. Se qualquer endpoint falhar, o job falha e o
+# GitHub envia notificacao de workflow failure (Actions > Settings).
+# Cobre: worker down, Error 1102, e 5xx de rotas criticas.
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe endpoints
+        env:
+          BASE: https://stackpost.expostacker.com.br
+        run: |
+          set -e
+          FAIL=0
+          for path in /api/ping / /plans /login /status; do
+            start=$(date +%s%3N)
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "$BASE$path" || echo "000")
+            ms=$(( $(date +%s%3N) - start ))
+            echo "$path => $code (${ms}ms)"
+            if [ "$code" != "200" ]; then
+              echo "::error::$path retornou $code"
+              FAIL=1
+            fi
+          done
+          exit $FAIL
