@@ -24,10 +24,16 @@ const config = {
       wrapper: "cloudflare-edge",
       converter: "edge",
       proxyExternalRequest: "fetch",
-      incrementalCache: "dummy",
+      // incrementalCache real aqui: com enableCacheInterception, paginas
+      // prerenderizadas em cache sao servidas pela camada middleware (~0,7MB)
+      // sem avaliar o bundle do servidor (~52MB) — derruba o TTFB de cold start.
+      incrementalCache: () => staticAssetsIncrementalCache,
       tagCache: "dummy",
       queue: "dummy",
     },
+  },
+  dangerous: {
+    enableCacheInterception: true,
   },
 };
 
