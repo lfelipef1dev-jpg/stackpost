@@ -135,7 +135,7 @@ export async function PUT(req: NextRequest) {
       .eq('id', id)
       .eq('team_id', user!.teamId)
       .select()
-      .single();
+      .maybeSingle();
     if (updateError) throw updateError;
     if (!data) {
       return NextResponse.json({ error: 'Post não encontrado' }, { status: 404 });
@@ -163,6 +163,15 @@ export async function DELETE(req: NextRequest) {
 
   try {
     const supabase = getSupabase();
+    // Ownership primeiro: sem isso, um tenant apagava os post_platforms
+    // de um post de outro tenant (delete filho nao filtrava team_id).
+    const { data: owned } = await supabase
+      .from('posts')
+      .select('id')
+      .eq('id', id)
+      .eq('team_id', user!.teamId)
+      .maybeSingle();
+    if (!owned) return NextResponse.json({ error: 'Post não encontrado' }, { status: 404 });
     const { error: ppError } = await supabase.from('post_platforms').delete().eq('post_id', id);
     if (ppError) throw ppError;
     const { error: postError } = await supabase.from('posts').delete().eq('id', id).eq('team_id', user!.teamId);

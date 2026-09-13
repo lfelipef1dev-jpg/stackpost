@@ -5,6 +5,7 @@ import Footer from '@/components/Footer';
 import { FadeIn } from '@/components/animations';
 import { PlatformIcon } from '@/components/PlatformIcon';
 import { PLATFORMS } from '@/lib/platforms';
+import { useFocusTrap } from '@/lib/useFocusTrap';
 import { platforms as PLATFORM_CARDS, type PlatformCardData } from '@/components/PlatformCards';
 
 import { useEffect, useState, useRef } from 'react';
@@ -276,6 +277,9 @@ export default function BillingPage() {
   const [showCreditModal, setShowCreditModal] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<BillingPlan | null>(null);
   const [selectedPlatform, setSelectedPlatform] = useState<PlatformCardData | null>(null);
+  const platformTrap = useFocusTrap<HTMLDivElement>(!!selectedPlatform, () => setSelectedPlatform(null));
+  const planTrap = useFocusTrap<HTMLDivElement>(!!selectedPlan, () => setSelectedPlan(null));
+  const creditTrap = useFocusTrap<HTMLDivElement>(showCreditModal, () => setShowCreditModal(false));
   const [isAnnual, setIsAnnual] = useState(false);
   const [planLoadError, setPlanLoadError] = useState<string | null>(null);
 
@@ -803,6 +807,7 @@ export default function BillingPage() {
       {/* Modal de plataforma (copia exata do homepage) */}
       {selectedPlatform && (
         <div
+          ref={platformTrap}
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
           onClick={() => setSelectedPlatform(null)}
           role="dialog"
@@ -924,6 +929,7 @@ export default function BillingPage() {
               <div className="absolute inset-0 bg-black/80 backdrop-blur-md" />
 
               <motion.div
+                ref={planTrap}
                 role="dialog"
                 aria-modal="true"
                 aria-label={`Plano ${selectedPlan.name}`}
@@ -1074,6 +1080,7 @@ export default function BillingPage() {
       {showCreditModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div
+            ref={creditTrap}
             role="dialog"
             aria-modal="true"
             aria-label="Adicionar créditos X"

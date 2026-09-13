@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Check, X } from 'lucide-react';
 import Link from 'next/link';
+import { useFocusTrap } from '@/lib/useFocusTrap';
 
 const plans = [
   {
@@ -40,10 +41,12 @@ const plans = [
 
 export default function PlanModal({ currentPlan, onClose }: { currentPlan: string; onClose: () => void }) {
   const [selected, setSelected] = useState(currentPlan);
+  const trapRef = useFocusTrap<HTMLDivElement>(true, onClose);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
       <div
+        ref={trapRef}
         role="dialog"
         aria-modal="true"
         aria-label="Mudar de plano"

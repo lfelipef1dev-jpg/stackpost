@@ -61,6 +61,16 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
   const supabase = getSupabase();
 
+  // Ownership primeiro: o delete de post_platforms abaixo nao filtra
+  // team_id — sem esta checagem um tenant apagava os filhos de outro.
+  const { data: owned } = await supabase
+    .from('posts')
+    .select('id')
+    .eq('id', id)
+    .eq('team_id', user.teamId)
+    .maybeSingle();
+  if (!owned) return NextResponse.json({ error: 'Post não encontrado' }, { status: 404 });
+
   // Buscar post_platforms com external_id
   const { data: ppRows } = await supabase
     .from('post_platforms')

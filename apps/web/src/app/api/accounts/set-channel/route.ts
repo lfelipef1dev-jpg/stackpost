@@ -2,9 +2,13 @@ import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { accounts_set_channelBodySchema } from '@/lib/schemas';
 import { getSupabase } from '@/lib/supabase';
+import { getUserFromToken } from '@/lib/auth';
 
 // Define/atualiza o canal selecionado para uma social_account
 export async function POST(req: NextRequest) {
+  const user = await getUserFromToken(req);
+  if (!user) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+
   const bodyRaw1 = await req.json().catch(() => ({}));
   const parsed1 = accounts_set_channelBodySchema.safeParse(bodyRaw1);
   if (!parsed1.success) return NextResponse.json(parsed1.error.issues, { status: 400 });
@@ -22,6 +26,7 @@ export async function POST(req: NextRequest) {
       .from('social_accounts')
       .select('id, team_id, platform')
       .eq('id', accountId)
+      .eq('team_id', user.teamId)
       .maybeSingle();
 
     if (findError || !existing) {

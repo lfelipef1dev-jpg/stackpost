@@ -1,0 +1,45 @@
+import { chromium } from 'playwright';
+const BASE = 'https://stackpost.expostacker.com.br';
+const errs = [];
+const r = await fetch(`${BASE}/api/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: 'devin.audit.20260912144121@expostacker.com', password: 'Audit123!' }) });
+const token = (r.headers.get('set-cookie') || '').match(/token=([^;]+)/)?.[1];
+const browser = await chromium.launch();
+const ctx = await browser.newContext();
+await ctx.addCookies([{ name: 'token', value: token, domain: 'stackpost.expostacker.com.br', path: '/', httpOnly: true, secure: true, sameSite: 'Lax' }]);
+const page = await ctx.newPage();
+page.on('console', (m) => { if (m.type() === 'error') errs.push(m.text().slice(0, 160)); });
+await page.setViewportSize({ width: 1440, height: 900 });
+await page.goto(`${BASE}/dashboard`, { waitUntil: 'domcontentloaded' });
+await page.waitForTimeout(4000);
+let focusVisible = 0;
+for (let i = 0; i < 15; i++) {
+  await page.keyboard.press('Tab');
+  const info = await page.evaluate(() => {
+    const el = document.activeElement;
+    if (!el || el === document.body) return {};
+    const st = getComputedStyle(el);
+    return { outline: st.outlineStyle !== 'none' && st.outlineWidth !== '0px', shadow: st.boxShadow !== 'none', tag: el.tagName };
+  });
+  if (info.outline || info.shadow) focusVisible++;
+}
+console.log(`kbd dashboard: ${focusVisible}/15 tabs com indicador visivel`);
+await page.setViewportSize({ width: 320, height: 800 });
+await page.goto(`${BASE}/dashboard`, { waitUntil: 'domcontentloaded' });
+await page.waitForTimeout(3500);
+await page.screenshot({ path: '_shot_dashboard_320.png' });
+await page.setViewportSize({ width: 1440, height: 900 });
+await page.reload({ waitUntil: 'domcontentloaded' });
+await page.waitForTimeout(3500);
+await page.screenshot({ path: '_shot_dashboard_1440.png' });
+await page.goto(`${BASE}/composer`, { waitUntil: 'domcontentloaded' });
+await page.waitForTimeout(3000);
+await page.screenshot({ path: '_shot_composer_1440.png' });
+await page.setViewportSize({ width: 375, height: 800 });
+await page.reload({ waitUntil: 'domcontentloaded' });
+await page.waitForTimeout(3000);
+await page.screenshot({ path: '_shot_composer_375.png' });
+await page.goto(`${BASE}/billing`, { waitUntil: 'domcontentloaded' });
+await page.waitForTimeout(3000);
+await page.screenshot({ path: '_shot_billing_375.png' });
+await browser.close();
+console.log('console errors:', errs.length ? errs.join('\n') : 'nenhum');

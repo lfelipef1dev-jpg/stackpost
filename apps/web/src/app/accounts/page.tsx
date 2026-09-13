@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import { PlatformIcon } from '@/components/PlatformIcon';
 import { PLATFORMS } from '@/lib/platforms';
 import { publishableAccounts, effectiveStatus, isActiveAccount, needsAttentionAccount } from '@/lib/accounts';
+import { useFocusTrap } from '@/lib/useFocusTrap';
 import { useEffect, useState, useRef } from 'react';
 import {
   RefreshCw, Trash2, AlertCircle, CheckCircle2, Clock, Loader2, Zap,
@@ -147,6 +148,8 @@ export default function AccountsPage() {
   const [drawerAccount, setDrawerAccount] = useState<any | null>(null);
   const [bannerIndex, setBannerIndex] = useState(0);
   const [bulkConfirm, setBulkConfirm] = useState<null | 'refresh' | 'delete'>(null);
+  const bulkTrap = useFocusTrap<HTMLDivElement>(!!bulkConfirm, () => setBulkConfirm(null));
+  const drawerTrap = useFocusTrap<HTMLDivElement>(!!drawerAccount, () => setDrawerAccount(null));
 
   useEffect(() => {
     loadAccounts();
@@ -709,6 +712,7 @@ export default function AccountsPage() {
           onClick={() => setBulkConfirm(null)}
         >
           <div
+            ref={bulkTrap}
             role="dialog"
             aria-modal="true"
             aria-label={bulkConfirm === 'delete' ? 'Confirmar exclusão de contas' : 'Confirmar renovação de tokens'}
@@ -759,6 +763,7 @@ export default function AccountsPage() {
           onClick={() => setDrawerAccount(null)}
         >
           <div
+            ref={drawerTrap}
             role="dialog"
             aria-modal="true"
             aria-label="Detalhes da conta"

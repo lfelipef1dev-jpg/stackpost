@@ -7,6 +7,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { formatError } from '@/lib/errors';
 import { PLATFORMS } from '@/lib/platforms';
+import { useFocusTrap } from '@/lib/useFocusTrap';
 import { PlatformIcon } from '@/components/PlatformIcon';
 import {
   Sparkles,
@@ -107,6 +108,7 @@ export default function ComposerPage() {
   const [derivatives, setDerivatives] = useState<Record<string, string>>({});
   const [showConfirm, setShowConfirm] = useState(false);
   const [pendingAction, setPendingAction] = useState<'schedule' | 'publish' | null>(null);
+  const actionTrap = useFocusTrap<HTMLDivElement>(showConfirm, () => setShowConfirm(false));
   const [postType, setPostType] = useState<'POST' | 'REEL' | 'STORY'>('POST');
   const [suggestedTags, setSuggestedTags] = useState<string[]>([]);
   const [charCount, setCharCount] = useState(0);
@@ -707,6 +709,7 @@ export default function ComposerPage() {
       {showConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
           <div
+            ref={actionTrap}
             role="dialog"
             aria-modal="true"
             aria-label={pendingAction === 'publish' ? 'Confirmar publicação' : 'Confirmar agendamento'}

@@ -7,6 +7,7 @@ import { logger } from '@/lib/logger';
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { PLATFORMS } from '@/lib/platforms';
+import { useFocusTrap } from '@/lib/useFocusTrap';
 import { PlatformIcon } from '@/components/PlatformIcon';
 import {
   ChevronLeft,
@@ -115,6 +116,8 @@ export default function CalendarPage() {
   const [plan, setPlan] = useState('free');
   const [message, setMessage] = useState('');
   const [editingPost, setEditingPost] = useState<any | null>(null);
+  const dayTrap = useFocusTrap<HTMLDivElement>(!!selectedDay, () => setSelectedDay(null));
+  const editTrap = useFocusTrap<HTMLDivElement>(!!editingPost, () => setEditingPost(null));
   const [editContent, setEditContent] = useState('');
   const [editScheduledAt, setEditScheduledAt] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
@@ -705,7 +708,7 @@ export default function CalendarPage() {
 
         {/* Drawer de detalhe do dia */}
         {selectedDay && (
-          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-end sm:justify-center p-0 sm:p-4" onClick={() => setSelectedDay(null)}>
+          <div ref={dayTrap} role="dialog" aria-modal="true" aria-label="Posts do dia" className="fixed inset-0 z-50 flex items-end sm:items-center justify-end sm:justify-center p-0 sm:p-4" onClick={() => setSelectedDay(null)}>
             <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
             <TiltCard className="relative w-full sm:w-[520px] h-[85vh] sm:h-auto max-h-[85vh] overflow-hidden">
               <SpotlightCard className="p-6" glow="#8AB4F8" onClick={(e) => e.stopPropagation()}>
@@ -788,7 +791,7 @@ export default function CalendarPage() {
 
         {/* Modal de edição */}
         {editingPost && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={() => setEditingPost(null)}>
+          <div ref={editTrap} role="dialog" aria-modal="true" aria-label="Editar post" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={() => setEditingPost(null)}>
             <TiltCard className="relative w-full max-w-lg" onClick={(e) => e.stopPropagation()}>
               <SpotlightCard className="p-6" glow="#8AB4F8">
                 <div className="flex items-center justify-between mb-4">
