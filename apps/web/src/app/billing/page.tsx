@@ -37,7 +37,8 @@ function formatBytes(bytes: number) {
   const k = 1024;
   const sizes = ['B', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${(bytes / Math.pow(k, i)).toFixed(i === 0 ? 0 : 1)} ${sizes[i]}`;
+  const value = bytes / Math.pow(k, i);
+  return `${value.toLocaleString('pt-BR', { maximumFractionDigits: i === 0 ? 0 : 1 })} ${sizes[i]}`;
 }
 
 function AnimatedNumber({ value, prefix = '', suffix = '' }: { value: number; prefix?: string; suffix?: string }) {
@@ -121,7 +122,7 @@ const allFeatures = [
   'Calendário',
   'Link na bio',
   'Upload de mídia',
-  'AI caption',
+  'Legendas com IA',
   'MCP server',
   'Suporte',
 ];
@@ -146,7 +147,7 @@ const billingPlans: BillingPlan[] = [
       { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
       { label: 'Upload de mídia', value: '100 MB' },
-      { label: 'AI caption', value: false },
+      { label: 'Legendas com IA', value: false },
       { label: 'MCP server', value: true },
       { label: 'Suporte', value: 'Comunidade' },
     ],
@@ -171,7 +172,7 @@ const billingPlans: BillingPlan[] = [
       { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
       { label: 'Upload de mídia', value: '500 MB' },
-      { label: 'AI caption', value: false },
+      { label: 'Legendas com IA', value: false },
       { label: 'MCP server', value: true },
       { label: 'Suporte', value: 'Email' },
     ],
@@ -181,7 +182,7 @@ const billingPlans: BillingPlan[] = [
     id: 'growth',
     name: 'Crescimento',
     tagline: 'Para agências e SaaS iniciantes',
-    description: 'Conecte até 20 contas nas 15 plataformas com 8.000 posts e 4.000 comentários mensais. Para times que precisam de calendário editorial, analytics avançado, AI caption e múltiplos workspaces.',
+    description: 'Conecte até 20 contas nas 15 plataformas com 8.000 posts e 4.000 comentários mensais. Para times que precisam de calendário editorial, analytics avançado, Legendas com IA e múltiplos workspaces.',
     monthlyPrice: 89,
     annualPrice: 890,
     icon: Building2,
@@ -197,7 +198,7 @@ const billingPlans: BillingPlan[] = [
       { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
       { label: 'Upload de mídia', value: '2 GB' },
-      { label: 'AI caption', value: true },
+      { label: 'Legendas com IA', value: true },
       { label: 'MCP server', value: true },
       { label: 'Suporte', value: 'Prioritário' },
     ],
@@ -222,7 +223,7 @@ const billingPlans: BillingPlan[] = [
       { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
       { label: 'Upload de mídia', value: '10 GB' },
-      { label: 'AI caption', value: true },
+      { label: 'Legendas com IA', value: true },
       { label: 'MCP server', value: true },
       { label: 'Suporte', value: 'Prioritário' },
     ],
@@ -247,7 +248,7 @@ const billingPlans: BillingPlan[] = [
       { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
       { label: 'Upload de mídia', value: '50 GB' },
-      { label: 'AI caption', value: true },
+      { label: 'Legendas com IA', value: true },
       { label: 'MCP server', value: true },
       { label: 'Suporte', value: 'Dedicado' },
     ],
@@ -783,7 +784,7 @@ export default function BillingPage() {
               </div>
               <div className="rounded-2xl bg-brand-surface/60 border border-brand-border/50 p-6 text-center">
                 <div className="w-12 h-12 rounded-xl bg-brand-accent/10 flex items-center justify-center mx-auto mb-4"><Zap className="w-6 h-6 text-brand-accent" /></div>
-                <h3 className="font-semibold mb-1">Setup em 10 minutos</h3>
+                <h3 className="font-semibold mb-1">Configuração em 10 minutos</h3>
                 <p className="text-sm text-brand-text-secondary">Conecte suas contas, importe conteúdo e comece a publicar hoje.</p>
               </div>
               <div className="rounded-2xl bg-brand-surface/60 border border-brand-border/50 p-6 text-center">

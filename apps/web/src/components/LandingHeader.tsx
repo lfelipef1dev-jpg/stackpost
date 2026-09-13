@@ -11,7 +11,7 @@ const nav = [
   { href: '/demo', label: 'Demo' },
   { href: '/compare', label: 'Comparar' },
   { href: '/ai-agents', label: 'AI Agents' },
-  { href: '/security', label: 'Security' },
+  { href: '/security', label: 'Segurança' },
 ];
 
 export default function LandingHeader() {

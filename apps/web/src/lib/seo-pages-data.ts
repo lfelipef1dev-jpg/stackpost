@@ -1093,7 +1093,7 @@ export const specializedPages: Record<string, SEOPageData> = {
       { name: 'MCP server', desc: 'Model Context Protocol compatível com Claude, Cursor e qualquer LLM com suporte.' },
       { name: 'Tools', desc: 'create_post, schedule_post, list_accounts, get_analytics e upload_media prontas.' },
       { name: 'stdio + HTTP', desc: 'Dois modos de operação flexíveis para qualquer arquitetura de agente.' },
-      { name: 'AI caption', desc: 'Nexus IA gera de 3 a 5 variações de legendas otimizadas por plataforma.' },
+      { name: 'Legendas com IA', desc: 'Nexus IA gera de 3 a 5 variações de legendas otimizadas por plataforma.' },
     ],
   },
   'instagram-music-api': {
@@ -1332,7 +1332,7 @@ export const specializedPages: Record<string, SEOPageData> = {
       { name: 'Claude Code', desc: 'Use Claude Code para publicar posts com comandos em linguagem natural.' },
       { name: 'Claude Desktop', desc: 'Use Claude Desktop para gerenciar redes sociais sem sair do app.' },
       { name: 'Tools', desc: 'create_post, schedule_post, list_accounts e get_analytics prontas.' },
-      { name: 'Setup em 1 comando', desc: 'npx stackpost mcp install claude para configuração instantânea.' },
+      { name: 'Configuração em 1 comando', desc: 'npx stackpost mcp install claude para configuração instantânea.' },
     ],
   },
   'cursor-social-media': {
@@ -1344,9 +1344,9 @@ export const specializedPages: Record<string, SEOPageData> = {
     features: [
       { name: 'MCP server', desc: 'Model Context Protocol integration para comunicação nativa com Cursor.' },
       { name: 'Cursor IDE', desc: 'Use Cursor para publicar posts sem sair do seu fluxo de desenvolvimento.' },
-      { name: 'AI caption', desc: 'Gere captions com IA direto no editor, otimizadas por plataforma.' },
+      { name: 'Legendas com IA', desc: 'Gere legendas com IA direto no editor, otimizadas por plataforma.' },
       { name: 'Tools', desc: 'create_post, schedule_post, list_accounts e get_analytics prontas.' },
-      { name: 'Setup em 1 comando', desc: 'npx stackpost mcp install cursor para configuração instantânea.' },
+      { name: 'Configuração em 1 comando', desc: 'npx stackpost mcp install cursor para configuração instantânea.' },
     ],
   },
 };
@@ -1401,7 +1401,7 @@ export const auxPages: Record<string, SEOPageData> = {
       { name: 'Teams', desc: 'Times dentro de orgs. Permissões por team.' },
       { name: 'Workspace separado', desc: 'Contas, posts, uploads, analytics e errors isolados.' },
       { name: 'RBAC', desc: 'Owner, admin, editor, viewer.' },
-      { name: 'Audit log', desc: 'Todas as ações registradas.' },
+      { name: 'Log de auditoria', desc: 'Todas as ações registradas.' },
     ],
   },
   'white-label-social-media-api': {

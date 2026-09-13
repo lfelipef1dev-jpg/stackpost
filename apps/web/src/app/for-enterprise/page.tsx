@@ -8,7 +8,7 @@ import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'StackPost for Enterprise - Infraestrutura social em escala',
-  description: 'Multi-tenant com isolamento, audit logs, alta disponibilidade, compliance LGPD/GDPR, DPA e suporte dedicado para enterprise.',
+  description: 'Multi-tenant com isolamento, logs de auditoria, alta disponibilidade, compliance LGPD/GDPR, DPA e suporte dedicado para enterprise.',
   alternates: { canonical: '/for-enterprise' },
 };
 
@@ -22,7 +22,7 @@ const features = [
   },
   {
     icon: FileText,
-    title: 'Audit logs',
+    title: 'Logs de auditoria',
     desc: 'Todas as ações rastreadas: quem fez, o que fez, quando e de onde. Exportavel para SIEM.',
   },
   {
@@ -65,7 +65,7 @@ export default function ForEnterprisePage() {
               StackPost for Enterprise
             </h1>
             <p className="text-lg text-brand-text-secondary max-w-2xl mx-auto">
-              Infraestrutura social em escala. Multi-tenant com isolamento, audit logs, alta disponibilidade e compliance completa.
+              Infraestrutura social em escala. Multi-tenant com isolamento, logs de auditoria, alta disponibilidade e compliance completa.
             </p>
           </FadeIn>
         </div>

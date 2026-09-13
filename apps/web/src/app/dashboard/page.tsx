@@ -161,6 +161,7 @@ function AnimatedNumber({ value }: { value: number }) {
 export default function DashboardPage() {
   const [posts, setPosts] = useState<any[]>([]);
   const [accounts, setAccounts] = useState<any[]>([]);
+  const [allAccounts, setAllAccounts] = useState<any[]>([]);
   const [user, setUser] = useState<any>(null);
   const [showPlanModal, setShowPlanModal] = useState(false);
   const [currentPlan, setCurrentPlan] = useState('free');
@@ -177,7 +178,9 @@ export default function DashboardPage() {
     ])
       .then(([postsData, accountsData, meData, usageData]) => {
         setPosts(Array.isArray(postsData) ? postsData : (postsData.items || []));
-        setAccounts(publishableAccounts(Array.isArray(accountsData) ? accountsData : (accountsData.items || accountsData.accounts || [])));
+        const rawAccounts = Array.isArray(accountsData) ? accountsData : (accountsData.items || accountsData.accounts || []);
+        setAllAccounts(rawAccounts);
+        setAccounts(publishableAccounts(rawAccounts));
         setUser(meData?.user || null);
         setCurrentPlan(meData?.organization?.plan || 'free');
         setUsage(usageData);
@@ -190,10 +193,10 @@ export default function DashboardPage() {
   const scheduled = posts.filter((p) => p.status === 'scheduled').length;
   const drafts = posts.filter((p) => p.status === 'draft').length;
 
-  const metrics = [
+  const metrics: { label: string; value: number; sub?: string; change: string; icon: any; color: string; glow: string }[] = [
     { label: 'Posts Publicados', value: posted, change: '+0%', icon: FileText, color: '#22C55E', glow: '#22C55E' },
     { label: 'Agendados', value: scheduled, change: '+0', icon: Calendar, color: '#F59E0B', glow: '#F59E0B' },
-    { label: 'Contas Conectadas', value: accounts.length, change: '+0', icon: Users, color: '#3B82F6', glow: '#3B82F6' },
+    { label: 'Contas conectadas', value: allAccounts.length, sub: `${allAccounts.filter((a) => a.status === 'active').length} ativas`, change: '+0', icon: Users, color: '#3B82F6', glow: '#3B82F6' },
     { label: 'Rascunhos', value: drafts, change: '+0', icon: FileText, color: '#A78BFA', glow: '#A78BFA' },
   ];
 
@@ -278,7 +281,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <Zap className="w-5 h-5 text-brand-accent" />
-              {completedSteps === activationSteps.length ? 'Setup concluído' : 'Ative seu StackPost'}
+              {completedSteps === activationSteps.length ? 'Configuração concluída' : 'Ative seu StackPost'}
             </h2>
             <span className="text-sm text-brand-text-secondary">{completedSteps} de {activationSteps.length} passos</span>
           </div>
@@ -316,6 +319,7 @@ export default function DashboardPage() {
                 <div className="text-3xl font-bold">
                   <AnimatedNumber value={m.value} />
                 </div>
+                {m.sub && <div className="text-xs text-brand-text-secondary mt-1">{m.sub}</div>}
               </SpotlightCard>
             </TiltCard>
           ))}

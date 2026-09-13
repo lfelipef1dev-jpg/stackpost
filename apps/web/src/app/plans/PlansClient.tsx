@@ -51,7 +51,7 @@ const plans: Plan[] = [
       { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
       { label: 'Upload de mídia', value: '100 MB' },
-      { label: 'AI caption', value: false },
+      { label: 'Legendas com IA', value: false },
       { label: 'MCP server', value: true },
       { label: 'Suporte', value: 'comunidade' },
     ],
@@ -77,7 +77,7 @@ const plans: Plan[] = [
       { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
       { label: 'Upload de mídia', value: '500 MB' },
-      { label: 'AI caption', value: false },
+      { label: 'Legendas com IA', value: false },
       { label: 'MCP server', value: true },
       { label: 'Suporte', value: 'e-mail' },
     ],
@@ -86,7 +86,7 @@ const plans: Plan[] = [
     id: 'growth',
     name: 'Crescimento',
     tagline: 'Para agências e SaaS iniciantes',
-    description: 'Conecte até 20 contas nas 15 plataformas com 8.000 posts e 4.000 comentários mensais. Para times que precisam de calendário editorial, analytics avançado, AI caption e múltiplos workspaces.',
+    description: 'Conecte até 20 contas nas 15 plataformas com 8.000 posts e 4.000 comentários mensais. Para times que precisam de calendário editorial, analytics avançado, Legendas com IA e múltiplos workspaces.',
     monthlyPrice: 89,
     yearlyPrice: 890,
     icon: Building2,
@@ -104,7 +104,7 @@ const plans: Plan[] = [
       { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
       { label: 'Upload de mídia', value: '2 GB' },
-      { label: 'AI caption', value: true },
+      { label: 'Legendas com IA', value: true },
       { label: 'MCP server', value: true },
       { label: 'Suporte', value: 'e-mail prior.' },
     ],
@@ -130,7 +130,7 @@ const plans: Plan[] = [
       { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
       { label: 'Upload de mídia', value: '10 GB' },
-      { label: 'AI caption', value: true },
+      { label: 'Legendas com IA', value: true },
       { label: 'MCP server', value: true },
       { label: 'Suporte', value: 'prioritário' },
     ],
@@ -155,7 +155,7 @@ const plans: Plan[] = [
       { label: 'Calendário', value: true },
       { label: 'Link na bio', value: true },
       { label: 'Upload de mídia', value: '50 GB' },
-      { label: 'AI caption', value: true },
+      { label: 'Legendas com IA', value: true },
       { label: 'MCP server', value: true },
       { label: 'Suporte', value: 'dedicado' },
     ],
@@ -273,7 +273,7 @@ export default function PlansPage() {
           </FadeIn>
           <FadeIn delay={0.12}>
             <p className="text-brand-text-secondary text-lg md:text-xl max-w-2xl mx-auto mb-6">
-              Planos a partir de R$39. Não cobramos por conta social. Cancele quando quiser.
+              Planos a partir de R$ 39. Não cobramos por conta social. Cancele quando quiser.
             </p>
           </FadeIn>
           <FadeIn delay={0.16}>
@@ -310,7 +310,7 @@ export default function PlansPage() {
           <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10 text-xs md:text-sm text-brand-text-secondary/70">
             <div className="flex items-center gap-2"><Shield className="w-4 h-4 text-brand-accent" /> Pagamento seguro</div>
             <div className="flex items-center gap-2"><RefreshCw className="w-4 h-4 text-brand-accent" /> Reembolso em 7 dias</div>
-            <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-brand-accent" /> Setup em menos de 10 min</div>
+            <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-brand-accent" /> Configuração em menos de 10 min</div>
             <div className="flex items-center gap-2"><Users className="w-4 h-4 text-brand-accent" /> Times ilimitados nos planos pagos</div>
           </div>
         </FadeIn>

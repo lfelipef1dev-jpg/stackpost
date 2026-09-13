@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
 
     const contentLength = parseInt(res.headers.get('content-length') || '0');
     if (contentLength > 1073741824) {
-      return NextResponse.json({ error: 'Arquivo excede 1GB' }, { status: 400 });
+      return NextResponse.json({ error: 'Arquivo excede 1 GB' }, { status: 400 });
     }
 
     const buffer = Buffer.from(await res.arrayBuffer());

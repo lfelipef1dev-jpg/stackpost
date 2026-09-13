@@ -22,7 +22,7 @@ const plans = [
     id: 'growth',
     name: 'Crescimento',
     price: 89,
-    features: ['20 contas sociais', '8.000 posts/mes', 'AI caption + webhooks'],
+    features: ['20 contas sociais', '8.000 posts/mes', 'Legendas com IA + webhooks'],
   },
   {
     id: 'scale',

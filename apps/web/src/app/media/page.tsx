@@ -157,7 +157,7 @@ export default function MediaLibraryPage() {
           <TiltCard>
             <SpotlightCard className="p-6" glow="#8AB4F8">
               <h2 className="text-lg font-semibold mb-4 flex items-center gap-2"><LinkIcon className="w-5 h-5 text-brand-accent" /> Upload por URL</h2>
-              <p className="text-sm text-brand-text-secondary mb-4">Cole uma URL pública (HTTP/HTTPS). O StackPost baixa e registra. Máx 1GB, timeout 60s.</p>
+              <p className="text-sm text-brand-text-secondary mb-4">Cole uma URL pública (HTTP/HTTPS). O StackPost baixa e registra. Máx 1 GB, timeout 60s.</p>
               <div className="flex gap-2">
                 <input value={urlInput} onChange={(e) => setUrlInput(e.target.value)} placeholder="https://exemplo.com/imagem.jpg" className="flex-1 px-4 py-3 rounded-xl bg-brand-elevated border border-brand-border text-brand-text" />
                 <button onClick={handleUrlUpload} disabled={loading || !urlInput} className="px-6 py-3 rounded-xl bg-brand-accent text-brand-bg font-semibold hover:bg-brand-accent-hover transition disabled:opacity-50">

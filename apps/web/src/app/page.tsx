@@ -12,7 +12,7 @@ import LandingHeader from '@/components/LandingHeader';
 
 export const metadata: Metadata = {
   title: 'StackPost - API unificada de redes sociais para SaaS, agências e AI agents',
-  description: 'StackPost é a API unificada de redes sociais: poste, agende, análise e modere em 15 plataformas por uma única integração. 114 endpoints, MCP server, AI caption, A/B testing, analytics histórico e escala por volume. Plano gratuito para sempre.',
+  description: 'StackPost é a API unificada de redes sociais: poste, agende, análise e modere em 15 plataformas por uma única integração. 114 endpoints, MCP server, legendas com IA, testes A/B, analytics histórico e escala por volume. Plano gratuito para sempre.',
   alternates: { canonical: '/' },
 };
 
@@ -34,7 +34,7 @@ const bentoFeatures = [
   { icon: Upload, title: 'Upload de mídia escalável', desc: 'Multipart, presigned, TUS e URL import. Suporta até 1 GB.', href: '/features' },
   { icon: Calendar, title: 'Agendamento inteligente', desc: 'Best-time ML, primeiro comentário e A/B testing.', href: '/features' },
   { icon: BarChart3, title: 'Analytics histórico', desc: 'Cron diário de snapshots. Gráficos de evolução sem limite.', href: '/features' },
-  { icon: Bot, title: 'AI caption & hashtags', desc: 'Nexus IA gera variações de caption e hashtags por nicho.', href: '/features' },
+  { icon: Bot, title: 'Legendas com IA e hashtags', desc: 'Nexus IA gera variações de legenda e hashtags por nicho.', href: '/features' },
   { icon: Webhook, title: 'Webhooks com replay', desc: 'HMAC, retry, replay e eventos em tempo real.', href: '/features' },
   { icon: Shield, title: 'Multi-user RBAC', desc: 'Owner, admin, editor, viewer. Workspaces separados.', href: '/features' },
   { icon: MessageSquare, title: 'Comment → DM', desc: 'Converta comentários em DM no Instagram e Facebook automaticamente.', href: '/features' },
@@ -170,7 +170,7 @@ export default function Home() {
               { icon: Layers, title: 'API unificada', desc: 'Um endpoint para 15 plataformas. Sem implementar 15 fluxos OAuth, retry e status individuais.' },
               { icon: Globe, title: 'Contas ilimitadas', desc: 'Conecte todos os perfis que quiser. Pague pelo uso, não por conta.' },
               { icon: TrendingUp, title: 'Analytics real', desc: 'Post e account analytics com refresh sob demanda e histórico infinito.' },
-              { icon: Bot, title: 'Pronto para IA', desc: 'MCP server, AI caption e A/B testing para agentes e produtos de conteúdo.' },
+              { icon: Bot, title: 'Pronto para IA', desc: 'MCP server, legendas com IA e testes A/B para agentes e produtos de conteúdo.' },
               { icon: Shield, title: 'Produção', desc: 'Idempotency, webhooks com replay e RBAC nativo para multi-tenant.' },
               { icon: Clock, title: 'Sem filas quebradas', desc: 'Scheduling, retry, best-time e aprovação em um só fluxo.' },
               { icon: Sparkles, title: 'PIX em reais', desc: 'Checkout com Mercado Pago. Sem taxa internacional escondida.' },

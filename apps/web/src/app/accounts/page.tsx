@@ -120,6 +120,18 @@ function expiryCountdown(dateStr?: string | null): { text: string; color: string
   return { text: `${hours}h restantes`, color: 'text-error' };
 }
 
+// Status efetivo de exibicao: o cron marca 'expired' quando o CHECK do token falha,
+// o que pode acontecer com expires_at ainda no futuro. Nesse caso o correto e
+// "Reconectar" (atencao), nao "Expirada" — a conta so e Expirada de verdade quando
+// a validade nominal ja passou.
+function effectiveStatus(acc: { status?: string | null; expires_at?: string | null }): string {
+  if (acc.status === 'expired') {
+    const exp = acc.expires_at ? new Date(acc.expires_at).getTime() : 0;
+    if (exp > Date.now()) return 'reconnect_required';
+  }
+  return acc.status || 'pending';
+}
+
 function timeAgo(dateStr?: string | null): string {
   if (!dateStr) return 'Nunca';
   const target = new Date(dateStr).getTime();
@@ -258,8 +270,8 @@ export default function AccountsPage() {
         const matchUser = (a.username || '').toLowerCase().includes(q);
         if (!matchName && !matchUser) return false;
       }
-      if (filter === 'active') return a.status === 'active';
-      if (filter === 'attention') return a.status === 'expired' || a.status === 'reconnect_required' || a.status === 'needs_reconnect';
+      if (filter === 'active') return effectiveStatus(a) === 'active';
+      if (filter === 'attention') return ['expired', 'reconnect_required', 'needs_reconnect'].includes(effectiveStatus(a));
       return true;
     })
     .sort((a, b) => {
@@ -280,8 +292,8 @@ export default function AccountsPage() {
 
   const stats = {
     total: accounts.length,
-    active: accounts.filter((a) => a.status === 'active').length,
-    expired: accounts.filter((a) => a.status === 'expired' || a.status === 'reconnect_required' || a.status === 'needs_reconnect').length,
+    active: accounts.filter((a) => effectiveStatus(a) === 'active').length,
+    expired: accounts.filter((a) => ['expired', 'reconnect_required', 'needs_reconnect'].includes(effectiveStatus(a))).length,
     platforms: new Set(accounts.map((a) => a.platform)).size,
   };
 
@@ -421,12 +433,18 @@ export default function AccountsPage() {
           <div className="flex flex-wrap items-center gap-3">
             <h2 className="text-lg font-semibold flex items-center gap-2 whitespace-nowrap">
               <TrendingUp className="w-5 h-5 text-success" />
-              Contas ({filteredAndSorted.length})
+              {loading ? 'Contas' : `Contas (${filteredAndSorted.length})`}
             </h2>
             <div className="hidden md:flex items-center gap-3 text-xs text-brand-text-secondary">
-              <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-success" />{stats.active} ativas</span>
-              <span className="flex items-center gap-1"><AlertCircle className="w-3 h-3 text-warning" />{stats.expired} atenção</span>
-              <span className="flex items-center gap-1"><Users className="w-3 h-3 text-brand-accent" />{stats.platforms} plataformas</span>
+              {loading ? (
+                <span className="h-4 w-40 bg-brand-elevated rounded animate-pulse" />
+              ) : (
+                <>
+                  <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-success" />{stats.active} ativas</span>
+                  <span className="flex items-center gap-1"><AlertCircle className="w-3 h-3 text-warning" />{stats.expired} atenção</span>
+                  <span className="flex items-center gap-1"><Users className="w-3 h-3 text-brand-accent" />{stats.platforms} plataformas</span>
+                </>
+              )}
             </div>
             <div className="flex-1 min-w-[180px] relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-text-secondary" />
@@ -493,7 +511,7 @@ export default function AccountsPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
             {filteredAndSorted.map((acc) => {
-              const config = statusConfig[acc.status] || statusConfig.pending;
+              const config = statusConfig[effectiveStatus(acc)] || statusConfig.pending;
               const Icon = config.icon;
               const meta = acc.platform_metadata || {};
               const avatar = typeof meta === 'object' && meta.avatar ? meta.avatar : null;
@@ -505,7 +523,7 @@ export default function AccountsPage() {
               const isSelected = selectedIds.includes(acc.id);
               return (
                 <TiltCard key={acc.id}>
-                  <SpotlightCard className="p-4" glow={acc.status === 'active' ? '#22C55E' : '#F87171'}>
+                  <SpotlightCard className="p-4" glow={effectiveStatus(acc) === 'active' ? '#22C55E' : '#F87171'}>
                     <div
                       className="cursor-pointer"
                       onClick={() => setDrawerAccount(acc)}
@@ -761,7 +779,7 @@ export default function AccountsPage() {
           >
             {(() => {
               const acc = drawerAccount;
-              const config = statusConfig[acc.status] || statusConfig.pending;
+              const config = statusConfig[effectiveStatus(acc)] || statusConfig.pending;
               const Icon = config.icon;
               const meta = acc.platform_metadata || {};
               const avatar = typeof meta === 'object' && meta.avatar ? meta.avatar : null;

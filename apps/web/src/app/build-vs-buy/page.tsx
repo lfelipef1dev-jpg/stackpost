@@ -150,7 +150,7 @@ export default function BuildVsBuyPage() {
                     <span className="font-mono">R$ {stackpostYear1.toLocaleString('pt-BR')}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-brand-text-secondary">Setup</span>
+                    <span className="text-brand-text-secondary">Configuração</span>
                     <span className="font-mono">R$ 0</span>
                   </div>
                   <div className="flex justify-between pt-2 border-t border-success/20">

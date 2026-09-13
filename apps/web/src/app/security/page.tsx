@@ -7,21 +7,21 @@ import LandingHeader from '@/components/LandingHeader';
 import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
-  title: 'Security - StackPost | Infraestrutura social segura',
-  description: 'Segurança por design: encryption at rest, OAuth 2.0, API keys com hash, HMAC webhooks, RBAC, audit logs, data isolation multi-tenant e rate limiting.',
+  title: 'Segurança - StackPost | Infraestrutura social segura',
+  description: 'Segurança por design: criptografia em repouso, OAuth 2.0, API keys com hash, webhooks HMAC, RBAC, logs de auditoria, isolamento multi-tenant e rate limiting.',
   alternates: { canonical: '/security' },
 };
 
-const jsonLd = serviceSchema('Security Center', 'Infraestrutura social segura por design.', '/security');
+const jsonLd = serviceSchema('Central de Segurança', 'Infraestrutura social segura por design.', '/security');
 
 const securityItems = [
-  { icon: Lock, title: 'Encryption at rest', desc: 'Todos os dados sensíveis criptografados em repouso no banco.' },
+  { icon: Lock, title: 'Criptografia em repouso', desc: 'Todos os dados sensíveis criptografados em repouso no banco.' },
   { icon: KeyRound, title: 'OAuth 2.0', desc: 'Autenticação via OAuth 2.0 para todas as plataformas conectadas.' },
   { icon: Shield, title: 'API keys com hash', desc: 'Chaves de API armazenadas com hash, nunca em texto plano.' },
-  { icon: Webhook, title: 'HMAC webhooks', desc: 'Webhooks assinados com HMAC-SHA256 para verificação de origem.' },
+  { icon: Webhook, title: 'Webhooks HMAC', desc: 'Webhooks assinados com HMAC-SHA256 para verificação de origem.' },
   { icon: Eye, title: 'RBAC', desc: 'Owner, Admin, Editor e Viewer com permissões granulares.' },
-  { icon: FileText, title: 'Audit logs', desc: 'Todas as ações rastreadas com timestamp, usuário e contexto.' },
-  { icon: Shield, title: 'Data isolation multi-tenant', desc: 'Cada workspace isolado, sem vazamento entre tenants.' },
+  { icon: FileText, title: 'Logs de auditoria', desc: 'Todas as ações rastreadas com timestamp, usuário e contexto.' },
+  { icon: Shield, title: 'Isolamento multi-tenant', desc: 'Cada workspace isolado, sem vazamento entre tenants.' },
   { icon: Zap, title: 'Rate limiting', desc: 'Limites por chave e por workspace para proteger a infraestrutura.' },
 ];
 
@@ -49,13 +49,13 @@ export default function SecurityPage() {
           <FadeIn>
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border mb-6" style={{ borderColor: '#8AB4F840', backgroundColor: '#8AB4F810' }}>
               <Shield className="w-3.5 h-3.5" style={{ color: '#8AB4F8' }} />
-              <span className="text-xs font-mono" style={{ color: '#8AB4F8' }}>Security</span>
+              <span className="text-xs font-mono" style={{ color: '#8AB4F8' }}>Segurança</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight" style={{ color: 'color-mix(in srgb, #8AB4F8 25%, white)' }}>
               Segurança por design
             </h1>
             <p className="text-lg text-brand-text-secondary max-w-2xl mx-auto">
-              Infraestrutura social segura desde o primeiro commit. Encryption, RBAC, audit logs e isolamento multi-tenant em todas as camadas.
+              Infraestrutura social segura desde o primeiro commit. Criptografia, RBAC, logs de auditoria e isolamento multi-tenant em todas as camadas.
             </p>
           </FadeIn>
         </div>
