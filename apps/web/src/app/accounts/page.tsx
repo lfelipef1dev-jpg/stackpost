@@ -5,7 +5,7 @@ import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { PlatformIcon } from '@/components/PlatformIcon';
 import { PLATFORMS } from '@/lib/platforms';
-import { publishableAccounts } from '@/lib/accounts';
+import { publishableAccounts, effectiveStatus, isActiveAccount, needsAttentionAccount } from '@/lib/accounts';
 import { useEffect, useState, useRef } from 'react';
 import {
   RefreshCw, Trash2, AlertCircle, CheckCircle2, Clock, Loader2, Zap,
@@ -118,18 +118,6 @@ function expiryCountdown(dateStr?: string | null): { text: string; color: string
   if (days >= 7) return { text: `${days}d restantes`, color: 'text-brand-text-secondary' };
   if (hours >= 24) return { text: `${days}d ${hours % 24}h`, color: 'text-warning' };
   return { text: `${hours}h restantes`, color: 'text-error' };
-}
-
-// Status efetivo de exibicao: o cron marca 'expired' quando o CHECK do token falha,
-// o que pode acontecer com expires_at ainda no futuro. Nesse caso o correto e
-// "Reconectar" (atencao), nao "Expirada" — a conta so e Expirada de verdade quando
-// a validade nominal ja passou.
-function effectiveStatus(acc: { status?: string | null; expires_at?: string | null }): string {
-  if (acc.status === 'expired') {
-    const exp = acc.expires_at ? new Date(acc.expires_at).getTime() : 0;
-    if (exp > Date.now()) return 'reconnect_required';
-  }
-  return acc.status || 'pending';
 }
 
 function timeAgo(dateStr?: string | null): string {
@@ -270,8 +258,8 @@ export default function AccountsPage() {
         const matchUser = (a.username || '').toLowerCase().includes(q);
         if (!matchName && !matchUser) return false;
       }
-      if (filter === 'active') return effectiveStatus(a) === 'active';
-      if (filter === 'attention') return ['expired', 'reconnect_required', 'needs_reconnect'].includes(effectiveStatus(a));
+      if (filter === 'active') return isActiveAccount(a);
+      if (filter === 'attention') return needsAttentionAccount(a);
       return true;
     })
     .sort((a, b) => {
@@ -292,8 +280,8 @@ export default function AccountsPage() {
 
   const stats = {
     total: accounts.length,
-    active: accounts.filter((a) => effectiveStatus(a) === 'active').length,
-    expired: accounts.filter((a) => ['expired', 'reconnect_required', 'needs_reconnect'].includes(effectiveStatus(a))).length,
+    active: accounts.filter(isActiveAccount).length,
+    expired: accounts.filter(needsAttentionAccount).length,
     platforms: new Set(accounts.map((a) => a.platform)).size,
   };
 

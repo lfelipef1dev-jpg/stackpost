@@ -41,26 +41,6 @@ function formatBytes(bytes: number) {
   return `${value.toLocaleString('pt-BR', { maximumFractionDigits: i === 0 ? 0 : 1 })} ${sizes[i]}`;
 }
 
-function AnimatedNumber({ value, prefix = '', suffix = '' }: { value: number; prefix?: string; suffix?: string }) {
-  const [display, setDisplay] = useState(0);
-  const prev = useRef(0);
-  useEffect(() => {
-    const start = prev.current;
-    const end = value;
-    const duration = 800;
-    const startTime = performance.now();
-    function tick(now: number) {
-      const p = Math.min(1, (now - startTime) / duration);
-      const ease = 1 - Math.pow(1 - p, 3);
-      setDisplay(start + (end - start) * ease);
-      if (p < 1) requestAnimationFrame(tick);
-      else prev.current = end;
-    }
-    requestAnimationFrame(tick);
-  }, [value]);
-  return <span>{prefix}{display.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}{suffix}</span>;
-}
-
 function SpotlightCard({ children, className = '', glow = '#6366F1', style }: { children: React.ReactNode; className?: string; glow?: string; style?: React.CSSProperties }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [spot, setSpot] = useState({ x: 0, y: 0, active: false });
@@ -469,10 +449,10 @@ export default function BillingPage() {
             <SpotlightCard className="h-full p-7 flex flex-col shadow-2xl shadow-brand-accent/5" glow="#F59E0B">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold flex items-center gap-2"><CreditCard className="w-5 h-5 text-warning" /> Créditos X</h2>
-                <span className="px-2.5 py-1 rounded-full bg-warning/10 text-warning text-[10px] font-semibold uppercase tracking-wide border border-warning/20">Saldo R$ {credits}</span>
+                <span className="px-2.5 py-1 rounded-full bg-warning/10 text-warning text-[10px] font-semibold uppercase tracking-wide border border-warning/20">Saldo R$ {Number(credits).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
               </div>
               <div className="text-4xl font-bold text-brand-accent mb-1">
-                R$ <AnimatedNumber value={credits} />
+                R$ {Number(credits).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               </div>
               <p className="text-sm text-brand-text-secondary mb-4">Saldo para publicações no X/Twitter</p>
 
@@ -528,7 +508,7 @@ export default function BillingPage() {
                 <span className="px-2.5 py-1 rounded-full bg-success/10 text-success text-[10px] font-semibold uppercase tracking-wide border border-success/20">Mensal</span>
               </div>
               <div className="text-4xl font-bold mb-1">
-                {currentPlan === 'free' ? 'R$ 0' : <><AnimatedNumber value={nextPayment ?? 0} prefix="R$ " /></>}
+                {currentPlan === 'free' ? 'R$ 0' : `R$ ${(nextPayment ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
               </div>
               <p className="text-sm text-brand-text-secondary mb-4">
                 {currentPlan === 'free' ? 'Plano gratuito sem cobrança' : 'Plano ativo, pagamento manual via PIX ou cartão'}

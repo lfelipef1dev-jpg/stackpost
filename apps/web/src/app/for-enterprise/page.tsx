@@ -28,7 +28,7 @@ const features = [
   {
     icon: Zap,
     title: 'Alta disponibilidade',
-    desc: 'Idempotencia e retry automático em todas as publicações, com monitoramento contínuo.',
+    desc: 'Idempotência e retry automático em todas as publicações, com monitoramento contínuo.',
   },
   {
     icon: Shield,

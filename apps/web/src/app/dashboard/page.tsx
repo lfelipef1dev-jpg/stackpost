@@ -3,7 +3,7 @@
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import PlanModal from '@/components/PlanModal';
-import { publishableAccounts } from '@/lib/accounts';
+import { publishableAccounts, effectiveStatus, isActiveAccount } from '@/lib/accounts';
 
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
@@ -196,7 +196,7 @@ export default function DashboardPage() {
   const metrics: { label: string; value: number; sub?: string; change: string; icon: any; color: string; glow: string }[] = [
     { label: 'Posts Publicados', value: posted, change: '+0%', icon: FileText, color: '#22C55E', glow: '#22C55E' },
     { label: 'Agendados', value: scheduled, change: '+0', icon: Calendar, color: '#F59E0B', glow: '#F59E0B' },
-    { label: 'Contas conectadas', value: allAccounts.length, sub: `${allAccounts.filter((a) => a.status === 'active').length} ativas`, change: '+0', icon: Users, color: '#3B82F6', glow: '#3B82F6' },
+    { label: 'Contas conectadas', value: allAccounts.length, sub: `${allAccounts.filter(isActiveAccount).length} ativas`, change: '+0', icon: Users, color: '#3B82F6', glow: '#3B82F6' },
     { label: 'Rascunhos', value: drafts, change: '+0', icon: FileText, color: '#A78BFA', glow: '#A78BFA' },
   ];
 
@@ -526,7 +526,7 @@ export default function DashboardPage() {
                         </div>
                       </div>
                       {(() => {
-                        const s = accountStatus[acc.status] || { label: acc.status, className: 'bg-success/10 text-success border-success/20' };
+                        const s = accountStatus[effectiveStatus(acc)] || { label: effectiveStatus(acc), className: 'bg-success/10 text-success border-success/20' };
                         return (
                           <span className={`text-xs px-2 py-1 rounded-md border ${s.className}`}>
                             {s.label}

@@ -26,8 +26,8 @@ const securityItems = [
 ];
 
 const complianceItems = [
-  { title: 'LGPD', desc: 'Conformidade com a Lei Geral de Protecao de Dados brasileira.' },
-  { title: 'GDPR-ready', desc: 'Estrutura preparada para o regulamento europeu de protecao de dados.' },
+  { title: 'LGPD', desc: 'Conformidade com a Lei Geral de Proteção de Dados brasileira.' },
+  { title: 'GDPR-ready', desc: 'Estrutura preparada para o regulamento europeu de proteção de dados.' },
   { title: 'DPA disponível', desc: 'Data Processing Agreement disponível para clientes enterprise.' },
   { title: 'Data retention configurável', desc: 'Defina por quanto tempo os dados são mantidos por workspace.' },
 ];
@@ -81,7 +81,7 @@ export default function SecurityPage() {
         </div>
       </section>
 
-      {/* Idempotencia e retry */}
+      {/* Idempotência e retry */}
       <section className="max-w-5xl mx-auto px-4 md:px-6 pb-20">
         <ScrollReveal>
           <div className="p-8 rounded-2xl bg-brand-surface/60 backdrop-blur-xl border border-brand-border/50">
@@ -89,14 +89,14 @@ export default function SecurityPage() {
               <div className="w-10 h-10 rounded-xl bg-brand-accent/10 flex items-center justify-center">
                 <RefreshCw className="w-5 h-5 text-brand-accent" />
               </div>
-              <h2 className="text-2xl font-bold text-brand-text">Idempotencia e retry</h2>
+              <h2 className="text-2xl font-bold text-brand-text">Idempotência e retry</h2>
             </div>
             <p className="text-brand-text-secondary mb-6">
               Publicações são resilientes por padrão. Nada de posts duplicados por erro de rede.
             </p>
             <div className="grid md:grid-cols-3 gap-4">
               <div>
-                <h3 className="font-semibold text-brand-text mb-1">Chaves de idempotencia</h3>
+                <h3 className="font-semibold text-brand-text mb-1">Chaves de idempotência</h3>
                 <p className="text-sm text-brand-text-secondary">Cada request recebe uma chave única. Retries não criam duplicatas.</p>
               </div>
               <div>
@@ -135,7 +135,7 @@ export default function SecurityPage() {
           <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">Documentação</h2>
           <div className="flex flex-wrap justify-center gap-4">
             <Link href="/privacy" className="px-6 py-3 rounded-xl border border-brand-border text-brand-text hover:bg-brand-elevated transition">
-              Politica de privacidade
+              Política de privacidade
             </Link>
             <Link href="/terms" className="px-6 py-3 rounded-xl border border-brand-border text-brand-text hover:bg-brand-elevated transition">
               Termos de uso
