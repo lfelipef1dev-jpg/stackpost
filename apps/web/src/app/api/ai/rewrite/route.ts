@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ai_rewriteBodySchema } from '@/lib/schemas';
 import { getUserFromToken } from '@/lib/auth';
+import { aiChat } from '@/lib/ai';
 
 const platformTones: Record<string, string> = {
   instagram: 'Engajador, com emojis e hashtags. Ideal 150-300 caracteres.',
@@ -23,31 +24,11 @@ export async function POST(req: NextRequest) {
   const { content, platform, tone } = bodyRaw1;
   if (!content) return NextResponse.json({ error: 'Conteúdo obrigatório' }, { status: 400 });
 
-  const apiKey = process.env.OPENAI_API_KEY || process.env.NEXUS_IA_API_KEY;
-  if (!apiKey) {
-    return NextResponse.json({
-      rewrite: `${content} ${platform === 'x' ? '#trending' : '#expostacker #socialmedia'}`,
-    });
-  }
-
-  const res = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: `Reescreva o texto abaixo para ${platform || 'Instagram'}. Tom: ${platformTones[platform || 'instagram']}. Retorne apenas a legenda, sem explicacao.` },
-        { role: 'user', content },
-      ],
-      max_tokens: 500,
-      temperature: 0.7,
-    }),
+  const rewrite = await aiChat([
+    { role: 'system', content: `Reescreva o texto abaixo para ${platform || 'Instagram'}. Tom: ${platformTones[platform || 'instagram']}. Retorne apenas a legenda, sem explicacao.` },
+    { role: 'user', content },
+  ]);
+  return NextResponse.json({
+    rewrite: rewrite || `${content} ${platform === 'x' ? '#trending' : '#expostacker #socialmedia'}`,
   });
-
-  const data = await res.json();
-  const rewrite = data.choices?.[0]?.message?.content || content;
-  return NextResponse.json({ rewrite });
 }

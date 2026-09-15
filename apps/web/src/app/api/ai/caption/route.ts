@@ -2,6 +2,7 @@ import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { ai_captionBodySchema } from '@/lib/schemas';
 import { getUserFromToken } from '@/lib/auth';
+import { aiChat } from '@/lib/ai';
 
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
@@ -36,38 +37,18 @@ ${platformGuides[platform || 'instagram'] || ''}
 Retorne apenas a legenda, sem explicacao.`;
 
   try {
-    const apiKey = process.env.OPENAI_API_KEY || process.env.NEXUS_IA_API_KEY;
-    if (!apiKey) {
-      // Fallback: generate a simple template
-      const templates = [
-        `${prompt}\n\n#expostacker #socialmedia #content`,
-        `Novo post! ${prompt}\n\n#marketing #digital #growth`,
-        `${prompt} 🚀\n\n#expostacker #inovacao #tecnologia`,
-      ];
-      return NextResponse.json({ caption: templates[Math.floor(Math.random() * templates.length)] });
-    }
+    const caption = await aiChat([
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: prompt || 'Escreva uma legenda sobre tecnologia e inovacao' },
+    ]);
+    if (caption) return NextResponse.json({ caption });
 
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: prompt || 'Escreva uma legenda sobre tecnologia e inovacao' },
-        ],
-        max_tokens: 500,
-        temperature: 0.7,
-      }),
-    });
-
-    const data = await res.json();
-    const caption = data.choices?.[0]?.message?.content || '';
-
-    return NextResponse.json({ caption });
+    const templates = [
+      `${prompt}\n\n#expostacker #socialmedia #content`,
+      `Novo post! ${prompt}\n\n#marketing #digital #growth`,
+      `${prompt} 🚀\n\n#expostacker #inovacao #tecnologia`,
+    ];
+    return NextResponse.json({ caption: templates[Math.floor(Math.random() * templates.length)] });
   } catch (error) {
     logger.error((error as string));
     return NextResponse.json({ error: 'Erro ao gerar legenda' }, { status: 500 });

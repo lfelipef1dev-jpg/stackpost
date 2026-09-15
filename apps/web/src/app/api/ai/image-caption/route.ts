@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ai_image_captionBodySchema } from '@/lib/schemas';
 import { getUserFromToken } from '@/lib/auth';
+import { aiChat } from '@/lib/ai';
 
 export async function POST(req: NextRequest) {
   const user = await getUserFromToken(req);
@@ -12,8 +13,20 @@ export async function POST(req: NextRequest) {
   const { imageUrl, platform, count = 3 } = bodyRaw1;
   if (!imageUrl) return NextResponse.json({ error: 'imageUrl obrigatório' }, { status: 400 });
 
-  const apiKey = process.env.OPENAI_API_KEY || process.env.NEXUS_IA_API_KEY;
-  if (!apiKey) {
+  const text = await aiChat(
+    [
+      { role: 'system', content: `Você e um especialista em social media. Gere ${count} opções de legenda em portugues para a imagem fornecida, adequadas para ${platform || 'Instagram'}. Retorne apenas as opções, separadas por linha, sem numeracao.` },
+      {
+        role: 'user',
+        content: [
+          { type: 'text', text: 'Gere legendas criativas para esta imagem.' },
+          { type: 'image_url', image_url: { url: imageUrl } },
+        ],
+      },
+    ],
+    { maxTokens: 500, temperature: 0.8 }
+  );
+  if (!text) {
     return NextResponse.json({
       captions: [
         'Imagem incrível! 🚀 #expostacker #socialmedia',
@@ -22,32 +35,6 @@ export async function POST(req: NextRequest) {
       ].slice(0, count),
     });
   }
-
-  const res = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: `Você e um especialista em social media. Gere ${count} opções de legenda em portugues para a imagem fornecida, adequadas para ${platform || 'Instagram'}. Retorne apenas as opções, separadas por linha, sem numeracao.` },
-        {
-          role: 'user',
-          content: [
-            { type: 'text', text: 'Gere legendas criativas para esta imagem.' },
-            { type: 'image_url', image_url: { url: imageUrl } },
-          ],
-        },
-      ],
-      max_tokens: 500,
-      temperature: 0.8,
-    }),
-  });
-
-  const data = await res.json();
-  const text = data.choices?.[0]?.message?.content || '';
   const captions = text.split('\n').map((s: string) => s.replace(/^\d+[\.)]\s*/, '').trim()).filter(Boolean).slice(0, count);
   return NextResponse.json({ captions });
 }

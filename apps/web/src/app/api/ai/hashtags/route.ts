@@ -2,6 +2,7 @@ import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { ai_hashtagsBodySchema } from '@/lib/schemas';
 import { getUserFromToken } from '@/lib/auth';
+import { aiChat } from '@/lib/ai';
 
 // AI Hashtags - generates relevant hashtags from content
 // Uses Nexus IA if configured, otherwise falls back to keyword extraction
@@ -35,32 +36,21 @@ export async function POST(req: NextRequest) {
   };
   const maxTags = limits[platform || 'instagram'] ?? 15;
 
-  // Try Nexus IA (or OpenAI) for AI-generated hashtags
-  const nexusUrl = process.env.NEXUS_IA_URL || process.env.OPENAI_API_KEY;
-  if (nexusUrl) {
-    try {
-      const aiRes = await fetch(`${process.env.NEXUS_IA_URL || 'https://nexusia.expostacker.com.br'}/api/chat`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: [
-            { role: 'system', content: `Gere ${maxTags} hashtags relevantes para ${platform}. Retorne apenas as hashtags separadas por espaco, sem numeracao.` },
-            { role: 'user', content: content.slice(0, 500) },
-          ],
-          max_tokens: 200,
-        }),
-      });
-      if (aiRes.ok) {
-        const aiData = await aiRes.json();
-        const text = aiData.content || aiData.message || '';
-        const hashtags = text.match(/#[\w]+/g) || [];
-        if (hashtags.length > 0) {
-          return NextResponse.json({ hashtags: hashtags.slice(0, maxTags), source: 'ai' });
-        }
-      }
-    } catch (err) {
-      logger.error('AI hashtag generation failed, falling back to keyword extraction:', err);
+  // Try AI providers for AI-generated hashtags
+  try {
+    const text = await aiChat(
+      [
+        { role: 'system', content: `Gere ${maxTags} hashtags relevantes para ${platform}. Retorne apenas as hashtags separadas por espaco, sem numeracao.` },
+        { role: 'user', content: content.slice(0, 500) },
+      ],
+      { maxTokens: 200 }
+    );
+    const hashtags = (text || '').match(/#[\w]+/g) || [];
+    if (hashtags.length > 0) {
+      return NextResponse.json({ hashtags: hashtags.slice(0, maxTags), source: 'ai' });
     }
+  } catch (err) {
+    logger.error('AI hashtag generation failed, falling back to keyword extraction:', err);
   }
 
   // Fallback: keyword extraction
