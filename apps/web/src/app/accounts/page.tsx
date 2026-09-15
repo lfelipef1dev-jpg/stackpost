@@ -505,7 +505,6 @@ export default function AccountsPage() {
               const config = statusConfig[effectiveStatus(acc)] || statusConfig.pending;
               const Icon = config.icon;
               const meta = acc.platform_metadata || {};
-              const avatar = typeof meta === 'object' && meta.avatar ? meta.avatar : null;
               const followers = typeof meta === 'object' && meta.followers ? meta.followers : null;
               const platformColor = PLATFORMS.find((p) => p.id === acc.platform)?.color || '#888';
               const expiry = expiryCountdown(acc.expires_at);
@@ -529,23 +528,12 @@ export default function AccountsPage() {
                             aria-label={`Selecionar conta ${acc.username}`}
                             className="mt-1 w-4 h-4 rounded accent-brand-accent cursor-pointer"
                           />
-                          {avatar ? (
-                            <Image
-                              src={avatar}
-                              alt={acc.username}
-                              width={44}
-                              height={44}
-                              unoptimized
-                              className="w-11 h-11 rounded-full object-cover border border-brand-border"
-                            />
-                          ) : (
-                            <div
-                              className="w-11 h-11 rounded-full flex items-center justify-center"
-                              style={{ backgroundColor: `${platformColor}15` }}
-                            >
-                              <PlatformIcon id={acc.platform} size={20} color={platformColor} />
-                            </div>
-                          )}
+                          <div
+                            className="w-11 h-11 rounded-full flex items-center justify-center"
+                            style={{ backgroundColor: `${platformColor}15` }}
+                          >
+                            <PlatformIcon id={acc.platform} size={20} color={platformColor} />
+                          </div>
                           <div>
                             <div className="font-semibold text-sm">{PLATFORMS.find((p) => p.id === acc.platform)?.name || acc.platform.replace('_', ' ')}</div>
                             <div className="text-xs text-brand-text-secondary">@{acc.username}</div>
@@ -775,7 +763,6 @@ export default function AccountsPage() {
               const config = statusConfig[effectiveStatus(acc)] || statusConfig.pending;
               const Icon = config.icon;
               const meta = acc.platform_metadata || {};
-              const avatar = typeof meta === 'object' && meta.avatar ? meta.avatar : null;
               const followers = typeof meta === 'object' && meta.followers ? meta.followers : null;
               const platformColor = PLATFORMS.find((p) => p.id === acc.platform)?.color || '#888';
               const expiry = expiryCountdown(acc.expires_at);
@@ -795,23 +782,12 @@ export default function AccountsPage() {
 
                   {/* Avatar grande */}
                   <div className="flex flex-col items-center mb-6">
-                    {avatar ? (
-                      <Image
-                        src={avatar}
-                        alt={acc.username}
-                        width={96}
-                        height={96}
-                        unoptimized
-                        className="w-24 h-24 rounded-full object-cover border-2 border-brand-border"
-                      />
-                    ) : (
-                      <div
-                        className="w-24 h-24 rounded-full flex items-center justify-center border-2 border-brand-border"
-                        style={{ backgroundColor: `${platformColor}15` }}
-                      >
-                        <PlatformIcon id={acc.platform} size={44} color={platformColor} />
-                      </div>
-                    )}
+                    <div
+                      className="w-24 h-24 rounded-full flex items-center justify-center border-2 border-brand-border"
+                      style={{ backgroundColor: `${platformColor}15` }}
+                    >
+                      <PlatformIcon id={acc.platform} size={44} color={platformColor} />
+                    </div>
                     <div className="mt-3 font-semibold text-lg">{PLATFORMS.find((p) => p.id === acc.platform)?.name || acc.platform.replace('_', ' ')}</div>
                     <div className="text-sm text-brand-text-secondary">@{acc.username}</div>
                     <span className={`mt-2 flex items-center gap-1.5 text-xs px-3 py-1 rounded-full ${config.bg} ${config.color} font-medium`}>
