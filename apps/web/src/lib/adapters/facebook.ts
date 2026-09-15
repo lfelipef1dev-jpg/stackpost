@@ -45,44 +45,73 @@ export class FacebookAdapter extends PlatformAdapter {
     videoUrl: string,
     mediaUrls?: string[]
   ): Promise<PublishResult> {
-    // STORY: upload de imagem para /stories
+    // STORY: Page Stories API — primeiro sobe foto nao-publicada, depois /photo_stories
     if (mediaType === 'STORY' && imageUrl) {
-      const imgRes = await fetch(imageUrl);
-      const imgBlob = await imgRes.blob();
-      const formData = new FormData();
-      formData.append('access_token', accessToken);
-      if (content) formData.append('caption', content);
-      formData.append('source', imgBlob, 'image.jpg');
-
-      const res = await fetch(`https://graph.facebook.com/v26.0/${pageId}/stories`, {
+      const photoRes = await fetch(`https://graph.facebook.com/v26.0/${pageId}/photos`, {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ access_token: accessToken, published: false, url: imageUrl }),
       });
+      const photo = await photoRes.json();
+      if (!photoRes.ok || !photo.id) {
+        return { success: false, error: normalizeError(new Error(photo.error?.message || 'Facebook story photo upload error'), this.platform) };
+      }
 
+      const res = await fetch(`https://graph.facebook.com/v26.0/${pageId}/photo_stories`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ access_token: accessToken, photo_id: photo.id }),
+      });
       const data = await res.json();
       if (!res.ok) return { success: false, error: normalizeError(new Error(data.error?.message || 'Facebook story API error'), this.platform) };
 
-      return { success: true, externalId: data.id };
+      return { success: true, externalId: data.post_id || data.id };
     }
 
-    // REEL: upload de video para /reels
+    // REEL: Video Reels API — 3 fases: start -> rupload -> finish
     if (mediaType === 'REEL' && videoUrl) {
+      const startRes = await fetch(`https://graph.facebook.com/v26.0/${pageId}/video_reels`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ access_token: accessToken, upload_phase: 'start' }),
+      });
+      const start = await startRes.json();
+      if (!startRes.ok || !start.video_id) {
+        return { success: false, error: normalizeError(new Error(start.error?.message || 'Facebook reel start error'), this.platform) };
+      }
+
       const videoRes = await fetch(videoUrl);
       const videoBlob = await videoRes.blob();
-      const formData = new FormData();
-      formData.append('access_token', accessToken);
-      formData.append('caption', content);
-      formData.append('video', videoBlob, 'video.mp4');
-
-      const res = await fetch(`https://graph.facebook.com/v26.0/${pageId}/reels`, {
+      const uploadRes = await fetch(start.upload_url, {
         method: 'POST',
-        body: formData,
+        headers: {
+          Authorization: `OAuth ${accessToken}`,
+          offset: '0',
+          file_size: String(videoBlob.size),
+          'Content-Type': 'application/octet-stream',
+        },
+        body: videoBlob,
       });
+      if (!uploadRes.ok) {
+        const upErr = await uploadRes.json().catch(() => ({}));
+        return { success: false, error: normalizeError(new Error(upErr.error?.message || 'Facebook reel upload error'), this.platform) };
+      }
 
-      const data = await res.json();
-      if (!res.ok) return { success: false, error: normalizeError(new Error(data.error?.message || 'Facebook reels API error'), this.platform) };
+      const finishRes = await fetch(`https://graph.facebook.com/v26.0/${pageId}/video_reels`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_token: accessToken,
+          upload_phase: 'finish',
+          video_id: start.video_id,
+          video_state: 'PUBLISHED',
+          description: content,
+        }),
+      });
+      const finish = await finishRes.json();
+      if (!finishRes.ok) return { success: false, error: normalizeError(new Error(finish.error?.message || 'Facebook reel finish error'), this.platform) };
 
-      return { success: true, externalId: data.id };
+      return { success: true, externalId: start.video_id };
     }
 
     // VIDEO normal: upload via /videos

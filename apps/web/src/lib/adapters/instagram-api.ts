@@ -91,7 +91,7 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
         is_carousel_item: 'true',
       };
       if (isVideo) {
-        childParams.media_type = 'Vídeo';
+        childParams.media_type = 'VIDEO';
         childParams.video_url = url;
       } else {
         childParams.image_url = url;
@@ -134,6 +134,16 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
     });
     const carousel = await carouselRes.json();
     if (carousel.error) return { success: false, error: carousel.error.error_user_msg || carousel.error.message };
+
+    // O container pai tambem precisa estar FINISHED antes do publish
+    let pRetries = 0;
+    while (pRetries < 30) {
+      const st = await (await fetch(`https://graph.instagram.com/v23.0/${carousel.id}?fields=status_code&access_token=${token}`)).json();
+      if (st.status_code === 'FINISHED') break;
+      if (st.status_code === 'ERROR') return { success: false, error: 'Erro ao processar container do carrossel' };
+      await new Promise((r) => setTimeout(r, 3000));
+      pRetries++;
+    }
 
     const publishRes = await fetch(`https://graph.instagram.com/v23.0/${igUserId}/media_publish`, {
       method: 'POST',

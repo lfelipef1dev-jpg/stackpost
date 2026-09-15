@@ -282,64 +282,55 @@ export async function publishToLinkedIn(account: any, content: string, imageUrl:
     return { success: true, externalId: post.id };
   }
 
-  // PDF / DOCUMENTO
+  // PDF / DOCUMENTO — Documents API (rest/documents) + rest/posts
   if (pdfUrl) {
-    const registerRes = await fetch('https://api.linkedin.com/v2/assets?action=registerUpload', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${account.access_token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        registerUploadRequest: {
-          recipes: ['urn:li:digitalmediaRecipe:feedshare-document'],
-          owner: author,
-          serviceRelationships: [{ relationshipType: 'OWNER', identifier: 'urn:li:userGeneratedContent' }],
-        },
-      }),
-    });
-    const register = await registerRes.json();
-    if (register.error || !register.value) {
-      return { success: false, error: register.error?.message || register.error || 'Erro ao registrar upload PDF LinkedIn' };
-    }
+    const liHeaders = {
+      Authorization: `Bearer ${account.access_token}`,
+      'Content-Type': 'application/json',
+      'LinkedIn-Version': '202401',
+      'X-Restli-Protocol-Version': '2.0.0',
+    };
 
-    const uploadUrl = register.value.uploadMechanism['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest'].uploadUrl;
-    const asset = register.value.asset;
+    const initRes = await fetch('https://api.linkedin.com/rest/documents?action=initializeUpload', {
+      method: 'POST',
+      headers: liHeaders,
+      body: JSON.stringify({ initializeUploadRequest: { owner: author } }),
+    });
+    const init = await initRes.json();
+    if (!initRes.ok || !init.value?.uploadUrl) {
+      return { success: false, error: init.message || init.code || `LinkedIn document init (HTTP ${initRes.status})` };
+    }
 
     const pdfRes = await fetch(pdfUrl);
     const pdfBlob = await pdfRes.blob();
-    const uploadRes = await fetch(uploadUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': pdfRes.headers.get('content-type') || 'application/pdf' },
+    const uploadRes = await fetch(init.value.uploadUrl, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/pdf' },
       body: pdfBlob,
     });
     if (!uploadRes.ok) {
       return { success: false, error: `Falha no upload de PDF LinkedIn (HTTP ${uploadRes.status})` };
     }
 
-    const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
+    const postRes = await fetch('https://api.linkedin.com/rest/posts', {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${account.access_token}`,
-        'Content-Type': 'application/json',
-        'X-Restli-Protocol-Version': '2.0.0',
-      },
+      headers: liHeaders,
       body: JSON.stringify({
         author,
+        commentary: content,
+        visibility: 'PUBLIC',
+        distribution: { feedDistribution: 'MAIN_FEED', targetEntities: [], thirdPartyDistributionChannels: [] },
+        content: { media: { id: init.value.document, title: 'Documento' } },
         lifecycleState: 'PUBLISHED',
-        specificContent: {
-          'com.linkedin.ugc.ShareContent': {
-            shareCommentary: { text: content },
-            shareMediaCategory: 'DOCUMENT',
-            media: [{ status: 'READY', description: { text: content.slice(0, 200) }, media: asset }],
-          },
-        },
-        visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' },
+        isReshareDisabledByAuthor: false,
       }),
     });
-    const post = await postRes.json();
-    if (post.error) return { success: false, error: post.error };
-    return { success: true, externalId: post.id };
+    if (!postRes.ok) {
+      const postErr = await postRes.json().catch(() => ({}));
+      return { success: false, error: postErr.message || `LinkedIn document post (HTTP ${postRes.status})` };
+    }
+    const postId = postRes.headers.get('x-restli-id') || '';
+    return { success: true, externalId: postId };
   }
 
   // Post só de texto
