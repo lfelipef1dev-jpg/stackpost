@@ -38,3 +38,10 @@ export function isActiveAccount(acc: { status?: string | null; expires_at?: stri
 export function needsAttentionAccount(acc: { status?: string | null; expires_at?: string | null }): boolean {
   return ['expired', 'reconnect_required', 'needs_reconnect'].includes(effectiveStatus(acc));
 }
+
+// Plataformas via webhook nao tem credencial expiravel — expires_at nao se aplica.
+export const WEBHOOK_PLATFORMS = new Set(['discord', 'slack']);
+
+export function hasExpiringCredential(acc: { platform?: string | null }): boolean {
+  return !WEBHOOK_PLATFORMS.has(acc?.platform || '');
+}

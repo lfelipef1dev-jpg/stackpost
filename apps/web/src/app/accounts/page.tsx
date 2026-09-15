@@ -5,7 +5,7 @@ import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { PlatformIcon } from '@/components/PlatformIcon';
 import { PLATFORMS } from '@/lib/platforms';
-import { publishableAccounts, effectiveStatus, isActiveAccount, needsAttentionAccount } from '@/lib/accounts';
+import { publishableAccounts, effectiveStatus, isActiveAccount, needsAttentionAccount, hasExpiringCredential } from '@/lib/accounts';
 import { useFocusTrap } from '@/lib/useFocusTrap';
 import { useEffect, useState, useRef } from 'react';
 import {
@@ -108,7 +108,9 @@ const ROTATING_BANNERS = [
   'Gerencie 15 redes em um só lugar',
 ];
 
-function expiryCountdown(dateStr?: string | null): { text: string; color: string } {
+function expiryCountdown(acc: any): { text: string; color: string } {
+  if (!hasExpiringCredential(acc)) return { text: 'Sem expiração', color: 'text-brand-text-secondary' };
+  const dateStr = acc?.expires_at;
   if (!dateStr) return { text: 'Sem data', color: 'text-brand-text-secondary' };
   const target = new Date(dateStr).getTime();
   const now = Date.now();
@@ -507,7 +509,7 @@ export default function AccountsPage() {
               const meta = acc.platform_metadata || {};
               const followers = typeof meta === 'object' && meta.followers ? meta.followers : null;
               const platformColor = PLATFORMS.find((p) => p.id === acc.platform)?.color || '#888';
-              const expiry = expiryCountdown(acc.expires_at);
+              const expiry = expiryCountdown(acc);
               const rateLimit = typeof meta === 'object' && meta.rate_limit ? meta.rate_limit : null;
               const ratePct = rateLimit ? (rateLimit.used / rateLimit.total) * 100 : null;
               const isSelected = selectedIds.includes(acc.id);
@@ -765,7 +767,7 @@ export default function AccountsPage() {
               const meta = acc.platform_metadata || {};
               const followers = typeof meta === 'object' && meta.followers ? meta.followers : null;
               const platformColor = PLATFORMS.find((p) => p.id === acc.platform)?.color || '#888';
-              const expiry = expiryCountdown(acc.expires_at);
+              const expiry = expiryCountdown(acc);
               const scopes = typeof meta === 'object' && Array.isArray(meta.scopes) ? meta.scopes : [];
               return (
                 <div className="p-6">
@@ -899,3 +901,4 @@ export default function AccountsPage() {
     </div>
   );
 }
+
