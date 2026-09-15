@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     // Buscar contas conectadas
     const { data: accounts, error } = await supabase
       .from('social_accounts')
-      .select('id, platform, status, expires_at')
+      .select('id, platform, status, expires_at, platform_metadata')
       .limit(100);
 
     if (error) throw error;
@@ -26,6 +26,32 @@ export async function GET(req: NextRequest) {
     let needsReconnect = 0;
 
     for (const account of accounts || []) {
+      // Webhooks (Discord/Slack) nao expiram — validar a URL diretamente
+      const webhookUrl = (account.platform_metadata as any)?.webhook_url;
+      if (webhookUrl) {
+        let ok = false;
+        try {
+          ok = (await fetch(webhookUrl)).ok;
+        } catch { ok = false; }
+        if (ok) {
+          healthy++;
+          if (account.status !== 'active') {
+            await supabase
+              .from('social_accounts')
+              .update({ status: 'active', last_checked_at: now })
+              .eq('id', account.id);
+          }
+        } else {
+          needsReconnect++;
+          if (account.status !== 'needs_reconnect') {
+            await supabase
+              .from('social_accounts')
+              .update({ status: 'needs_reconnect', last_checked_at: now })
+              .eq('id', account.id);
+          }
+        }
+        continue;
+      }
       if (account.expires_at && new Date(account.expires_at) < new Date()) {
         expired++;
         // Marcar como needs_reconnect

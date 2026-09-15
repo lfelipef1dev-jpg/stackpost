@@ -32,18 +32,36 @@ export async function GET(req: NextRequest) {
       checked++;
       let valid = true;
 
-      if (account.platform === 'instagram' || account.platform === 'facebook') {
+      if (account.platform === 'instagram') {
+        // Token de login do Instagram (IGAAO...) nao funciona em
+        // graph.facebook.com/me — o endpoint certo e graph.instagram.com/me.
+        // Fallback para o Graph da Meta cobre contas IG conectadas via FB Login.
+        try {
+          let res = await fetch(
+            `https://graph.instagram.com/me?fields=id,username&access_token=${account.access_token}`
+          );
+          if (!res.ok) {
+            res = await fetch(
+              `https://graph.facebook.com/v21.0/me?access_token=${account.access_token}`
+            );
+          }
+          if (!res.ok) valid = false;
+        } catch {
+          valid = false;
+        }
+      } else if (account.platform === 'facebook') {
         try {
           const res = await fetch(
-            `https://graph.facebook.com/v19.0/me?access_token=${account.access_token}`
+            `https://graph.facebook.com/v21.0/me?access_token=${account.access_token}`
           );
           if (!res.ok) valid = false;
         } catch {
           valid = false;
         }
       } else if (account.platform === 'linkedin') {
+        // /v2/me foi descontinuado (exige r_liteprofile). Apps novos usam OpenID /v2/userinfo.
         try {
-          const res = await fetch('https://api.linkedin.com/v2/me', {
+          const res = await fetch('https://api.linkedin.com/v2/userinfo', {
             headers: { Authorization: `Bearer ${account.access_token}` },
           });
           if (!res.ok) valid = false;
@@ -56,9 +74,23 @@ export async function GET(req: NextRequest) {
         if (account.refresh_token) {
           let newToken: string | null = null;
 
-          if (account.platform === 'instagram' || account.platform === 'facebook') {
+          if (account.platform === 'instagram') {
+            // Tokens de login do IG renovam em graph.instagram.com (ig_refresh_token).
+            // fb_exchange_token so funciona para tokens derivados de login do Facebook.
+            let res = await fetch(
+              `https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=${account.access_token}`
+            );
+            let data = await res.json();
+            if (!data.access_token) {
+              res = await fetch(
+                `https://graph.facebook.com/v21.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${process.env.META_APP_ID}&client_secret=${process.env.META_APP_SECRET}&fb_exchange_token=${account.access_token}`
+              );
+              data = await res.json();
+            }
+            if (data.access_token) newToken = data.access_token;
+          } else if (account.platform === 'facebook') {
             const res = await fetch(
-              `https://graph.facebook.com/v19.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${process.env.META_APP_ID}&client_secret=${process.env.META_APP_SECRET}&fb_exchange_token=${account.access_token}`
+              `https://graph.facebook.com/v21.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${process.env.META_APP_ID}&client_secret=${process.env.META_APP_SECRET}&fb_exchange_token=${account.access_token}`
             );
             const data = await res.json();
             if (data.access_token) newToken = data.access_token;
