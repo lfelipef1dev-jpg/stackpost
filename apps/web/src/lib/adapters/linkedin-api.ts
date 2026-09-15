@@ -5,9 +5,15 @@ const LINKEDIN_CLIENT_ID = process.env.LINKEDIN_CLIENT_ID;
 const LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;
 const LINKEDIN_REDIRECT_URI = process.env.LINKEDIN_REDIRECT_URI || 'https://stackpost.expostacker.com.br/api/oauth/linkedin/callback';
 
-export function getLinkedInAuthUrl(stateToken?: string): string {
-  // r_basicprofile retido para compatibilidade; r_organization_social permite Company Pages
-  const scopes = encodeURIComponent('openid profile w_member_social r_organization_social w_organization_social');
+export function getLinkedInAuthUrl(stateToken?: string, organization = false): string {
+  // Escopos de membro funcionam pra qualquer usuario com os produtos basicos
+  // (Sign In with LinkedIn + Share on LinkedIn). Escopos de organizacao exigem
+  // Community Management API aprovada E o usuario ser admin de uma Company Page —
+  // pedir tudo junto derruba o OAuth de quem nao administra pagina.
+  const base = 'openid profile w_member_social';
+  const scopes = encodeURIComponent(
+    organization ? `${base} r_organization_social w_organization_social` : base
+  );
   const state = stateToken || 'linkedin';
   return `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${LINKEDIN_CLIENT_ID}&redirect_uri=${encodeURIComponent(LINKEDIN_REDIRECT_URI)}&scope=${scopes}&state=${encodeURIComponent(state)}`;
 }

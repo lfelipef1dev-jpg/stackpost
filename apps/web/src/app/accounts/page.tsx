@@ -175,10 +175,10 @@ export default function AccountsPage() {
     setLoading(false);
   }
 
-  function handleConnect(platform: string) {
+  function handleConnect(platform: string, variant?: string) {
     const route = OAUTH_ROUTES[platform];
     if (route) {
-      window.location.href = route;
+      window.location.href = variant ? `${route}?type=${variant}` : route;
     }
   }
 
@@ -417,6 +417,16 @@ export default function AccountsPage() {
                   </button>
                 );
               })}
+            </div>
+            <div className="mt-4 text-xs text-brand-text-secondary flex items-center gap-2">
+              <PlatformIcon id="linkedin" size={14} color="#0A66C2" />
+              <span>
+                LinkedIn: o botão acima conecta seu <b>perfil</b>. Para postar numa{' '}
+                <button onClick={() => handleConnect('linkedin', 'organization')} className="text-brand-accent hover:underline font-medium">
+                  Página de empresa
+                </button>{' '}
+                (precisa ser admin da página), clique aqui.
+              </span>
             </div>
           </SpotlightCard>
         </TiltCard>

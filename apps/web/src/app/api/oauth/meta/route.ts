@@ -4,19 +4,9 @@ import { getInstagramAuthUrl } from '@/lib/adapters/instagram-api';
 import { getUserFromToken } from '@/lib/auth';
 
 export async function GET(req: NextRequest) {
-  // Identificar usuário logado via token no cookie ou query param
-  const authHeader = req.headers.get('authorization');
-  const token = authHeader?.startsWith('Bearer ')
-    ? authHeader.slice(7)
-    : new URL(req.url).searchParams.get('token') || '';
-
-  let stateToken = 'instagram';
-  if (token) {
-    const user = await getUserFromToken(req);
-    if (user) {
-      stateToken = `${user.teamId}:instagram`;
-    }
-  }
+  // getUserFromToken le o cookie HttpOnly — resolve o team de qualquer usuario logado
+  const user = await getUserFromToken(req);
+  const stateToken = user ? `${user.teamId}:instagram` : 'instagram';
 
   return NextResponse.redirect(getInstagramAuthUrl(stateToken));
 }

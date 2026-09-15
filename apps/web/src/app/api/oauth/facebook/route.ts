@@ -6,18 +6,9 @@ const META_APP_ID = process.env.META_APP_ID || process.env.IG_APP_ID || '';
 const FACEBOOK_REDIRECT_URI = process.env.FACEBOOK_REDIRECT_URI || 'https://stackpost.expostacker.com.br/api/oauth/facebook/callback';
 
 export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get('authorization');
-  const token = authHeader?.startsWith('Bearer ')
-    ? authHeader.slice(7)
-    : new URL(req.url).searchParams.get('token') || '';
-
-  let stateToken = 'facebook';
-  if (token) {
-    const user = await getUserFromToken(req);
-    if (user) {
-      stateToken = `${user.teamId}:facebook`;
-    }
-  }
+  // getUserFromToken le o cookie HttpOnly — resolve o team de qualquer usuario logado
+  const user = await getUserFromToken(req);
+  const stateToken = user ? `${user.teamId}:facebook` : 'facebook';
 
   // Escopos basicos que funcionam sem App Review (development mode).
   // Escopos avancados (pages_manage_engagement, pages_read_engagement, pages_read_user_content,
