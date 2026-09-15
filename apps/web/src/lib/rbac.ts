@@ -71,6 +71,7 @@ export type AdminPermission =
   | 'cron.read' | 'cron.write'
   | 'analytics.read' | 'analytics.write'
   | 'audit_logs.read' | 'audit_logs.write'
+  | 'reports.read' | 'reports.write'
   | 'settings.read' | 'settings.write';
 
 export interface AdminUser {
@@ -101,7 +102,8 @@ export async function getAdminFromToken(req: NextRequest): Promise<AdminUser | n
       'posts.read', 'posts.write', 'comments.read', 'comments.write', 'accounts.read', 'accounts.write',
       'billing.read', 'billing.write', 'plans.read', 'plans.write', 'credits.read', 'credits.write',
       'webhooks.read', 'webhooks.write', 'cron.read', 'cron.write', 'analytics.read', 'analytics.write',
-      'audit_logs.read', 'audit_logs.write', 'settings.read', 'settings.write',
+      'audit_logs.read', 'audit_logs.write', 'reports.read', 'reports.write',
+      'settings.read', 'settings.write',
     ];
     return { ...userRow, permissions: allPerms };
   }

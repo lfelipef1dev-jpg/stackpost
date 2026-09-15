@@ -12,6 +12,7 @@ import {
   Coins,
   CalendarClock,
   Webhook,
+  Bug,
   Settings,
   BarChart3,
   Shield,
@@ -30,6 +31,7 @@ const nav = [
   { href: '/admin/webhooks', label: 'Webhooks', icon: Webhook },
   { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
   { href: '/admin/audit-logs', label: 'Audit Logs', icon: Shield },
+  { href: '/admin/reports', label: 'Reports', icon: Bug },
   { href: '/admin/settings', label: 'Configurações', icon: Settings },
 ];
 

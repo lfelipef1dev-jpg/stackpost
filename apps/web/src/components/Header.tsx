@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { BarChart3, CalendarDays, ChevronRight, CreditCard, LayoutDashboard, Link2, LogOut, Menu, Settings, SquarePen, X } from 'lucide-react';
+import ReportButton from '@/components/ReportButton';
 
 const nav = [
   { href: '/dashboard', label: 'Painel', icon: LayoutDashboard },
@@ -107,6 +108,7 @@ export default function Header({ activeHref }: { activeHref?: string }) {
                 {item.label}
               </Link>
             ))}
+            <ReportButton />
             <button
               onClick={logout}
               className="px-3 py-1.5 rounded-lg border border-brand-border text-brand-text-secondary hover:text-brand-text hover:bg-brand-elevated transition"
@@ -186,6 +188,10 @@ export default function Header({ activeHref }: { activeHref?: string }) {
             </nav>
 
             <div className="px-3 pt-3 pb-5 border-t border-brand-border/60 shrink-0">
+              <div className="flex items-center justify-between px-3 pb-3">
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-text-secondary/50">Ajuda</span>
+                <ReportButton />
+              </div>
               <button
                 id="mobile-logout"
                 onClick={logout}

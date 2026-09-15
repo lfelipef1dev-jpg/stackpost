@@ -260,6 +260,12 @@ export const commentsQuerySchema = z.object({
   id: z.string().uuid(),
 });
 
+export const reportBodySchema = z.object({
+  category: z.enum(['bug', 'erro', 'melhoria', 'duvida', 'outro']).default('bug'),
+  message: z.string().min(5).max(4000),
+  pageUrl: z.string().max(500).optional().nullable(),
+}).passthrough();
+
 export const cross_postBodySchema = z.object({
   content: z.string(),
   platforms: z.array(z.enum(allPlatforms)),
