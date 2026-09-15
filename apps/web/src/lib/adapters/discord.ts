@@ -6,7 +6,8 @@ export class DiscordAdapter extends PlatformAdapter {
   platform = 'discord';
 
   async publish(params: PublishParams): Promise<PublishResult> {
-    const webhookUrl = params.account?.access_token || (params.account?.platform_metadata as any)?.webhook_url;
+    const metaUrl = (params.account?.platform_metadata as any)?.webhook_url;
+    const webhookUrl = (typeof metaUrl === 'string' && metaUrl.includes('/api/webhooks/')) ? metaUrl : params.account?.access_token;
     const content = params.content;
 
     if (!webhookUrl) return { success: false, error: normalizeError(new Error('Webhook URL obrigatório'), this.platform) };

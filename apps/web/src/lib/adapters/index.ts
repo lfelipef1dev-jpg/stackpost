@@ -30,7 +30,7 @@ export class InstagramAdapter extends PlatformAdapter {
     if (!mediaUrl) {
       return { success: false, error: { code: 'VALIDATION', message: 'Instagram: mídia obrigatória.' } };
     }
-    const mediaType = params.mediaType || (params.videoUrl ? 'Video' : 'IMAGE');
+    const mediaType = (params.mediaType || (params.videoUrl ? 'VIDEO' : 'IMAGE')).toUpperCase();
     return publishToInstagram(params.account, params.content, mediaUrl, mediaType as any, params.firstComment, params.mediaUrls);
   }
 }
