@@ -39,8 +39,9 @@ export function needsAttentionAccount(acc: { status?: string | null; expires_at?
   return ['expired', 'reconnect_required', 'needs_reconnect'].includes(effectiveStatus(acc));
 }
 
-// Plataformas via webhook nao tem credencial expiravel — expires_at nao se aplica.
-export const WEBHOOK_PLATFORMS = new Set(['discord', 'slack']);
+// Plataformas via webhook ou token de pagina nao tem credencial expiravel —
+// expires_at nao se aplica. (Tokens de pagina do Facebook sao long-lived e nao expiram.)
+export const WEBHOOK_PLATFORMS = new Set(['discord', 'slack', 'facebook']);
 
 export function hasExpiringCredential(acc: { platform?: string | null }): boolean {
   return !WEBHOOK_PLATFORMS.has(acc?.platform || '');
