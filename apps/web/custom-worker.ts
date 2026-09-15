@@ -13,6 +13,7 @@ const CRON_ROUTES: Record<string, string[]> = {
   // A cada hora: renovacao de tokens + manutencao de conexoes
   "0 * * * *": [
     "/api/cron/refresh-tokens",
+    "/api/cron/health-check",
     "/api/cron/auto-reconnect",
     "/api/cron/auto-disable-webhooks",
   ],

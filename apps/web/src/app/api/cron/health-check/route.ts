@@ -4,7 +4,7 @@ import { getSupabase } from '@/lib/supabase';
 import { requireCronAuth } from '@/lib/cron-auth';
 
 // Cron: Health check das contas sociais conectadas
-// Trigger: Cloudflare Workers Cron Triggers (a cada 30 minutos)
+// Trigger: Cloudflare Workers Cron Triggers (a cada hora)
 export async function GET(req: NextRequest) {
   const denied = requireCronAuth(req);
   if (denied) return denied;
@@ -33,36 +33,27 @@ export async function GET(req: NextRequest) {
         try {
           ok = (await fetch(webhookUrl)).ok;
         } catch { ok = false; }
-        if (ok) {
-          healthy++;
-          if (account.status !== 'active') {
-            await supabase
-              .from('social_accounts')
-              .update({ status: 'active', last_checked_at: now })
-              .eq('id', account.id);
-          }
-        } else {
-          needsReconnect++;
-          if (account.status !== 'needs_reconnect') {
-            await supabase
-              .from('social_accounts')
-              .update({ status: 'needs_reconnect', last_checked_at: now })
-              .eq('id', account.id);
-          }
-        }
-        continue;
-      }
-      if (account.expires_at && new Date(account.expires_at) < new Date()) {
-        expired++;
-        // Marcar como needs_reconnect
+        ok ? healthy++ : needsReconnect++;
         await supabase
           .from('social_accounts')
-          .update({ status: 'needs_reconnect' })
+          .update({ status: ok ? 'active' : 'needs_reconnect', last_checked_at: now })
           .eq('id', account.id);
-      } else if (account.status === 'needs_reconnect') {
-        needsReconnect++;
+        continue;
+      }
+      const isExpired = account.expires_at && new Date(account.expires_at) < new Date();
+      if (isExpired) {
+        expired++;
+        await supabase
+          .from('social_accounts')
+          .update({ status: 'needs_reconnect', last_checked_at: now })
+          .eq('id', account.id);
       } else {
-        healthy++;
+        account.status === 'needs_reconnect' ? needsReconnect++ : healthy++;
+        // Sempre atualizar last_checked_at — "Sync há X" reflete a ultima verificacao real
+        await supabase
+          .from('social_accounts')
+          .update({ last_checked_at: now })
+          .eq('id', account.id);
       }
     }
 
