@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { BarChart3, CalendarDays, ChevronRight, CreditCard, LayoutDashboard, Link2, LogOut, Menu, Settings, SquarePen, X } from 'lucide-react';
 import ReportButton from '@/components/ReportButton';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const nav = [
   { href: '/dashboard', label: 'Painel', icon: LayoutDashboard },
@@ -108,6 +109,7 @@ export default function Header({ activeHref }: { activeHref?: string }) {
                 {item.label}
               </Link>
             ))}
+            <ThemeToggle />
             <ReportButton />
             <button
               onClick={logout}
@@ -190,7 +192,10 @@ export default function Header({ activeHref }: { activeHref?: string }) {
             <div className="px-3 pt-3 pb-5 border-t border-brand-border/60 shrink-0">
               <div className="flex items-center justify-between px-3 pb-3">
                 <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-text-secondary/50">Ajuda</span>
-                <ReportButton />
+                <div className="flex items-center gap-1">
+                  <ThemeToggle />
+                  <ReportButton />
+                </div>
               </div>
               <button
                 id="mobile-logout"

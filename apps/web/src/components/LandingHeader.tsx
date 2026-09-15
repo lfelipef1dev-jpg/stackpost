@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, BookOpen, Bot, ChevronRight, Menu, PlayCircle, Scale, Share2, ShieldCheck, Tag, X } from 'lucide-react';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const nav = [
   { href: '/#platforms', label: 'Plataformas', icon: Share2, desc: '15 redes integradas' },
@@ -92,6 +93,7 @@ export default function LandingHeader() {
             ))}
           </nav>
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             <Link
               href="/login"
               className="hidden sm:inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-brand-text-secondary hover:text-brand-text transition-colors"

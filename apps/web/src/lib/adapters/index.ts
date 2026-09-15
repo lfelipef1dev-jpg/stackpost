@@ -30,7 +30,11 @@ export class InstagramAdapter extends PlatformAdapter {
     if (!mediaUrl) {
       return { success: false, error: { code: 'VALIDATION', message: 'Instagram: mídia obrigatória.' } };
     }
-    const mediaType = (params.mediaType || (params.videoUrl ? 'VIDEO' : 'IMAGE')).toUpperCase();
+    let mediaType = (params.mediaType || '').toUpperCase();
+    // video presente e tipo nao-CAROUSEL/STORY => sempre VIDEO (REELS).
+    // Composer manda 'REEL'/'POST'/'video' — normaliza tudo pro vocabulario da API.
+    if (params.videoUrl && mediaType !== 'CAROUSEL' && mediaType !== 'STORY') mediaType = 'VIDEO';
+    if (!mediaType) mediaType = params.videoUrl ? 'VIDEO' : 'IMAGE';
     return publishToInstagram(params.account, params.content, mediaUrl, mediaType as any, params.firstComment, params.mediaUrls);
   }
 }

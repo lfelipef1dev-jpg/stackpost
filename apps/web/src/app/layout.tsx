@@ -126,6 +126,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('stackpost-theme');if(!t)t='dark';document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme='dark';}})()`,
+          }}
+        />
+      </head>
       <body className={`min-h-screen bg-brand-bg text-brand-text ${fontSans.variable} ${fontDisplay.variable} ${fontMono.variable}`}>
         {process.env.NEXT_PUBLIC_GA4_ID ? (
           <GoogleAnalytics gaMeasurementId={process.env.NEXT_PUBLIC_GA4_ID} trackPageViews />

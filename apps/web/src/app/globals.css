@@ -17,6 +17,18 @@
     --font-mono: ui-monospace, monospace;
   }
 
+  html[data-theme="light"] {
+    color-scheme: light;
+    --brand-bg: #F7F7F8;
+    --brand-surface: #FFFFFF;
+    --brand-elevated: #ECECEF;
+    --brand-border: rgba(10, 10, 10, 0.12);
+    --brand-text: #161618;
+    --brand-text-secondary: rgba(22, 22, 24, 0.68);
+    --brand-accent: #2F6FED;
+    --brand-accent-hover: #1D5BD8;
+  }
+
   html {
     scroll-behavior: smooth;
   }
