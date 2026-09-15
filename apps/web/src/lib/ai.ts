@@ -6,11 +6,12 @@ interface AIProvider {
   key: string | undefined;
   url: string;
   model: string;
+  extraBody?: Record<string, unknown>;
 }
 
 const PROVIDERS: AIProvider[] = [
   { key: process.env.OPENAI_API_KEY, url: 'https://api.openai.com/v1/chat/completions', model: 'gpt-4o-mini' },
-  { key: process.env.GROQ_API_KEY, url: 'https://api.groq.com/openai/v1/chat/completions', model: 'openai/gpt-oss-120b' },
+  { key: process.env.GROQ_API_KEY, url: 'https://api.groq.com/openai/v1/chat/completions', model: 'openai/gpt-oss-120b', extraBody: { reasoning_effort: 'low' } },
 ];
 
 export function aiConfigured(): boolean {
@@ -33,8 +34,9 @@ export async function aiChat(
         body: JSON.stringify({
           model: provider.model,
           messages,
-          max_tokens: opts.maxTokens ?? 500,
+          max_tokens: opts.maxTokens ?? 800,
           temperature: opts.temperature ?? 0.7,
+          ...(provider.extraBody || {}),
         }),
       });
       if (!res.ok) {
