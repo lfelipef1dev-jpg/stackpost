@@ -198,7 +198,7 @@ export async function publishPost(postId: string) {
         videoUrl,
         mediaUrls,
         pdfUrl,
-        mediaType: post.media_type || (mediaUrls && mediaUrls.length > 1 ? 'CAROUSEL' : undefined),
+        mediaType: mediaUrls && mediaUrls.length > 1 ? 'CAROUSEL' : (post.media_type || undefined),
       });
 
       const { error: ppError } = await supabase
