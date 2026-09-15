@@ -3,26 +3,11 @@ import { rateLimit } from '@/lib/rate-limit';
 import { getUserFromToken } from '@/lib/auth';
 import { getSupabase } from '@/lib/supabase';
 import { createLogger } from '@/lib/logger';
-import { SEO_SLUG_SET } from '@/lib/seo-slugs';
 
-const PUBLIC_PATHS = ['/', '/login', '/register', '/plans', '/about', '/features', '/pricing', '/contact', '/blog', '/docs', '/privacy', '/terms', '/status', '/changelog', '/partners', '/comparisons', '/glossary', '/brand-kit', '/platforms', '/onboarding', '/compare', '/roadmap', '/demo', '/build-vs-buy', '/migrate', '/security', '/ai-agents', '/for-saas', '/for-agencies', '/for-enterprise'];
-const STATIC_PATHS = ['/_next', '/static', '/favicon.ico', '/robots.txt', '/sitemap.xml', '/icon.png', '/logo.png', '/og.png', '/manifest', '/uploads', '/brand', '/banner', '/cases', '/prints', '/videos', '/openapi.json', '/site.webmanifest', '/_headers'];
-
-function isPublic(path: string): boolean {
-  if (STATIC_PATHS.some((p) => path.startsWith(p))) return true;
-  if (PUBLIC_PATHS.some((p) => path === p || path.startsWith(`${p}/`))) return true;
-  if (path.startsWith('/api/auth/')) return true;
-  if (path.startsWith('/api/pagamentos/webhook')) return true;
-  // Páginas publicas de marketing/SEO (terminadas em -api ou -alternative)
-  if (/-api$/.test(path) || /-alternative$/.test(path)) return true;
-  // Páginas de migracao
-  if (path.startsWith('/migrate-from-')) return true;
-  // Páginas SEO com sufixo -for-*
-  if (/-api-for-/.test(path)) return true;
-  // Slugs servidos pela rota dinâmica /[seo] (ex: /bulk-posting, /social-media-cli)
-  if (SEO_SLUG_SET.has(path.slice(1))) return true;
-  return false;
-}
+// Rotas que exigem autenticacao. Qualquer path fora desta lista cai na rota
+// /[seo] e recebe 404 correto (em vez de redirect para /login, que gerava
+// soft-404 em URLs inexistentes).
+const PRIVATE_PATHS = ['/dashboard', '/composer', '/calendar', '/accounts', '/analytics', '/billing', '/settings', '/team', '/media', '/bulk', '/comments', '/imports', '/link-in-bio', '/webhooks'];
 
 function getAllowedOrigins(): string[] {
   const base = process.env.NEXT_PUBLIC_SITE_URL;
@@ -111,7 +96,7 @@ export async function middleware(req: NextRequest) {
       return res;
     }
 
-    if (!isPublic(pathname)) {
+    if (PRIVATE_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {
       const user = await getUserFromToken(req);
       if (!user) {
         return NextResponse.redirect(new URL('/login', req.url));

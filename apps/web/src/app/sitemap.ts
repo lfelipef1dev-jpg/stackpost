@@ -59,11 +59,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...Object.keys(auxPages),
   ];
 
-  const routes = [
+  const routes = [...new Set([
     ...staticPages,
     ...partnerPages,
     ...allSeoSlugs.map((s) => `/${s}`),
-  ];
+  ])];
 
   return routes.map((path) => ({
     url: `${SITE_URL}${path === '' ? '' : path}`,

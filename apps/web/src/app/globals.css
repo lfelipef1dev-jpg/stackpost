@@ -50,4 +50,42 @@
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
+  /* Animacoes do menu mobile (fora do <header> para nao herdar containing block do backdrop-filter) */
+  @keyframes menu-overlay-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes menu-overlay-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+  @keyframes menu-panel-in {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+  @keyframes menu-panel-out {
+    from { transform: translateX(0); }
+    to { transform: translateX(100%); }
+  }
+  .menu-overlay-in { animation: menu-overlay-in 200ms ease-out both; }
+  .menu-overlay-out { animation: menu-overlay-out 180ms ease-in both; }
+  .menu-panel-in { animation: menu-panel-in 240ms cubic-bezier(0.32, 0.72, 0, 1) both; }
+  .menu-panel-out { animation: menu-panel-out 180ms ease-in both; }
+
+  /* Reveal CSS puro para conteudo above-the-fold — executa no primeiro paint,
+     sem depender de JS/hidratacao (corrige LCP alto causado por initial opacity:0) */
+  @keyframes hero-reveal {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-reveal {
+    animation: hero-reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .menu-overlay-in, .menu-overlay-out, .menu-panel-in, .menu-panel-out, .hero-reveal {
+      animation: none;
+    }
+  }
 }

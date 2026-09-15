@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { ArrowRight, Zap, Calendar, BarChart3, Upload, Webhook, Bot, Shield, Globe, Sparkles, Clock, MessageSquare, Layers, CheckCircle2, Building2, TrendingUp, Rocket } from 'lucide-react';
 import { PLATFORMS } from '@/lib/platforms';
 import { PlatformIcon } from '@/components/PlatformIcon';
-import { FadeIn, ScrollReveal, StaggerGroup, StaggerItem } from '@/components/animations';
+import { ScrollReveal, StaggerGroup, StaggerItem } from '@/components/animations';
 import { JsonLd, softwareApplicationSchema } from '@/components/JsonLd';
 import Footer from '@/components/Footer';
 import HeroBanner from '@/components/HeroBanner';
@@ -61,7 +61,7 @@ export default function Home() {
 
         <div className="relative w-full max-w-6xl mx-auto px-4 md:px-6 text-center">
           <div className="max-w-3xl mx-auto">
-            <FadeIn>
+            <div className="hero-reveal">
               <span className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-0 text-[10px] md:text-xs font-bold uppercase tracking-widest text-brand-accent border border-brand-accent/25 rounded-full bg-brand-accent/10 backdrop-blur-sm">
                 <span className="relative flex w-2 h-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-accent opacity-75"></span>
@@ -69,21 +69,21 @@ export default function Home() {
                 </span>
                 114 endpoints · 15 plataformas · API ao vivo
               </span>
-            </FadeIn>
+            </div>
 
-            <FadeIn delay={0.06}>
+            <div className="hero-reveal" style={{ animationDelay: '0.06s' }}>
               <h1 className="font-display font-black leading-[1.05] tracking-[-0.04em] text-brand-text mt-8 mb-6 text-center text-balance mx-auto max-w-5xl px-4 text-[clamp(2.25rem,6vw,4.25rem)]">
                 A infraestrutura social <span className="text-brand-accent">do seu produto.</span>
               </h1>
-            </FadeIn>
+            </div>
 
-            <FadeIn delay={0.12}>
+            <div className="hero-reveal" style={{ animationDelay: '0.12s' }}>
               <p className="text-base md:text-lg text-brand-text-secondary max-w-2xl mx-auto mb-6 leading-relaxed">
                 Elimine meses de engenharia integrando redes sociais no seu produto. Uma API, 15 plataformas, sem manter OAuth, retry nem rate limits. Pague pelo uso, não por conta.
               </p>
-            </FadeIn>
+            </div>
 
-            <FadeIn delay={0.18}>
+            <div className="hero-reveal" style={{ animationDelay: '0.18s' }}>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-3">
                 <Link
                   href="/register"
@@ -99,12 +99,12 @@ export default function Home() {
                   </Link>
                 </div>
                 <p className="text-brand-text-secondary/60 text-sm">Plano gratuito para sempre. Não precisa de cartão.</p>
-              </FadeIn>
+              </div>
           </div>
 
-          <FadeIn delay={0.24}>
+          <div className="hero-reveal" style={{ animationDelay: '0.24s' }}>
             <HeroBanner />
-          </FadeIn>
+          </div>
         </div>
 
         </section>

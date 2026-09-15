@@ -588,7 +588,7 @@ export default function PlansPage() {
       </section>
 
       {/* FAQ */}
-      <section className="max-w-3xl mx-auto px-4 md:px-6 pb-24">
+      <section id="faq" className="max-w-3xl mx-auto px-4 md:px-6 pb-24 scroll-mt-24">
         <ScrollReveal>
           <h2 className="font-display text-2xl md:text-3xl font-bold mb-3 text-center">Perguntas frequentes</h2>
           <p className="text-brand-text-secondary text-center mb-8">Tudo que você precisa saber para decidir com segurança.</p>
