@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
       ],
       { maxTokens: 200 }
     );
-    const hashtags = (text || '').match(/#[\w]+/g) || [];
+    const hashtags = (text || '').match(/#[\p{L}\p{N}_]+/gu) || [];
     if (hashtags.length > 0) {
       return NextResponse.json({ hashtags: hashtags.slice(0, maxTags), source: 'ai' });
     }
