@@ -1,5 +1,6 @@
 import { getSupabase } from '@/lib/supabase';
 import { recordBillingEvent } from '@/lib/billing-metering';
+import { getDailyLimit } from '@/lib/limits';
 import {
   InstagramAdapter,
   FacebookAdapter,
@@ -90,6 +91,28 @@ export async function publishPost(postId: string) {
     .single();
   const orgId = teamData?.organization_id || '';
 
+  // Anti-ban: limite diario de posts por plataforma conforme o plano.
+  // Sem isso, um usuario podia agendar centenas de posts e tomar restricao/ban nas redes.
+  const { data: orgData } = await supabase
+    .from('organizations')
+    .select('plan')
+    .eq('id', orgId)
+    .single();
+  const tier = (orgData?.plan || 'free').toUpperCase();
+
+  const dayStart = new Date();
+  dayStart.setUTCHours(0, 0, 0, 0);
+  const { data: todayRows } = await supabase
+    .from('post_platforms')
+    .select('platform, posts!inner(team_id, published_at)')
+    .eq('posts.team_id', post.team_id)
+    .eq('status', 'posted')
+    .gte('posts.published_at', dayStart.toISOString());
+  const todayCount: Record<string, number> = {};
+  for (const r of todayRows || []) {
+    todayCount[r.platform] = (todayCount[r.platform] || 0) + 1;
+  }
+
   let uploadData: Record<string, { url: string; mime_type: string }> = {};
   if (post.upload_ids?.length) {
     const { data: uploads } = await supabase
@@ -110,6 +133,18 @@ export async function publishPost(postId: string) {
 
       if (!adapter) return { platform, success: false, error: 'Plataforma não suportada' };
       if (!account) return { platform, success: false, error: 'Conta não conectada' };
+
+      const dailyLimit = getDailyLimit(tier, platform.toUpperCase()).posts;
+      const usedToday = todayCount[platform] || 0;
+      if (usedToday >= dailyLimit) {
+        const limitError = `Limite diário atingido: ${dailyLimit} posts/dia no plano ${tier}. Post retido para proteger a conta — reagende para amanhã.`;
+        await supabase
+          .from('post_platforms')
+          .update({ status: 'error', errors: limitError })
+          .eq('post_id', postId)
+          .eq('platform', platform);
+        return { platform, success: false, error: limitError, rateLimited: true };
+      }
 
       let imageUrl: string | undefined;
       let videoUrl: string | undefined;
