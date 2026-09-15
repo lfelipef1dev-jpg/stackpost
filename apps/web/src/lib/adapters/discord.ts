@@ -16,16 +16,28 @@ export class DiscordAdapter extends PlatformAdapter {
     if (content.length > 2000) return { success: false, error: { code: 'VALIDATION', message: 'Discord: texto maximo 2000 caracteres.' } };
 
     try {
-      const body: any = { content };
-      if (params.imageUrl) {
-        body.embeds = [{ image: { url: params.imageUrl } }];
+      let res: Response;
+      if (params.videoUrl) {
+        // Video nao renderiza via embed de URL — enviar como anexo multipart
+        // (webhook aceita files[], limite 25MB).
+        const videoRes = await fetch(params.videoUrl);
+        if (!videoRes.ok) return { success: false, error: { code: 'MEDIA', message: 'Discord: falha ao baixar video para upload.' } };
+        const videoBlob = await videoRes.blob();
+        const form = new FormData();
+        form.append('payload_json', JSON.stringify({ content }));
+        form.append('files[0]', videoBlob, 'video.mp4');
+        res = await fetch(webhookUrl, { method: 'POST', body: form });
+      } else {
+        const body: any = { content };
+        if (params.imageUrl) {
+          body.embeds = [{ image: { url: params.imageUrl } }];
+        }
+        res = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
       }
-
-      const res = await fetch(webhookUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
