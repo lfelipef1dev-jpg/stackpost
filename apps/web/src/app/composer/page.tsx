@@ -161,55 +161,25 @@ export default function ComposerPage() {
 
     for (const file of batch) {
       try {
-        const presignRes = await fetch('/api/upload/presign', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ fileName: file.name, contentType: file.type, size: file.size }),
-        });
-
-        const presignData = await presignRes.json();
-        if (!presignRes.ok) {
-          flash(presignData.error || 'Erro no upload', 'error');
+        // Upload via servidor: evita CORS do PUT direto no Supabase Storage
+        const fd = new FormData();
+        fd.append('file', file);
+        const upRes = await fetch('/api/upload/simple', { method: 'POST', body: fd });
+        const upData = await upRes.json();
+        if (!upRes.ok) {
+          flash(upData.error || 'Erro no upload', 'error');
           continue;
         }
 
-        const uploadRes = await fetch(presignData.signedUrl, {
-          method: 'PUT',
-          headers: { 'Content-Type': file.type || 'application/octet-stream' },
-          body: file,
-        });
-
-        if (!uploadRes.ok) {
-          flash('Erro ao enviar arquivo para o storage', 'error');
-          continue;
-        }
-
-        const regRes = await fetch('/api/upload/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            id: presignData.id,
-            fileName: file.name,
-            contentType: file.type,
-            size: file.size,
-            url: presignData.publicUrl,
-          }),
-        });
-
-        if (regRes.ok) {
-          const isImage = file.type.startsWith('image/');
-          setMediaItems((prev) => [...prev, {
-            id: presignData.id,
-            preview: isImage || file.type.startsWith('video/') ? URL.createObjectURL(file) : '',
-            name: file.name,
-            type: file.type,
-          }]);
-          setDerivatives(presignData.derivatives || {});
-          flash('');
-        } else {
-          const regData = await regRes.json();
-          flash(regData.error || 'Erro ao registrar upload', 'error');
-        }
+        const isImage = file.type.startsWith('image/');
+        setMediaItems((prev) => [...prev, {
+          id: upData.id,
+          preview: isImage || file.type.startsWith('video/') ? URL.createObjectURL(file) : '',
+          name: file.name,
+          type: file.type,
+        }]);
+        setDerivatives(upData.derivatives || {});
+        flash('');
       } catch (err: any) {
         flash(err.message || 'Erro no upload', 'error');
       }
