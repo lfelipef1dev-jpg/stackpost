@@ -475,7 +475,9 @@ export default function ComposerPage() {
                   <div className="mt-3 grid grid-cols-3 sm:grid-cols-4 gap-2">
                     {mediaItems.map((m, i) => (
                       <div key={m.id} className="relative group/item rounded-xl overflow-hidden border border-brand-border bg-brand-elevated aspect-square">
-                        {m.preview ? (
+                        {m.preview && m.type.startsWith('video/') ? (
+                          <video src={m.preview} muted playsInline className="w-full h-full object-cover" />
+                        ) : m.preview ? (
                           <img src={m.preview} alt={m.name} className="w-full h-full object-cover" />
                         ) : (
                           <div className="w-full h-full flex flex-col items-center justify-center text-brand-text-secondary p-2">
@@ -655,7 +657,9 @@ export default function ComposerPage() {
                     </p>
                   </div>
                   <div className="aspect-[4/5] bg-black/40 flex items-center justify-center border-t border-brand-border">
-                    {currentPreviewUrl ? (
+                    {currentPreviewUrl && mediaItems[0]?.type.startsWith('video/') ? (
+                      <video src={currentPreviewUrl} muted playsInline autoPlay loop className="w-full h-full object-cover" />
+                    ) : currentPreviewUrl ? (
                       <img src={currentPreviewUrl} alt={`Pré-visualização como ${previewPlatform}`} className="w-full h-full object-cover" />
                     ) : (
                       <div className="text-brand-text-secondary text-sm flex flex-col items-center gap-2">
