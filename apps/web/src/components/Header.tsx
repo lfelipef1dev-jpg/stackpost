@@ -4,16 +4,16 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { BarChart3, CalendarDays, ChevronRight, CreditCard, LayoutDashboard, Link2, LogOut, Menu, Settings, SquarePen, X } from 'lucide-react';
 
 const nav = [
-  { href: '/dashboard', label: 'Painel' },
-  { href: '/composer', label: 'Criar post' },
-  { href: '/calendar', label: 'Calendário' },
-  { href: '/accounts', label: 'Contas' },
-  { href: '/analytics', label: 'Métricas' },
-  { href: '/billing', label: 'Cobrança' },
-  { href: '/settings', label: 'Configurações' },
+  { href: '/dashboard', label: 'Painel', icon: LayoutDashboard },
+  { href: '/composer', label: 'Criar post', icon: SquarePen },
+  { href: '/calendar', label: 'Calendário', icon: CalendarDays },
+  { href: '/accounts', label: 'Contas', icon: Link2 },
+  { href: '/analytics', label: 'Métricas', icon: BarChart3 },
+  { href: '/billing', label: 'Cobrança', icon: CreditCard },
+  { href: '/settings', label: 'Configurações', icon: Settings },
 ];
 
 const CLOSE_MS = 180;
@@ -137,9 +137,12 @@ export default function Header({ activeHref }: { activeHref?: string }) {
             onClick={close}
             aria-hidden="true"
           />
-          <div className={`absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-brand-surface border-l border-brand-border p-4 flex flex-col shadow-2xl ${closing ? 'menu-panel-out' : 'menu-panel-in'}`}>
-            <div className="flex items-center justify-between mb-6">
-              <span className="text-sm font-semibold text-brand-text">Menu</span>
+          <div className={`absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-gradient-to-b from-brand-surface to-brand-bg border-l border-brand-border flex flex-col shadow-2xl ${closing ? 'menu-panel-out' : 'menu-panel-in'}`}>
+            <div className="flex items-center justify-between h-16 px-5 border-b border-brand-border/60 shrink-0">
+              <div className="flex items-center gap-2.5">
+                <Image src="/brand/logo-header.webp" alt="" width={28} height={28} className="h-7 w-auto" />
+                <span className="text-sm font-bold font-display tracking-tight text-brand-text">StackPost</span>
+              </div>
               <button
                 ref={closeButtonRef}
                 onClick={close}
@@ -150,35 +153,48 @@ export default function Header({ activeHref }: { activeHref?: string }) {
               </button>
             </div>
 
-            <nav className="flex-1 flex flex-col gap-1 overflow-y-auto" aria-label="Navegação mobile">
-              {nav.map((item) => {
+            <nav className="flex-1 flex flex-col gap-1 overflow-y-auto px-3 py-4" aria-label="Navegação mobile">
+              {nav.map((item, i) => {
                 const isActive = item.href === activeHref;
+                const Icon = item.icon;
                 return (
                   <Link
                     key={item.href}
                     id={`mobile-nav-${item.href}`}
                     href={item.href}
                     onClick={close}
-                    className={`px-4 py-3 rounded-xl text-sm font-medium transition border-l-2 ${
+                    style={{ animationDelay: `${120 + i * 40}ms` }}
+                    className={`menu-item-in group flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${
                       isActive
-                        ? 'bg-brand-surface border-brand-accent text-brand-text'
-                        : 'border-transparent text-brand-text-secondary hover:text-brand-text hover:bg-brand-elevated'
+                        ? 'bg-brand-elevated text-brand-text border border-brand-accent/40'
+                        : 'text-brand-text-secondary hover:text-brand-text hover:bg-brand-elevated/80'
                     }`}
                     aria-current={isActive ? 'page' : undefined}
                   >
-                    {item.label}
+                    <span className={`w-9 h-9 rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
+                      isActive
+                        ? 'bg-brand-accent/10 border-brand-accent/50 text-brand-accent'
+                        : 'bg-brand-elevated border-brand-border/70 group-hover:border-brand-accent/50 group-hover:text-brand-accent'
+                    }`}>
+                      <Icon className="w-4 h-4" />
+                    </span>
+                    <span className="flex-1 min-w-0 text-sm font-semibold leading-tight">{item.label}</span>
+                    <ChevronRight className="w-4 h-4 shrink-0 opacity-30 group-hover:opacity-80 group-hover:translate-x-0.5 transition-all" />
                   </Link>
                 );
               })}
             </nav>
 
-            <button
-              id="mobile-logout"
-              onClick={logout}
-              className="mt-4 w-full px-4 py-3 rounded-xl border border-brand-border text-brand-text-secondary hover:text-brand-text hover:bg-brand-elevated transition text-sm font-medium"
-            >
-              Sair
-            </button>
+            <div className="px-3 pt-3 pb-5 border-t border-brand-border/60 shrink-0">
+              <button
+                id="mobile-logout"
+                onClick={logout}
+                className="w-full px-4 py-3 rounded-xl border border-error/30 text-error hover:bg-error/10 transition text-sm font-medium flex items-center justify-center gap-2"
+              >
+                <LogOut className="w-4 h-4" />
+                Sair da conta
+              </button>
+            </div>
           </div>
         </div>
       )}

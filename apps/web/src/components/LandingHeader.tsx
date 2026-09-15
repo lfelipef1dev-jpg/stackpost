@@ -3,16 +3,16 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, Menu, X } from 'lucide-react';
+import { ArrowRight, BookOpen, Bot, ChevronRight, Menu, PlayCircle, Scale, Share2, ShieldCheck, Tag, X } from 'lucide-react';
 
 const nav = [
-  { href: '/#platforms', label: 'Plataformas' },
-  { href: '/plans', label: 'Planos' },
-  { href: '/docs', label: 'Docs' },
-  { href: '/demo', label: 'Demo' },
-  { href: '/compare', label: 'Comparar' },
-  { href: '/ai-agents', label: 'AI Agents' },
-  { href: '/security', label: 'Segurança' },
+  { href: '/#platforms', label: 'Plataformas', icon: Share2, desc: '15 redes integradas' },
+  { href: '/plans', label: 'Planos', icon: Tag, desc: 'Preços e limites' },
+  { href: '/docs', label: 'Docs', icon: BookOpen, desc: 'Guias e API reference' },
+  { href: '/demo', label: 'Demo', icon: PlayCircle, desc: 'Veja funcionando' },
+  { href: '/compare', label: 'Comparar', icon: Scale, desc: 'StackPost vs alternativas' },
+  { href: '/ai-agents', label: 'AI Agents', icon: Bot, desc: 'MCP e automação' },
+  { href: '/security', label: 'Segurança', icon: ShieldCheck, desc: 'Criptografia e compliance' },
 ];
 
 const CLOSE_MS = 180;
@@ -127,9 +127,12 @@ export default function LandingHeader() {
             onClick={close}
             aria-hidden="true"
           />
-          <div className={`absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-brand-surface border-l border-brand-border p-4 flex flex-col shadow-2xl ${closing ? 'menu-panel-out' : 'menu-panel-in'}`}>
-            <div className="flex items-center justify-between mb-6">
-              <span className="text-sm font-semibold text-brand-text">Menu</span>
+          <div className={`absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-gradient-to-b from-brand-surface to-brand-bg border-l border-brand-border flex flex-col shadow-2xl ${closing ? 'menu-panel-out' : 'menu-panel-in'}`}>
+            <div className="flex items-center justify-between h-16 px-5 border-b border-brand-border/60 shrink-0">
+              <div className="flex items-center gap-2.5">
+                <Image src="/brand/logo-header.webp" alt="" width={28} height={28} className="h-7 w-auto" />
+                <span className="text-sm font-bold font-display tracking-tight text-brand-text">StackPost</span>
+              </div>
               <button
                 ref={closeButtonRef}
                 onClick={close}
@@ -139,32 +142,46 @@ export default function LandingHeader() {
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <nav className="flex-1 flex flex-col gap-1 overflow-y-auto" aria-label="Navegação mobile">
-              {nav.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={close}
-                  className="px-4 py-3 rounded-xl text-sm font-medium transition border-l-2 border-transparent text-brand-text-secondary hover:text-brand-text hover:bg-brand-elevated"
-                >
-                  {item.label}
-                </Link>
-              ))}
+            <nav className="flex-1 flex flex-col gap-1 overflow-y-auto px-3 py-4" aria-label="Navegação mobile">
+              {nav.map((item, i) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={close}
+                    style={{ animationDelay: `${120 + i * 40}ms` }}
+                    className="menu-item-in group flex items-center gap-3 px-3 py-2.5 rounded-xl text-brand-text-secondary hover:text-brand-text hover:bg-brand-elevated/80 transition-colors"
+                  >
+                    <span className="w-9 h-9 rounded-lg bg-brand-elevated border border-brand-border/70 flex items-center justify-center shrink-0 group-hover:border-brand-accent/50 group-hover:text-brand-accent transition-colors">
+                      <Icon className="w-4 h-4" />
+                    </span>
+                    <span className="flex-1 min-w-0">
+                      <span className="block text-sm font-semibold leading-tight">{item.label}</span>
+                      <span className="block text-[11px] text-brand-text-secondary/70 leading-tight mt-0.5">{item.desc}</span>
+                    </span>
+                    <ChevronRight className="w-4 h-4 shrink-0 opacity-30 group-hover:opacity-80 group-hover:translate-x-0.5 transition-all" />
+                  </Link>
+                );
+              })}
             </nav>
-            <Link
-              href="/login"
-              onClick={close}
-              className="mt-4 w-full px-4 py-3 rounded-xl border border-brand-border text-brand-text-secondary hover:text-brand-text hover:bg-brand-elevated transition text-sm font-medium text-center"
-            >
-              Entrar
-            </Link>
-            <Link
-              href="/register"
-              onClick={close}
-              className="mt-2 w-full px-4 py-3 rounded-xl bg-brand-accent text-brand-bg transition text-sm font-bold text-center"
-            >
-              Criar conta
-            </Link>
+            <div className="px-3 pt-3 pb-5 border-t border-brand-border/60 shrink-0">
+              <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-brand-text-secondary/50">Conta</p>
+              <Link
+                href="/login"
+                onClick={close}
+                className="block w-full px-4 py-3 rounded-xl border border-brand-border text-brand-text-secondary hover:text-brand-text hover:bg-brand-elevated transition text-sm font-medium text-center"
+              >
+                Entrar
+              </Link>
+              <Link
+                href="/register"
+                onClick={close}
+                className="mt-2 w-full px-4 py-3 rounded-xl bg-brand-accent text-brand-bg transition text-sm font-bold text-center flex items-center justify-center gap-1.5"
+              >
+                Criar conta grátis <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
         </div>
       )}
