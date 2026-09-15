@@ -7,6 +7,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { formatError } from '@/lib/errors';
 import { PLATFORMS } from '@/lib/platforms';
+import { isActiveAccount } from '@/lib/accounts';
 import { useFocusTrap } from '@/lib/useFocusTrap';
 import { PlatformIcon } from '@/components/PlatformIcon';
 import {
@@ -114,10 +115,18 @@ export default function ComposerPage() {
   const [charCount, setCharCount] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const [accounts, setAccounts] = useState<any[] | null>(null);
 
   useEffect(() => {
     setCharCount(content.length);
   }, [content]);
+
+  useEffect(() => {
+    fetch('/api/accounts')
+      .then((r) => (r.ok ? r.json() : []))
+      .then(setAccounts)
+      .catch(() => setAccounts([]));
+  }, []);
 
   function togglePlatform(id: string) {
     setSelectedPlatforms((prev) => (prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]));
@@ -487,6 +496,10 @@ export default function ComposerPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                   {PLATFORMS.map((p) => {
                     const isSelected = selectedPlatforms.includes(p.id);
+                    const acc = accounts?.find((a) => a.platform === p.id);
+                    const accOk = acc ? isActiveAccount(acc) : false;
+                    const unavailable = accounts !== null && !accOk;
+                    const needsReconnect = acc && !accOk;
                     return (
                       <button
                         key={p.id}
@@ -494,8 +507,20 @@ export default function ComposerPage() {
                           togglePlatform(p.id);
                           setPreviewPlatform(p.id);
                         }}
+                        disabled={unavailable}
+                        title={
+                          accounts === null
+                            ? undefined
+                            : accOk
+                            ? `@${acc.username} conectada`
+                            : needsReconnect
+                            ? `@${acc.username} precisa reconectar — veja /accounts`
+                            : 'Nenhuma conta conectada — conecte em /accounts'
+                        }
                         className={`relative flex items-center gap-3 p-3 rounded-2xl border transition ${
-                          isSelected
+                          unavailable
+                            ? 'bg-brand-surface/40 border-brand-border/50 opacity-45 cursor-not-allowed'
+                            : isSelected
                             ? 'bg-brand-elevated border-brand-accent shadow-lg shadow-brand-accent/10'
                             : 'bg-brand-surface border-brand-border hover:border-brand-text/30'
                         }`}
@@ -507,6 +532,14 @@ export default function ComposerPage() {
                           <PlatformIcon id={p.id} size={18} color={p.color} />
                         </div>
                         <span className="text-sm truncate">{p.name}</span>
+                        {accounts !== null && (
+                          <span
+                            className={`absolute top-1.5 left-1.5 w-2 h-2 rounded-full ${
+                              accOk ? 'bg-success' : needsReconnect ? 'bg-warning' : 'bg-brand-text-secondary/40'
+                            }`}
+                            aria-hidden="true"
+                          />
+                        )}
                         {isSelected && (
                           <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-brand-accent flex items-center justify-center">
                             <Check className="w-2.5 h-2.5 text-brand-bg" />
@@ -516,6 +549,12 @@ export default function ComposerPage() {
                     );
                   })}
                 </div>
+                {accounts !== null && (
+                  <p className="mt-3 text-xs text-brand-text-secondary">
+                    {accounts.filter(isActiveAccount).length} conta{accounts.filter(isActiveAccount).length !== 1 ? 's' : ''} ativa{accounts.filter(isActiveAccount).length !== 1 ? 's' : ''}.
+                    {' '}Gerenciar em <a href="/accounts" className="text-brand-accent hover:underline">Contas</a>.
+                  </p>
+                )}
               </SpotlightCard>
             </TiltCard>
 
