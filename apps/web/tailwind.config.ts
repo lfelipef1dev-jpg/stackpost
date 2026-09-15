@@ -7,14 +7,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'brand-bg': '#0A0A0A',
-        'brand-surface': '#1A1A1A',
-        'brand-elevated': '#252525',
-        'brand-border': 'rgba(255, 255, 255, 0.12)',
-        'brand-text': '#E6E6E6',
-        'brand-text-secondary': 'rgba(230, 230, 230, 0.70)',
-        'brand-accent': '#8AB4F8',
-        'brand-accent-hover': '#AECBFA',
+        'brand-bg': 'var(--brand-bg)',
+        'brand-surface': 'var(--brand-surface)',
+        'brand-elevated': 'var(--brand-elevated)',
+        'brand-border': 'var(--brand-border)',
+        'brand-text': 'var(--brand-text)',
+        'brand-text-secondary': 'var(--brand-text-secondary)',
+        'brand-accent': 'var(--brand-accent)',
+        'brand-accent-hover': 'var(--brand-accent-hover)',
         'success': '#22C55E',
         'error': '#F87171',
         'warning': '#FBBF24',
