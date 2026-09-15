@@ -26,6 +26,7 @@ import {
   Eye,
   Layers,
   Type,
+  FileText,
 } from 'lucide-react';
 
 function SpotlightCard({
@@ -104,8 +105,7 @@ export default function ComposerPage() {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState<'info' | 'success' | 'error'>('info');
   const [previewPlatform, setPreviewPlatform] = useState('instagram');
-  const [mediaPath, setMediaPath] = useState<string | null>(null);
-  const [mediaPreview, setMediaPreview] = useState<string | null>(null);
+  const [mediaItems, setMediaItems] = useState<{ id: string; preview: string; name: string; type: string }[]>([]);
   const [derivatives, setDerivatives] = useState<Record<string, string>>({});
   const [showConfirm, setShowConfirm] = useState(false);
   const [pendingAction, setPendingAction] = useState<'schedule' | 'publish' | null>(null);
@@ -120,6 +120,13 @@ export default function ComposerPage() {
   useEffect(() => {
     setCharCount(content.length);
   }, [content]);
+
+  // Se usuario escolheu Story e depois selecionou Instagram, volta pra Post
+  useEffect(() => {
+    if (selectedPlatforms.includes('instagram') && postType === 'STORY') {
+      setPostType('POST');
+    }
+  }, [selectedPlatforms, postType]);
 
   useEffect(() => {
     fetch('/api/accounts')
@@ -138,59 +145,79 @@ export default function ComposerPage() {
   }
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    e.target.value = '';
+    if (!files.length) return;
 
-    flash('Enviando arquivo...');
-
-    try {
-      const presignRes = await fetch('/api/upload/presign', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fileName: file.name, contentType: file.type, size: file.size }),
-      });
-
-      const presignData = await presignRes.json();
-      if (!presignRes.ok) {
-        flash(presignData.error || 'Erro no upload', 'error');
-        return;
-      }
-
-      const uploadRes = await fetch(presignData.signedUrl, {
-        method: 'PUT',
-        headers: { 'Content-Type': file.type || 'application/octet-stream' },
-        body: file,
-      });
-
-      if (!uploadRes.ok) {
-        flash('Erro ao enviar arquivo para o storage', 'error');
-        return;
-      }
-
-      const regRes = await fetch('/api/upload/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: presignData.id,
-          fileName: file.name,
-          contentType: file.type,
-          size: file.size,
-          url: presignData.publicUrl,
-        }),
-      });
-
-      if (regRes.ok) {
-        setMediaPath(presignData.id);
-        setMediaPreview(URL.createObjectURL(file));
-        setDerivatives(presignData.derivatives || {});
-        flash('');
-      } else {
-        const regData = await regRes.json();
-        flash(regData.error || 'Erro ao registrar upload', 'error');
-      }
-    } catch (err: any) {
-      flash(err.message || 'Erro no upload', 'error');
+    const MAX = 10;
+    const room = MAX - mediaItems.length;
+    if (room <= 0) {
+      flash(`Máximo de ${MAX} arquivos por post`, 'error');
+      return;
     }
+    const batch = files.slice(0, room);
+    if (files.length > room) flash(`Limite de ${MAX} arquivos — ${files.length - room} ignorado(s)`, 'error');
+    else flash('Enviando arquivo...');
+
+    for (const file of batch) {
+      try {
+        const presignRes = await fetch('/api/upload/presign', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fileName: file.name, contentType: file.type, size: file.size }),
+        });
+
+        const presignData = await presignRes.json();
+        if (!presignRes.ok) {
+          flash(presignData.error || 'Erro no upload', 'error');
+          continue;
+        }
+
+        const uploadRes = await fetch(presignData.signedUrl, {
+          method: 'PUT',
+          headers: { 'Content-Type': file.type || 'application/octet-stream' },
+          body: file,
+        });
+
+        if (!uploadRes.ok) {
+          flash('Erro ao enviar arquivo para o storage', 'error');
+          continue;
+        }
+
+        const regRes = await fetch('/api/upload/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: presignData.id,
+            fileName: file.name,
+            contentType: file.type,
+            size: file.size,
+            url: presignData.publicUrl,
+          }),
+        });
+
+        if (regRes.ok) {
+          const isImage = file.type.startsWith('image/');
+          setMediaItems((prev) => [...prev, {
+            id: presignData.id,
+            preview: isImage || file.type.startsWith('video/') ? URL.createObjectURL(file) : '',
+            name: file.name,
+            type: file.type,
+          }]);
+          setDerivatives(presignData.derivatives || {});
+          flash('');
+        } else {
+          const regData = await regRes.json();
+          flash(regData.error || 'Erro ao registrar upload', 'error');
+        }
+      } catch (err: any) {
+        flash(err.message || 'Erro no upload', 'error');
+      }
+    }
+  }
+
+  function removeMedia(id: string) {
+    setMediaItems((prev) => prev.filter((m) => m.id !== id));
   }
 
   function confirmAction(action: 'schedule' | 'publish') {
@@ -220,7 +247,7 @@ export default function ComposerPage() {
       body: JSON.stringify({
         content,
         platforms: selectedPlatforms,
-        uploadIds: mediaPath ? [mediaPath] : undefined,
+        uploadIds: mediaItems.length ? mediaItems.map((m) => m.id) : undefined,
         scheduledAt: isoScheduledAt,
         postType,
         firstComment,
@@ -269,12 +296,14 @@ export default function ComposerPage() {
       : null;
 
   const currentPreviewUrl =
-    derivativeKey && derivatives[derivativeKey] ? derivatives[derivativeKey] : mediaPreview;
+    derivativeKey && derivatives[derivativeKey] ? derivatives[derivativeKey] : mediaItems[0]?.preview || null;
 
+  // Instagram Content Publishing API nao suporta Stories — esconder quando IG selecionado
+  const igSelected = selectedPlatforms.includes('instagram');
   const postTypeConfig = [
     { id: 'POST' as const, label: 'Post', icon: Type, glow: '#6366F1' },
     { id: 'REEL' as const, label: 'Reel', icon: Video, glow: '#EC4899' },
-    { id: 'STORY' as const, label: 'Story', icon: Zap, glow: '#F59E0B' },
+    ...(igSelected ? [] : [{ id: 'STORY' as const, label: 'Story', icon: Zap, glow: '#F59E0B' }]),
   ];
 
   return (
@@ -459,26 +488,41 @@ export default function ComposerPage() {
                   <ImageIcon className="w-4 h-4 text-success" />
                   <label className="text-sm font-semibold">Mídia</label>
                 </div>
-                <input ref={fileInputRef} type="file" accept="image/*,video/*" onChange={handleFileChange} className="hidden" />
+                <input ref={fileInputRef} type="file" accept="image/*,video/*,.pdf" multiple onChange={handleFileChange} className="hidden" />
                 <div
                   onClick={() => fileInputRef.current?.click()}
-                  className="border-2 border-dashed border-brand-border rounded-2xl p-10 text-center cursor-pointer hover:border-brand-accent transition group"
+                  className="border-2 border-dashed border-brand-border rounded-2xl p-6 text-center cursor-pointer hover:border-brand-accent transition group"
                 >
-                  {mediaPreview ? (
-                    <img src={mediaPreview} alt="Pré-visualização da mídia selecionada" className="max-h-56 mx-auto rounded-xl shadow-lg" />
-                  ) : (
-                    <div className="text-brand-text-secondary">
-                      <ImageIcon className="w-10 h-10 mx-auto mb-3 text-brand-text-secondary/50 group-hover:text-brand-accent transition" />
-                      <div className="text-sm">
-                        Arraste uma imagem ou vídeo, ou <span className="text-brand-accent font-medium">clique para selecionar</span>
-                      </div>
+                  <div className="text-brand-text-secondary">
+                    <ImageIcon className="w-10 h-10 mx-auto mb-3 text-brand-text-secondary/50 group-hover:text-brand-accent transition" />
+                    <div className="text-sm">
+                      Imagens, vídeo ou PDF — <span className="text-brand-accent font-medium">clique para selecionar</span>
                     </div>
-                  )}
+                    <div className="text-[11px] mt-1 opacity-60">até 10 arquivos (carrossel)</div>
+                  </div>
                 </div>
-                {mediaPath && (
-                  <div className="mt-3 flex items-center gap-2 text-xs text-brand-text-secondary">
-                    <Check className="w-3 h-3 text-success" />
-                    Arquivo: <span className="font-mono">{mediaPath}</span>
+                {mediaItems.length > 0 && (
+                  <div className="mt-3 grid grid-cols-3 sm:grid-cols-4 gap-2">
+                    {mediaItems.map((m, i) => (
+                      <div key={m.id} className="relative group/item rounded-xl overflow-hidden border border-brand-border bg-brand-elevated aspect-square">
+                        {m.preview ? (
+                          <img src={m.preview} alt={m.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex flex-col items-center justify-center text-brand-text-secondary p-2">
+                            <FileText className="w-6 h-6 mb-1" />
+                            <span className="text-[9px] font-mono truncate w-full text-center">{m.name}</span>
+                          </div>
+                        )}
+                        <span className="absolute top-1 left-1 bg-brand-bg/80 text-[10px] font-mono px-1.5 py-0.5 rounded">{i + 1}</span>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); removeMedia(m.id); }}
+                          className="absolute top-1 right-1 p-1 rounded-md bg-brand-bg/80 text-brand-text-secondary hover:text-error opacity-0 group-hover/item:opacity-100 transition"
+                          aria-label={`Remover ${m.name}`}
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
                   </div>
                 )}
               </SpotlightCard>
@@ -723,7 +767,7 @@ export default function ComposerPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-brand-text-secondary">Mídia</span>
-                    <span className="font-medium">{mediaPath ? 'Sim' : 'Não'}</span>
+                    <span className="font-medium">{mediaItems.length ? `${mediaItems.length} arquivo${mediaItems.length > 1 ? 's' : ''}` : 'Não'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-brand-text-secondary">Tipo</span>
