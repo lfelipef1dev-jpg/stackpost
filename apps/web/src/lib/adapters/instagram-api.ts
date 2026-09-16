@@ -194,17 +194,20 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
 
   if (container.error) return { success: false, error: container.error.error_user_msg || container.error.message };
 
-  // Video precisa de polling real de status (delay fixo e frágil)
+  // Video precisa de polling de status — limitado a ~70s pra nao travar o Worker;
+  // se ainda estiver processando, retorna retryable e o publisher adia pro proximo tick
   if (mediaType === 'VIDEO') {
     let retries = 0;
-    while (retries < 60) {
+    let finished = false;
+    while (retries < 14) {
       const statusRes = await fetch(`https://graph.instagram.com/v23.0/${container.id}?fields=status_code&access_token=${token}`);
       const statusData = await statusRes.json();
-      if (statusData.status_code === 'FINISHED') break;
+      if (statusData.status_code === 'FINISHED') { finished = true; break; }
       if (statusData.status_code === 'ERROR') return { success: false, error: 'Erro ao processar video no Instagram' };
       await new Promise((r) => setTimeout(r, 5000));
       retries++;
     }
+    if (!finished) return { success: false, error: { code: 'STILL_PROCESSING', message: 'IG_STILL_PROCESSING: container ainda processando' } };
   } else {
     // Imagem: pequeno delay inicial
     await new Promise((r) => setTimeout(r, 3000));

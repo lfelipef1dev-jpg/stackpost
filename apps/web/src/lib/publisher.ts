@@ -236,6 +236,12 @@ export async function publishPost(postId: string) {
         mediaType: mediaUrls && mediaUrls.length > 1 ? 'CAROUSEL' : (post.media_type || undefined),
       });
 
+      // Midia ainda processando na rede (ex: container IG) = adia pro proximo tick, nao e erro
+      const errStr = typeof result.error === 'object' ? (result.error?.code + ' ' + result.error?.message) : String(result.error || '');
+      if (!result.success && /STILL_PROCESSING/i.test(errStr)) {
+        return { platform, deferred: true, reason: 'media_processing' };
+      }
+
       const { error: ppError } = await supabase
         .from('post_platforms')
         .update({

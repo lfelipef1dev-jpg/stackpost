@@ -15,12 +15,23 @@ export async function GET(req: NextRequest) {
     const now = new Date().toISOString();
 
     // Buscar posts agendados cuja data chegou
+    // Resgata posts travados em 'processing' ha mais de 10min (worker morreu no meio)
+    // posts nao tem updated_at — usa published_at/created_at como referencia
+    const stale = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+    await supabase
+      .from('posts')
+      .update({ status: 'scheduled' })
+      .eq('status', 'processing')
+      .or(`published_at.lt.${stale},published_at.is.null`)
+      .lt('created_at', stale);
+
     const { data: posts, error } = await supabase
       .from('posts')
       .select('id')
       .eq('status', 'scheduled')
       .lte('scheduled_at', now)
-      .limit(50);
+      .order('scheduled_at', { ascending: true })
+      .limit(15);
 
     if (error) throw error;
 
