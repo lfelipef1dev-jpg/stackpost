@@ -26,7 +26,12 @@ export class BlueskyAdapter extends PlatformAdapter {
           const supabase = getSupabase();
           await supabase
             .from('social_accounts')
-            .update({ access_token: refData.accessJwt, refresh_token: refData.refreshJwt })
+            .update({
+              access_token: refData.accessJwt,
+              refresh_token: refData.refreshJwt,
+              // refreshJwt do ATProto dura ~60 dias — o accessJwt expira em ~2h mas renova sozinho
+              expires_at: new Date(Date.now() + 55 * 24 * 60 * 60 * 1000).toISOString(),
+            })
             .eq('platform', 'bluesky')
             .eq('platform_account_id', did);
         }

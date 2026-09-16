@@ -258,6 +258,21 @@ export async function publishPost(postId: string) {
       : { platform: post.platforms[i], success: false, error: s.reason?.message || 'Erro interno' }
   );
 
+  // Erros de publicação viram reports no painel admin (exportável p/ diagnóstico)
+  const failures = results.filter((r: any) => !r.success);
+  for (const f of failures) {
+    const errMsg = typeof f.error === 'object' ? (f.error?.message || JSON.stringify(f.error)) : String(f.error || 'Erro desconhecido');
+    try {
+      await supabase.from('reports').insert({
+        team_id: post.team_id,
+        category: 'publish_error',
+        message: `[${f.platform}] ${errMsg}`,
+        page_url: `post:${postId}`,
+        status: 'open',
+      });
+    } catch {}
+  }
+
   const hasError = results.some((r: any) => !r.success);
   const finalStatus = hasError ? 'error' : 'posted';
 

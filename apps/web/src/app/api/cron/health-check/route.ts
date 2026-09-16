@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     // Buscar contas conectadas
     const { data: accounts, error } = await supabase
       .from('social_accounts')
-      .select('id, platform, status, expires_at, platform_metadata')
+      .select('id, platform, status, expires_at, platform_metadata, refresh_token')
       .limit(100);
 
     if (error) throw error;
@@ -40,6 +40,41 @@ export async function GET(req: NextRequest) {
           .eq('id', account.id);
         continue;
       }
+      // Bluesky (ATProto): accessJwt expira em ~2h mas o refreshJwt renova — tenta refresh antes de flagar
+      if (account.platform === 'bluesky' && account.refresh_token) {
+        let ok = false;
+        try {
+          const refRes = await fetch('https://bsky.social/xrpc/com.atproto.server.refreshSession', {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${account.refresh_token}` },
+          });
+          const refData = await refRes.json();
+          if (refData.accessJwt) {
+            ok = true;
+            await supabase
+              .from('social_accounts')
+              .update({
+                access_token: refData.accessJwt,
+                refresh_token: refData.refreshJwt,
+                status: 'active',
+                expires_at: new Date(Date.now() + 55 * 24 * 60 * 60 * 1000).toISOString(),
+                last_checked_at: now,
+              })
+              .eq('id', account.id);
+          }
+        } catch { ok = false; }
+        if (!ok) {
+          needsReconnect++;
+          await supabase
+            .from('social_accounts')
+            .update({ status: 'needs_reconnect', last_checked_at: now })
+            .eq('id', account.id);
+        } else {
+          healthy++;
+        }
+        continue;
+      }
+
       const isExpired = account.expires_at && new Date(account.expires_at) < new Date();
       if (isExpired) {
         expired++;
