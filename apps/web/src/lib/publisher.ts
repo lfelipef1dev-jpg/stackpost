@@ -42,13 +42,14 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333';
 // Ritmo minimo entre publicacoes por rede (minutos)
 // Modo "colocar trabalho em dia": 15min em todas — se Meta flagar, o defer segura e retenta
 export const PLATFORM_PACE_MINUTES: Record<string, number> = {
+  // Meta bloqueou a conta por rajada — cooldown conservador ate liberar
+  facebook: 60,
+  instagram: 60,
+  threads: 60,
   discord: 0,
   slack: 0,
   bluesky: 0,
-  instagram: 0,
-  facebook: 0,
   linkedin: 0,
-  threads: 0,
   x: 0,
   mastodon: 0,
   pinterest: 0,
