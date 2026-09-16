@@ -42,23 +42,23 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333';
 // Ritmo minimo entre publicacoes por rede (minutos)
 // Modo "colocar trabalho em dia": 15min em todas — se Meta flagar, o defer segura e retenta
 export const PLATFORM_PACE_MINUTES: Record<string, number> = {
-  discord: 15,
-  slack: 15,
-  bluesky: 15,
-  instagram: 15,
-  facebook: 15,
-  linkedin: 15,
-  threads: 15,
-  x: 15,
-  mastodon: 15,
-  pinterest: 15,
-  reddit: 15,
-  tiktok: 15,
-  youtube: 15,
-  snapchat: 15,
-  google_business: 15,
+  discord: 0,
+  slack: 0,
+  bluesky: 0,
+  instagram: 0,
+  facebook: 0,
+  linkedin: 0,
+  threads: 0,
+  x: 0,
+  mastodon: 0,
+  pinterest: 0,
+  reddit: 0,
+  tiktok: 0,
+  youtube: 0,
+  snapchat: 0,
+  google_business: 0,
 };
-const DEFAULT_PACE_MIN = 15;
+const DEFAULT_PACE_MIN = 0;
 
 function buildImageUrl(uploadId: string, platform: string, derivatives: Record<string, string> = {}): string {
   if (platform === 'instagram') {
