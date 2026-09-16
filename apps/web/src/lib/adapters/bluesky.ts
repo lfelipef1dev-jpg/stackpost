@@ -29,9 +29,18 @@ export class BlueskyAdapter extends PlatformAdapter {
         if (dlRes.ok) {
           const videoBuf = await dlRes.arrayBuffer();
 
+          // 0. descobre o PDS real do usuario via DID doc
+          let pdsDid = 'did:web:bsky.social';
+          try {
+            const didDoc = await (await fetch(`https://plc.directory/${did}`)).json();
+            const svc = (didDoc.service || []).find((s: any) => s.type === 'AtprotoPersonalDataServer' || /atproto_pds/i.test(s.id || ''));
+            const pdsHost = svc?.serviceEndpoint ? new URL(svc.serviceEndpoint).host : null;
+            if (pdsHost) pdsDid = `did:web:${pdsHost}`;
+          } catch {}
+
           // 1. service token com permissao de uploadBlob (GET)
           const authUrl = new URL('https://bsky.social/xrpc/com.atproto.server.getServiceAuth');
-          authUrl.searchParams.set('aud', 'did:web:bsky.social');
+          authUrl.searchParams.set('aud', pdsDid);
           authUrl.searchParams.set('lxm', 'com.atproto.repo.uploadBlob');
           authUrl.searchParams.set('exp', String(Math.floor(Date.now() / 1000) + 1800));
           const authRes = await fetch(authUrl.toString(), { headers: { Authorization: `Bearer ${accessToken}` } });
