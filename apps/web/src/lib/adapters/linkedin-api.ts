@@ -287,7 +287,7 @@ export async function publishToLinkedIn(account: any, content: string, imageUrl:
     const liHeaders = {
       Authorization: `Bearer ${account.access_token}`,
       'Content-Type': 'application/json',
-      'LinkedIn-Version': '202505',
+      'LinkedIn-Version': '202608',
       'X-Restli-Protocol-Version': '2.0.0',
     };
 
@@ -359,4 +359,5 @@ export async function publishToLinkedIn(account: any, content: string, imageUrl:
 
   return { success: true, externalId: post.id };
 }
+
 
