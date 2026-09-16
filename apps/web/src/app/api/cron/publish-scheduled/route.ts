@@ -40,21 +40,29 @@ export async function GET(req: NextRequest) {
     let deferred = 0;
     const errors: any[] = [];
 
-    for (const post of posts || []) {
-      try {
-        const result = await publishPost(post.id);
-        if (result.status === 'posted') {
-          published++;
-        } else if (result.status === 'scheduled') {
-          deferred++; // plataformas adiadas pelo ritmo da rede — nao e falha
+    // Processa em blocos de 5 posts concorrentes — cada post ja publica suas
+    // redes em paralelo; antes era 1 post por vez e o tick morria no meio
+    const list = posts || [];
+    for (let i = 0; i < list.length; i += 5) {
+      const chunk = list.slice(i, i + 5);
+      const settled = await Promise.allSettled(chunk.map((post) => publishPost(post.id)));
+      for (let j = 0; j < settled.length; j++) {
+        const s = settled[j];
+        if (s.status === 'fulfilled') {
+          const result = s.value as any;
+          if (result.status === 'posted') {
+            published++;
+          } else if (result.status === 'scheduled') {
+            deferred++;
+          } else {
+            failed++;
+            errors.push({ id: chunk[j].id, result });
+          }
         } else {
+          logger.error(`Failed to publish ${chunk[j].id}:`, s.reason);
           failed++;
-          errors.push({ id: post.id, result });
+          errors.push({ id: chunk[j].id, error: String(s.reason?.message || s.reason) });
         }
-      } catch (err: any) {
-        logger.error(`Failed to publish ${post.id}:`, err);
-        failed++;
-        errors.push({ id: post.id, error: err.message, stack: err.stack });
       }
     }
 
