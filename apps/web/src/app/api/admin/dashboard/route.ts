@@ -28,7 +28,8 @@ export async function GET(request: Request) {
     supabase.from('posts').select('*', { count: 'exact', head: true }).gte('created_at', today),
     supabase.from('stackpost_processed_payments').select('*', { count: 'exact', head: true }).gte('processed_at', today),
     supabase.from('posts').select('*', { count: 'exact', head: true }).eq('status', 'scheduled'),
-    supabase.from('posts').select('*', { count: 'exact', head: true }).eq('status', 'error'),
+    // Erros de hoje (falhas que aconteceram hoje — published_at é setado na tentativa)
+    supabase.from('posts').select('*', { count: 'exact', head: true }).eq('status', 'error').gte('published_at', today),
   ]);
 
   return NextResponse.json({
