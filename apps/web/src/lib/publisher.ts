@@ -39,26 +39,26 @@ const adapters: Record<string, any> = {
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333';
 
-// Ritmo minimo entre publicacoes por rede (minutos) — protege contra ban/rate limit
-// Meta flaga burst; Discord/Bluesky toleram cadencia alta
+// Ritmo minimo entre publicacoes por rede (minutos)
+// Modo "colocar trabalho em dia": 15min em todas — se Meta flagar, o defer segura e retenta
 export const PLATFORM_PACE_MINUTES: Record<string, number> = {
   discord: 15,
   slack: 15,
-  bluesky: 30,
-  instagram: 60,
-  facebook: 60,
-  linkedin: 80,
-  threads: 60,
-  x: 60,
-  mastodon: 30,
-  pinterest: 45,
-  reddit: 45,
-  tiktok: 60,
-  youtube: 60,
-  snapchat: 60,
-  google_business: 60,
+  bluesky: 15,
+  instagram: 15,
+  facebook: 15,
+  linkedin: 15,
+  threads: 15,
+  x: 15,
+  mastodon: 15,
+  pinterest: 15,
+  reddit: 15,
+  tiktok: 15,
+  youtube: 15,
+  snapchat: 15,
+  google_business: 15,
 };
-const DEFAULT_PACE_MIN = 30;
+const DEFAULT_PACE_MIN = 15;
 
 function buildImageUrl(uploadId: string, platform: string, derivatives: Record<string, string> = {}): string {
   if (platform === 'instagram') {
