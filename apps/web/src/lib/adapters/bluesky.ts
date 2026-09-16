@@ -1,15 +1,37 @@
 import { PlatformAdapter, PublishParams, PublishResult } from './base';
 import { normalizeError } from '@/lib/errors';
+import { getSupabase } from '@/lib/supabase';
 
 export class BlueskyAdapter extends PlatformAdapter {
   name = 'bluesky';
   platform = 'bluesky';
 
   async publish(params: PublishParams): Promise<PublishResult> {
-    const accessToken = params.account?.access_token;
+    let accessToken = params.account?.access_token;
+    const refreshToken = params.account?.refresh_token;
     const did = params.account?.platform_account_id || params.account?.did;
     const handle = params.account?.username || params.account?.handle;
     const content = params.content;
+
+    // accessJwt expira em ~2h — renova via refreshSession e persiste
+    if (refreshToken) {
+      try {
+        const refRes = await fetch('https://bsky.social/xrpc/com.atproto.server.refreshSession', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${refreshToken}` },
+        });
+        const refData = await refRes.json();
+        if (refData.accessJwt) {
+          accessToken = refData.accessJwt;
+          const supabase = getSupabase();
+          await supabase
+            .from('social_accounts')
+            .update({ access_token: refData.accessJwt, refresh_token: refData.refreshJwt })
+            .eq('platform', 'bluesky')
+            .eq('platform_account_id', did);
+        }
+      } catch {}
+    }
 
     if (!accessToken) return { success: false, error: normalizeError(new Error('No access token'), this.platform) };
     if (!did) return { success: false, error: normalizeError(new Error('DID obrigatório'), this.platform) };
@@ -30,16 +52,19 @@ export class BlueskyAdapter extends PlatformAdapter {
           const videoBuf = await dlRes.arrayBuffer();
 
           // 0. descobre o PDS real do usuario via DID doc
+          let pdsOrigin = 'https://bsky.social';
           let pdsDid = 'did:web:bsky.social';
           try {
             const didDoc = await (await fetch(`https://plc.directory/${did}`)).json();
             const svc = (didDoc.service || []).find((s: any) => s.type === 'AtprotoPersonalDataServer' || /atproto_pds/i.test(s.id || ''));
-            const pdsHost = svc?.serviceEndpoint ? new URL(svc.serviceEndpoint).host : null;
-            if (pdsHost) pdsDid = `did:web:${pdsHost}`;
+            if (svc?.serviceEndpoint) {
+              pdsOrigin = svc.serviceEndpoint;
+              pdsDid = `did:web:${new URL(svc.serviceEndpoint).host}`;
+            }
           } catch {}
 
-          // 1. service token com permissao de uploadBlob (GET)
-          const authUrl = new URL('https://bsky.social/xrpc/com.atproto.server.getServiceAuth');
+          // 1. service token com permissao de uploadBlob (GET, no PDS do usuario)
+          const authUrl = new URL(`${pdsOrigin}/xrpc/com.atproto.server.getServiceAuth`);
           authUrl.searchParams.set('aud', pdsDid);
           authUrl.searchParams.set('lxm', 'com.atproto.repo.uploadBlob');
           authUrl.searchParams.set('exp', String(Math.floor(Date.now() / 1000) + 1800));
