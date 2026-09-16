@@ -44,23 +44,23 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333';
 export const PLATFORM_PACE_MINUTES: Record<string, number> = {
   // So o Facebook bloqueou por rajada — cooldown conservador ate liberar
   facebook: 60,
-  // Demais redes: 5min entre posts — drena a fila rapido sem burst
-  instagram: 5,
-  threads: 5,
-  discord: 5,
-  slack: 5,
-  bluesky: 5,
-  linkedin: 5,
-  x: 5,
-  mastodon: 5,
-  pinterest: 5,
-  reddit: 5,
-  tiktok: 5,
-  youtube: 5,
-  snapchat: 5,
-  google_business: 5,
+  // Demais redes: sem espera — post dispara em todas ao mesmo tempo
+  instagram: 0,
+  threads: 0,
+  discord: 0,
+  slack: 0,
+  bluesky: 0,
+  linkedin: 0,
+  x: 0,
+  mastodon: 0,
+  pinterest: 0,
+  reddit: 0,
+  tiktok: 0,
+  youtube: 0,
+  snapchat: 0,
+  google_business: 0,
 };
-const DEFAULT_PACE_MIN = 5;
+const DEFAULT_PACE_MIN = 0;
 
 function buildImageUrl(uploadId: string, platform: string, derivatives: Record<string, string> = {}): string {
   if (platform === 'instagram') {
