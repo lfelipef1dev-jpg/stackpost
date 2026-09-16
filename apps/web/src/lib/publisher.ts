@@ -126,8 +126,17 @@ export async function publishPost(postId: string) {
     }
   }
 
+  // Idempotencia: plataformas ja publicadas nao republicam (permite retry seguro)
+  const { data: ppRows } = await supabase
+    .from('post_platforms')
+    .select('platform, status')
+    .eq('post_id', postId)
+    .eq('status', 'posted');
+  const alreadyPosted = new Set((ppRows || []).map((r: any) => r.platform));
+  const pendingPlatforms = post.platforms.filter((pl: string) => !alreadyPosted.has(pl));
+
   const settled = await Promise.allSettled(
-    post.platforms.map(async (platform: string) => {
+    pendingPlatforms.map(async (platform: string) => {
       const adapter = adapters[platform];
       const account = accountsList.find((a) => a.platform === platform);
 
@@ -252,11 +261,16 @@ export async function publishPost(postId: string) {
     })
   );
 
-  const results = settled.map((s, i) =>
-    s.status === 'fulfilled'
-      ? s.value
-      : { platform: post.platforms[i], success: false, error: s.reason?.message || 'Erro interno' }
-  );
+  const results = [
+    ...settled.map((s, i) =>
+      s.status === 'fulfilled'
+        ? s.value
+        : { platform: pendingPlatforms[i], success: false, error: s.reason?.message || 'Erro interno' }
+    ),
+    ...post.platforms
+      .filter((pl: string) => alreadyPosted.has(pl))
+      .map((pl: string) => ({ platform: pl, success: true })),
+  ];
 
   // Erros de publicação viram reports no painel admin (exportável p/ diagnóstico)
   const failures = results.filter((r: any) => !r.success);

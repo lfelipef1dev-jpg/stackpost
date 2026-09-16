@@ -35,6 +35,11 @@ const TRANSIENT_PATTERNS = [
   /service unavailable/i,
   /internal error/i,
   /try again/i,
+  // mensagens em PT retornadas pelas plataformas (ex: rate limit do Facebook)
+  /limitamos/i,
+  /frequ[êe]ncia/i,
+  /mais tarde/i,
+  /tente novamente/i,
 ];
 
 export function normalizeError(error: any, platform?: string): NormalizedError {
