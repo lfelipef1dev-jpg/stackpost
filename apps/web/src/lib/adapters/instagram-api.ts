@@ -106,18 +106,15 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
       childrenIds.push(child.id);
     }
 
-    // Aguardar processamento de cada child (polling real em vez de delay fixo)
+    // Aguardar processamento de cada child (budget curto: imagem e quase instantaneo)
     for (const childId of childrenIds) {
-      let retries = 0;
-      while (retries < 30) {
-        const statusRes = await fetch(`https://graph.instagram.com/v23.0/${childId}?fields=status_code&access_token=${token}`);
-        const statusData = await statusRes.json();
+      for (let r = 0; r < 8; r++) {
+        const statusData = await (await fetch(`https://graph.instagram.com/v23.0/${childId}?fields=status_code&access_token=${token}`)).json();
         if (statusData.status_code === 'FINISHED') break;
         if (statusData.status_code === 'ERROR') {
           return { success: false, error: `Erro ao processar mídia do carrossel (child ${childId})` };
         }
-        await new Promise((r) => setTimeout(r, 3000));
-        retries++;
+        await new Promise((res) => setTimeout(res, 1500));
       }
     }
 
@@ -136,20 +133,25 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
     if (carousel.error) return { success: false, error: carousel.error.error_user_msg || carousel.error.message };
 
     // O container pai tambem precisa estar FINISHED antes do publish
-    let pRetries = 0;
-    while (pRetries < 30) {
+    for (let r = 0; r < 8; r++) {
       const st = await (await fetch(`https://graph.instagram.com/v23.0/${carousel.id}?fields=status_code&access_token=${token}`)).json();
       if (st.status_code === 'FINISHED') break;
       if (st.status_code === 'ERROR') return { success: false, error: 'Erro ao processar container do carrossel' };
-      await new Promise((r) => setTimeout(r, 3000));
-      pRetries++;
+      await new Promise((res) => setTimeout(res, 1500));
     }
 
-    const publishRes = await fetch(`https://graph.instagram.com/v23.0/${igUserId}/media_publish`, {
-      method: 'POST',
-      body: new URLSearchParams({ creation_id: carousel.id, access_token: token }),
-    });
-    const publish = await publishRes.json();
+    // media_publish com retry curto se ainda nao estiver pronto
+    let publish: any = {};
+    for (let r = 0; r < 4; r++) {
+      publish = await (await fetch(`https://graph.instagram.com/v23.0/${igUserId}/media_publish`, {
+        method: 'POST',
+        body: new URLSearchParams({ creation_id: carousel.id, access_token: token }),
+      })).json();
+      if (!publish.error) break;
+      const msg = publish.error.error_user_msg || publish.error.message || '';
+      if (!/not ready|being processed/i.test(msg)) break;
+      await new Promise((res) => setTimeout(res, 4000));
+    }
     if (publish.error) return { success: false, error: publish.error.error_user_msg || publish.error.message };
 
     if (firstComment?.trim() && publish.id) {
