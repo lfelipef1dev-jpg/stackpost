@@ -82,10 +82,9 @@ export class BlueskyAdapter extends PlatformAdapter {
             body: videoBuf,
           });
           const job = await upRes.json();
-          if (!upRes.ok) return { success: false, error: normalizeError(new Error(`Bluesky video: ${job.message || job.error}`), this.platform) };
-
-          // 3. aguarda processamento (budget curto p/ nao estourar o worker)
-          let vBlob = job.blob;
+          // dedupe: se o video ja foi processado, reusa o blob existente
+          let vBlob = job.blob || job.jobStatus?.blob;
+          if (!upRes.ok && !vBlob) return { success: false, error: normalizeError(new Error(`Bluesky video: ${job.message || job.error || job.jobStatus?.error}`), this.platform) };
           for (let i = 0; i < 12 && !vBlob; i++) {
             await new Promise((r) => setTimeout(r, 2500));
             const st = await (await fetch(`https://video.bsky.app/xrpc/app.bsky.video.getJobStatus?jobId=${job.jobId}`, {
