@@ -29,12 +29,12 @@ export class BlueskyAdapter extends PlatformAdapter {
         if (dlRes.ok) {
           const videoBuf = await dlRes.arrayBuffer();
 
-          // 1. service token com permissao de uploadBlob
-          const authRes = await fetch('https://bsky.social/xrpc/com.atproto.server.getServiceAuth', {
-            method: 'POST',
-            headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ aud: 'did:web:bsky.social', lxm: 'com.atproto.repo.uploadBlob', exp: Math.floor(Date.now() / 1000) + 1800 }),
-          });
+          // 1. service token com permissao de uploadBlob (GET)
+          const authUrl = new URL('https://bsky.social/xrpc/com.atproto.server.getServiceAuth');
+          authUrl.searchParams.set('aud', 'did:web:bsky.social');
+          authUrl.searchParams.set('lxm', 'com.atproto.repo.uploadBlob');
+          authUrl.searchParams.set('exp', String(Math.floor(Date.now() / 1000) + 1800));
+          const authRes = await fetch(authUrl.toString(), { headers: { Authorization: `Bearer ${accessToken}` } });
           const authData = await authRes.json();
           if (!authData.token) return { success: false, error: normalizeError(new Error('Bluesky: falha no service token'), this.platform) };
 
