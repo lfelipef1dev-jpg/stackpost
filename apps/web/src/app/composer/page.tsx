@@ -665,7 +665,7 @@ export default function ComposerPage() {
                   </div>
                   <div className="aspect-[4/5] bg-black/40 flex items-center justify-center border-t border-brand-border">
                     {currentPreviewUrl && mediaItems[0]?.type.startsWith('video/') ? (
-                      <video src={currentPreviewUrl} muted playsInline autoPlay loop className="w-full h-full object-cover" />
+                      <video src={currentPreviewUrl} muted playsInline autoPlay loop controls className="max-w-full max-h-full object-contain" />
                     ) : currentPreviewUrl ? (
                       <img src={currentPreviewUrl} alt={`Pré-visualização como ${previewPlatform}`} className="w-full h-full object-cover" />
                     ) : (
