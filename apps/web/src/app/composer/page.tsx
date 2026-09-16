@@ -476,7 +476,14 @@ export default function ComposerPage() {
                     {mediaItems.map((m, i) => (
                       <div key={m.id} className="relative group/item rounded-xl overflow-hidden border border-brand-border bg-brand-elevated aspect-square">
                         {m.preview && m.type.startsWith('video/') ? (
-                          <video src={m.preview} muted playsInline className="w-full h-full object-cover" />
+                          <video
+                            src={m.preview}
+                            muted
+                            playsInline
+                            preload="metadata"
+                            onLoadedMetadata={(e) => { (e.target as HTMLVideoElement).currentTime = 0.5; }}
+                            className="w-full h-full object-cover"
+                          />
                         ) : m.preview ? (
                           <img src={m.preview} alt={m.name} className="w-full h-full object-cover" />
                         ) : (
