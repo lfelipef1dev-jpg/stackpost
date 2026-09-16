@@ -339,6 +339,13 @@ export async function publishPost(postId: string) {
   const postUpdate: any = { status: finalStatus, external_data: results, errors: failures };
   if (anyPosted) postUpdate.published_at = new Date().toISOString();
 
+  // Se TUDO deferiu (nada publicou, sem erro): joga o post pro fim da fila
+  // — senao ele monopoliza o batch e os posts atras nunca sao processados
+  if (hasDeferred && !anyPosted && !hasError) {
+    const minPace = Math.max(1, Math.min(...results.filter((r: any) => r.deferred).map((r: any) => PLATFORM_PACE_MINUTES[r.platform] ?? DEFAULT_PACE_MIN), 15));
+    postUpdate.scheduled_at = new Date(Date.now() + minPace * 60 * 1000).toISOString();
+  }
+
   const { error: finalError } = await supabase
     .from('posts')
     .update(postUpdate)
