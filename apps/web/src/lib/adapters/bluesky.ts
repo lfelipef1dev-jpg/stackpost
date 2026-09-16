@@ -82,12 +82,13 @@ export class BlueskyAdapter extends PlatformAdapter {
             body: videoBuf,
           });
           const job = await upRes.json();
-          // dedupe: se o video ja foi processado, reusa o blob existente
+          // dedupe: 'already_exists' retorna o jobId — o blob vem via getJobStatus
           let vBlob = job.blob || job.jobStatus?.blob;
-          if (!upRes.ok && !vBlob) return { success: false, error: normalizeError(new Error(`Bluesky video: ${job.message || job.error || job.jobStatus?.error}`), this.platform) };
+          const jobId = job.jobId || job.jobStatus?.jobId;
+          if (!upRes.ok && !vBlob && !jobId) return { success: false, error: normalizeError(new Error(`Bluesky video: ${job.message || job.error || job.jobStatus?.error}`), this.platform) };
           for (let i = 0; i < 12 && !vBlob; i++) {
             await new Promise((r) => setTimeout(r, 2500));
-            const st = await (await fetch(`https://video.bsky.app/xrpc/app.bsky.video.getJobStatus?jobId=${job.jobId}`, {
+            const st = await (await fetch(`https://video.bsky.app/xrpc/app.bsky.video.getJobStatus?jobId=${jobId}`, {
               headers: { Authorization: `Bearer ${accessToken}` },
             })).json();
             if (st.jobStatus?.state === 'JOB_STATE_FAILED') {
