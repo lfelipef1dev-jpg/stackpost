@@ -33,6 +33,7 @@ const CSP = "default-src 'self'; " +
   "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; " +
   "style-src 'self' 'unsafe-inline'; " +
   "img-src 'self' https: data: blob:; " +
+  "media-src 'self' https: blob:; " +
   "connect-src 'self' https://cloudflareinsights.com; " +
   "font-src 'self'; " +
   "frame-ancestors https://expostacker.com.br https://*.expostacker.com.br http://localhost:* http://127.0.0.1:*; " +
