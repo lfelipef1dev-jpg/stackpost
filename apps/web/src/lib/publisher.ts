@@ -237,9 +237,16 @@ export async function publishPost(postId: string) {
       });
 
       // Midia ainda processando na rede (ex: container IG) = adia pro proximo tick, nao e erro
-      const errStr = typeof result.error === 'object' ? (result.error?.code + ' ' + result.error?.message) : String(result.error || '');
+      const errObj = typeof result.error === 'object' ? result.error : null;
+      const errStr = errObj ? (errObj.code + ' ' + errObj.message) : String(result.error || '');
       if (!result.success && /STILL_PROCESSING/i.test(errStr)) {
         return { platform, deferred: true, reason: 'media_processing' };
+      }
+
+      // Erro transitorio/retryable (rate limit, timeout, 5xx da rede social) =
+      // deixa o slot pending e adia o post — o proximo tick retenta so essa rede
+      if (!result.success && (errObj?.retryable || errObj?.isTransient)) {
+        return { platform, deferred: true, reason: 'retryable_error' };
       }
 
       const { error: ppError } = await supabase
