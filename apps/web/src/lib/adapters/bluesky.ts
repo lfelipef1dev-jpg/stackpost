@@ -24,13 +24,13 @@ export class BlueskyAdapter extends PlatformAdapter {
       };
 
       // Upload de mídia via xrpc.atproto.repo.uploadBlob
-      const embedMedia: any[] = [];
-      const mediaUrl = params.imageUrl || params.videoUrl;
+      const mediaUrl = params.videoUrl || params.imageUrl;
+      const isVideo = !!params.videoUrl;
       if (mediaUrl) {
         const dlRes = await fetch(mediaUrl);
         if (dlRes.ok) {
           const blob = await dlRes.blob();
-          const mimeType = dlRes.headers.get('content-type') || 'image/jpeg';
+          const mimeType = dlRes.headers.get('content-type') || (isVideo ? 'video/mp4' : 'image/jpeg');
           const uploadRes = await fetch('https://bsky.social/xrpc/com.atproto.repo.uploadBlob', {
             method: 'POST',
             headers: {
@@ -41,16 +41,11 @@ export class BlueskyAdapter extends PlatformAdapter {
           });
           const uploadData = await uploadRes.json();
           if (uploadData.blob) {
-            embedMedia.push({ alt: content.slice(0, 100), image: uploadData.blob });
+            record.embed = isVideo
+              ? { $type: 'app.bsky.embed.video', video: uploadData.blob, alt: content.slice(0, 100), aspectRatio: { width: 9, height: 16 } }
+              : { $type: 'app.bsky.embed.images', images: [{ alt: content.slice(0, 100), image: uploadData.blob }] };
           }
         }
-      }
-
-      if (embedMedia.length > 0) {
-        record.embed = {
-          $type: 'app.bsky.embed.images',
-          images: embedMedia,
-        };
       }
 
       // AT Protocol - create record
