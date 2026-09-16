@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
       .eq('status', 'scheduled')
       .lte('scheduled_at', now)
       .order('scheduled_at', { ascending: true })
-      .limit(15);
+      .limit(9);
 
     if (error) throw error;
 
@@ -43,8 +43,8 @@ export async function GET(req: NextRequest) {
     // Processa em blocos de 5 posts concorrentes — cada post ja publica suas
     // redes em paralelo; antes era 1 post por vez e o tick morria no meio
     const list = posts || [];
-    for (let i = 0; i < list.length; i += 5) {
-      const chunk = list.slice(i, i + 5);
+    for (let i = 0; i < list.length; i += 3) {
+      const chunk = list.slice(i, i + 3);
       const settled = await Promise.allSettled(chunk.map((post) => publishPost(post.id)));
       for (let j = 0; j < settled.length; j++) {
         const s = settled[j];
