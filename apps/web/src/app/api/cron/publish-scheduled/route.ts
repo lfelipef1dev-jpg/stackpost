@@ -26,6 +26,7 @@ export async function GET(req: NextRequest) {
 
     let published = 0;
     let failed = 0;
+    let deferred = 0;
     const errors: any[] = [];
 
     for (const post of posts || []) {
@@ -33,6 +34,8 @@ export async function GET(req: NextRequest) {
         const result = await publishPost(post.id);
         if (result.status === 'posted') {
           published++;
+        } else if (result.status === 'scheduled') {
+          deferred++; // plataformas adiadas pelo ritmo da rede — nao e falha
         } else {
           failed++;
           errors.push({ id: post.id, result });
@@ -44,7 +47,7 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    return NextResponse.json({ ok: true, cron: 'publish-scheduled', published, failed, total: (posts || []).length, errors, timestamp: now });
+    return NextResponse.json({ ok: true, cron: 'publish-scheduled', published, failed, deferred, total: (posts || []).length, errors, timestamp: now });
   } catch (err: any) {
     logger.error('Cron publish-scheduled error:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });

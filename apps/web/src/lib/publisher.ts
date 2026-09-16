@@ -39,6 +39,27 @@ const adapters: Record<string, any> = {
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333';
 
+// Ritmo minimo entre publicacoes por rede (minutos) — protege contra ban/rate limit
+// Meta flaga burst; Discord/Bluesky toleram cadencia alta
+export const PLATFORM_PACE_MINUTES: Record<string, number> = {
+  discord: 15,
+  slack: 15,
+  bluesky: 30,
+  instagram: 60,
+  facebook: 60,
+  linkedin: 80,
+  threads: 60,
+  x: 60,
+  mastodon: 30,
+  pinterest: 45,
+  reddit: 45,
+  tiktok: 60,
+  youtube: 60,
+  snapchat: 60,
+  google_business: 60,
+};
+const DEFAULT_PACE_MIN = 30;
+
 function buildImageUrl(uploadId: string, platform: string, derivatives: Record<string, string> = {}): string {
   if (platform === 'instagram') {
     if (derivatives.instagram_4x5) {
@@ -109,8 +130,11 @@ export async function publishPost(postId: string) {
     .eq('status', 'posted')
     .gte('posts.published_at', dayStart.toISOString());
   const todayCount: Record<string, number> = {};
+  const lastPostedAt: Record<string, number> = {};
   for (const r of todayRows || []) {
     todayCount[r.platform] = (todayCount[r.platform] || 0) + 1;
+    const ts = new Date((r.posts as any)?.published_at || 0).getTime();
+    if (!lastPostedAt[r.platform] || ts > lastPostedAt[r.platform]) lastPostedAt[r.platform] = ts;
   }
 
   let uploadData: Record<string, { url: string; mime_type: string }> = {};
@@ -143,16 +167,18 @@ export async function publishPost(postId: string) {
       if (!adapter) return { platform, success: false, error: 'Plataforma não suportada' };
       if (!account) return { platform, success: false, error: 'Conta não conectada' };
 
+      // Ritmo por rede: se a ultima publicacao foi recente demais, adia (fica pendente)
+      const paceMin = PLATFORM_PACE_MINUTES[platform] || DEFAULT_PACE_MIN;
+      const lastTs = lastPostedAt[platform] || 0;
+      if (lastTs && Date.now() - lastTs < paceMin * 60 * 1000) {
+        return { platform, deferred: true };
+      }
+
       const dailyLimit = getDailyLimit(tier, platform.toUpperCase()).posts;
       const usedToday = todayCount[platform] || 0;
       if (usedToday >= dailyLimit) {
-        const limitError = `Limite diário atingido: ${dailyLimit} posts/dia no plano ${tier}. Post retido para proteger a conta — reagende para amanhã.`;
-        await supabase
-          .from('post_platforms')
-          .update({ status: 'error', errors: limitError })
-          .eq('post_id', postId)
-          .eq('platform', platform);
-        return { platform, success: false, error: limitError, rateLimited: true };
+        // Limite diario = adia pra amanha (fica pendente) em vez de falhar
+        return { platform, deferred: true, reason: `daily_limit:${dailyLimit}` };
       }
 
       let imageUrl: string | undefined;
@@ -273,7 +299,8 @@ export async function publishPost(postId: string) {
   ];
 
   // Erros de publicação viram reports no painel admin (exportável p/ diagnóstico)
-  const failures = results.filter((r: any) => !r.success);
+  // deferred = adiado por ritmo da rede — NAO e erro, fica pendente pro proximo tick
+  const failures = results.filter((r: any) => !r.success && !r.deferred);
   for (const f of failures) {
     const errMsg = typeof f.error === 'object' ? (f.error?.message || JSON.stringify(f.error)) : String(f.error || 'Erro desconhecido');
     try {
@@ -287,17 +314,19 @@ export async function publishPost(postId: string) {
     } catch {}
   }
 
-  const hasError = results.some((r: any) => !r.success);
-  const finalStatus = hasError ? 'error' : 'posted';
+  const hasError = failures.length > 0;
+  const hasDeferred = results.some((r: any) => r.deferred);
+  const anyPosted = results.some((r: any) => r.success);
+  // se sobrou plataforma adiada, o post volta pra fila (cron repete no proximo tick)
+  const finalStatus = hasDeferred ? 'scheduled' : hasError ? 'error' : 'posted';
+
+  // published_at so atualiza quando algo publicou de verdade — senao quebra o pacing por rede
+  const postUpdate: any = { status: finalStatus, external_data: results, errors: failures };
+  if (anyPosted) postUpdate.published_at = new Date().toISOString();
 
   const { error: finalError } = await supabase
     .from('posts')
-    .update({
-      status: finalStatus,
-      published_at: new Date().toISOString(),
-      external_data: results,
-      errors: results.filter((r: any) => !r.success),
-    })
+    .update(postUpdate)
     .eq('id', postId);
   if (finalError) throw finalError;
 
