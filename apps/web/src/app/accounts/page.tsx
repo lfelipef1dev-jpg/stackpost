@@ -150,6 +150,7 @@ export default function AccountsPage() {
   const [drawerAccount, setDrawerAccount] = useState<any | null>(null);
   const [bannerIndex, setBannerIndex] = useState(0);
   const [bulkConfirm, setBulkConfirm] = useState<null | 'refresh' | 'delete'>(null);
+  const [credModal, setCredModal] = useState<null | { platform: string; handle: string; password: string; loading: boolean; error: string }>(null);
   const bulkTrap = useFocusTrap<HTMLDivElement>(!!bulkConfirm, () => setBulkConfirm(null));
   const drawerTrap = useFocusTrap<HTMLDivElement>(!!drawerAccount, () => setDrawerAccount(null));
 
@@ -176,9 +177,34 @@ export default function AccountsPage() {
   }
 
   function handleConnect(platform: string, variant?: string) {
+    if (platform === 'bluesky') {
+      setCredModal({ platform, handle: '', password: '', loading: false, error: '' });
+      return;
+    }
     const route = OAUTH_ROUTES[platform];
     if (route) {
       window.location.href = variant ? `${route}?type=${variant}` : route;
+    }
+  }
+
+  async function handleCredSubmit() {
+    if (!credModal) return;
+    setCredModal({ ...credModal, loading: true, error: '' });
+    try {
+      const res = await fetch(`/api/accounts/${credModal.platform}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ handle: credModal.handle, appPassword: credModal.password }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setCredModal({ ...credModal, loading: false, error: data.error || 'Erro ao conectar' });
+        return;
+      }
+      setCredModal(null);
+      await loadAccounts();
+    } catch {
+      setCredModal({ ...credModal, loading: false, error: 'Erro de conexão' });
     }
   }
 
@@ -750,6 +776,63 @@ export default function AccountsPage() {
                 }`}
               >
                 {bulkConfirm === 'delete' ? 'Excluir' : 'Renovar'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de credenciais (Bluesky app password) */}
+      {credModal && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setCredModal(null)}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Conectar Bluesky"
+            className="max-w-sm w-full p-6 rounded-2xl bg-brand-surface border border-brand-border"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <PlatformIcon id="bluesky" size={20} color="#0285FF" />
+              <h3 className="text-lg font-semibold">Conectar Bluesky</h3>
+            </div>
+            <p className="text-xs text-brand-text-secondary mb-4">
+              Crie um app password em <span className="text-brand-accent">bsky.app → Configurações → Privacidade → App Passwords</span>.
+            </p>
+            <input
+              type="text"
+              value={credModal.handle}
+              onChange={(e) => setCredModal({ ...credModal, handle: e.target.value })}
+              placeholder="seu-handle.bsky.social"
+              className="w-full mb-3 px-4 py-3 rounded-xl bg-brand-elevated border border-brand-border text-sm text-brand-text focus:outline-none focus:border-brand-accent"
+            />
+            <input
+              type="password"
+              value={credModal.password}
+              onChange={(e) => setCredModal({ ...credModal, password: e.target.value })}
+              placeholder="App password (xxxx-xxxx-xxxx-xxxx)"
+              className="w-full mb-3 px-4 py-3 rounded-xl bg-brand-elevated border border-brand-border text-sm text-brand-text focus:outline-none focus:border-brand-accent"
+            />
+            {credModal.error && (
+              <p className="text-xs text-error mb-3">{credModal.error}</p>
+            )}
+            <div className="flex gap-2">
+              <button
+                onClick={() => setCredModal(null)}
+                className="flex-1 px-4 py-2 rounded-xl bg-brand-elevated border border-brand-border text-sm font-medium hover:border-brand-accent transition"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleCredSubmit}
+                disabled={credModal.loading || !credModal.handle || !credModal.password}
+                className="flex-1 px-4 py-2 rounded-xl bg-brand-accent text-brand-bg text-sm font-medium hover:bg-brand-accent/90 transition disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {credModal.loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                Conectar
               </button>
             </div>
           </div>
