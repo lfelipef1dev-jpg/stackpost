@@ -25,13 +25,19 @@ export async function GET(req: NextRequest) {
       .or(`published_at.lt.${stale},published_at.is.null`)
       .lt('created_at', stale);
 
-    const { data: posts, error } = await supabase
-      .from('posts')
-      .select('id')
-      .eq('status', 'scheduled')
-      .lte('scheduled_at', now)
-      .order('scheduled_at', { ascending: true })
-      .limit(1);
+    // postId via fila: publica esse post especifico (ja verificado como devido
+    // quando foi enfileirado pelo cron). Sem postId: modo legado — pega o mais
+    // antigo devido (usado por chamadas manuais/diagnostico).
+    const postId = req.nextUrl.searchParams.get('postId');
+    const { data: posts, error } = postId
+      ? await supabase.from('posts').select('id').eq('id', postId).in('status', ['scheduled', 'processing'])
+      : await supabase
+          .from('posts')
+          .select('id')
+          .eq('status', 'scheduled')
+          .lte('scheduled_at', now)
+          .order('scheduled_at', { ascending: true })
+          .limit(1);
 
     if (error) throw error;
 

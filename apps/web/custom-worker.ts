@@ -68,21 +68,24 @@ export default {
         try {
           for (const route of routes) {
             try {
-              // publish-scheduled: um post com video nas 5 redes gasta ~40
-              // subrequests e o Worker limita 50 POR INVOCACAO. Chamadas
-              // handler.fetch diretas compartilham a invocacao (e o budget),
-              // entao o batch morria no meio. Solucao: chamar a rota via
-              // fetch HTTP publico em loop — cada chamada e uma invocacao
-              // separada com seus proprios 50 subrequests. Ate 8 por tick.
+              // publish-scheduled: cada post vai pra FILA (Cloudflare Queues).
+              // O consumer processa 1 mensagem por invocacao = 50 subrequests
+              // proprios por post — um video nas 5 redes cabe tranquilo.
               if (route === '/api/cron/publish-scheduled') {
-                const siteUrl = env.NEXT_PUBLIC_SITE_URL || 'https://stackpost.expostacker.com.br';
-                for (let i = 0; i < 8; i++) {
-                  const r = await fetch(`${siteUrl}${route}`, {
-                    headers: { Authorization: `Bearer ${cronSecret}` },
-                  });
-                  const data: any = await r.json().catch(() => ({}));
-                  log.info(`publish-scheduled[${i}] -> ${r.status} pub=${data.published ?? '?'} defer=${data.deferred ?? '?'} total=${data.total ?? '?'}`);
-                  if (!data.total) break; // fila devida vazia
+                const supaUrl = env.NEXT_PUBLIC_SUPABASE_URL;
+                const supaKey = env.SUPABASE_SERVICE_ROLE_KEY;
+                if (supaUrl && supaKey && env.PUBLISH_QUEUE) {
+                  const res = await fetch(
+                    `${supaUrl}/rest/v1/posts?select=id&status=eq.scheduled&scheduled_at=lte.${new Date().toISOString()}&order=scheduled_at.asc&limit=30`,
+                    { headers: { apikey: supaKey, Authorization: `Bearer ${supaKey}` } }
+                  );
+                  const due: any[] = await res.json().catch(() => []);
+                  if (Array.isArray(due) && due.length) {
+                    await env.PUBLISH_QUEUE.sendBatch(due.map((p: any) => ({ body: p.id })));
+                    log.info(`publish-scheduled: ${due.length} posts enfileirados`);
+                  } else {
+                    log.info('publish-scheduled: fila vazia');
+                  }
                 }
                 continue;
               }
@@ -108,6 +111,30 @@ export default {
         }
       })()
     );
+  },
+
+  // Consumer da fila de publicacao: 1 mensagem = 1 invocacao = 50 subrequests
+  // proprios. max_batch_size=1 garante isolamento total por post.
+  // @ts-ignore
+  async queue(batch: any, env: any, ctx: any) {
+    const cronSecret = env.CRON_SECRET || env.SUPABASE_SERVICE_ROLE_KEY;
+    const log = createLogger({ route: 'queue:publish' });
+    for (const msg of batch.messages) {
+      try {
+        const postId = msg.body;
+        const req = new Request(`https://worker.internal/api/cron/publish-scheduled?postId=${postId}`, {
+          headers: { Authorization: `Bearer ${cronSecret}` },
+        });
+        // @ts-ignore
+        const resp = await handler.fetch(req, env, ctx);
+        await resp.body?.cancel();
+        log.info(`post ${postId} -> ${resp.status}`);
+        msg.ack();
+      } catch (err) {
+        log.error('falha ao publicar mensagem da fila', err);
+        msg.retry(); // queue faz retry (max_retries: 2)
+      }
+    }
   },
 };
 

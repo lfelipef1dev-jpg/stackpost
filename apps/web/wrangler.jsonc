@@ -33,5 +33,20 @@
       "0 3 * * *",
       "0 0 1 * *"
     ]
+  },
+  "queues": {
+    "producers": [
+      {
+        "queue": "stackpost-publish",
+        "binding": "PUBLISH_QUEUE"
+      }
+    ],
+    "consumers": [
+      {
+        "queue": "stackpost-publish",
+        "max_batch_size": 1,
+        "max_retries": 2
+      }
+    ]
   }
 }
