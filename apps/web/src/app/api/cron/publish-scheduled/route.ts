@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
       .eq('status', 'scheduled')
       .lte('scheduled_at', now)
       .order('scheduled_at', { ascending: true })
-      .limit(3);
+      .limit(2);
 
     if (error) throw error;
 
