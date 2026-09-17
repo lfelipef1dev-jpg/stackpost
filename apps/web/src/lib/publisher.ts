@@ -331,7 +331,11 @@ export async function publishPost(postId: string) {
 
   const hasError = failures.length > 0;
   const hasDeferred = results.some((r: any) => r.deferred);
-  const anyPosted = results.some((r: any) => r.success);
+  // anyPosted conta so sucessos DESTA execucao — plataformas ja postadas
+  // antes nao devem impedir o post de ir pro fim da fila quando tudo defere
+  const anyPosted = settled.some(
+    (s) => s.status === 'fulfilled' && (s.value as any).success
+  );
   // se sobrou plataforma adiada, o post volta pra fila (cron repete no proximo tick)
   const finalStatus = hasDeferred ? 'scheduled' : hasError ? 'error' : 'posted';
 
