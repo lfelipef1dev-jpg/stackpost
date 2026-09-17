@@ -23,8 +23,9 @@ export const DAILY_LIMITS: Record<string, Record<string, PlatformLimits>> = {
   },
   PRO: {
     TWITTER: { posts: 96, comments: 0 },
-    FACEBOOK: { posts: 96, comments: 90 },
-    INSTAGRAM: { posts: 96, comments: 90 },
+    // Limites reais das APIs: IG Content Publishing = 25/dia, FB ~50/dia
+    FACEBOOK: { posts: 50, comments: 50 },
+    INSTAGRAM: { posts: 25, comments: 25 },
     LINKEDIN: { posts: 96, comments: 90 },
     YOUTUBE: { posts: 96, comments: 90 },
     TIKTOK: { posts: 96, comments: 90 },

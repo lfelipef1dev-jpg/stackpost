@@ -223,7 +223,16 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
   });
   const publish = await publishRes.json();
 
-  if (publish.error) return { success: false, error: publish.error.error_user_msg || publish.error.message };
+  if (publish.error) {
+    const msg = publish.error.error_user_msg || publish.error.message || '';
+    // Limite diario da Content Publishing API (~25/dia) = retryable, slot
+    // fica pending e retenta amanha — nao vira erro permanente
+    const isDailyCap = /maximum number of posts|rate limit|too many/i.test(msg);
+    return {
+      success: false,
+      error: { code: isDailyCap ? 'RATE_LIMIT' : 'PUBLISH_ERROR', message: msg, retryable: isDailyCap },
+    };
+  }
 
   // First comment (regra do bundle: max 2.200, já validado no adapter)
   if (firstComment?.trim() && publish.id) {
