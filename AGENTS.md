@@ -117,6 +117,28 @@ npx tsc --noEmit   # Type check
 Instagram, Facebook, LinkedIn, TikTok, YouTube, Snapchat, Twitter/X, Threads,
 Pinterest, Reddit, Mastodon, Bluesky, Discord, Slack, Google Business Profile.
 
+### Status de conexao (17/09/2026)
+
+| Plataforma | Status | Observacao |
+|---|---|---|
+| LinkedIn | ATIVA | Pagina "ExpoStacker Studio" |
+| Bluesky | ATIVA | @expostacker.bsky.social |
+| Discord | ATIVA | webhook canal do servidor |
+| Instagram | ATIVA | cap 25/dia (Content Publishing API) |
+| Mastodon | ATIVA | @expostacker em mastodon.social |
+| Slack | ATIVA | webhook #social (workspace ExpoStacker) |
+| Facebook | BLOQUEADA | verificacao de identidade Meta em analise |
+| Pinterest | BLOQUEADA | Trial API pendente + ticket aberto (App 1612857) |
+| Reddit | BLOQUEADA | pedido de acesso dev enviado |
+| Demais | NAO CONFIGURADA | TikTok, YouTube, X, Threads, Snapchat, GBP |
+
+### Credenciais por plataforma (.dev.vars — nunca commitar)
+
+- Slack: `SLACK_WEBHOOK_URL` (webhook posta no canal #social)
+- Mastodon: `MASTODON_CLIENT_ID/SECRET/ACCESS_TOKEN` (mastodon.social)
+- Discord: webhook no `access_token` da social_account
+- Bluesky: app password na social_account
+
 ## 13. Contato
 
 - Repo: https://github.com/lfelipef1dev-jpg/stackpost
