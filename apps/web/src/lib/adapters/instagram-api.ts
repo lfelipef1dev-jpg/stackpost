@@ -192,7 +192,14 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
   });
   const container = await containerRes.json();
 
-  if (container.error) return { success: false, error: container.error.error_user_msg || container.error.message };
+  if (container.error) {
+    const msg = container.error.error_user_msg || container.error.message || '';
+    const isDailyCap = /maximum number of posts|rate limit|too many/i.test(msg);
+    return {
+      success: false,
+      error: { code: isDailyCap ? 'RATE_LIMIT' : 'CONTAINER_ERROR', message: msg, retryable: isDailyCap },
+    };
+  }
 
   // Video precisa de polling de status — limitado a ~70s pra nao travar o Worker;
   // se ainda estiver processando, retorna retryable e o publisher adia pro proximo tick
