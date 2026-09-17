@@ -160,6 +160,7 @@ export async function publishPost(postId: string) {
     .eq('status', 'posted');
   const alreadyPosted = new Set((ppRows || []).map((r: any) => r.platform));
   const pendingPlatforms = post.platforms.filter((pl: string) => !alreadyPosted.has(pl));
+  const billingEvents: any[] = [];
 
   const settled = await Promise.allSettled(
     pendingPlatforms.map(async (platform: string) => {
@@ -263,44 +264,38 @@ export async function publishPost(postId: string) {
         .eq('platform', platform);
       if (ppError) throw ppError;
 
-      // Metering: registra evento de billing após publicação bem-sucedida
+      // Metering: coleta o evento pra inserir em batch no final
+      // (1 subrequest total em vez de ~10 — post com video ja gasta ~40)
       if (result.success) {
-        const hasLink = /\bhttps?:\/\//i.test(post.content || '');
-        const idempotencyKey = `post_${postId}_${platform}`;
-
-        try {
-          await recordBillingEvent({
-            teamId: post.team_id,
-            orgId,
-            eventType: 'post',
-            platform,
-            units: 1,
-            unitCostCents: 15, // R$ 0,15 por post
-            idempotencyKey,
-            metadata: { post_id: postId, external_id: result.externalId },
-          });
-
-          // Post no X com link: evento adicional 'x_post_link' (R$ 0,20)
-          if (platform === 'x' && hasLink) {
-            await recordBillingEvent({
-              teamId: post.team_id,
-              orgId,
-              eventType: 'x_post_link',
-              platform: 'x',
-              units: 1,
-              unitCostCents: 20,
-              idempotencyKey: `${idempotencyKey}_link`,
-              metadata: { post_id: postId },
-            });
-          }
-        } catch {
-          // Metering não deve bloquear a publicação
-        }
+        billingEvents.push({
+          team_id: post.team_id,
+          organization_id: orgId,
+          event_type: 'post',
+          platform,
+          units: 1,
+          unit_cost_cents: 15,
+          total_cost_cents: 15,
+          idempotency_key: `stackpost_post_${postId}_${platform}`,
+          metadata: { post_id: postId, external_id: result.externalId },
+        });
       }
 
       return { platform, ...result };
     })
   );
+
+  // Billing em um unico insert batch — ignora duplicatas por idempotency_key
+  if (billingEvents.length) {
+    try {
+      await supabase.from('billing_events').insert(billingEvents, {
+        // @ts-ignore
+        onConflict: 'idempotency_key',
+        ignoreDuplicates: true,
+      } as any);
+    } catch {
+      // Metering não deve bloquear a publicação
+    }
+  }
 
   const results = [
     ...settled.map((s, i) =>

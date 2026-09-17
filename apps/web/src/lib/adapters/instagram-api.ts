@@ -199,7 +199,7 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
   if (mediaType === 'VIDEO') {
     let retries = 0;
     let finished = false;
-    while (retries < 14) {
+    while (retries < 8) {
       const statusRes = await fetch(`https://graph.instagram.com/v23.0/${container.id}?fields=status_code&access_token=${token}`);
       const statusData = await statusRes.json();
       if (statusData.status_code === 'FINISHED') { finished = true; break; }
