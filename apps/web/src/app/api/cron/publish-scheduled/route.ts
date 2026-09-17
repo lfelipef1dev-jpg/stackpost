@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
       .eq('status', 'scheduled')
       .lte('scheduled_at', now)
       .order('scheduled_at', { ascending: true })
-      .limit(2);
+      .limit(1);
 
     if (error) throw error;
 
@@ -42,8 +42,9 @@ export async function GET(req: NextRequest) {
 
     // Processa em blocos de 5 posts concorrentes — cada post ja publica suas
     // redes em paralelo; antes era 1 post por vez e o tick morria no meio
-    // 3 posts por tick, um por vez — post com video demora ~2min e o Worker
-    // nao aguenta lote grande (mata no meio e trava posts em processing)
+    // 1 post por chamada — um post com video nas 5 redes gasta ~40 subrequests
+    // e o Worker so permite 50 por invocacao. O worker chama esta rota em loop
+    // via HTTP publico (cada chamada = invocacao nova com budget proprio).
     const list = posts || [];
     for (let i = 0; i < list.length; i += 1) {
       const chunk = list.slice(i, i + 1);

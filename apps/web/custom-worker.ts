@@ -68,6 +68,24 @@ export default {
         try {
           for (const route of routes) {
             try {
+              // publish-scheduled: um post com video nas 5 redes gasta ~40
+              // subrequests e o Worker limita 50 POR INVOCACAO. Chamadas
+              // handler.fetch diretas compartilham a invocacao (e o budget),
+              // entao o batch morria no meio. Solucao: chamar a rota via
+              // fetch HTTP publico em loop — cada chamada e uma invocacao
+              // separada com seus proprios 50 subrequests. Ate 8 por tick.
+              if (route === '/api/cron/publish-scheduled') {
+                const siteUrl = env.NEXT_PUBLIC_SITE_URL || 'https://stackpost.expostacker.com.br';
+                for (let i = 0; i < 8; i++) {
+                  const r = await fetch(`${siteUrl}${route}`, {
+                    headers: { Authorization: `Bearer ${cronSecret}` },
+                  });
+                  const data: any = await r.json().catch(() => ({}));
+                  log.info(`publish-scheduled[${i}] -> ${r.status} pub=${data.published ?? '?'} defer=${data.deferred ?? '?'} total=${data.total ?? '?'}`);
+                  if (!data.total) break; // fila devida vazia
+                }
+                continue;
+              }
               // Fetch interno direto no handler: evita subrequest externo
               // e o round-trip completo de middleware/CORS/TLS do dominio publico.
               const req = new Request(`https://worker.internal${route}`, {
