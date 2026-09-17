@@ -37,7 +37,23 @@ export class MastodonAdapter extends PlatformAdapter {
 
           if (uploadRes.ok) {
             const uploadData = await uploadRes.json();
-            if (uploadData.id) mediaIds.push(uploadData.id);
+            if (uploadData.id) {
+              // Video retorna 202 e processa async — sem esperar, o /statuses da 422
+              if (uploadRes.status === 202 || uploadData.type === 'gifv' || uploadData.type === 'video') {
+                for (let i = 0; i < 10; i++) {
+                  await new Promise((r) => setTimeout(r, 2000));
+                  const m = await fetch(`${baseUrl}/api/v1/media/${uploadData.id}`, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                  });
+                  if (m.ok) {
+                    const md = await m.json();
+                    if (md.url) break; // processado
+                    if (md.error) return { success: false, error: normalizeError(new Error(md.error), this.platform) };
+                  }
+                }
+              }
+              mediaIds.push(uploadData.id);
+            }
           }
         }
       }
