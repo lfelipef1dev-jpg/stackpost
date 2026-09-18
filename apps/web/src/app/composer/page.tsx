@@ -667,7 +667,15 @@ export default function ComposerPage() {
                     {currentPreviewUrl && mediaItems[0]?.type.startsWith('video/') ? (
                       <video src={currentPreviewUrl} muted playsInline autoPlay loop controls className="max-w-full max-h-full object-contain" />
                     ) : currentPreviewUrl ? (
-                      <img src={currentPreviewUrl} alt={`Pré-visualização como ${previewPlatform}`} className="w-full h-full object-cover" />
+                      <img
+                        src={currentPreviewUrl}
+                        alt={`Pré-visualização como ${previewPlatform}`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const fb = mediaItems[0]?.preview;
+                          if (fb && (e.target as HTMLImageElement).src !== fb) (e.target as HTMLImageElement).src = fb;
+                        }}
+                      />
                     ) : (
                       <div className="text-brand-text-secondary text-sm flex flex-col items-center gap-2">
                         <ImageIcon className="w-8 h-8 opacity-50" />

@@ -46,6 +46,20 @@
     font-family: var(--font-mono), 'JetBrains Mono', ui-monospace, monospace;
   }
 
+  /* Dropdowns nativos: options seguem o tema (evita caixa branca no dark) */
+  select {
+    color-scheme: dark;
+    color: var(--brand-text);
+  }
+  html[data-theme="light"] select {
+    color-scheme: light;
+    color: var(--brand-text);
+  }
+  select option {
+    background-color: var(--brand-surface);
+    color: var(--brand-text);
+  }
+
   /* WCAG 2.4.7: indicador de foco visivel para navegacao por teclado */
   :focus-visible {
     outline: 2px solid var(--brand-accent);
