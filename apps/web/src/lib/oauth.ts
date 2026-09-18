@@ -16,6 +16,8 @@ export interface OAuthConfig {
   profileUrl?: string;
   extraAuthParams?: Record<string, string>;
   useBasicAuth?: boolean;
+  clientIdParam?: string;
+  clientSecretParam?: string;
 }
 
 export function buildAuthUrl(config: OAuthConfig, state: string): string {
@@ -23,7 +25,7 @@ export function buildAuthUrl(config: OAuthConfig, state: string): string {
   if (!clientId) throw new Error(`${config.clientIdEnv} não configurado`);
   const redirectUri = `${BASE_URL}${config.redirectPath}`;
   const params = new URLSearchParams({
-    client_id: clientId,
+    [config.clientIdParam ?? 'client_id']: clientId,
     redirect_uri: redirectUri,
     response_type: 'code',
     scope: config.scope,
@@ -46,8 +48,8 @@ export async function exchangeCodeForToken(
     grant_type: 'authorization_code',
     code,
     redirect_uri: redirectUri,
-    client_id: clientId,
-    client_secret: clientSecret,
+    [config.clientIdParam ?? 'client_id']: clientId,
+    [config.clientSecretParam ?? 'client_secret']: clientSecret,
   });
 
   const headers: Record<string, string> = { 'Content-Type': 'application/x-www-form-urlencoded' };
@@ -130,9 +132,10 @@ export const OAUTH_CONFIGS: Record<string, OAuthConfig> = {
     platform: 'tiktok',
     authUrl: 'https://www.tiktok.com/v2/auth/authorize/',
     tokenUrl: 'https://open.tiktokapis.com/v2/oauth/token/',
-    scope: 'user.info.basic,vídeo.publish,vídeo.upload',
+    scope: 'user.info.basic,video.upload,video.publish',
     clientIdEnv: 'TIKTOK_CLIENT_ID',
     clientSecretEnv: 'TIKTOK_CLIENT_SECRET',
+    clientIdParam: 'client_key',
     redirectPath: '/api/oauth/tiktok/callback',
   },
   youtube: {
