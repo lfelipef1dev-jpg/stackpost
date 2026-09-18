@@ -15,6 +15,7 @@ export interface OAuthConfig {
   redirectPath: string;
   profileUrl?: string;
   extraAuthParams?: Record<string, string>;
+  useBasicAuth?: boolean;
 }
 
 export function buildAuthUrl(config: OAuthConfig, state: string): string {
@@ -49,9 +50,16 @@ export async function exchangeCodeForToken(
     client_secret: clientSecret,
   });
 
+  const headers: Record<string, string> = { 'Content-Type': 'application/x-www-form-urlencoded' };
+  if (config.useBasicAuth) {
+    body.delete('client_id');
+    body.delete('client_secret');
+    headers.Authorization = 'Basic ' + btoa(`${clientId}:${clientSecret}`);
+  }
+
   const res = await fetch(config.tokenUrl, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers,
     body: body.toString(),
   });
 
@@ -151,6 +159,7 @@ export const OAUTH_CONFIGS: Record<string, OAuthConfig> = {
     platform: 'pinterest',
     authUrl: 'https://www.pinterest.com/oauth/',
     tokenUrl: 'https://api.pinterest.com/v5/oauth/token',
+    useBasicAuth: true,
     scope: 'boards:read,pins:read,pins:write',
     clientIdEnv: 'PINTEREST_CLIENT_ID',
     clientSecretEnv: 'PINTEREST_CLIENT_SECRET',
