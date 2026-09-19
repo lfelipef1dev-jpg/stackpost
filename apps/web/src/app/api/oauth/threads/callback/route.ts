@@ -1,6 +1,6 @@
 import { logger } from '@/lib/logger';
 import { oauth_threads_callbackQuerySchema } from '@/lib/schemas';
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { exchangeCodeForToken, saveAccount, OAUTH_CONFIGS } from '@/lib/oauth';
 
 export async function GET(req: NextRequest) {
@@ -18,9 +18,32 @@ export async function GET(req: NextRequest) {
   const config = OAUTH_CONFIGS['threads'];
   try {
     const tokenData = await exchangeCodeForToken(config, code);
-    await saveAccount(req, 'threads', tokenData, {
-      username: 'threads_user',
-      externalId: tokenData.raw?.user?.open_id || tokenData.raw?.user_id,
+
+    // Trocar token de curta duração (1h) por long-lived (60 dias)
+    let accessToken = tokenData.accessToken;
+    let expiresIn = tokenData.expiresIn;
+    const userId = tokenData.raw?.user_id;
+    const ll = await fetch(
+      `https://graph.threads.net/access_token?grant_type=th_exchange_token&client_secret=${encodeURIComponent(
+        process.env.THREADS_APP_SECRET!
+      )}&access_token=${encodeURIComponent(accessToken)}`
+    ).then((r) => r.json()).catch(() => null);
+    if (ll?.access_token) {
+      accessToken = ll.access_token;
+      expiresIn = ll.expires_in;
+    }
+
+    // Username real
+    let username = 'threads_user';
+    const me = await fetch(
+      `https://graph.threads.net/v1.0/me?fields=id,username&access_token=${encodeURIComponent(accessToken)}`
+    ).then((r) => r.json()).catch(() => null);
+    if (me?.username) username = me.username;
+
+    await saveAccount(req, 'threads', { ...tokenData, accessToken, expiresIn }, {
+      username,
+      externalId: me?.id || userId,
+      platformAccountId: me?.id || userId,
     });
     return NextResponse.redirect(new URL('/dashboard?connected=threads', req.url));
   } catch (err: any) {

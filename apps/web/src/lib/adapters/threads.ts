@@ -21,7 +21,7 @@ export class ThreadsAdapter extends PlatformAdapter {
       const isCarousel = params.mediaUrls && params.mediaUrls.length > 1;
 
       let mediaType = 'TEXT';
-      let mediaBody: Record<string, any> = { text: content, access_token: accessToken };
+      let mediaBody: Record<string, any> = { media_type: 'TEXT', text: content, access_token: accessToken };
 
       if (isCarousel && params.mediaUrls && params.mediaUrls.length > 1) {
         // Threads carousel: criar cada child, depois container pai
@@ -33,7 +33,7 @@ export class ThreadsAdapter extends PlatformAdapter {
             is_carousel_item: true,
           };
           if (isVid) {
-            childBody.media_type = 'Vídeo';
+            childBody.media_type = 'VIDEO';
             childBody.video_url = url;
           } else {
             childBody.media_type = 'IMAGE';
@@ -57,8 +57,8 @@ export class ThreadsAdapter extends PlatformAdapter {
           access_token: accessToken,
         };
       } else if (isVideo) {
-        mediaType = 'Video';
-        mediaBody = { media_type: 'Video', video_url: params.videoUrl, caption: content, access_token: accessToken };
+        mediaType = 'VIDEO';
+        mediaBody = { media_type: 'VIDEO', video_url: params.videoUrl, caption: content, access_token: accessToken };
       } else if (isImage) {
         mediaType = 'IMAGE';
         mediaBody = { media_type: 'IMAGE', image_url: params.imageUrl, caption: content, access_token: accessToken };
@@ -96,7 +96,7 @@ export class ThreadsAdapter extends PlatformAdapter {
       return {
         success: true,
         externalId: postId,
-        externalUrl: `https://threads.net/@${params.account?.username || userId}/post/${postId}`,
+        externalUrl: `https://threads.com/@${params.account?.username || userId}/post/${postId}`,
       };
     } catch (error) {
       return { success: false, error: normalizeError(error, this.platform) };
