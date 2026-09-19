@@ -198,11 +198,11 @@ export const OAUTH_CONFIGS: Record<string, OAuthConfig> = {
   },
   threads: {
     platform: 'threads',
-    authUrl: 'https://www.threads.net/oauth/authorize',
+    authUrl: 'https://threads.com/oauth/authorize',
     tokenUrl: 'https://graph.threads.net/oauth/access_token',
     scope: 'threads_basic,threads_content_publish',
-    clientIdEnv: 'META_APP_ID',
-    clientSecretEnv: 'META_APP_SECRET',
+    clientIdEnv: 'THREADS_APP_ID',
+    clientSecretEnv: 'THREADS_APP_SECRET',
     redirectPath: '/api/oauth/threads/callback',
   },
   instagram: {
