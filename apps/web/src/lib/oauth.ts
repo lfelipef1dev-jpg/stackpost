@@ -76,6 +76,59 @@ export async function exchangeCodeForToken(
   };
 }
 
+const REFRESHABLE: Record<string, { url: string; clientIdEnv: string; clientSecretEnv: string }> = {
+  youtube: { url: 'https://oauth2.googleapis.com/token', clientIdEnv: 'GOOGLE_CLIENT_ID', clientSecretEnv: 'GOOGLE_CLIENT_SECRET' },
+  google_business: { url: 'https://oauth2.googleapis.com/token', clientIdEnv: 'GOOGLE_CLIENT_ID', clientSecretEnv: 'GOOGLE_CLIENT_SECRET' },
+  pinterest: { url: 'https://api.pinterest.com/v5/oauth/token', clientIdEnv: 'PINTEREST_CLIENT_ID', clientSecretEnv: 'PINTEREST_CLIENT_SECRET' },
+  tiktok: { url: 'https://open.tiktokapis.com/v2/oauth/token/', clientIdEnv: 'TIKTOK_CLIENT_ID', clientSecretEnv: 'TIKTOK_CLIENT_SECRET' },
+};
+
+// Renova access_token se expirado/expirando. Retorna a conta atualizada.
+export async function ensureFreshToken(account: any): Promise<any> {
+  const cfg = REFRESHABLE[account.platform];
+  if (!cfg || !account.refresh_token) return account;
+  const exp = account.expires_at ? new Date(account.expires_at).getTime() : 0;
+  if (exp > Date.now() + 5 * 60 * 1000) return account;
+
+  const clientId = process.env[cfg.clientIdEnv];
+  const clientSecret = process.env[cfg.clientSecretEnv];
+  if (!clientId || !clientSecret) return account;
+
+  const body = new URLSearchParams({
+    grant_type: 'refresh_token',
+    refresh_token: account.refresh_token,
+    client_id: clientId,
+    client_secret: clientSecret,
+  });
+  const headers: Record<string, string> = { 'Content-Type': 'application/x-www-form-urlencoded' };
+  if (account.platform === 'pinterest') {
+    body.delete('client_id');
+    body.delete('client_secret');
+    headers.Authorization = 'Basic ' + btoa(`${clientId}:${clientSecret}`);
+  }
+  if (account.platform === 'tiktok') {
+    body.set('client_key', clientId);
+    body.delete('client_id');
+  }
+
+  const res = await fetch(cfg.url, { method: 'POST', headers, body });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || !data.access_token) return account;
+
+  const expiresAt = data.expires_in ? new Date(Date.now() + data.expires_in * 1000).toISOString() : null;
+  const supabase = getSupabase();
+  await supabase
+    .from('social_accounts')
+    .update({
+      access_token: data.access_token,
+      refresh_token: data.refresh_token || account.refresh_token,
+      expires_at: expiresAt,
+    })
+    .eq('id', account.id);
+
+  return { ...account, access_token: data.access_token, refresh_token: data.refresh_token || account.refresh_token, expires_at: expiresAt };
+}
+
 export async function saveAccount(
   req: NextRequest,
   platform: string,

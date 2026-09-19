@@ -1,4 +1,5 @@
 import { getSupabase } from '@/lib/supabase';
+import { ensureFreshToken } from '@/lib/oauth';
 import { recordBillingEvent } from '@/lib/billing-metering';
 import { getDailyLimit } from '@/lib/limits';
 import {
@@ -103,7 +104,7 @@ export async function publishPost(postId: string) {
     .eq('status', 'active');
   if (accountsError) throw accountsError;
 
-  const accountsList = accounts || [];
+  const accountsList = await Promise.all((accounts || []).map((a) => ensureFreshToken(a)));
   const derivatives = post.derivatives || {};
 
   // Buscar organization_id do time para metering
