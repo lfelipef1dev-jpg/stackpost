@@ -117,20 +117,25 @@ npx tsc --noEmit   # Type check
 Instagram, Facebook, LinkedIn, TikTok, YouTube, Snapchat, Twitter/X, Threads,
 Pinterest, Reddit, Mastodon, Bluesky, Discord, Slack, Google Business Profile.
 
-### Status de conexao (17/09/2026)
+### Status de conexao (19/09/2026)
 
-| Plataforma | Status | Observacao |
-|---|---|---|
-| LinkedIn | ATIVA | Pagina "ExpoStacker Studio" |
-| Bluesky | ATIVA | @expostacker.bsky.social |
-| Discord | ATIVA | webhook canal do servidor |
-| Instagram | ATIVA | cap 25/dia (Content Publishing API) |
-| Mastodon | ATIVA | @expostacker em mastodon.social |
-| Slack | ATIVA | webhook #social (workspace ExpoStacker) |
-| Facebook | BLOQUEADA | verificacao de identidade Meta em analise |
-| Pinterest | BLOQUEADA | Trial API pendente + ticket aberto (App 1612857) |
-| Reddit | BLOQUEADA | pedido de acesso dev enviado |
-| Demais | NAO CONFIGURADA | TikTok, YouTube, X, Threads, Snapchat, GBP |
+| Plataforma | Nossa conta | Cliente consegue? | Observacao |
+|---|---|---|---|
+| LinkedIn | ✅ POSTANDO | ? | video ok, URL salva (feed/update) |
+| Bluesky | ✅ POSTANDO | sim | @expostacker.bsky.social, video ok |
+| Discord | ✅ POSTANDO | webhook | video ok |
+| Slack | ✅ POSTANDO | webhook | video ok |
+| Mastodon | ✅ POSTANDO | sim | @expo_stacker (antiga suspensa) |
+| Instagram | ✅ POSTANDO | depende Meta review | reels ok, permalink salvo |
+| Facebook | ✅ POSTANDO | depende Meta review | pacing 60min anti-ban |
+| Threads | ✅ POSTANDO | depende Meta review | video ok c/ polling de status |
+| TikTok | ⚠️ INBOX | nao | app nao auditado: video cai na inbox s/ legenda. App Review em preparacao |
+| YouTube | ❌ needs_reconnect | nao | refresh token de outro client — reconectar OAuth |
+| Pinterest | ⚠️ conectada s/ board | nao | boards:write no scope, falta board + reconnect |
+| Google Business | ❌ needs_reconnect | nao | token invalido + quota/location pendente |
+| Reddit | BLOQUEADA | nao | pedido de acesso dev enviado |
+| X/Twitter | CONGELADA | — | "em breve" |
+| Snapchat | REMOVIDA | — | fora do projeto |
 
 ### Credenciais por plataforma (.dev.vars — nunca commitar)
 
