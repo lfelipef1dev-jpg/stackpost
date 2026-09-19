@@ -216,7 +216,7 @@ export const OAUTH_CONFIGS: Record<string, OAuthConfig> = {
     authUrl: 'https://www.pinterest.com/oauth/',
     tokenUrl: 'https://api.pinterest.com/v5/oauth/token',
     useBasicAuth: true,
-    scope: 'boards:read,pins:read,pins:write',
+    scope: 'boards:read,boards:write,pins:read,pins:write',
     clientIdEnv: 'PINTEREST_CLIENT_ID',
     clientSecretEnv: 'PINTEREST_CLIENT_SECRET',
     redirectPath: '/api/oauth/pinterest/callback',

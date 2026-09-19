@@ -21,8 +21,13 @@ export class TikTokAdapter extends PlatformAdapter {
     }
 
     try {
-      // Se tem video, usar video/init
+      // Se tem video, usar video/init com FILE_UPLOAD (dominio nao precisa ser verificado)
       if (videoUrl) {
+        const videoRes = await fetch(videoUrl);
+        if (!videoRes.ok) return { success: false, error: normalizeError(new Error('Falha ao baixar vídeo'), this.platform) };
+        const videoBytes = new Uint8Array(await videoRes.arrayBuffer());
+        const videoSize = videoBytes.length;
+
         const initRes = await fetch('https://open.tiktokapis.com/v2/post/publish/video/init/', {
           method: 'POST',
           headers: {
@@ -32,11 +37,13 @@ export class TikTokAdapter extends PlatformAdapter {
           body: JSON.stringify({
             post_info: {
               title: content.slice(0, 150),
-              privacy_level: 'PUBLIC_TO_EVERYONE',
+              privacy_level: 'SELF_ONLY',
             },
             source_info: {
-              source: 'PULL_FROM_URL',
-              video_url: videoUrl,
+              source: 'FILE_UPLOAD',
+              video_size: videoSize,
+              chunk_size: videoSize,
+              total_chunk_count: 1,
             },
           }),
         });
@@ -45,6 +52,20 @@ export class TikTokAdapter extends PlatformAdapter {
         if (!initRes.ok) return { success: false, error: normalizeError(new Error(initData.error?.message || 'TikTok API error'), this.platform) };
 
         const publishId = initData.data?.publish_id;
+        const uploadUrl = initData.data?.upload_url;
+        if (!publishId || !uploadUrl) return { success: false, error: normalizeError(new Error('TikTok: init sem publish_id/upload_url'), this.platform) };
+
+        const putRes = await fetch(uploadUrl, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'video/mp4',
+            'Content-Length': String(videoSize),
+            'Content-Range': `bytes 0-${videoSize - 1}/${videoSize}`,
+          },
+          body: videoBytes,
+        });
+        if (!putRes.ok) return { success: false, error: normalizeError(new Error(`TikTok upload falhou: ${putRes.status}`), this.platform) };
+
         return {
           success: true,
           externalId: publishId,
