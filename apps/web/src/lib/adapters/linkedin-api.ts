@@ -153,7 +153,7 @@ export async function publishToLinkedIn(account: any, content: string, imageUrl:
 
     if (post.error) return { success: false, error: post.error };
 
-    return { success: true, externalId: post.id };
+    return { success: true, externalId: post.id, externalUrl: 'https://www.linkedin.com/feed/update/' + post.id + '/' };
   }
 
   // IMAGE: upload via assets com recipe feedshare-image
@@ -214,7 +214,7 @@ export async function publishToLinkedIn(account: any, content: string, imageUrl:
 
     if (post.error) return { success: false, error: post.error };
 
-    return { success: true, externalId: post.id };
+    return { success: true, externalId: post.id, externalUrl: 'https://www.linkedin.com/feed/update/' + post.id + '/' };
   }
 
   // MULTI-MIDIA (até 10 imagens)
@@ -279,7 +279,7 @@ export async function publishToLinkedIn(account: any, content: string, imageUrl:
     });
     const post = await postRes.json();
     if (post.error) return { success: false, error: post.error };
-    return { success: true, externalId: post.id };
+    return { success: true, externalId: post.id, externalUrl: 'https://www.linkedin.com/feed/update/' + post.id + '/' };
   }
 
   // PDF / DOCUMENTO — Documents API (rest/documents) + rest/posts
@@ -330,7 +330,7 @@ export async function publishToLinkedIn(account: any, content: string, imageUrl:
       return { success: false, error: postErr.message || `LinkedIn document post (HTTP ${postRes.status})` };
     }
     const postId = postRes.headers.get('x-restli-id') || '';
-    return { success: true, externalId: postId };
+    return { success: true, externalId: postId, externalUrl: postId ? 'https://www.linkedin.com/feed/update/' + postId + '/' : undefined };
   }
 
   // Post só de texto
@@ -357,7 +357,7 @@ export async function publishToLinkedIn(account: any, content: string, imageUrl:
 
   if (post.error) return { success: false, error: post.error };
 
-  return { success: true, externalId: post.id };
+  return { success: true, externalId: post.id, externalUrl: 'https://www.linkedin.com/feed/update/' + post.id + '/' };
 }
 
 

@@ -161,7 +161,8 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
       }).catch((err) => logger.warn('Instagram first comment error:', err));
     }
 
-    return { success: true, externalId: publish.id };
+    const permalink = await getPermalink(publish.id, token);
+    return { success: true, externalId: publish.id, externalUrl: permalink };
   }
 
   // Criar container de mídia - parametros diferentes pra video, imagem e story
@@ -252,5 +253,16 @@ export async function publishToInstagram(account: any, content: string, mediaUrl
     }).catch((err) => logger.warn('Instagram first comment error:', err));
   }
 
-  return { success: true, externalId: publish.id };
+  const permalink = await getPermalink(publish.id, token);
+  return { success: true, externalId: publish.id, externalUrl: permalink };
+}
+
+async function getPermalink(mediaId: string, token: string): Promise<string | undefined> {
+  try {
+    const res = await fetch(`https://graph.instagram.com/v23.0/${mediaId}?fields=permalink&access_token=${token}`);
+    const data = await res.json();
+    return data.permalink;
+  } catch {
+    return undefined;
+  }
 }
