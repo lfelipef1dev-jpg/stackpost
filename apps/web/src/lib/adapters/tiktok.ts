@@ -28,28 +28,28 @@ export class TikTokAdapter extends PlatformAdapter {
         const videoBytes = new Uint8Array(await videoRes.arrayBuffer());
         const videoSize = videoBytes.length;
 
-        const initRes = await fetch('https://open.tiktokapis.com/v2/post/publish/video/init/', {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            post_info: {
-              title: content.slice(0, 150),
-              privacy_level: 'SELF_ONLY',
-            },
-            source_info: {
-              source: 'FILE_UPLOAD',
-              video_size: videoSize,
-              chunk_size: videoSize,
-              total_chunk_count: 1,
-            },
-          }),
-        });
+        const postInfo = { title: content.slice(0, 150), privacy_level: 'SELF_ONLY' };
+        const sourceInfo = { source: 'FILE_UPLOAD', video_size: videoSize, chunk_size: videoSize, total_chunk_count: 1 };
 
-        const initData = await initRes.json();
-        if (!initRes.ok) return { success: false, error: normalizeError(new Error(initData.error?.message || 'TikTok API error'), this.platform) };
+        let initRes = await fetch('https://open.tiktokapis.com/v2/post/publish/video/init/', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ post_info: postInfo, source_info: sourceInfo }),
+        });
+        let initData = await initRes.json();
+
+        // App nao auditado: TikTok so aceita direct-post em conta privada.
+        // Fallback oficial: inbox/video/init manda o video pros rascunhos do usuario.
+        if (initData.error?.code === 'unaudited_client_can_only_post_to_private_accounts') {
+          initRes = await fetch('https://open.tiktokapis.com/v2/post/publish/inbox/video/init/', {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ source_info: sourceInfo }),
+          });
+          initData = await initRes.json();
+        }
+
+        if (!initRes.ok || initData.error?.code !== 'ok') return { success: false, error: normalizeError(new Error(initData.error?.message || 'TikTok API error'), this.platform) };
 
         const publishId = initData.data?.publish_id;
         const uploadUrl = initData.data?.upload_url;
