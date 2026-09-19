@@ -77,6 +77,21 @@ export class ThreadsAdapter extends PlatformAdapter {
       const containerId = createData.id;
       if (!containerId) return { success: false, error: normalizeError(new Error('Threads: container sem id'), this.platform) };
 
+      // VIDEO/CAROUSEL precisam processar antes de publicar — senao publish retorna
+      // "resource does not exist". Poll de status igual fazemos no Instagram.
+      if (mediaType !== 'TEXT' && mediaType !== 'IMAGE') {
+        for (let i = 0; i < 15; i++) {
+          await new Promise((r) => setTimeout(r, 3000));
+          const st = await fetch(`https://graph.threads.net/v1.0/${containerId}?fields=status&access_token=${accessToken}`);
+          const stData = await st.json();
+          if (stData.status === 'FINISHED') break;
+          if (stData.status === 'ERROR' || stData.status === 'EXPIRED') {
+            return { success: false, error: normalizeError(new Error(`Threads: media ${stData.status}`), this.platform) };
+          }
+          if (i === 14) return { success: false, error: { code: 'STILL_PROCESSING', message: 'STILL_PROCESSING', retryable: true } as any };
+        }
+      }
+
       // Publicar container
       const publishRes = await fetch(`https://graph.threads.net/v1.0/${userId}/threads_publish`, {
         method: 'POST',
